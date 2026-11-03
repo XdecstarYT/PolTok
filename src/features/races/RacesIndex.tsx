@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import type { Race, Rating } from '../../types';
-import { RACES, SENATE_NOT_UP } from '../../data';
+import { HOUSE_BASELINE, RACES, SENATE_NOT_UP } from '../../data';
 import { useLive } from '../../lib/live';
 import { RatingBadge, SimBadge, PartyDot } from '../../components';
 import { PARTY_HEX, RATING_HEX, RATINGS } from '../../lib/format';
@@ -265,11 +265,13 @@ function SeatSummary({ tab, math, races }: { tab: ChamberTab; math: ReturnType<t
   const nu = SENATE_NOT_UP ?? { D: 0, R: 0, I: 0 };
   const segs: { label: string; n: number; color: string; notUp?: boolean }[] = [
     ...(tab === 'senate' ? [{ label: 'D not up', n: (nu.D || 0) + (nu.I || 0), color: '#14327a', notUp: true }] : []),
+    ...(tab === 'house' && HOUSE_BASELINE?.D ? [{ label: 'D safe (untracked)', n: HOUSE_BASELINE.D, color: '#14327a', notUp: true }] : []),
     ...RATINGS.map((r) => ({ label: r, n: math.counts[r], color: RATING_HEX[r] })),
     ...(tab === 'senate' ? [{ label: 'R not up', n: nu.R || 0, color: '#6e1020', notUp: true }] : []),
+    ...(tab === 'house' && HOUSE_BASELINE?.R ? [{ label: 'R safe (untracked)', n: HOUSE_BASELINE.R, color: '#6e1020', notUp: true }] : []),
   ];
   const segTotal = segs.reduce((s, g) => s + g.n, 0);
-  const majPct = tab === 'senate' && segTotal >= 90 ? (51 / segTotal) * 100 : undefined;
+  const majPct = tab === 'senate' && segTotal >= 90 ? (51 / segTotal) * 100 : tab === 'house' && segTotal >= 400 ? (218 / segTotal) * 100 : undefined;
   const { results } = useLive();
   const liveD = races.filter((r) => {
     const w = results[r.id]?.calledFor;
@@ -293,7 +295,10 @@ function SeatSummary({ tab, math, races }: { tab: ChamberTab; math: ReturnType<t
   } else if (tab === 'house') {
     headline = (
       <>
-        <b>218</b> seats for a House majority · ratings for <b className="mono">{math.tracked}</b> tracked races
+        <b>218</b> for a House majority
+        <span className="rx-sep">·</span>
+        <b style={{ color: 'var(--dem)' }}>D {math.dBase}</b> safe+lean · <b style={{ color: 'var(--tossup)' }}>{math.tossups}</b> toss-ups · <b style={{ color: 'var(--rep)' }}>R {math.rBase}</b>
+        {HOUSE_BASELINE?.D ? <span className="rx-muted rx-small"> (incl. {HOUSE_BASELINE.D + HOUSE_BASELINE.R} untracked safe seats)</span> : null}
       </>
     );
   } else {
@@ -309,7 +314,7 @@ function SeatSummary({ tab, math, races }: { tab: ChamberTab; math: ReturnType<t
     <section className="card rx-seat" aria-label="Seat math">
       <div className="rx-seat-head">
         <p className="rx-seat-line">{headline}</p>
-        {tab === 'senate' && math.tracked > 0 && (
+        {tab !== 'governor' && math.tracked > 0 && (
           <div className="rx-seat-nums mono">
             <span>
               <small>D safe+lean</small>
@@ -325,7 +330,7 @@ function SeatSummary({ tab, math, races }: { tab: ChamberTab; math: ReturnType<t
             </span>
             <span>
               <small>D need of toss-ups</small>
-              <b>{Math.max(0, 51 - math.dBase)}</b>
+              <b>{Math.max(0, math.majority - math.dBase)}</b>
             </span>
           </div>
         )}
@@ -345,7 +350,7 @@ function SeatSummary({ tab, math, races }: { tab: ChamberTab; math: ReturnType<t
         )}
         {majPct !== undefined && (
           <i className="rx-majline" style={{ left: `${majPct}%` }}>
-            <em className="mono">51 · D majority</em>
+            <em className="mono">{math.majority} · majority</em>
           </i>
         )}
       </div>

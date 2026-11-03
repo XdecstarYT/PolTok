@@ -1,6 +1,6 @@
 // Helpers for the Races & States feature (owned by agent 10).
 import type { Candidate, NewsItem, Party, Race, RaceResult, Rating, StateInfo } from '../../types';
-import { RACES, SENATE_NOT_UP, STATES } from '../../data';
+import { HOUSE_BASELINE, RACES, SENATE_NOT_UP, STATES } from '../../data';
 import { RATINGS } from '../../lib/format';
 
 export type ChamberTab = 'senate' | 'governor' | 'house';
@@ -103,8 +103,9 @@ export function fmtCloseET(hhmm?: string): string {
   if (!hhmm) return 'TBD';
   const [h, m] = hhmm.split(':').map((x) => parseInt(x, 10));
   if (Number.isNaN(h)) return hhmm;
-  const h12 = ((h + 11) % 12) + 1;
-  return `${h12}:${String(m || 0).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'} ET`;
+  const hh = h % 24;
+  const h12 = ((hh + 11) % 12) + 1;
+  return `${h12}:${String(m || 0).padStart(2, '0')} ${hh >= 12 ? 'PM' : 'AM'} ET${h >= 24 ? ' (Nov 4)' : ''}`;
 }
 
 export function ordinal(n: number): string {
@@ -228,11 +229,12 @@ export function seatMath(chamber: ChamberTab, races: Race[] = RACES): SeatMath {
   }
   const total = chamber === 'house' ? 435 : 50;
   const majority = chamber === 'house' ? 218 : 26;
+  const hb = chamber === 'house' ? HOUSE_BASELINE : undefined;
   return {
     chamber,
     counts,
-    dBase: dLean,
-    rBase: rLean,
+    dBase: dLean + (hb?.D ?? 0),
+    rBase: rLean + (hb?.R ?? 0),
     tossups: counts['Toss-up'],
     majority,
     dHeld: heldD,

@@ -50,6 +50,16 @@ function marginLabel(m: number, a: { label: string; color: string }, b: { label:
   return { text: `${shortLabel(lead.label)}+${Math.abs(m).toFixed(1)}`, color: lead.color };
 }
 const shortLabel = (l: string) => (/^dem/i.test(l) ? 'D' : /^rep/i.test(l) ? 'R' : l);
+/** Compact label for table cells: party letter, Approve/Disapprove → App/Dis, else candidate last name. */
+const cellLabel = (k: { key: string; label: string }) => {
+  if (/^(D|R|I|L|G)$/.test(k.key)) return k.key;
+  if (/^dem/i.test(k.label)) return 'D';
+  if (/^rep/i.test(k.label)) return 'R';
+  if (/^approve/i.test(k.label)) return 'App';
+  if (/^disapprove/i.test(k.label)) return 'Dis';
+  const parts = k.label.replace(/\s*\(.*\)$/, '').split(/\s+/);
+  return parts[parts.length - 1] ?? k.label;
+};
 
 function Headlines({ generic, approval }: { generic?: PollSeries; approval?: PollSeries }) {
   const g = useSeriesAverages(generic);
@@ -182,13 +192,14 @@ function PollTable() {
     for (const s of POLL_SERIES) {
       for (let i = 0; i < (s.polls?.length ?? 0); i++) {
         const p = s.polls[i];
-        const result = s.keys.filter((k) => p.values[k.key] != null).map((k) => ({ label: shortLabel(k.label), v: p.values[k.key], color: k.color }));
+        const result = s.keys.filter((k) => p.values[k.key] != null).map((k) => ({ label: cellLabel(k), v: p.values[k.key], color: k.color }));
         const m = marginOf(p.values, s.keys);
         let marginText = '—';
         let mc = 'var(--text-3)';
         if (m != null && s.keys.length >= 2) {
           const lead = m >= 0 ? s.keys[0] : s.keys[1];
-          marginText = Math.abs(m) < 0.05 ? 'TIE' : `${shortLabel(lead.label)}+${Math.abs(m).toFixed(m % 1 ? 1 : 0)}`;
+          const mm = Math.abs(m).toFixed(m % 1 ? 1 : 0);
+          marginText = Math.abs(m) < 0.05 ? 'TIE' : /^approve/i.test(s.keys[0].label) ? `Net ${m > 0 ? '+' : '−'}${mm}` : `${cellLabel(lead)}+${mm}`;
           mc = Math.abs(m) < 0.05 ? 'var(--text-2)' : lead.color;
         }
         out.push({ key: `${s.id}-${i}`, seriesId: s.id, seriesTitle: s.title, pollster: p.pollster, date: p.date, t: parseDay(p.date), sample: p.sample, pop: p.population, result, margin: m, marginText, marginColor: mc, grade: p.grade });

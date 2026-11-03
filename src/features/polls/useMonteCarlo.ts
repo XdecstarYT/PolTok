@@ -32,7 +32,7 @@ export function useMonteCarlo(model: SimModel | null, params: SimParams, target:
       let done = false;
       const per = model.chamber === 'house' ? 20 : 100;
       do done = run.step(per);
-      while (!done && performance.now() - t0 < 8);
+      while (!done && performance.now() - t0 < 12);
       setSnap(cloneSnap(run.snap));
       if (!done) schedule();
     };
