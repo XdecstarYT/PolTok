@@ -168,7 +168,7 @@
 .rc__name { font-family: var(--font-display); font-size: clamp(22px, 3.4vw, 34px); font-weight: 700; line-height: 1.05; }
 .rc__party { font-size: 14px; opacity: 0.85; }
 .rc__stamp {
-  position: absolute; right: 6px; top: 0; padding: 6px 16px; border: 4px solid #fff; border-radius: 8px;
+  position: absolute; right: 6px; top: -58px; padding: 6px 16px; border: 4px solid #fff; border-radius: 8px;
   font-family: var(--font-display); font-weight: 700; letter-spacing: 0.12em; font-size: clamp(22px, 4vw, 40px); color: #fff;
   background: rgba(0, 0, 0, 0.18); mix-blend-mode: normal;
 }

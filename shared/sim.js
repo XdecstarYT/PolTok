@@ -146,6 +146,29 @@ const PARTY_NAME = { D: 'Democrat', R: 'Republican', I: 'Independent', L: 'Liber
 const PARTY_PLURAL = { D: 'Democrats', R: 'Republicans' };
 
 /** Poisson-binomial: probability that the sum of Bernoulli(p_i) >= k. */
+/**
+ * P(at least k successes) with a correlated national error: each uncalled seat's
+ * probability is shifted together in logit space across a grid of swing scenarios.
+ * Independent-seat math is badly overconfident early in the night.
+ */
+function correlatedAtLeast(ps, k, sd = 0.7) {
+  const grid = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];
+  let wsum = 0;
+  let acc = 0;
+  for (const z of grid) {
+    const w = Math.exp(-0.5 * z * z);
+    const shift = z * sd;
+    const shifted = ps.map((p) => {
+      if (p <= 0 || p >= 1) return p;
+      const q = clamp(p, 1e-4, 1 - 1e-4);
+      return 1 / (1 + Math.exp(-(Math.log(q / (1 - q)) + shift)));
+    });
+    acc += w * probAtLeast(shifted, k);
+    wsum += w;
+  }
+  return acc / wsum;
+}
+
 function probAtLeast(ps, k) {
   if (k <= 0) return 1;
   if (k > ps.length) return 0;
@@ -572,7 +595,7 @@ export function createSimulation(opts) {
       projD += unknown / 2;
       projR += unknown / 2;
       const baseD = notUp.D + notUp.I;
-      const pDcontrol = probAtLeast(dProbs, SENATE_D_NEEDS - baseD);
+      const pDcontrol = correlatedAtLeast(dProbs, SENATE_D_NEEDS - baseD);
       out.push({
         chamber: 'senate',
         total: SENATE_TOTAL,
@@ -619,7 +642,7 @@ export function createSimulation(opts) {
         projR += 1 - pD;
       }
       const majority = Math.floor(houseTotal / 2) + 1;
-      const pDcontrol = probAtLeast(dProbs, majority);
+      const pDcontrol = correlatedAtLeast(dProbs, majority);
       out.push({
         chamber: 'house',
         total: houseTotal,

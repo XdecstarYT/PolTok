@@ -61,7 +61,7 @@ export function RaceCallWatcher() {
     const t = setTimeout(() => setActive(queue.current.shift() ?? null), SHOW_MS);
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setActive(null);
     window.addEventListener('keydown', onKey);
-    try { navigator.vibrate?.(40); } catch { /* noop */ }
+    try { if ((navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive) navigator.vibrate?.(40); } catch { /* noop */ }
     return () => {
       clearTimeout(t);
       window.removeEventListener('keydown', onKey);
