@@ -1,0 +1,36 @@
+/* Design tokens — owned by the Design/Shell agent. Other agents: USE these vars, don't redefine. */
+:root {
+  --bg: #07080d;
+  --bg-1: #0d0f17;
+  --bg-2: #141724;
+  --bg-3: #1c2031;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --text: #eef0f6;
+  --text-2: #a9afc3;
+  --text-3: #6b7189;
+
+  --dem: #3d7bff;
+  --dem-soft: rgba(61, 123, 255, 0.16);
+  --rep: #ff3d55;
+  --rep-soft: rgba(255, 61, 85, 0.16);
+  --ind: #a96bff;
+  --lib: #f5c518;
+  --grn: #2ecc71;
+  --oth: #8b93a7;
+  --tossup: #f5c518;
+  --accent: #c6ff3d; /* signature "live" lime */
+  --breaking: #ff2e63;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  --glass: rgba(20, 23, 36, 0.66);
+  --nav-h: 60px;
+  --ticker-h: 34px;
+  --gutter: 16px;
+}
