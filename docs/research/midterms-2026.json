@@ -1,0 +1,2051 @@
+{
+ "_meta": {
+  "asOf": "2026-11-03",
+  "electionDay": "2026-11-03",
+  "sources": [
+   "https://en.wikipedia.org/wiki/2026_United_States_Senate_elections",
+   "https://en.wikipedia.org/wiki/2026_United_States_gubernatorial_elections",
+   "https://en.wikipedia.org/wiki/2026_United_States_House_of_Representatives_election_ratings",
+   "https://political.org/2026-house-elections/",
+   "https://news.kalshi.com/p/final-2026-midterm-odds",
+   "https://www.thegreenpapers.com/G26/PollingHours.phtml",
+   "https://en.wikipedia.org/wiki/2024_United_States_presidential_election"
+  ],
+  "ratingSource": "Cook Political Report (Senate & House Nov 2 2026, Governors Oct 29 2026) as reported on Wikipedia; Sabato/IE differences in notes",
+  "caveats": "Nominee names compiled from Wikipedia and political.org on Election Day; House challenger names are third-party compiled - verify before display. pollClosings = time the LAST polls in the state close (ET, Nov 3; '00:00'/'01:00' = Nov 4). pollClosingsFirst = earlier closing for most/part of state where it differs. pres2024.margin = repPct - demPct (positive = R)."
+ },
+ "senateComposition": {
+  "R": 53,
+  "D": 45,
+  "I": 2,
+  "independentsCaucusWith": "D",
+  "demCaucus": 47,
+  "seatsUp": 35,
+  "classTwoSeats": 33,
+  "specials": [
+   "FL",
+   "OH"
+  ],
+  "majority": 51,
+  "tiebreaker": "VP JD Vance (R)",
+  "demNetGainNeeded": 4,
+  "seatsUpByParty": {
+   "R": 22,
+   "D": 13
+  },
+  "notes": "Dems need 51 seats (net +4) because VP breaks 50-50 ties for R. Appointed incumbents running/serving: Moody (FL), Husted (OH), Darline Graham (SC), Alan Armstrong (OK, not running)."
+ },
+ "houseComposition": {
+  "R": 218,
+  "D": 214,
+  "I": 1,
+  "vacancies": 2,
+  "total": 435,
+  "majority": 218,
+  "independent": "Kevin Kiley (CA) - left GOP Mar 9 2026, caucuses with Republicans; running in redrawn CA-6",
+  "vacant": [
+   {
+    "seat": "FL-20",
+    "lastParty": "D",
+    "note": "Sheila Cherfilus-McCormick resigned Apr 21 2026"
+   },
+   {
+    "seat": "TX-23",
+    "lastParty": "R",
+    "note": "Tony Gonzales resigned Apr 14 2026"
+   }
+  ],
+  "republicanConference": 219,
+  "demNetGainNeeded": 3,
+  "notes": "Dems won 215 in 2024; net +3 vs. 2024 baseline (4 more than current 214 sitting members) reaches 218. Mid-decade redistricting (TX, CA Prop 50, FL, OH, NC, MO kept old map, UT court map, LA, AL): Cook est. ~R+9 / D+5 seats from new lines, net ~R+4."
+ },
+ "senateRaces": [
+  {
+   "state": "AL",
+   "incumbent": "Tommy Tuberville",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Everett Wess",
+   "rep": "Barry Moore",
+   "rating": "Solid R",
+   "notes": "Tuberville running for governor"
+  },
+  {
+   "state": "AK",
+   "incumbent": "Dan Sullivan",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Mary Peltola",
+   "rep": "Dan Sullivan",
+   "rating": "Toss-up",
+   "notes": "Top-four primary + ranked-choice general; Sabato: Lean D"
+  },
+  {
+   "state": "AR",
+   "incumbent": "Tom Cotton",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Hallie Shoffner",
+   "rep": "Tom Cotton",
+   "otherNotable": "Jeff Wadlin (L)",
+   "rating": "Solid R"
+  },
+  {
+   "state": "CO",
+   "incumbent": "John Hickenlooper",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "John Hickenlooper",
+   "rep": "Mark Baisley",
+   "rating": "Solid D"
+  },
+  {
+   "state": "DE",
+   "incumbent": "Chris Coons",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Chris Coons",
+   "rep": "Michael Katz",
+   "rating": "Solid D"
+  },
+  {
+   "state": "FL",
+   "incumbent": "Ashley Moody",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Angie Nixon",
+   "rep": "Ashley Moody",
+   "rating": "Likely R",
+   "notes": "SPECIAL election (Rubio seat, Class 3); Moody appointed Jan 2025"
+  },
+  {
+   "state": "GA",
+   "incumbent": "Jon Ossoff",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Jon Ossoff",
+   "rep": "Mike Collins",
+   "rating": "Likely D"
+  },
+  {
+   "state": "ID",
+   "incumbent": "Jim Risch",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "None (Democratic nominee withdrew)",
+   "rep": "Jim Risch",
+   "otherNotable": "Todd Achilles (I)",
+   "rating": "Solid R"
+  },
+  {
+   "state": "IL",
+   "incumbent": "Dick Durbin",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Juliana Stratton",
+   "rep": "Don Tracy",
+   "rating": "Solid D",
+   "notes": "Durbin retiring"
+  },
+  {
+   "state": "IA",
+   "incumbent": "Joni Ernst",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Josh Turek",
+   "rep": "Ashley Hinson",
+   "rating": "Toss-up",
+   "notes": "Ernst retiring; Sabato: Lean R"
+  },
+  {
+   "state": "KS",
+   "incumbent": "Roger Marshall",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Adam Hamilton",
+   "rep": "Roger Marshall",
+   "rating": "Toss-up",
+   "notes": "Sabato: Lean D; Kalshi Nov 2: Hamilton 63%"
+  },
+  {
+   "state": "KY",
+   "incumbent": "Mitch McConnell",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Charles Booker",
+   "rep": "Andy Barr",
+   "rating": "Solid R",
+   "notes": "McConnell retiring"
+  },
+  {
+   "state": "LA",
+   "incumbent": "Bill Cassidy",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Jamie Davis",
+   "rep": "Julia Letlow",
+   "rating": "Solid R",
+   "notes": "Cassidy lost renomination; Sabato: Lean R"
+  },
+  {
+   "state": "ME",
+   "incumbent": "Susan Collins",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Troy Jackson",
+   "rep": "Susan Collins",
+   "rating": "Toss-up",
+   "notes": "Jackson replaced Graham Platner as D nominee; Sabato: Lean D; Kalshi Nov 2: Jackson 73%"
+  },
+  {
+   "state": "MA",
+   "incumbent": "Ed Markey",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Ed Markey",
+   "rep": "John Deaton",
+   "otherNotable": "Shiva Ayyadurai (I)",
+   "rating": "Solid D"
+  },
+  {
+   "state": "MI",
+   "incumbent": "Gary Peters",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Abdul El-Sayed",
+   "rep": "Mike Rogers",
+   "rating": "Lean D",
+   "notes": "Peters retiring; Cook moved Toss-up -> Lean D Nov 2 after NYT/Siena poll"
+  },
+  {
+   "state": "MN",
+   "incumbent": "Tina Smith",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Peggy Flanagan",
+   "rep": "Michele Tafoya",
+   "rating": "Lean D",
+   "notes": "Smith retiring; Flanagan is DFL"
+  },
+  {
+   "state": "MS",
+   "incumbent": "Cindy Hyde-Smith",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Scott Colom",
+   "rep": "Cindy Hyde-Smith",
+   "otherNotable": "Ty Pinkins (I)",
+   "rating": "Likely R"
+  },
+  {
+   "state": "MT",
+   "incumbent": "Steve Daines",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Alani Bankhead",
+   "rep": "Kurt Alme",
+   "otherNotable": "Seth Bodnar (I)",
+   "rating": "Solid R",
+   "notes": "Daines retiring"
+  },
+  {
+   "state": "NE",
+   "incumbent": "Pete Ricketts",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "None (Democratic nominee withdrew)",
+   "rep": "Pete Ricketts",
+   "otherNotable": "Dan Osborn (I) - de facto opposition candidate",
+   "rating": "Lean R"
+  },
+  {
+   "state": "NH",
+   "incumbent": "Jeanne Shaheen",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Chris Pappas",
+   "rep": "John E. Sununu",
+   "rating": "Lean D",
+   "notes": "Shaheen retiring"
+  },
+  {
+   "state": "NJ",
+   "incumbent": "Cory Booker",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Cory Booker",
+   "rep": "Justin Murphy",
+   "rating": "Solid D"
+  },
+  {
+   "state": "NM",
+   "incumbent": "Ben Ray Lujan",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Ben Ray Lujan",
+   "rep": "Larry Marker",
+   "rating": "Solid D"
+  },
+  {
+   "state": "NC",
+   "incumbent": "Thom Tillis",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Roy Cooper",
+   "rep": "Michael Whatley",
+   "rating": "Likely D",
+   "notes": "Tillis retiring; rated as likely D flip"
+  },
+  {
+   "state": "OH",
+   "incumbent": "Jon Husted",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Sherrod Brown",
+   "rep": "Jon Husted",
+   "rating": "Toss-up",
+   "notes": "SPECIAL election (Vance seat, Class 3); Husted appointed Jan 2025; Sabato: Lean D; Kalshi Nov 2: Brown 71%"
+  },
+  {
+   "state": "OK",
+   "incumbent": "Alan Armstrong",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "N'Kiyla Jasmine Thomas",
+   "rep": "Kevin Hern",
+   "rating": "Solid R",
+   "notes": "Armstrong appointed 2026 after Markwayne Mullin resigned to lead DHS; interim appointee not running"
+  },
+  {
+   "state": "OR",
+   "incumbent": "Jeff Merkley",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Jeff Merkley",
+   "rep": "David Brock Smith",
+   "rating": "Solid D"
+  },
+  {
+   "state": "RI",
+   "incumbent": "Jack Reed",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Jack Reed",
+   "rep": "Raymond McKay",
+   "rating": "Solid D"
+  },
+  {
+   "state": "SC",
+   "incumbent": "Darline Graham",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Annie Andrews",
+   "rep": "Darline Graham",
+   "rating": "Lean R",
+   "notes": "Sen. Lindsey Graham died 2026; his sister Darline Graham appointed (sworn in Jul 14, 2026) and won GOP nomination in runoff; Kalshi Nov 2: Graham 67%"
+  },
+  {
+   "state": "SD",
+   "incumbent": "Mike Rounds",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "None",
+   "rep": "Mike Rounds",
+   "otherNotable": "Brian Bengs (I)",
+   "rating": "Solid R"
+  },
+  {
+   "state": "TN",
+   "incumbent": "Bill Hagerty",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Marquita Bradshaw",
+   "rep": "Bill Hagerty",
+   "rating": "Solid R"
+  },
+  {
+   "state": "TX",
+   "incumbent": "John Cornyn",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "James Talarico",
+   "rep": "Ken Paxton",
+   "rating": "Toss-up",
+   "notes": "Cornyn lost GOP runoff to Paxton; Sabato: Lean D"
+  },
+  {
+   "state": "VA",
+   "incumbent": "Mark Warner",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Mark Warner",
+   "rep": "Bert Mizusawa",
+   "rating": "Solid D"
+  },
+  {
+   "state": "WV",
+   "incumbent": "Shelley Moore Capito",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Rachel Fetty Anderson",
+   "rep": "Shelley Moore Capito",
+   "rating": "Solid R"
+  },
+  {
+   "state": "WY",
+   "incumbent": "Cynthia Lummis",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "James W. Byrd",
+   "rep": "Harriet Hageman",
+   "rating": "Solid R",
+   "notes": "Lummis retiring"
+  }
+ ],
+ "governorRaces": [
+  {
+   "state": "AL",
+   "incumbent": "Kay Ivey",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Doug Jones",
+   "rep": "Tommy Tuberville",
+   "rating": "Solid R"
+  },
+  {
+   "state": "AK",
+   "incumbent": "Mike Dunleavy",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Jonathan Kreiss-Tomkins",
+   "rep": "Multiple: Bernadette Wilson, Dave Bronson, Treg Taylor",
+   "rating": "Lean D",
+   "notes": "Top-four primary, ranked-choice general; three Republicans advanced (per MultiState; Taylor certification was disputed) - VERIFY final ballot"
+  },
+  {
+   "state": "AZ",
+   "incumbent": "Katie Hobbs",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Katie Hobbs",
+   "rep": "Andy Biggs",
+   "rating": "Likely D"
+  },
+  {
+   "state": "AR",
+   "incumbent": "Sarah Huckabee Sanders",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Fredrick Love",
+   "rep": "Sarah Huckabee Sanders",
+   "rating": "Solid R"
+  },
+  {
+   "state": "CA",
+   "incumbent": "Gavin Newsom",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Xavier Becerra",
+   "rep": "Steve Hilton",
+   "rating": "Solid D",
+   "notes": "Top-two general"
+  },
+  {
+   "state": "CO",
+   "incumbent": "Jared Polis",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Phil Weiser",
+   "rep": "Victor Marx",
+   "rating": "Solid D"
+  },
+  {
+   "state": "CT",
+   "incumbent": "Ned Lamont",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Ned Lamont",
+   "rep": "Ryan Fazio",
+   "rating": "Solid D"
+  },
+  {
+   "state": "FL",
+   "incumbent": "Ron DeSantis",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "David Jolly",
+   "rep": "Byron Donalds",
+   "rating": "Lean R",
+   "notes": "Kalshi Nov 2: Donalds 62%"
+  },
+  {
+   "state": "GA",
+   "incumbent": "Brian Kemp",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Keisha Lance Bottoms",
+   "rep": "Rick Jackson",
+   "rating": "Toss-up",
+   "notes": "Sabato: Lean D; Kalshi Nov 2: Bottoms 68%"
+  },
+  {
+   "state": "HI",
+   "incumbent": "Josh Green",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Josh Green",
+   "rep": "Gary Cordery",
+   "rating": "Solid D"
+  },
+  {
+   "state": "ID",
+   "incumbent": "Brad Little",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Terri Pickens",
+   "rep": "Brad Little",
+   "rating": "Solid R"
+  },
+  {
+   "state": "IL",
+   "incumbent": "JB Pritzker",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "JB Pritzker",
+   "rep": "Darren Bailey",
+   "rating": "Solid D"
+  },
+  {
+   "state": "IA",
+   "incumbent": "Kim Reynolds",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Rob Sand",
+   "rep": "Zach Lahn",
+   "rating": "Lean D"
+  },
+  {
+   "state": "KS",
+   "incumbent": "Laura Kelly",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Cindy Holscher",
+   "rep": "Ty Masterson",
+   "rating": "Toss-up",
+   "notes": "Sabato: Lean R"
+  },
+  {
+   "state": "ME",
+   "incumbent": "Janet Mills",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Hannah Pingree",
+   "rep": "Robert B. Charles",
+   "otherNotable": "Rick Bennett (I)",
+   "rating": "Solid D"
+  },
+  {
+   "state": "MD",
+   "incumbent": "Wes Moore",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Wes Moore",
+   "rep": "Dan Cox",
+   "rating": "Solid D"
+  },
+  {
+   "state": "MA",
+   "incumbent": "Maura Healey",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Maura Healey",
+   "rep": "Mike Minogue",
+   "rating": "Solid D"
+  },
+  {
+   "state": "MI",
+   "incumbent": "Gretchen Whitmer",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Jocelyn Benson",
+   "rep": "John James",
+   "rating": "Lean D"
+  },
+  {
+   "state": "MN",
+   "incumbent": "Tim Walz",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Amy Klobuchar",
+   "rep": "Lisa Demuth",
+   "rating": "Solid D",
+   "notes": "Walz retiring; Klobuchar (DFL) running"
+  },
+  {
+   "state": "NE",
+   "incumbent": "Jim Pillen",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Lynne Walz",
+   "rep": "Jim Pillen",
+   "rating": "Lean R"
+  },
+  {
+   "state": "NV",
+   "incumbent": "Joe Lombardo",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Aaron Ford",
+   "rep": "Joe Lombardo",
+   "rating": "Toss-up",
+   "notes": "Sabato: Lean D"
+  },
+  {
+   "state": "NH",
+   "incumbent": "Kelly Ayotte",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Cinde Warmington",
+   "rep": "Kelly Ayotte",
+   "rating": "Likely R"
+  },
+  {
+   "state": "NM",
+   "incumbent": "Michelle Lujan Grisham",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Deb Haaland",
+   "rep": "Gregg Hull",
+   "rating": "Solid D"
+  },
+  {
+   "state": "NY",
+   "incumbent": "Kathy Hochul",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Kathy Hochul",
+   "rep": "Bruce Blakeman",
+   "rating": "Solid D"
+  },
+  {
+   "state": "OH",
+   "incumbent": "Mike DeWine",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Amy Acton",
+   "rep": "Vivek Ramaswamy",
+   "rating": "Lean D"
+  },
+  {
+   "state": "OK",
+   "incumbent": "Kevin Stitt",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Cyndi Munson",
+   "rep": "Mike Mazzei",
+   "rating": "Likely R"
+  },
+  {
+   "state": "OR",
+   "incumbent": "Tina Kotek",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Tina Kotek",
+   "rep": "Christine Drazan",
+   "rating": "Lean D"
+  },
+  {
+   "state": "PA",
+   "incumbent": "Josh Shapiro",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Josh Shapiro",
+   "rep": "Stacy Garrity",
+   "rating": "Solid D"
+  },
+  {
+   "state": "RI",
+   "incumbent": "Dan McKee",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Helena Foulkes",
+   "rep": "Aaron Guckian",
+   "otherNotable": "Ken Block (I)",
+   "rating": "Solid D",
+   "notes": "McKee lost Sept 9 primary to Foulkes; Guckian GOP nominee (recount filed by Elaine Pelino); Block polling 2nd"
+  },
+  {
+   "state": "SC",
+   "incumbent": "Henry McMaster",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Jermaine Johnson",
+   "rep": "Alan Wilson",
+   "rating": "Solid R"
+  },
+  {
+   "state": "SD",
+   "incumbent": "Larry Rhoden",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Dan Ahlers",
+   "rep": "Larry Rhoden",
+   "rating": "Solid R"
+  },
+  {
+   "state": "TN",
+   "incumbent": "Bill Lee",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Jerri Green",
+   "rep": "Marsha Blackburn",
+   "rating": "Solid R"
+  },
+  {
+   "state": "TX",
+   "incumbent": "Greg Abbott",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Gina Hinojosa",
+   "rep": "Greg Abbott",
+   "rating": "Lean R",
+   "notes": "Kalshi Nov 2: Abbott 60%"
+  },
+  {
+   "state": "VT",
+   "incumbent": "Phil Scott",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Amanda Janoo",
+   "rep": "Phil Scott",
+   "rating": "Likely R"
+  },
+  {
+   "state": "WI",
+   "incumbent": "Tony Evers",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "David Crowley",
+   "rep": "Tom Tiffany",
+   "rating": "Lean D"
+  },
+  {
+   "state": "WY",
+   "incumbent": "Mark Gordon",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Kenneth Casner",
+   "rep": "Eric Barlow",
+   "rating": "Solid R"
+  }
+ ],
+ "houseRaces": [
+  {
+   "state": "AL",
+   "district": 2,
+   "incumbent": "Shomari Figures",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Shomari Figures",
+   "rep": "Rhett Marques",
+   "rating": "Lean R",
+   "notes": "Redrawn (new AL map); Sabato Lean D"
+  },
+  {
+   "state": "AK",
+   "district": 0,
+   "incumbent": "Nick Begich III",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Eric Hafner (nominal)",
+   "rep": "Nick Begich III",
+   "otherNotable": "Bill Hill (I) - main challenger",
+   "rating": "Lean R"
+  },
+  {
+   "state": "AZ",
+   "district": 1,
+   "incumbent": "David Schweikert",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Amish Shah",
+   "rep": "Jay Feely",
+   "rating": "Lean D"
+  },
+  {
+   "state": "AZ",
+   "district": 2,
+   "incumbent": "Eli Crane",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Jonathan Nez",
+   "rep": "Eli Crane",
+   "rating": "Lean R"
+  },
+  {
+   "state": "AZ",
+   "district": 6,
+   "incumbent": "Juan Ciscomani",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "JoAnna Mendoza",
+   "rep": "Juan Ciscomani",
+   "rating": "Lean D"
+  },
+  {
+   "state": "CA",
+   "district": 13,
+   "incumbent": "Adam Gray",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Adam Gray",
+   "rep": "Kevin Lincoln",
+   "rating": "Likely D"
+  },
+  {
+   "state": "CA",
+   "district": 22,
+   "incumbent": "David Valadao",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Randy Villegas",
+   "rep": "David Valadao",
+   "rating": "Toss-up",
+   "notes": "Prop 50 map; Sabato Lean D"
+  },
+  {
+   "state": "CA",
+   "district": 45,
+   "incumbent": "Derek Tran",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Derek Tran",
+   "rep": "Chuong Vo",
+   "rating": "Likely D"
+  },
+  {
+   "state": "CA",
+   "district": 48,
+   "incumbent": "Darrell Issa",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Marni von Wilpert",
+   "rep": "Jim Desmond",
+   "rating": "Lean D"
+  },
+  {
+   "state": "CO",
+   "district": 3,
+   "incumbent": "Jeff Hurd",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Dwayne Romero",
+   "rep": "Jeff Hurd",
+   "rating": "Likely R"
+  },
+  {
+   "state": "CO",
+   "district": 4,
+   "incumbent": "Lauren Boebert",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Eileen Laubacher",
+   "rep": "Lauren Boebert",
+   "rating": "Lean R"
+  },
+  {
+   "state": "CO",
+   "district": 5,
+   "incumbent": "Jeff Crank",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Jessica Killin",
+   "rep": "Jeff Crank",
+   "rating": "Toss-up"
+  },
+  {
+   "state": "CO",
+   "district": 8,
+   "incumbent": "Gabe Evans",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Manny Rutinel",
+   "rep": "Gabe Evans",
+   "rating": "Lean D"
+  },
+  {
+   "state": "FL",
+   "district": 7,
+   "incumbent": "Cory Mills",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Bale Dalton",
+   "rep": "Ryan Elijah",
+   "rating": "Lean R",
+   "notes": "Mills lost renomination"
+  },
+  {
+   "state": "FL",
+   "district": 9,
+   "incumbent": "Darren Soto",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Darren Soto",
+   "rep": "Dan Green",
+   "rating": "Lean R",
+   "notes": "New FL map"
+  },
+  {
+   "state": "FL",
+   "district": 13,
+   "incumbent": "Anna Paulina Luna",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Leela Gray",
+   "rep": "Anna Paulina Luna",
+   "rating": "Lean R"
+  },
+  {
+   "state": "FL",
+   "district": 14,
+   "incumbent": "Kathy Castor",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Kathy Castor",
+   "rep": "Mike Beltran",
+   "rating": "Toss-up",
+   "notes": "New FL map"
+  },
+  {
+   "state": "FL",
+   "district": 22,
+   "incumbent": "None (new seat)",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Pia Dandiya",
+   "rep": "Casey Askar",
+   "rating": "Toss-up",
+   "notes": "New seat under May 2026 FL map; incumbentParty is nominal"
+  },
+  {
+   "state": "FL",
+   "district": 25,
+   "incumbent": "Jared Moskowitz",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Jared Moskowitz",
+   "rep": "Scott Singer",
+   "rating": "Lean D"
+  },
+  {
+   "state": "FL",
+   "district": 27,
+   "incumbent": "Maria Elvira Salazar",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Eliott Rodriguez",
+   "rep": "Maria Elvira Salazar",
+   "rating": "Lean R"
+  },
+  {
+   "state": "IN",
+   "district": 5,
+   "incumbent": "Victoria Spartz",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "J.D. Ford",
+   "rep": "Victoria Spartz",
+   "rating": "Lean R"
+  },
+  {
+   "state": "IA",
+   "district": 1,
+   "incumbent": "Mariannette Miller-Meeks",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Christina Bohannan",
+   "rep": "Mariannette Miller-Meeks",
+   "rating": "Lean D"
+  },
+  {
+   "state": "IA",
+   "district": 2,
+   "incumbent": "Ashley Hinson",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Lindsay James",
+   "rep": "Joe Mitchell",
+   "rating": "Toss-up",
+   "notes": "Hinson running for Senate"
+  },
+  {
+   "state": "IA",
+   "district": 3,
+   "incumbent": "Zach Nunn",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Sarah Trone Garriott",
+   "rep": "Zach Nunn",
+   "rating": "Lean D"
+  },
+  {
+   "state": "KY",
+   "district": 6,
+   "incumbent": "Andy Barr",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Zach Dembo",
+   "rep": "Ralph Alvarado",
+   "rating": "Toss-up",
+   "notes": "Barr running for Senate; Sabato moved to Lean R Nov 2"
+  },
+  {
+   "state": "ME",
+   "district": 2,
+   "incumbent": "Jared Golden",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Matt Dunlap",
+   "rep": "Paul LePage",
+   "rating": "Lean R",
+   "notes": "Golden retiring"
+  },
+  {
+   "state": "MI",
+   "district": 4,
+   "incumbent": "Bill Huizenga",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Sean McCann",
+   "rep": "Bill Huizenga",
+   "rating": "Toss-up"
+  },
+  {
+   "state": "MI",
+   "district": 7,
+   "incumbent": "Tom Barrett",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "William Lawrence",
+   "rep": "Tom Barrett",
+   "rating": "Toss-up",
+   "notes": "D nominee name from political.org - verify"
+  },
+  {
+   "state": "MI",
+   "district": 10,
+   "incumbent": "John James",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Christina Hines",
+   "rep": "Mike Bouchard Jr.",
+   "rating": "Toss-up",
+   "notes": "James running for governor"
+  },
+  {
+   "state": "MN",
+   "district": 1,
+   "incumbent": "Brad Finstad",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Jake Johnson",
+   "rep": "Brad Finstad",
+   "rating": "Lean R"
+  },
+  {
+   "state": "MO",
+   "district": 2,
+   "incumbent": "Ann Wagner",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Fred Wellman",
+   "rep": "Ann Wagner",
+   "rating": "Likely R"
+  },
+  {
+   "state": "MT",
+   "district": 1,
+   "incumbent": "Ryan Zinke",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Sam Forstag",
+   "rep": "Aaron Flint",
+   "rating": "Toss-up",
+   "notes": "Zinke retiring"
+  },
+  {
+   "state": "NE",
+   "district": 2,
+   "incumbent": "Don Bacon",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Denise Powell",
+   "rep": "Brinker Harding",
+   "rating": "Likely D",
+   "notes": "Bacon retiring"
+  },
+  {
+   "state": "NV",
+   "district": 1,
+   "incumbent": "Dina Titus",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Dina Titus",
+   "rep": "Carrie Ann Buck",
+   "rating": "Likely D"
+  },
+  {
+   "state": "NV",
+   "district": 2,
+   "incumbent": "Mark Amodei",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Teresa Benitez-Thompson",
+   "rep": "David Flippo",
+   "rating": "Lean R"
+  },
+  {
+   "state": "NV",
+   "district": 3,
+   "incumbent": "Susie Lee",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Susie Lee",
+   "rep": "Marty O'Donnell",
+   "rating": "Likely D"
+  },
+  {
+   "state": "NH",
+   "district": 1,
+   "incumbent": "Chris Pappas",
+   "incumbentParty": "D",
+   "open": true,
+   "dem": "Stefany Shaheen",
+   "rep": "Anthony DiLorenzo",
+   "rating": "Likely D",
+   "notes": "Pappas running for Senate"
+  },
+  {
+   "state": "NJ",
+   "district": 2,
+   "incumbent": "Jeff Van Drew",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Zack Mullock",
+   "rep": "Jeff Van Drew",
+   "rating": "Likely R"
+  },
+  {
+   "state": "NJ",
+   "district": 7,
+   "incumbent": "Thomas Kean Jr.",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Rebecca Bennett",
+   "rep": "Thomas Kean Jr.",
+   "rating": "Lean D"
+  },
+  {
+   "state": "NM",
+   "district": 2,
+   "incumbent": "Gabe Vasquez",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Gabe Vasquez",
+   "rep": "Greg Cunningham",
+   "rating": "Lean D"
+  },
+  {
+   "state": "NY",
+   "district": 3,
+   "incumbent": "Tom Suozzi",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Tom Suozzi",
+   "rep": "Michael LiPetri Jr.",
+   "rating": "Likely D"
+  },
+  {
+   "state": "NY",
+   "district": 4,
+   "incumbent": "Laura Gillen",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Laura Gillen",
+   "rep": "Jeanine Driscoll",
+   "rating": "Likely D"
+  },
+  {
+   "state": "NY",
+   "district": 17,
+   "incumbent": "Mike Lawler",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Cait Conley",
+   "rep": "Mike Lawler",
+   "rating": "Toss-up"
+  },
+  {
+   "state": "NY",
+   "district": 19,
+   "incumbent": "Josh Riley",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Josh Riley",
+   "rep": "Peter Oberacker",
+   "rating": "Likely D"
+  },
+  {
+   "state": "NY",
+   "district": 21,
+   "incumbent": "Elise Stefanik",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Blake Gendebien",
+   "rep": "Anthony Constantino",
+   "rating": "Lean R"
+  },
+  {
+   "state": "NC",
+   "district": 1,
+   "incumbent": "Don Davis",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Don Davis",
+   "rep": "Laurie Buckhout",
+   "rating": "Toss-up",
+   "notes": "Redrawn to be more R"
+  },
+  {
+   "state": "NC",
+   "district": 11,
+   "incumbent": "Chuck Edwards",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Jamie Ager",
+   "rep": "Jennifer Balkcom",
+   "rating": "Lean D",
+   "notes": "Edwards ended campaign"
+  },
+  {
+   "state": "OH",
+   "district": 1,
+   "incumbent": "Greg Landsman",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Greg Landsman",
+   "rep": "Eric Conroy",
+   "rating": "Likely D"
+  },
+  {
+   "state": "OH",
+   "district": 7,
+   "incumbent": "Max Miller",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Brian Poindexter",
+   "rep": "Max Miller",
+   "rating": "Toss-up"
+  },
+  {
+   "state": "OH",
+   "district": 9,
+   "incumbent": "Marcy Kaptur",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Marcy Kaptur",
+   "rep": "Derek Merrin",
+   "rating": "Lean D"
+  },
+  {
+   "state": "OH",
+   "district": 10,
+   "incumbent": "Mike Turner",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Kristina Knickerbocker",
+   "rep": "Mike Turner",
+   "rating": "Lean R"
+  },
+  {
+   "state": "OH",
+   "district": 15,
+   "incumbent": "Mike Carey",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Don Leonard",
+   "rep": "Mike Carey",
+   "rating": "Lean R"
+  },
+  {
+   "state": "PA",
+   "district": 1,
+   "incumbent": "Brian Fitzpatrick",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Bob Harvie",
+   "rep": "Brian Fitzpatrick",
+   "rating": "Toss-up"
+  },
+  {
+   "state": "PA",
+   "district": 7,
+   "incumbent": "Ryan Mackenzie",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Bob Brooks",
+   "rep": "Ryan Mackenzie",
+   "rating": "Lean D"
+  },
+  {
+   "state": "PA",
+   "district": 8,
+   "incumbent": "Rob Bresnahan",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Paige Cognetti",
+   "rep": "Rob Bresnahan",
+   "rating": "Lean D"
+  },
+  {
+   "state": "PA",
+   "district": 10,
+   "incumbent": "Scott Perry",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Janelle Stelson",
+   "rep": "Scott Perry",
+   "rating": "Lean D"
+  },
+  {
+   "state": "SC",
+   "district": 1,
+   "incumbent": "Nancy Mace",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Nancy Lacore",
+   "rep": "Jenny Costa Honeycutt",
+   "rating": "Toss-up",
+   "notes": "Mace ran for governor"
+  },
+  {
+   "state": "TX",
+   "district": 9,
+   "incumbent": "None (new seat)",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Leticia Gutierrez",
+   "rep": "Alex Mealer",
+   "rating": "Likely R",
+   "notes": "New TX map"
+  },
+  {
+   "state": "TX",
+   "district": 15,
+   "incumbent": "Monica De La Cruz",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Bobby Pulido",
+   "rep": "Monica De La Cruz",
+   "rating": "Toss-up"
+  },
+  {
+   "state": "TX",
+   "district": 23,
+   "incumbent": "Vacant (Tony Gonzales resigned Apr 14 2026)",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Katy Padilla Stout",
+   "rep": "Brandon Herrera",
+   "rating": "Lean R"
+  },
+  {
+   "state": "TX",
+   "district": 28,
+   "incumbent": "Henry Cuellar",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Henry Cuellar",
+   "rep": "Tano Tijerina",
+   "rating": "Likely D"
+  },
+  {
+   "state": "TX",
+   "district": 34,
+   "incumbent": "Vicente Gonzalez",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Vicente Gonzalez",
+   "rep": "Eric Flores",
+   "rating": "Lean D"
+  },
+  {
+   "state": "TX",
+   "district": 35,
+   "incumbent": "None (new seat)",
+   "incumbentParty": "R",
+   "open": true,
+   "dem": "Johnny C. Garcia",
+   "rep": "Carlos De La Cruz",
+   "rating": "Toss-up",
+   "notes": "New TX map"
+  },
+  {
+   "state": "VA",
+   "district": 1,
+   "incumbent": "Rob Wittman",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Shannon Taylor",
+   "rep": "Rob Wittman",
+   "rating": "Toss-up"
+  },
+  {
+   "state": "VA",
+   "district": 2,
+   "incumbent": "Jen Kiggans",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Elaine Luria",
+   "rep": "Jen Kiggans",
+   "rating": "Lean D"
+  },
+  {
+   "state": "VA",
+   "district": 5,
+   "incumbent": "John McGuire",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Tom Perriello",
+   "rep": "John McGuire",
+   "rating": "Lean R",
+   "notes": "IE: Lean D"
+  },
+  {
+   "state": "WA",
+   "district": 3,
+   "incumbent": "Marie Gluesenkamp Perez",
+   "incumbentParty": "D",
+   "open": false,
+   "dem": "Marie Gluesenkamp Perez",
+   "rep": "John Braun",
+   "rating": "Lean D",
+   "notes": "Sabato: Toss-up"
+  },
+  {
+   "state": "WI",
+   "district": 1,
+   "incumbent": "Bryan Steil",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Mitchell Berman",
+   "rep": "Bryan Steil",
+   "rating": "Lean R"
+  },
+  {
+   "state": "WI",
+   "district": 3,
+   "incumbent": "Derrick Van Orden",
+   "incumbentParty": "R",
+   "open": false,
+   "dem": "Rebecca Cooke",
+   "rep": "Derrick Van Orden",
+   "rating": "Lean D"
+  }
+ ],
+ "governorComposition": {
+  "R": 26,
+  "D": 24,
+  "seatsUp": 36,
+  "seatsUpByParty": {
+   "R": 18,
+   "D": 18
+  }
+ },
+ "raterTotals": {
+  "house": {
+   "Cook": {
+    "date": "2026-11-02",
+    "D": 222,
+    "R": 195,
+    "tossup": 18
+   },
+   "InsideElections": {
+    "date": "2026-10-29",
+    "D": 224,
+    "R": 198,
+    "tossup": 13
+   },
+   "Sabato": {
+    "date": "2026-11-02",
+    "D": 239,
+    "R": 196,
+    "tossup": 0
+   },
+   "SplitTicket": {
+    "date": "2026-11-02",
+    "D": 225,
+    "R": 197,
+    "tossup": 13
+   },
+   "SilverBulletin": {
+    "date": "2026-11-02",
+    "D": 230,
+    "R": 196,
+    "tossup": 9
+   },
+   "Economist": {
+    "date": "2026-11-02",
+    "D": 230,
+    "R": 190,
+    "tossup": 15
+   },
+   "DDHQ": {
+    "date": "2026-11-02",
+    "D": 223,
+    "R": 203,
+    "tossup": 9
+   },
+   "RCP": {
+    "date": "2026-11-02",
+    "D": 226,
+    "R": 189,
+    "tossup": 20
+   }
+  },
+  "senateCook": {
+   "date": "2026-11-02",
+   "SolidD": 9,
+   "LikelyD": 2,
+   "LeanD": 3,
+   "Tossup": 6,
+   "LeanR": 2,
+   "LikelyR": 2,
+   "SolidR": 11
+  }
+ },
+ "genericBallot": {
+  "RCP": {
+   "margin": "D+8.3",
+   "asOf": "2026-10-29",
+   "source": "https://www.realclearpolitics.com/articles/2026/10/29/democrats_poised_for_largest_generic_ballot_win_since_obamas_2008_blowout_154628.html"
+  },
+  "other": {
+   "margin": "D+8.6",
+   "source": "uspollingdata.com (methodology unclear)"
+  }
+ },
+ "approval": {
+  "RCP": {
+   "approve": 38.4,
+   "disapprove": 59.7,
+   "asOf": "2026-10-30"
+  },
+  "SilverBulletin": {
+   "approve": 37.3,
+   "disapprove": 59.9,
+   "asOf": "2026-10-30"
+  },
+  "NYT": {
+   "approve": 37,
+   "asOf": "2026-10-30"
+  },
+  "source": "https://www.newsweek.com/trump-approval-rating-final-weeks-before-midterms-12638540"
+ },
+ "markets": {
+  "asOf": "2026-11-02T12:00:00-05:00",
+  "kalshi": {
+   "houseDem": 94,
+   "senateDem": 74,
+   "balanceOfPower": {
+    "demSweep": 74,
+    "demHouseRepSenate": 21,
+    "repSweep": 6,
+    "repHouseDemSenate": 1
+   }
+  },
+  "polymarket": {
+   "houseDem": 95,
+   "senateDem": 72
+  },
+  "kalshiRaces": {
+   "senate": {
+    "IA": {
+     "dem": 52,
+     "rep": 48
+    },
+    "KS": {
+     "dem": 63,
+     "rep": 37
+    },
+    "SC": {
+     "dem": 33,
+     "rep": 67
+    },
+    "OH": {
+     "dem": 71,
+     "rep": 29
+    },
+    "ME": {
+     "dem": 73,
+     "rep": 27
+    },
+    "MI": {
+     "dem": 78
+    }
+   },
+   "governor": {
+    "FL": {
+     "dem": 38,
+     "rep": 62
+    },
+    "TX": {
+     "dem": 40,
+     "rep": 60
+    },
+    "GA": {
+     "dem": 68,
+     "rep": 32
+    }
+   }
+  },
+  "sources": [
+   "https://news.kalshi.com/p/final-2026-midterm-odds",
+   "https://qz.com/prediction-markets-democrats-senate-kalshi-odds-110226"
+  ]
+ },
+ "pollClosings": {
+  "AL": "20:00 ET",
+  "AK": "01:00 ET",
+  "AZ": "21:00 ET",
+  "AR": "20:30 ET",
+  "CA": "23:00 ET",
+  "CO": "21:00 ET",
+  "CT": "20:00 ET",
+  "DE": "20:00 ET",
+  "DC": "20:00 ET",
+  "FL": "20:00 ET",
+  "GA": "19:00 ET",
+  "HI": "00:00 ET",
+  "ID": "23:00 ET",
+  "IL": "20:00 ET",
+  "IN": "19:00 ET",
+  "IA": "21:00 ET",
+  "KS": "21:00 ET",
+  "KY": "19:00 ET",
+  "LA": "21:00 ET",
+  "ME": "20:00 ET",
+  "MD": "20:00 ET",
+  "MA": "20:00 ET",
+  "MI": "21:00 ET",
+  "MN": "21:00 ET",
+  "MS": "20:00 ET",
+  "MO": "20:00 ET",
+  "MT": "22:00 ET",
+  "NE": "21:00 ET",
+  "NV": "22:00 ET",
+  "NH": "20:00 ET",
+  "NJ": "20:00 ET",
+  "NM": "21:00 ET",
+  "NY": "21:00 ET",
+  "NC": "19:30 ET",
+  "ND": "23:00 ET",
+  "OH": "19:30 ET",
+  "OK": "20:00 ET",
+  "OR": "23:00 ET",
+  "PA": "20:00 ET",
+  "RI": "20:00 ET",
+  "SC": "19:00 ET",
+  "SD": "21:00 ET",
+  "TN": "20:00 ET",
+  "TX": "21:00 ET",
+  "UT": "22:00 ET",
+  "VT": "19:00 ET",
+  "VA": "19:00 ET",
+  "WA": "23:00 ET",
+  "WV": "19:30 ET",
+  "WI": "21:00 ET",
+  "WY": "21:00 ET"
+ },
+ "pollClosingsFirst": {
+  "FL": "19:00 ET",
+  "IN": "18:00 ET",
+  "KY": "18:00 ET",
+  "KS": "20:00 ET",
+  "MI": "20:00 ET",
+  "SD": "20:00 ET",
+  "TX": "20:00 ET",
+  "ID": "22:00 ET",
+  "ND": "22:00 ET",
+  "AK": "00:00 ET"
+ },
+ "pres2024": {
+  "AK": {
+   "ev": 3,
+   "demPct": 41.41,
+   "repPct": 54.54,
+   "winner": "R",
+   "margin": 13.13
+  },
+  "AL": {
+   "ev": 9,
+   "demPct": 34.1,
+   "repPct": 64.57,
+   "winner": "R",
+   "margin": 30.47
+  },
+  "AR": {
+   "ev": 6,
+   "demPct": 33.56,
+   "repPct": 64.2,
+   "winner": "R",
+   "margin": 30.64
+  },
+  "AZ": {
+   "ev": 11,
+   "demPct": 46.69,
+   "repPct": 52.22,
+   "winner": "R",
+   "margin": 5.53
+  },
+  "CA": {
+   "ev": 54,
+   "demPct": 58.47,
+   "repPct": 38.33,
+   "winner": "D",
+   "margin": -20.14
+  },
+  "CO": {
+   "ev": 10,
+   "demPct": 54.13,
+   "repPct": 43.14,
+   "winner": "D",
+   "margin": -10.99
+  },
+  "CT": {
+   "ev": 7,
+   "demPct": 56.4,
+   "repPct": 41.89,
+   "winner": "D",
+   "margin": -14.51
+  },
+  "DC": {
+   "ev": 3,
+   "demPct": 90.28,
+   "repPct": 6.47,
+   "winner": "D",
+   "margin": -83.81
+  },
+  "DE": {
+   "ev": 3,
+   "demPct": 56.49,
+   "repPct": 41.79,
+   "winner": "D",
+   "margin": -14.7
+  },
+  "FL": {
+   "ev": 30,
+   "demPct": 42.99,
+   "repPct": 56.09,
+   "winner": "R",
+   "margin": 13.1
+  },
+  "GA": {
+   "ev": 16,
+   "demPct": 48.53,
+   "repPct": 50.72,
+   "winner": "R",
+   "margin": 2.19
+  },
+  "HI": {
+   "ev": 4,
+   "demPct": 60.59,
+   "repPct": 37.48,
+   "winner": "D",
+   "margin": -23.11
+  },
+  "IA": {
+   "ev": 6,
+   "demPct": 42.52,
+   "repPct": 55.73,
+   "winner": "R",
+   "margin": 13.21
+  },
+  "ID": {
+   "ev": 4,
+   "demPct": 30.38,
+   "repPct": 66.87,
+   "winner": "R",
+   "margin": 36.49
+  },
+  "IL": {
+   "ev": 19,
+   "demPct": 54.37,
+   "repPct": 43.47,
+   "winner": "D",
+   "margin": -10.9
+  },
+  "IN": {
+   "ev": 11,
+   "demPct": 39.62,
+   "repPct": 58.58,
+   "winner": "R",
+   "margin": 18.96
+  },
+  "KS": {
+   "ev": 6,
+   "demPct": 41.04,
+   "repPct": 57.16,
+   "winner": "R",
+   "margin": 16.12
+  },
+  "KY": {
+   "ev": 8,
+   "demPct": 33.94,
+   "repPct": 64.47,
+   "winner": "R",
+   "margin": 30.53
+  },
+  "LA": {
+   "ev": 8,
+   "demPct": 38.21,
+   "repPct": 60.22,
+   "winner": "R",
+   "margin": 22.01
+  },
+  "MA": {
+   "ev": 11,
+   "demPct": 61.22,
+   "repPct": 36.02,
+   "winner": "D",
+   "margin": -25.2
+  },
+  "MD": {
+   "ev": 10,
+   "demPct": 62.62,
+   "repPct": 34.08,
+   "winner": "D",
+   "margin": -28.54
+  },
+  "ME": {
+   "ev": 4,
+   "demPct": 52.4,
+   "repPct": 45.46,
+   "winner": "D",
+   "notes": "Statewide Harris; ME-2 (1 EV) went Trump -> Harris 3, Trump 1",
+   "margin": -6.94
+  },
+  "MI": {
+   "ev": 15,
+   "demPct": 48.31,
+   "repPct": 49.73,
+   "winner": "R",
+   "margin": 1.42
+  },
+  "MN": {
+   "ev": 10,
+   "demPct": 50.92,
+   "repPct": 46.68,
+   "winner": "D",
+   "margin": -4.24
+  },
+  "MO": {
+   "ev": 10,
+   "demPct": 40.08,
+   "repPct": 58.49,
+   "winner": "R",
+   "margin": 18.41
+  },
+  "MS": {
+   "ev": 6,
+   "demPct": 38.0,
+   "repPct": 60.89,
+   "winner": "R",
+   "margin": 22.89
+  },
+  "MT": {
+   "ev": 4,
+   "demPct": 38.46,
+   "repPct": 58.39,
+   "winner": "R",
+   "margin": 19.93
+  },
+  "NC": {
+   "ev": 16,
+   "demPct": 47.65,
+   "repPct": 50.86,
+   "winner": "R",
+   "margin": 3.21
+  },
+  "ND": {
+   "ev": 3,
+   "demPct": 30.51,
+   "repPct": 66.96,
+   "winner": "R",
+   "margin": 36.45
+  },
+  "NE": {
+   "ev": 5,
+   "demPct": 38.86,
+   "repPct": 59.32,
+   "winner": "R",
+   "notes": "Statewide Trump; NE-2 (1 EV) went Harris -> Trump 4, Harris 1",
+   "margin": 20.46
+  },
+  "NH": {
+   "ev": 4,
+   "demPct": 50.65,
+   "repPct": 47.87,
+   "winner": "D",
+   "margin": -2.78
+  },
+  "NJ": {
+   "ev": 14,
+   "demPct": 51.97,
+   "repPct": 46.06,
+   "winner": "D",
+   "margin": -5.91
+  },
+  "NM": {
+   "ev": 5,
+   "demPct": 51.85,
+   "repPct": 45.85,
+   "winner": "D",
+   "margin": -6.0
+  },
+  "NV": {
+   "ev": 6,
+   "demPct": 47.49,
+   "repPct": 50.59,
+   "winner": "R",
+   "margin": 3.1
+  },
+  "NY": {
+   "ev": 28,
+   "demPct": 55.91,
+   "repPct": 43.31,
+   "winner": "D",
+   "margin": -12.6
+  },
+  "OH": {
+   "ev": 17,
+   "demPct": 43.93,
+   "repPct": 55.14,
+   "winner": "R",
+   "margin": 11.21
+  },
+  "OK": {
+   "ev": 7,
+   "demPct": 31.9,
+   "repPct": 66.16,
+   "winner": "R",
+   "margin": 34.26
+  },
+  "OR": {
+   "ev": 8,
+   "demPct": 55.27,
+   "repPct": 40.97,
+   "winner": "D",
+   "margin": -14.3
+  },
+  "PA": {
+   "ev": 19,
+   "demPct": 48.66,
+   "repPct": 50.37,
+   "winner": "R",
+   "margin": 1.71
+  },
+  "RI": {
+   "ev": 4,
+   "demPct": 55.54,
+   "repPct": 41.76,
+   "winner": "D",
+   "margin": -13.78
+  },
+  "SC": {
+   "ev": 9,
+   "demPct": 40.36,
+   "repPct": 58.23,
+   "winner": "R",
+   "margin": 17.87
+  },
+  "SD": {
+   "ev": 3,
+   "demPct": 34.24,
+   "repPct": 63.43,
+   "winner": "R",
+   "margin": 29.19
+  },
+  "TN": {
+   "ev": 11,
+   "demPct": 34.47,
+   "repPct": 64.19,
+   "winner": "R",
+   "margin": 29.72
+  },
+  "TX": {
+   "ev": 40,
+   "demPct": 42.46,
+   "repPct": 56.14,
+   "winner": "R",
+   "margin": 13.68
+  },
+  "UT": {
+   "ev": 6,
+   "demPct": 37.79,
+   "repPct": 59.38,
+   "winner": "R",
+   "margin": 21.59
+  },
+  "VA": {
+   "ev": 13,
+   "demPct": 51.83,
+   "repPct": 46.05,
+   "winner": "D",
+   "margin": -5.78
+  },
+  "VT": {
+   "ev": 3,
+   "demPct": 63.83,
+   "repPct": 32.32,
+   "winner": "D",
+   "margin": -31.51
+  },
+  "WA": {
+   "ev": 12,
+   "demPct": 57.23,
+   "repPct": 39.01,
+   "winner": "D",
+   "margin": -18.22
+  },
+  "WI": {
+   "ev": 10,
+   "demPct": 48.74,
+   "repPct": 49.6,
+   "winner": "R",
+   "margin": 0.86
+  },
+  "WV": {
+   "ev": 4,
+   "demPct": 28.1,
+   "repPct": 69.97,
+   "winner": "R",
+   "margin": 41.87
+  },
+  "WY": {
+   "ev": 3,
+   "demPct": 25.84,
+   "repPct": 71.6,
+   "winner": "R",
+   "margin": 45.76
+  }
+ },
+ "pres2024National": {
+  "repEV": 312,
+  "demEV": 226,
+  "repPct": 49.8,
+  "demPct": 48.3,
+  "repVotes": 77302580,
+  "demVotes": 75017613
+ }
+}

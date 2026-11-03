@@ -1,0 +1,227 @@
+/* USMap — owned by Map agent. Uses tokens from src/styles/tokens.css */
+.usmap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 975 / 610;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.usmap-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ---- geo ---- */
+.usmap-geo {
+  transition: opacity 0.55s ease;
+}
+.usmap.is-hex .usmap-geo {
+  opacity: 0;
+  pointer-events: none;
+}
+.usmap-state {
+  stroke: none;
+  transition: fill 0.6s ease, opacity 0.35s ease, filter 0.2s ease;
+  outline: none;
+}
+.usmap.is-clickable .usmap-state,
+.usmap.is-clickable .usmap-hex,
+.usmap.is-clickable .usmap-chip {
+  cursor: pointer;
+}
+.usmap-state:focus-visible,
+.usmap-hex:focus-visible {
+  filter: brightness(1.25);
+}
+.usmap-borders {
+  fill: none;
+  stroke: var(--bg);
+  stroke-opacity: 0.85;
+  stroke-width: 0.9;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.usmap-nation {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 0.8;
+  pointer-events: none;
+}
+.usmap-nation-glow {
+  fill: none;
+  stroke: rgba(120, 140, 255, 0.18);
+  stroke-width: 7;
+  filter: blur(6px);
+  pointer-events: none;
+}
+.is-dim {
+  opacity: 0.22;
+}
+.usmap-hover {
+  pointer-events: none;
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  transform: translateY(-3px);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.25)) brightness(1.15);
+  animation: usmap-lift 0.18s ease-out;
+}
+.usmap-hover-hex {
+  transform: none;
+}
+@keyframes usmap-lift {
+  from {
+    transform: translateY(0);
+    filter: none;
+  }
+}
+.usmap-selected {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(198, 255, 61, 0.6));
+}
+.usmap-pulse {
+  fill: none;
+  stroke: var(--accent);
+  stroke-linejoin: round;
+  pointer-events: none;
+  animation: usmap-pulse 1.6s ease-out infinite;
+}
+@keyframes usmap-pulse {
+  0% {
+    stroke-width: 1.5;
+    stroke-opacity: 1;
+  }
+  70% {
+    stroke-width: 12;
+    stroke-opacity: 0;
+  }
+  100% {
+    stroke-width: 12;
+    stroke-opacity: 0;
+  }
+}
+.usmap-leader line {
+  stroke: var(--text-3);
+  stroke-width: 0.8;
+}
+.usmap-leader circle {
+  fill: var(--text-2);
+}
+.usmap-chip {
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 0.6;
+  transition: fill 0.6s ease, opacity 0.35s ease;
+}
+
+/* ---- hex ---- */
+.usmap-hex-cell {
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.usmap.is-hex .usmap-hex-cell {
+  opacity: 1;
+  pointer-events: auto;
+}
+.usmap-hex {
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1;
+  transition: fill 0.6s ease, opacity 0.35s ease, filter 0.2s ease;
+  outline: none;
+}
+
+/* ---- labels ---- */
+.usmap-label {
+  pointer-events: none;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+}
+.usmap-abbr {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  transition: font-size 0.4s ease, fill 0.4s ease;
+}
+.usmap.is-hex .usmap-abbr {
+  font-size: 17px;
+}
+.usmap-label.is-small .usmap-abbr {
+  font-size: 9px;
+}
+.usmap-sub {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.usmap-label.on-dark text {
+  fill: #fff;
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 2px;
+}
+.usmap-label.on-light text {
+  fill: #0b0d14;
+}
+.usmap-label.on-bg text {
+  fill: var(--text-2);
+  font-size: 10px;
+}
+.usmap-label.is-hover text {
+  fill: #fff;
+}
+
+/* ---- tooltip ---- */
+.usmap-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  min-width: 160px;
+  max-width: 280px;
+  pointer-events: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(13, 15, 23, 0.92);
+  border: 1px solid var(--line-2);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text);
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  will-change: transform;
+}
+.usmap-tip.is-on {
+  opacity: 1;
+}
+.usmap-tip:empty {
+  display: none;
+}
+
+@media (hover: none) {
+  .usmap-tip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .usmap *,
+  .usmap-hex-cell,
+  .usmap-label {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .usmap-pulse {
+    animation: none;
+    stroke-width: 3;
+  }
+}
