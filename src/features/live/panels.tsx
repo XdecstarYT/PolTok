@@ -91,7 +91,7 @@ function PathLine({ party, need, leads, others, chamber, undecided }: { party: '
 // ---------------------------------------------------------------------------
 // Poll-closing timeline
 
-export function PollTimeline({ views, now }: { views: RaceView[]; now: number }) {
+export function PollTimeline({ views, now, simMin }: { views: RaceView[]; now: number; simMin?: number }) {
   const groups = useMemo(() => {
     const byState = new Map<string, RaceView[]>();
     for (const v of views) byState.set(v.race.state, [...(byState.get(v.race.state) ?? []), v]);
@@ -104,7 +104,7 @@ export function PollTimeline({ views, now }: { views: RaceView[]; now: number })
       .sort((a, b) => a[0] - b[0])
       .map(([min, states]) => ({ min, states: states.sort((a, b) => a.abbr.localeCompare(b.abbr)), byState }));
   }, [views]);
-  const nowMin = etNowMinutes(now);
+  const nowMin = simMin ?? etNowMinutes(now);
   if (!groups.length)
     return (
       <section className="lv-panel">
@@ -125,7 +125,8 @@ export function PollTimeline({ views, now }: { views: RaceView[]; now: number })
         <span className="lv-panel-sub mono">
           {next ? (
             <>
-              Next: <b>{fmtClock(next.min)}</b> · {next.states.length} states · in {mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`}
+              Next: <b>{fmtClock(next.min)}</b> · {next.states.length} states
+              {simMin == null && <> · in {mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`}</>}
             </>
           ) : (
             'All polls closed'
@@ -138,7 +139,7 @@ export function PollTimeline({ views, now }: { views: RaceView[]; now: number })
             <div className="lv-tl-fill" style={{ width: pos(nowMin) }} />
             {nowMin >= first && nowMin <= last && (
               <div className="lv-tl-now" style={{ left: pos(nowMin) }}>
-                <span className="mono">NOW {fmtClock(nowMin)}</span>
+                <span className="mono">{simMin == null ? 'NOW' : 'SIM'} {fmtClock(nowMin)}</span>
               </div>
             )}
           </div>

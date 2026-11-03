@@ -44,6 +44,17 @@ export default function LivePage() {
     return { counting, called, total };
   }, [views]);
 
+  // Sim clock: prefer an explicit clock from the provider (if the lead exposes one), else infer
+  // from the latest poll-closing wave that has started reporting.
+  const simMin = useMemo(() => {
+    const clk = (live as { clock?: { simMinute?: number } }).clock;
+    if (clk && typeof clk.simMinute === 'number') return 18 * 60 + clk.simMinute;
+    if (live.mode === 'live' || live.mode === 'connecting') return undefined;
+    let m = 0;
+    for (const v of views) if (v.status !== 'not-started' && v.closeMin > m) m = v.closeMin;
+    return m || undefined;
+  }, [live, views]);
+
   const modeLabel =
     live.mode === 'connecting' ? 'Connecting…' : live.mode === 'browser-simulation' ? 'In-browser simulation' : live.mode === 'simulation' ? 'Server simulation' : 'Live feed';
 
@@ -89,7 +100,7 @@ export default function LivePage() {
         <CallFeed calls={live.calls} now={now} />
       </div>
 
-      <PollTimeline views={views} now={now} />
+      <PollTimeline views={views} now={now} simMin={simMin} />
 
       <div className="lv-row-map">
         <LiveMap views={views} calls={live.calls} now={now} />

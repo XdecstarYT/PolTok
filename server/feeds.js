@@ -148,4 +148,13 @@ export const OUTLET_LEAN = {
   'silver bulletin': 'Center',
   'national public radio': 'Lean Left',
   'pbs news': 'Lean Left',
+  'abc news - breaking news, latest news and videos': 'Lean Left',
+  yahoo: 'Lean Left',
+  'c-span': 'Center',
+  newsnation: 'Center',
+  'dw.com': 'Center',
+  'dw': 'Center',
+  'scripps news': 'Center',
+  'the independent': 'Lean Left',
+  'cbs news chicago': 'Lean Left',
 };

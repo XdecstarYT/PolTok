@@ -273,32 +273,34 @@ function tokens(title) {
 }
 
 export function cluster(items, threshold = 0.35, windowMs = 12 * 3600 * 1000) {
-  const toks = items.map((i) => tokens(i.title));
-  const parent = items.map((_, i) => i);
-  const find = (i) => (parent[i] === i ? i : (parent[i] = find(parent[i])));
-  for (let i = 0; i < items.length; i++) {
-    if (toks[i].size < 3) continue;
-    for (let j = i + 1; j < items.length; j++) {
-      if (Math.abs(items[i].publishedAt - items[j].publishedAt) > windowMs) continue;
-      if (toks[j].size < 3) continue;
-      let inter = 0;
-      for (const t of toks[i]) if (toks[j].has(t)) inter++;
-      if (!inter) continue;
-      const jac = inter / (toks[i].size + toks[j].size - inter);
-      if (jac >= threshold) parent[find(i)] = find(j);
+  // Leader clustering (no transitive chaining): oldest items seed clusters; each item joins the
+  // most similar seed within the time window if token Jaccard >= threshold.
+  const order = items.map((_, i) => i).sort((a, b) => items[a].publishedAt - items[b].publishedAt);
+  /** @type {{ toks: Set<string>; t: number; id: string }[]} */
+  const seeds = [];
+  for (const i of order) {
+    const it = items[i];
+    const tk = tokens(it.title);
+    let best = null;
+    let bestJ = threshold;
+    if (tk.size >= 3) {
+      for (const s of seeds) {
+        if (it.publishedAt - s.t > windowMs) continue;
+        let inter = 0;
+        for (const w of tk) if (s.toks.has(w)) inter++;
+        if (!inter) continue;
+        const jac = inter / (tk.size + s.toks.size - inter);
+        if (jac >= bestJ) {
+          bestJ = jac;
+          best = s;
+        }
+      }
     }
-  }
-  const groups = new Map();
-  items.forEach((_, i) => {
-    const r = find(i);
-    if (!groups.has(r)) groups.set(r, []);
-    groups.get(r).push(i);
-  });
-  for (const members of groups.values()) {
-    // stable id: the oldest member's id
-    const oldest = members.reduce((a, b) => (items[a].publishedAt <= items[b].publishedAt ? a : b));
-    const cid = 'c_' + items[oldest].id;
-    for (const i of members) items[i].clusterId = cid;
+    if (best) it.clusterId = best.id;
+    else {
+      it.clusterId = 'c_' + it.id;
+      if (tk.size >= 3) seeds.push({ toks: tk, t: it.publishedAt, id: it.clusterId });
+    }
   }
   return items;
 }
