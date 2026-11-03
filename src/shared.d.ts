@@ -31,5 +31,6 @@ declare module '*/shared/sim.js' {
     stop(): void;
     snapshot(): { results: RaceResult[]; balance: BalanceOfPower[]; markets: Market[] };
     subscribe(fn: (ev: LiveEvent) => void): () => void;
+    clock?(): { simMinute: number; et: string; progress: number; final: boolean };
   };
 }

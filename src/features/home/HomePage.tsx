@@ -66,9 +66,12 @@ const count = (ch: Race['chamber'], fallback: number) => {
 };
 
 function Hero() {
-  const now = useNow(1000);
+  const wallNow = useNow(1000);
+  const { calls, balance, clock } = useLive();
+  // When results are simulated, follow the simulation's election-night clock so the
+  // poll-closing countdown agrees with the race calls on screen.
+  const now = clock ? zonedTime(ELECTION_DATE, '18:00') + clock.simMinute * 60000 : wallNow;
   const { next, closed, list } = useClosings(now);
-  const { calls, balance } = useLive();
   const etDate = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'short', day: 'numeric' }).format(now);
   return (
     <section className="hm-hero" aria-labelledby="hm-title">
@@ -106,7 +109,13 @@ function Hero() {
               <span className="num">{fmtHHMM(next.hhmm)}</span>
               <span className="faint"> ET</span>
             </div>
-            <Countdown to={next.at} />
+            {clock ? (
+              <p className="muted num" style={{ fontSize: 14 }}>
+                Sim clock {clock.et} · closes in {Math.max(1, Math.round((next.at - now) / 60000))} sim-min
+              </p>
+            ) : (
+              <Countdown to={next.at} />
+            )}
             <div className="hm-close__states">
               {next.states.slice(0, 18).map((a) => (
                 <Chip key={a} size="sm" to={`/state/${a}`}>{a}</Chip>

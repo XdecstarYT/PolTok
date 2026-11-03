@@ -8,7 +8,7 @@
  */
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { BalanceOfPower, LiveEvent, Market, NewsItem, RaceCallEvent, RaceResult } from '../types';
-import { RACES, STATES } from '../data';
+import { RACES, STATES, raceById } from '../data';
 import { createSimulation } from '../../shared/sim.js';
 
 export interface TickerItem {
@@ -28,6 +28,15 @@ export interface LiveState {
   markets: Market[];
   ticker: TickerItem[]; // newest first
   lastUpdate: number;
+  /** Simulated Eastern-time election-night clock (simMinute = minutes after 18:00 ET). */
+  clock?: SimClock;
+}
+
+export interface SimClock {
+  simMinute: number;
+  et: string;
+  progress: number;
+  final: boolean;
 }
 
 const initial: LiveState = {
@@ -54,7 +63,27 @@ function reduce(s: LiveState, ev: LiveEvent): LiveState {
     case 'results': {
       const results = { ...s.results };
       for (const r of ev.results) results[r.raceId] = r;
-      return { ...s, results, lastUpdate: now };
+      // Backfill calls for races already called in a snapshot (clients that join mid-night
+      // never saw those 'call' events).
+      const known = new Set(s.calls.map((c) => c.raceId));
+      const backfill: RaceCallEvent[] = [];
+      for (const r of ev.results) {
+        if (!r.calledFor || known.has(r.raceId)) continue;
+        const race = raceById.get(r.raceId);
+        const cand = race?.candidates.find((c) => c.id === r.calledFor);
+        if (!race || !cand) continue;
+        const side = (p: string) => (p === 'I' ? 'D' : p);
+        backfill.push({
+          type: 'call',
+          raceId: r.raceId,
+          candidateId: cand.id,
+          party: cand.party,
+          flip: side(cand.party) !== side(race.incumbentParty),
+          at: r.calledAt ?? r.updatedAt ?? now,
+        });
+      }
+      const calls = backfill.length ? [...s.calls, ...backfill].sort((a, b) => b.at - a.at).slice(0, 200) : s.calls;
+      return { ...s, results, calls, lastUpdate: now };
     }
     case 'balance': {
       const balance = { ...s.balance };
@@ -118,7 +147,12 @@ export function LiveProvider({ children }: { children: ReactNode }) {
       push({ type: 'balance', balance: snap.balance });
       push({ type: 'markets', markets: snap.markets });
       sim.start();
+      const clockTimer = setInterval(() => {
+        const c = sim.clock?.();
+        if (c) setState((s) => ({ ...s, clock: c }));
+      }, 1000);
       stopSim = () => {
+        clearInterval(clockTimer);
         unsub();
         sim.stop();
       };
@@ -135,6 +169,16 @@ export function LiveProvider({ children }: { children: ReactNode }) {
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d: { items: NewsItem[] }) => d.items?.length && push({ type: 'news', items: d.items }))
       .catch(() => {});
+
+    // Server sim clock (not part of the SSE contract): poll the lightweight health endpoint.
+    const pollClock = () =>
+      !stopSim &&
+      fetch('/api/health')
+        .then((r) => (r.ok ? r.json() : Promise.reject()))
+        .then((d: { clock?: SimClock }) => d.clock && !stopSim && setState((s) => ({ ...s, clock: d.clock })))
+        .catch(() => {});
+    pollClock();
+    const clockPoll = setInterval(pollClock, 5000);
 
     try {
       es = new EventSource('/api/stream');
@@ -158,6 +202,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
     return () => {
       cancelled = true;
+      clearInterval(clockPoll);
       clearTimeout(fallbackTimer);
       cancelAnimationFrame(raf);
       es?.close();

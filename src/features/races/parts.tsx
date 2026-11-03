@@ -179,8 +179,10 @@ export function ResultRows({ race, result, big }: { race: Race; result?: RaceRes
               <span className="rx-row-name">
                 {big && <Avatar name={s.cand.name} party={s.cand.party} src={s.cand.photo} size={34} />}
                 <span>
-                  <b>{s.cand.name}</b>
-                  {won && <span className="rx-check" aria-label="Projected winner">✓</span>}
+                  <b>
+                    {s.cand.name}
+                    {won && <span className="rx-check" aria-label="Projected winner">✓</span>}
+                  </b>
                   <small>
                     {PARTY_NAME[s.cand.party]}
                     {s.cand.incumbent ? ' · Incumbent' : ''}

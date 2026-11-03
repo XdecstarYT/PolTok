@@ -46,7 +46,7 @@ export function closeMinutes(hhmm: string | undefined): number {
 }
 
 export function fmtClock(min: number): string {
-  const m = ((min % 1440) + 1440) % 1440;
+  const m = ((Math.floor(min) % 1440) + 1440) % 1440;
   const h = Math.floor(m / 60);
   const mm = m % 60;
   const h12 = h % 12 === 0 ? 12 : h % 12;
