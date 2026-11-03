@@ -335,9 +335,9 @@ function StatsHeader({ mode, chamber, build, onReset }: { mode: MapMode; chamber
     return (
       <div className="mp-stats-grid">
         <div className="mp-stats-line">
-          <Stat label="Electoral votes · Harris" value={ev.D} tone="d" />
-          <Stat label="Electoral votes · Trump" value={ev.R} tone="r" />
-          <span className="mp-note">2024 presidential results, shaded by margin</span>
+          <Stat label="2024 winner" value="Trump" tone="r" />
+          <Stat label="States flipped from 2020" value={6} />
+          <span className="mp-note">Presidential results by state, shaded by margin</span>
         </div>
         <ElectoralBar dem={ev.D} rep={ev.R} leftLabel="Harris" rightLabel="Trump" />
       </div>
@@ -386,7 +386,12 @@ function StatsHeader({ mode, chamber, build, onReset }: { mode: MapMode; chamber
     const list = racesOf('house');
     const unrated = Math.max(0, HOUSE_SEATS - list.length);
     const segs = ratingSegments(list);
-    if (unrated) segs.splice(3, 0, { key: 'unrated', value: unrated, color: 'transparent', label: 'Not in dataset' });
+    if (unrated) {
+      // Split unrated seats around the toss-up block so toss-ups stay centered.
+      const ti = segs.findIndex((x) => x.key === 'Toss-up');
+      segs.splice(ti + 1, 0, { key: 'unrated-r', value: Math.floor(unrated / 2), color: 'transparent', label: 'Not in dataset' });
+      segs.splice(ti, 0, { key: 'unrated-d', value: Math.ceil(unrated / 2), color: 'transparent', label: 'Not in dataset' });
+    }
     return (
       <div className="mp-stats-grid">
         <div className="mp-stats-line">
@@ -509,7 +514,13 @@ function Legend({ mode, chamber }: { mode: MapMode; chamber: Chamber }) {
         <span>{mode === 'pres2024' ? 'R+20' : 'R seats'}</span>
         <span className="mp-grad" style={{ background: `linear-gradient(90deg, ${stops.join(',')})` }} />
         <span>{mode === 'pres2024' ? 'D+20' : 'D seats'}</span>
-        {mode === 'house' && <span className="mp-legend-note">Labels: D-favored · Toss · R-favored (hex view)</span>}
+        {mode === 'house' && (
+          <>
+            <Swatch color={RATING_HEX['Toss-up']} label="Even / toss-ups" />
+            <Swatch color={NO_RACE} label="No rated races" />
+            <span className="mp-legend-note">Hex labels: D-fav · toss · R-fav</span>
+          </>
+        )}
       </div>
     );
   } else if (mode === 'live') {

@@ -48,6 +48,14 @@ export function RaceCallWatcher() {
     setActive((a) => a ?? queue.current.shift() ?? null);
   }, [calls, toast]);
 
+  // QA hook: /?callDemo=GA-SEN previews the takeover for that race (labelled simulated as always).
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('callDemo');
+    const race = id ? raceById.get(id) : undefined;
+    const c = race?.candidates[0];
+    if (race && c) setActive({ type: 'call', raceId: race.id, candidateId: c.id, party: c.party, flip: false, at: Date.now() });
+  }, []);
+
   useEffect(() => {
     if (!active) return;
     const t = setTimeout(() => setActive(queue.current.shift() ?? null), SHOW_MS);

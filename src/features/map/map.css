@@ -174,9 +174,6 @@
   fill: var(--text-2);
   font-size: 10px;
 }
-.usmap-label.is-hover text {
-  fill: #fff;
-}
 
 /* ---- tooltip ---- */
 .usmap-tip {

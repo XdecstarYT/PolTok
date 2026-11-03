@@ -70,6 +70,7 @@ export default function NewsPage() {
   const [sourceF, setSourceF] = useState('');
   const [q, setQ] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
+  const [limit, setLimit] = useState(36);
   const [apiSources, setApiSources] = useState<{ name: string; lean: Lean; ok: boolean }[] | null>(null);
 
   useEffect(() => savePrefs({ view, balance }), [view, balance]);
@@ -273,7 +274,6 @@ export default function NewsPage() {
             </Chip>
           ))}
           <label className="nw-select">
-            <span className="sr-only">Filter by state</span>
             <select value={stateF} onChange={(e) => setStateF(e.target.value)} aria-label="Filter by state">
               <option value="">All states</option>
               {stateOptions.map(([abbr, n]) => (
@@ -335,13 +335,18 @@ export default function NewsPage() {
             </div>
           ) : view === 'cards' ? (
             <div className="nw-grid">
-              {storyCards.slice(0, 120).map(({ cluster, item }) => (
+              {storyCards.slice(0, limit).map(({ cluster, item }) => (
                 <StoryCard key={cluster.id} cluster={cluster} item={item} now={now} onOpen={() => setSelected(cluster.id)} active={selected === cluster.id} />
               ))}
+              {storyCards.length > limit && (
+                <button className="nw-more" onClick={() => setLimit((l) => l + 36)}>
+                  Show more stories <span className="mono">({storyCards.length - limit})</span>
+                </button>
+              )}
             </div>
           ) : view === 'list' ? (
             <ol className="nw-list">
-              {filtered.slice(0, 250).map((n) => (
+              {filtered.slice(0, limit * 3).map((n) => (
                 <ListRow key={n.id} item={n} cluster={clusterOf(n)} now={now} onOpen={(id) => setSelected(id)} />
               ))}
             </ol>
@@ -454,7 +459,7 @@ function Thumb({ cluster, item }: { cluster: Cluster; item: NewsItem }) {
       </div>
     );
   return (
-    <div className="nw-thumb">
+    <div className="nw-thumb is-art">
       <GenArt seed={cluster.id} coverageTint={cluster.coverage} label={kickerOf(cluster.tags) ?? item.source} />
     </div>
   );

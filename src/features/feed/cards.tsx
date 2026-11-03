@@ -360,7 +360,7 @@ export function MarketCard({ id, live, meta, active, reduced }: { id: string; li
           {m.outcomes.slice(0, 3).map((o, i) => (
             <div key={o.label} className="fd-odd">
               <div className="fd-odd-num mono" style={{ color: o.color ?? (i ? PARTY_HEX.R : PARTY_HEX.D) }}>
-                {Math.round(o.prob * 100)}
+                {o.prob > 0.99 ? '>99' : o.prob < 0.01 ? '<1' : Math.round(o.prob * 100)}
                 <small>%</small>
               </div>
               <div className="fd-odd-label">{o.label}</div>

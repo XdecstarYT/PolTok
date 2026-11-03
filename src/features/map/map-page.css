@@ -1,7 +1,6 @@
 /* MapPage — owned by Map agent */
 .mp {
   position: relative;
-  isolation: isolate;
   max-width: 1600px;
   margin: 0 auto;
   padding: 18px var(--gutter) 80px;
@@ -701,8 +700,9 @@
     right: 0;
     bottom: 0;
     top: auto;
-    z-index: 60;
-    max-height: 72vh;
+    z-index: calc(var(--z-modal, 80) + 1);
+    max-height: 78vh;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
     border-radius: 18px 18px 0 0;
     border-bottom: 0;
     padding-top: 22px;
@@ -725,7 +725,7 @@
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 59;
+    z-index: var(--z-modal, 80);
     border: 0;
     background: rgba(0, 0, 0, 0.45);
   }

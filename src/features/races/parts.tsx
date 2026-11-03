@@ -6,7 +6,7 @@ import { line as d3line, curveMonotoneX } from 'd3-shape';
 import type { NewsItem, PollSeries, Race, RaceResult, StateInfo } from '../../types';
 import { Avatar, PartyDot, RatingBadge, SimBadge } from '../../components';
 import { fmtInt, LEAN_HEX, PARTY_COLOR, PARTY_HEX, PARTY_NAME, RATING_HEX, timeAgo } from '../../lib/format';
-import { stateByAbbr } from '../../data';
+import { RACES, stateByAbbr } from '../../data';
 import {
   demMargin,
   fmtSignedMargin,
@@ -478,7 +478,7 @@ export function CallBanner({ race, result }: { race: Race; result?: RaceResult }
           <>
             <span className={`rx-pulse s-${result?.status ?? 'not-started'}`} aria-hidden />
             <b>{statusText(result, st)}</b>
-            {result?.reportingNote && <span className="rx-muted">{result.reportingNote}</span>}
+            {result?.reportingNote && result.reportingNote !== statusText(result, st) && <span className="rx-muted">{result.reportingNote}</span>}
           </>
         )}
         <span style={{ marginLeft: 'auto' }}>
@@ -544,7 +544,21 @@ export function NotFound({ kind, query }: { kind: 'race' | 'state'; query: strin
           ))}
         </ul>
       ) : (
-        <p className="rx-muted">No matches yet.</p>
+        <>
+          <p className="rx-muted">No matches. Key races tonight:</p>
+          <ul className="rx-suggest">
+            {RACES.filter((r) => r.key)
+              .slice(0, 6)
+              .map((r) => (
+                <li key={r.id}>
+                  <Link to={`/race/${r.id}`}>
+                    <b>{longTitle(r)}</b>
+                    <span className="rx-muted">{r.rating}</span>
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </>
       )}
       <p>
         <Link className="rx-btn" to="/races">

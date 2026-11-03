@@ -289,7 +289,7 @@ function SeatSummary({ tab, math, races }: { tab: ChamberTab; math: ReturnType<t
       <>
         <b style={{ color: 'var(--dem)' }}>D need {math.dNeed > 0 ? `+${math.dNeed}` : 'to hold'}</b> for a Senate majority (51)
         <span className="rx-sep">·</span>
-        <b style={{ color: 'var(--rep)' }}>R need {math.rNeed > 0 ? `+${math.rNeed}` : 'to hold 50'}</b> with the VP tiebreak
+        <b style={{ color: 'var(--rep)' }}>R need {math.rNeed > 0 ? `+${math.rNeed}` : '50 seats'}</b> to hold control (VP tiebreak)
       </>
     );
   } else if (tab === 'house') {

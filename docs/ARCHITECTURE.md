@@ -65,7 +65,7 @@ only, and write a note in `docs/REQUESTS.md` (append-only) describing it; the le
 - Map: `src/features/map/USMap.tsx` → `<USMap fills variant onStateClick renderTooltip highlight labels focus />`
 
 ## Routes
-`/` home · `/live` election night · `/map/:mode?` (pres2024 | senate | governor | house | live) ·
+`/` home · `/live` election night · `/map/:mode?` (pres2024 | senate | governor | house | live | build) ·
 `/feed` PolTok vertical feed · `/news` · `/polls` · `/forecast` · `/races` · `/race/:id` · `/state/:abbr`
 
 Race ids: `PA-SEN`, `OH-SEN-S` (special), `PA-GOV`, `PA-07` (house, zero-padded; at-large `AK-AL`).
