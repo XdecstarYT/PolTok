@@ -179,3 +179,5 @@
 @media (max-width: 600px) {
   .rc__stamp { position: static; justify-self: start; order: -1; }
 }
+.cmdk__input input:focus-visible { box-shadow: none; }
+.cmdk__input:focus-within { color: var(--signal); }
