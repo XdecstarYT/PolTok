@@ -151,7 +151,7 @@ const PARTY_PLURAL = { D: 'Democrats', R: 'Republicans' };
  * probability is shifted together in logit space across a grid of swing scenarios.
  * Independent-seat math is badly overconfident early in the night.
  */
-function correlatedAtLeast(ps, k, sd = 0.7) {
+export function correlatedAtLeast(ps, k, sd = 0.7) {
   const grid = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];
   let wsum = 0;
   let acc = 0;

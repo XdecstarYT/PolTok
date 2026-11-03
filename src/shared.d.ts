@@ -34,3 +34,20 @@ declare module '*/shared/sim.js' {
     clock?(): { simMinute: number; et: string; progress: number; final: boolean };
   };
 }
+
+declare module '*/shared/nyt.js' {
+  import type { RaceResult, BalanceOfPower, Market, LiveEvent, Race, StateInfo } from './types';
+  export const LIVE_ATTRIBUTION: string;
+  export const NYT_SOURCES: Record<'senate' | 'governor' | 'house', string>;
+  export function createNytProvider(opts: { races: Race[]; states?: StateInfo[]; pollMs?: number; housePollMs?: number; log?: (m: string) => void }): {
+    mode: 'live';
+    start(): void;
+    stop(): void;
+    snapshot(): { results: RaceResult[]; balance: BalanceOfPower[]; markets: Market[] };
+    subscribe(fn: (ev: LiveEvent) => void): () => void;
+    clock(): { simMinute: number; et: string; progress: number; final: boolean; live?: boolean };
+  };
+}
+declare module '*/server/feeds.js' {
+  export const OUTLET_LEAN: Record<string, string>;
+}

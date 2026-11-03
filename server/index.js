@@ -29,6 +29,7 @@ if ((process.env.HTTPS_PROXY || process.env.https_proxy) && !process.env.NODE_US
 async function main() {
   const { STATES, RACES, POLL_SERIES } = await import('../shared/data/index.js');
   const { createResultsProvider } = await import('./results-provider.js');
+  const { createNytProvider } = await import('../shared/nyt.js');
   const { createNewsService } = await import('./news.js');
   const { createStatic } = await import('./static.js');
 
@@ -38,10 +39,12 @@ async function main() {
   const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 
   /* ------------------------------ SSE hub ------------------------------ */
-  const clients = new Set();
-  function broadcast(ev) {
+  const clients = new Set(); // every SSE response
+  const channels = { simulation: new Set(), live: new Set() };
+  function broadcast(ev, source) {
     const chunk = `data: ${JSON.stringify(ev)}\n\n`;
-    for (const c of clients) {
+    const targets = source ? channels[source] : clients;
+    for (const c of targets) {
       try {
         c.write(chunk);
       } catch {
@@ -51,10 +54,30 @@ async function main() {
   }
 
   /* ------------------------------ services ----------------------------- */
-  const provider = createResultsProvider({ races: RACES, states: STATES, log });
-  provider.subscribe(broadcast);
-  provider.start();
-  log(`[results] mode=${provider.mode} races=${RACES.length} states=${STATES.length}`);
+  // Two result sources run side by side; each SSE client picks one with ?source=live|simulation.
+  // Each provider gets its own copy of the race list (the live provider syncs candidate names).
+  const providers = {
+    simulation: createResultsProvider({ races: structuredClone(RACES), states: STATES, log, env: { ...process.env, RESULTS_MODE: 'simulation' } }),
+    live:
+      (process.env.RESULTS_MODE || '').toLowerCase() === 'live' && process.env.RESULTS_FEED_URL
+        ? createResultsProvider({ races: structuredClone(RACES), states: STATES, log })
+        : Object.assign(createNytProvider({ races: structuredClone(RACES), states: STATES, log }), { mode: 'live' }),
+  };
+  const DEFAULT_SOURCE = (process.env.DEFAULT_SOURCE || 'live').toLowerCase() === 'simulation' ? 'simulation' : 'live';
+  const pick = (q) => (q === 'simulation' || q === 'sim' ? 'simulation' : q === 'live' ? 'live' : DEFAULT_SOURCE);
+  let liveStarted = false;
+  for (const [name, pr] of Object.entries(providers)) pr.subscribe((ev) => broadcast(ev, name));
+  providers.simulation.start();
+  // Start polling the live feed lazily, on first use.
+  const ensure = (source) => {
+    if (source === 'live' && !liveStarted) {
+      liveStarted = true;
+      providers.live.start();
+    }
+    return providers[source];
+  };
+  if (DEFAULT_SOURCE === 'live') ensure('live');
+  log(`[results] sources: simulation + live (default ${DEFAULT_SOURCE}) races=${RACES.length} states=${STATES.length}`);
 
   const news = createNewsService({
     log,
@@ -76,7 +99,8 @@ async function main() {
     res.end(s);
   }
 
-  function handleStream(req, res) {
+  function handleStream(req, res, source) {
+    const pr = ensure(source);
     res.writeHead(200, {
       'content-type': 'text/event-stream; charset=utf-8',
       'cache-control': 'no-cache, no-transform',
@@ -87,14 +111,15 @@ async function main() {
     res.socket?.setNoDelay?.(true);
     const send = (ev) => res.write(`data: ${JSON.stringify(ev)}\n\n`);
     res.write('retry: 3000\n\n');
-    const snap = provider.snapshot();
-    send({ type: 'hello', serverTime: Date.now(), mode: provider.mode });
+    const snap = pr.snapshot();
+    send({ type: 'hello', serverTime: Date.now(), mode: source === 'live' ? 'live' : 'simulation' });
     send({ type: 'results', results: snap.results });
     send({ type: 'balance', balance: snap.balance });
     send({ type: 'markets', markets: snap.markets });
     const recent = news.recent(60);
     if (recent.length) send({ type: 'news', items: recent });
     clients.add(res);
+    channels[source].add(res);
     const hb = setInterval(() => {
       try {
         res.write(`: heartbeat ${Date.now()}\n\n`);
@@ -105,6 +130,7 @@ async function main() {
     const done = () => {
       clearInterval(hb);
       clients.delete(res);
+      channels[source].delete(res);
     };
     req.on('close', done);
     res.on('error', done);
@@ -122,17 +148,22 @@ async function main() {
       if (p.startsWith('/api/')) {
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
         switch (p) {
-          case '/api/health':
+          case '/api/health': {
+            const source = pick(url.searchParams.get('source'));
+            const pr = ensure(source);
             return json(res, 200, {
               ok: true,
-              mode: provider.mode,
+              mode: source,
+              defaultSource: DEFAULT_SOURCE,
               uptime: Math.round((Date.now() - started) / 1000),
               clients: clients.size,
               newsReady: news.ready(),
-              clock: provider.snapshot().clock,
+              clock: pr.clock ? pr.clock() : pr.snapshot().clock,
+              liveStatus: providers.live.status ? providers.live.status() : undefined,
             });
+          }
           case '/api/stream':
-            return handleStream(req, res);
+            return handleStream(req, res, pick(url.searchParams.get('source')));
           case '/api/news': {
             if (!news.ready() && process.env.NEWS_DISABLED !== '1') await Promise.race([news.refresh(), sleep(9000)]);
             const q = url.searchParams;
@@ -145,8 +176,9 @@ async function main() {
             }));
           }
           case '/api/snapshot': {
-            const s = provider.snapshot();
-            return json(res, 200, { mode: provider.mode, results: s.results, balance: s.balance, markets: s.markets, clock: s.clock });
+            const source = pick(url.searchParams.get('source'));
+            const s = ensure(source).snapshot();
+            return json(res, 200, { mode: source, results: s.results, balance: s.balance, markets: s.markets, clock: s.clock });
           }
           case '/api/polls':
             return json(res, 200, POLL_SERIES);
@@ -174,7 +206,7 @@ async function main() {
 
   const shutdown = (sig) => {
     log(`[server] ${sig} — shutting down`);
-    provider.stop();
+    Object.values(providers).forEach((pr) => pr.stop());
     news.stop();
     for (const c of clients) c.end();
     server.close(() => process.exit(0));

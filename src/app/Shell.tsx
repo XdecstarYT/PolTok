@@ -54,20 +54,33 @@ function Wordmark() {
 }
 
 function LiveStatus() {
-  const { mode, connected } = useLive();
-  const sim = mode === 'simulation' || mode === 'browser-simulation';
+  const { mode, connected, source, setSource } = useLive();
+  const local = mode === 'browser-live' || mode === 'browser-simulation';
   const state =
     mode === 'connecting' ? { cls: 'is-wait', label: 'CONNECTING' }
-    : !connected && mode !== 'browser-simulation' ? { cls: 'is-wait', label: 'RECONNECTING' }
-    : mode === 'browser-simulation' ? { cls: 'is-live', label: 'LIVE · LOCAL' }
-    : { cls: 'is-live', label: 'LIVE' };
+    : !connected && !local ? { cls: 'is-wait', label: 'RECONNECTING' }
+    : { cls: 'is-live', label: source === 'live' ? 'LIVE' : 'SIM' };
   return (
     <span className="sh-status">
-      <span className={`sh-pill ${state.cls}`} role="status" aria-live="polite" title={sim ? 'Results stream is simulated' : 'Connected to live stream'}>
+      <span className={`sh-pill ${state.cls}`} role="status" aria-live="polite" title={source === 'live' ? 'Real results: AP via The New York Times' : 'Simulated election night'}>
         <span className="pulse" aria-hidden="true" />
         {state.label}
       </span>
-      {sim && <SimBadge compact />}
+      <span className="sh-source" role="radiogroup" aria-label="Results source">
+        {(['live', 'simulation'] as const).map((s) => (
+          <button
+            key={s}
+            type="button"
+            role="radio"
+            aria-checked={source === s}
+            className={`sh-source__opt ${source === s ? 'is-on' : ''} ${s === 'live' ? 'is-live' : ''}`}
+            onClick={() => setSource(s)}
+            title={s === 'live' ? 'Real AP results via The New York Times' : 'Simulated election night (demo)'}
+          >
+            {s === 'live' ? 'Live' : 'Simulated'}
+          </button>
+        ))}
+      </span>
     </span>
   );
 }

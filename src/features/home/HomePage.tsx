@@ -455,6 +455,19 @@ function Ctas() {
   );
 }
 
+function SourceFoot() {
+  const { source } = useLive();
+  return (
+    <p className="hm-foot faint">
+      {source === 'live' ? (
+        <>Results and race calls are <b>live</b> from the Associated Press via The New York Times. Market prices are the last real quotes before Election Day. Headlines are real and link to their publishers.</>
+      ) : (
+        <>Results, race calls and market prices are <b>simulated</b> for demonstration — switch to <b>Live</b> in the top bar for real results. Headlines are real and link to their publishers.</>
+      )}
+    </p>
+  );
+}
+
 export default function HomePage() {
   return (
     <div className="page hm">
@@ -470,9 +483,7 @@ export default function HomePage() {
       </div>
       <PollsSnapshot />
       <Ctas />
-      <p className="hm-foot faint">
-        Results, race calls and market prices on PolTok are <b>simulated</b> for demonstration. Headlines are real and link to their publishers.
-      </p>
+      <SourceFoot />
     </div>
   );
 }

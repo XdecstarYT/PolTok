@@ -2,6 +2,7 @@ import { useId, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } 
 import { Link } from 'react-router-dom';
 import type { Party, Rating } from '../types';
 import { initials, PARTY_COLOR, PARTY_NAME, RATING_HEX } from '../lib/format';
+import { useLive } from '../lib/live';
 
 /* ───────────── Original primitives (props are stable) ───────────── */
 
@@ -82,9 +83,22 @@ export function Card({
 }
 
 /** Honesty label for simulated results. Required on every surface showing live results. */
+/**
+ * Results-source badge. Name kept for compatibility: in Simulated mode it reads "SIMULATED";
+ * in Live mode it shows the real-data attribution ("LIVE · AP").
+ */
 export function SimBadge({ compact }: { compact?: boolean }) {
+  const { source } = useLive();
+  if (source === 'live') {
+    return (
+      <span className="pt-simbadge pt-simbadge--live" title="Real results: AP race calls and vote counts via The New York Times">
+        <span className="pt-simbadge__dot" aria-hidden="true" />
+        {compact ? 'AP' : 'LIVE · AP'}
+      </span>
+    );
+  }
   return (
-    <span className="pt-simbadge" title="Results are simulated for demonstration; plug in a live results feed in server/ to go live.">
+    <span className="pt-simbadge" title="Results are simulated for demonstration. Switch to Live in the top bar for real results.">
       <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0 L10 5 L5 10 L0 5Z" fill="currentColor" /></svg>
       {compact ? 'SIM' : 'SIMULATED'}
     </span>

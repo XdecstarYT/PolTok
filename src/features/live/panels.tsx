@@ -54,7 +54,7 @@ export function ChamberControl({ s, title }: { s: ChamberSummary; title: string 
             </>
           ) : decided ? (
             <li className="lv-path-done" style={{ color: PARTY_HEX[decided] }}>
-              ✓ {partyWord[decided]} win control of the {s.chamber === 'senate' ? 'Senate' : 'House'} (simulated)
+              ✓ {partyWord[decided]} win control of the {s.chamber === 'senate' ? 'Senate' : 'House'}
             </li>
           ) : (
             <>
@@ -270,7 +270,7 @@ export function LiveMap({ views, calls, now }: { views: RaceView[]; calls: RaceC
         emptyFill="#12141d"
         highlight={highlight}
         labels
-        title={`Live ${mode} results map (simulated)`}
+        title={`Live ${mode} results map`}
         onStateClick={(abbr) => {
           const v = byState.get(abbr);
           nav(v ? `/race/${v.race.id}` : `/state/${abbr}`);

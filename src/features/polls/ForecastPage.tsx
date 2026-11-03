@@ -312,7 +312,7 @@ function BuildSenate({ model, shift, corr }: { model: SimModel; shift: number; c
 
 /* ---------- Markets ---------- */
 function MarketsPanel({ senateP, houseP, raceP }: { senateP: number | null; houseP: number | null; raceP: (id: string) => number | null }) {
-  const { markets } = useLive();
+  const { markets, source } = useLive();
   const sorted = useMemo(() => {
     const pri = (m: Market) => (m.id === 'senate-control' ? 0 : m.id === 'house-control' ? 1 : 2);
     return [...markets].sort((a, b) => pri(a) - pri(b)).slice(0, 8);
@@ -334,7 +334,11 @@ function MarketsPanel({ senateP, houseP, raceP }: { senateP: number | null; hous
         <div>
           <div className="eyebrow">Prediction markets</div>
           <h2 id="h-mkts">What the money says</h2>
-          <p className="fc-help">Live odds below are <b>simulated</b> and react to tonight&apos;s simulated count. For reference, the last real quotes before Election Day ({MARKET_REFERENCE.asOf}):</p>
+          <p className="fc-help">
+            {source === 'live'
+              ? <>Odds below are the last real prediction-market quotes before Election Day ({MARKET_REFERENCE.asOf}).</>
+              : <>Live odds below are <b>simulated</b> and react to tonight&apos;s simulated count. For reference, the last real quotes before Election Day ({MARKET_REFERENCE.asOf}):</>}
+          </p>
         </div>
         <SimBadge />
       </div>

@@ -16,7 +16,7 @@ const SHOW_MS = 3600;
  * every other new call → toast. Backlog on load / reconnect is ignored.
  */
 export function RaceCallWatcher() {
-  const { calls } = useLive();
+  const { calls, source } = useLive();
   const toast = useToast();
   const reduce = useReducedMotion();
   const seen = useRef<Set<string> | null>(null);
@@ -38,7 +38,7 @@ export function RaceCallWatcher() {
       if (race?.key || c.flip) queue.current.push(c);
       else
         toast.push({
-          kicker: c.flip ? `FLIP · ${c.party} GAIN` : 'RACE CALL · SIMULATED',
+          kicker: c.flip ? `FLIP · ${c.party} GAIN` : source === 'live' ? 'RACE CALL · AP' : 'RACE CALL · SIMULATED',
           title: `${cand?.name ?? PARTY_NAME[c.party]} wins ${race?.title ?? c.raceId}`,
           body: `Projected ${fmtET(c.at)}`,
           tone: c.party === 'D' ? 'dem' : c.party === 'R' ? 'rep' : 'ind',
@@ -46,7 +46,7 @@ export function RaceCallWatcher() {
         });
     }
     setActive((a) => a ?? queue.current.shift() ?? null);
-  }, [calls, toast]);
+  }, [calls, toast, source]);
 
   // QA hook: /?callDemo=GA-SEN previews the takeover for that race (labelled simulated as always).
   useEffect(() => {

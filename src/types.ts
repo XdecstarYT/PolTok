@@ -72,6 +72,8 @@ export interface RaceResult {
   reportingNote?: string;
   updatedAt: number;
   status: 'not-started' | 'polls-closed' | 'counting' | 'called' | 'too-close';
+  /** Live mode only: authoritative candidate list (names/photos from the results provider). */
+  candidates?: Candidate[];
 }
 
 export interface BalanceOfPower {

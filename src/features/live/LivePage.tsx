@@ -1,6 +1,6 @@
 /**
  * /live — Election-night control room. Owned by the Live agent (src/features/live/**).
- * All results here are SIMULATED (see SimBadge); data comes from useLive().
+ * Results come from useLive(): live AP data (via NYT) or the simulation, per the user toggle.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -56,7 +56,7 @@ export default function LivePage() {
   }, [live, views]);
 
   const modeLabel =
-    live.mode === 'connecting' ? 'Connecting…' : live.mode === 'browser-simulation' ? 'In-browser simulation' : live.mode === 'simulation' ? 'Server simulation' : 'Live feed';
+    live.mode === 'connecting' ? 'Connecting…' : live.mode === 'browser-simulation' ? 'In-browser simulation' : live.mode === 'simulation' ? 'Server simulation' : live.mode === 'browser-live' ? 'AP via NYT (direct)' : 'AP via NYT';
 
   return (
     <div className="page lv-page">
@@ -113,8 +113,11 @@ export default function LivePage() {
       <RaceGrid views={views} now={now} />
 
       <p className="lv-foot muted">
-        Results, race calls, probabilities and market prices on this page are <b>simulated</b> for demonstration; candidates and 2024 baselines come from
-        PolTok research data. Senate majority shown as 51; a 50–50 split is decided by the Vice President's tiebreak.
+        {live.source === 'live' ? (
+          <>Results and race calls are <b>live</b>: AP vote counts and race calls, with win probabilities from The New York Times model, via the NYT results feed. Market prices are the last real quotes before Election Day.</>
+        ) : (
+          <>Results, race calls, probabilities and market prices on this page are <b>simulated</b> for demonstration (switch to <b>Live</b> in the top bar for real results); candidates and 2024 baselines come from PolTok research data.</>
+        )} Senate majority shown as 51; a 50–50 split is decided by the Vice President's tiebreak.
       </p>
     </div>
   );

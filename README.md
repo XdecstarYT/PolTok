@@ -15,20 +15,30 @@ npm run dev                 # API on :8787 + Vite on :5173 → open http://local
 # or production:
 npm run build && npm start  # everything on http://localhost:8787
 ```
-Useful env: `SIM_SPEED=12` (faster election night), `SIM_SEED`, `SIM_LOOP=1`, `PORT`.
 
-## What's real vs. simulated
-| | Source |
-|---|---|
-| **News headlines** | **Real** — server-side RSS aggregation (NPR, Politico, Fox, NYT, BBC, The Hill, Guardian, Google News `site:` queries for AP/Reuters/Axios/WaPo…), refreshed every 2 min, lean labels per AllSides-style ratings, clustered into stories. |
-| **Candidates, ratings, 2024 results, poll-closing times** | Researched seed data in `shared/data/` (sources in `docs/research/midterms-2026-data.md`). Some House challengers come from a single source — verify before relying on them. |
-| **Polls** | 758 real published polls (Sep 1 – Nov 2, 2026) in `shared/data/polls.js`. |
-| **Vote counts, race calls, needles, market odds** | **Simulated** (labelled `SIMULATED` everywhere). There is no free real-time results feed. A seeded engine (`shared/sim.js`) plays out the night 6 PM → 2 AM ET in ~25 min with realistic count curves, red-mirage/blue-shift ordering and correlated uncertainty. |
+## Live vs. Simulated
+A **Live / Simulated** toggle in the top bar picks the results source (remembered per browser):
 
-### Going live with real results
-Set `RESULTS_MODE=live` and `RESULTS_FEED_URL` to an endpoint returning `{ results, balance?, markets? }`
-in the shapes from `src/types.ts`. `server/results-provider.js` documents mapping an AP / Decision
-Desk HQ feed into that shape.
+| | **Live** (default) | **Simulated** |
+|---|---|---|
+| Vote counts, race calls | **Real** AP results via The New York Times' public results JSON (`shared/nyt.js`), polled every 30 s (House every 90–180 s) | Seeded engine (`shared/sim.js`) plays out 6 PM → 2 AM ET in ~25 min |
+| Win probabilities / needles | NYT model per race; chamber control computed with correlated error | Simulated |
+| Market odds | Last real Kalshi quotes before Election Day | Simulated |
+| Candidates | Synced from AP/NYT (names, photos) | Research data |
+
+Everything else is real in both modes:
+- **News headlines** — server-side RSS aggregation from ~40 outlets (NPR, Politico, Fox, NYT, BBC, The Hill, Guardian, Google News `site:` queries for AP/Reuters/Axios/WaPo…), refreshed every 2 min, lean labels per AllSides-style ratings, clustered into stories.
+- **Polls** — 758 real published polls (Sep 1 – Nov 2, 2026).
+- **Ratings, 2024 results, poll-closing times** — researched seed data in `shared/data/` (sources in `docs/research/`).
+
+### No server? Still works
+If `/api` is unreachable (static hosting, `vite preview`), the browser fetches live results directly
+from the NYT JSON (CORS-enabled) or runs the simulation locally, and pulls real headlines via
+CORS-friendly RSS routes (NYT direct + rss2json.com). It keeps checking for the API and switches back
+to it automatically when it comes up.
+
+Server env: `DEFAULT_SOURCE=live|simulation`, `SIM_SPEED`, `SIM_SEED`, `SIM_LOOP`, `PORT`.
+Custom feed: `RESULTS_MODE=live RESULTS_FEED_URL=…` replaces the NYT provider (see `server/results-provider.js`).
 
 ## Pages
 | Route | |

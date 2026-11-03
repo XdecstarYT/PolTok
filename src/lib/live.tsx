@@ -1,12 +1,15 @@
 /**
- * Live data layer. Connects to the API's SSE stream (/api/stream). If the API is
- * unreachable (e.g. static hosting), it falls back to running the shared simulation
- * engine in the browser, so the app is always "alive".
+ * Live data layer. Two result sources, chosen by the user (persisted):
+ *   - 'live'       real AP results via the NYT results JSON (shared/nyt.js)
+ *   - 'simulation' the seeded election-night simulation (shared/sim.js)
+ * Connects to the API's SSE stream (/api/stream?source=…). If the API is unreachable
+ * (static hosting), the same provider runs in the browser, and news is fetched from
+ * CORS-friendly RSS routes (src/lib/browserNews.ts).
  *
  * Consumers: `const live = useLive();` — see LiveState below. Do not open your own
  * EventSource in feature code; extend this provider instead (coordinate first).
  */
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { BalanceOfPower, LiveEvent, Market, NewsItem, RaceCallEvent, RaceResult } from '../types';
 import { RACES, STATES, raceById } from '../data';
 import { createSimulation } from '../../shared/sim.js';
@@ -18,9 +21,15 @@ export interface TickerItem {
   at: number;
 }
 
+export type ResultsSource = 'live' | 'simulation';
+
 export interface LiveState {
   connected: boolean;
-  mode: 'connecting' | 'live' | 'simulation' | 'browser-simulation';
+  /** Where results come from right now. browser-* = no API server; computed in the browser. */
+  mode: 'connecting' | 'live' | 'simulation' | 'browser-live' | 'browser-simulation';
+  /** The user's chosen results source (persisted). */
+  source: ResultsSource;
+  setSource: (s: ResultsSource) => void;
   results: Record<string, RaceResult>;
   balance: Record<'senate' | 'house', BalanceOfPower | undefined>;
   calls: RaceCallEvent[]; // newest first
@@ -37,11 +46,15 @@ export interface SimClock {
   et: string;
   progress: number;
   final: boolean;
+  /** true when this is the real wall clock (live mode) */
+  live?: boolean;
 }
 
 const initial: LiveState = {
   connected: false,
   mode: 'connecting',
+  source: 'live',
+  setSource: () => {},
   results: {},
   balance: { senate: undefined, house: undefined },
   calls: [],
@@ -59,7 +72,12 @@ function reduce(s: LiveState, ev: LiveEvent): LiveState {
   const now = Date.now();
   switch (ev.type) {
     case 'hello':
-      return { ...s, connected: true, mode: ev.mode, lastUpdate: now };
+      return {
+        ...s,
+        connected: true,
+        mode: s.mode === 'browser-live' || s.mode === 'browser-simulation' ? s.mode : ev.mode,
+        lastUpdate: now,
+      };
     case 'results': {
       const results = { ...s.results };
       for (const r of ev.results) results[r.raceId] = r;
@@ -113,19 +131,68 @@ function reduce(s: LiveState, ev: LiveEvent): LiveState {
   }
 }
 
+const SOURCE_KEY = 'poltok:source';
+function readSource(): ResultsSource {
+  try {
+    const v = localStorage.getItem(SOURCE_KEY);
+    if (v === 'live' || v === 'simulation') return v;
+  } catch {
+    /* storage unavailable */
+  }
+  return 'live';
+}
+
+/** Apply the provider's authoritative candidate list (live mode) to the shared race objects. */
+function syncCandidates(results: RaceResult[]) {
+  for (const r of results) {
+    if (!r.candidates?.length) continue;
+    const race = raceById.get(r.raceId);
+    if (!race) continue;
+    const same =
+      race.candidates.length === r.candidates.length &&
+      race.candidates.every((c, i) => c.id === r.candidates![i].id && c.name === r.candidates![i].name && c.photo === r.candidates![i].photo);
+    if (!same) race.candidates.splice(0, race.candidates.length, ...r.candidates.map((c) => ({ ...c })));
+  }
+}
+
+type Provider = {
+  start(): void;
+  stop(): void;
+  snapshot(): { results: RaceResult[]; balance: BalanceOfPower[]; markets: Market[] };
+  subscribe(fn: (ev: LiveEvent) => void): () => void;
+  clock?(): SimClock;
+};
+
 export function LiveProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<LiveState>(initial);
+  const [source, setSourceState] = useState<ResultsSource>(readSource);
+  const [state, setState] = useState<LiveState>(() => ({ ...initial, source }));
   const queue = useRef<LiveEvent[]>([]);
 
+  const setSource = useCallback((s: ResultsSource) => {
+    try {
+      localStorage.setItem(SOURCE_KEY, s);
+    } catch {
+      /* ignore */
+    }
+    setSourceState(s);
+  }, []);
+
+  /* ------------------------------- results ------------------------------- */
   useEffect(() => {
     let cancelled = false;
     let es: EventSource | null = null;
-    let stopSim: (() => void) | null = null;
+    let browser: { stop(): void } | null = null;
+    const timers: ReturnType<typeof setInterval>[] = [];
     let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
 
-    // Batch incoming events into one render per animation frame.
+    // Fresh slate for the new source (news is source-independent and kept).
+    setState((s) => ({ ...initial, news: s.news, source, mode: 'connecting' }));
+    queue.current = [];
+
     let raf = 0;
     const push = (ev: LiveEvent) => {
+      if (cancelled) return;
+      if (ev.type === 'results') syncCandidates(ev.results);
       queue.current.push(ev);
       if (!raf)
         raf = requestAnimationFrame(() => {
@@ -135,54 +202,16 @@ export function LiveProvider({ children }: { children: ReactNode }) {
         });
     };
 
-    const startBrowserSim = () => {
-      if (stopSim || cancelled) return;
-      es?.close();
-      const sim = createSimulation({ races: RACES, states: STATES });
-      const unsub = sim.subscribe(push);
-      const snap = sim.snapshot();
-      push({ type: 'hello', serverTime: Date.now(), mode: 'simulation' });
-      setState((s) => ({ ...s, mode: 'browser-simulation' }));
-      push({ type: 'results', results: snap.results });
-      push({ type: 'balance', balance: snap.balance });
-      push({ type: 'markets', markets: snap.markets });
-      sim.start();
-      const clockTimer = setInterval(() => {
-        const c = sim.clock?.();
-        if (c) setState((s) => ({ ...s, clock: c }));
-      }, 1000);
-      stopSim = () => {
-        clearInterval(clockTimer);
-        unsub();
-        sim.stop();
-      };
-      // Static fallback news, if the data agent provided any.
-      import('../../shared/data/index.js')
-        .then((m: { FALLBACK_NEWS?: unknown[] }) => {
-          if (m.FALLBACK_NEWS?.length) push({ type: 'news', items: m.FALLBACK_NEWS as NewsItem[] });
-        })
-        .catch(() => {});
-    };
-
-    // Initial news fetch (stream will deliver updates after).
-    fetch('/api/news?limit=200')
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((d: { items: NewsItem[] }) => d.items?.length && push({ type: 'news', items: d.items }))
-      .catch(() => {});
-
-    // Server sim clock (not part of the SSE contract): poll the lightweight health endpoint.
-    const pollClock = () =>
-      !stopSim &&
-      fetch('/api/health')
+    const pollServerClock = () =>
+      fetch(`/api/health?source=${source}`)
         .then((r) => (r.ok ? r.json() : Promise.reject()))
-        .then((d: { clock?: SimClock }) => d.clock && !stopSim && setState((s) => ({ ...s, clock: d.clock })))
+        .then((d: { clock?: SimClock }) => !cancelled && !browser && d.clock && setState((s) => ({ ...s, clock: d.clock })))
         .catch(() => {});
-    pollClock();
-    const clockPoll = setInterval(pollClock, 5000);
 
-    try {
-      es = new EventSource('/api/stream');
+    const connectServer = () => {
+      es?.close();
       let opened = false;
+      es = new EventSource(`/api/stream?source=${source}`);
       es.onmessage = (m) => {
         opened = true;
         try {
@@ -192,25 +221,115 @@ export function LiveProvider({ children }: { children: ReactNode }) {
         }
       };
       es.onerror = () => {
-        if (!opened) startBrowserSim();
+        if (!opened) startBrowser();
         else setState((s) => ({ ...s, connected: false }));
       };
-      fallbackTimer = setTimeout(() => !opened && startBrowserSim(), 3500);
+      clearTimeout(fallbackTimer);
+      fallbackTimer = setTimeout(() => !opened && startBrowser(), 3500);
+      pollServerClock();
+    };
+
+    // No API server: run the same provider in the browser (NYT/AP live JSON is CORS-enabled).
+    const startBrowser = async () => {
+      if (browser || cancelled) return;
+      browser = { stop() {} };
+      es?.close();
+      es = null;
+      let p: Provider;
+      if (source === 'live') {
+        const { createNytProvider } = await import('../../shared/nyt.js');
+        p = createNytProvider({ races: RACES, states: STATES, housePollMs: 180000 }) as Provider;
+      } else {
+        p = createSimulation({ races: RACES, states: STATES }) as Provider;
+      }
+      if (cancelled) return;
+      const unsub = p.subscribe(push);
+      const snap = p.snapshot();
+      push({ type: 'hello', serverTime: Date.now(), mode: source === 'live' ? 'live' : 'simulation' });
+      setState((s) => ({ ...s, mode: source === 'live' ? 'browser-live' : 'browser-simulation' }));
+      push({ type: 'results', results: snap.results });
+      push({ type: 'balance', balance: snap.balance });
+      push({ type: 'markets', markets: snap.markets });
+      p.start();
+      const clockTimer = setInterval(() => {
+        const c = p.clock?.();
+        if (c) setState((s) => ({ ...s, clock: c }));
+      }, 1000);
+      // Keep checking whether the API server came up; if so, switch to it.
+      const retry = setInterval(() => {
+        fetch('/api/health')
+          .then((r) => (r.ok ? r.json() : Promise.reject()))
+          .then((d: { ok?: boolean }) => {
+            if (!d?.ok || cancelled) return;
+            browser?.stop();
+            browser = null;
+            setState((s) => ({ ...initial, news: s.news, source, mode: 'connecting' }));
+            connectServer();
+          })
+          .catch(() => {});
+      }, 20000);
+      browser = {
+        stop() {
+          clearInterval(clockTimer);
+          clearInterval(retry);
+          unsub();
+          p.stop();
+        },
+      };
+    };
+
+    timers.push(setInterval(pollServerClock, 5000));
+    try {
+      connectServer();
     } catch {
-      startBrowserSim();
+      startBrowser();
     }
 
     return () => {
       cancelled = true;
-      clearInterval(clockPoll);
+      timers.forEach(clearInterval);
       clearTimeout(fallbackTimer);
       cancelAnimationFrame(raf);
       es?.close();
-      stopSim?.();
+      browser?.stop();
+    };
+  }, [source]);
+
+  /* --------------------------------- news -------------------------------- */
+  useEffect(() => {
+    let cancelled = false;
+    let serverFailures = 0;
+    let lastBrowserFetch = 0;
+    const add = (items: NewsItem[]) => !cancelled && items.length && setState((s) => reduce(s, { type: 'news', items }));
+    const tick = async () => {
+      try {
+        const r = await fetch('/api/news?limit=200', { signal: AbortSignal.timeout(15000) });
+        if (!r.ok) throw new Error(String(r.status));
+        const d = (await r.json()) as { items?: NewsItem[] };
+        if (!Array.isArray(d.items)) throw new Error('bad payload');
+        serverFailures = 0;
+        add(d.items);
+        return;
+      } catch {
+        serverFailures++;
+      }
+      // API unreachable: fetch real headlines straight from the browser (at most every 3 min).
+      if (Date.now() - lastBrowserFetch > 3 * 60000) {
+        lastBrowserFetch = Date.now();
+        const { fetchBrowserNews } = await import('./browserNews');
+        add(await fetchBrowserNews());
+      }
+    };
+    tick();
+    const t = setInterval(tick, 60000);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
     };
   }, []);
 
-  return <LiveCtx.Provider value={state}>{children}</LiveCtx.Provider>;
+  const value = useMemo(() => ({ ...state, source, setSource }), [state, source, setSource]);
+  return <LiveCtx.Provider value={value}>{children}</LiveCtx.Provider>;
 }
 
 export const useLive = () => useContext(LiveCtx);

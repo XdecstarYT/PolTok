@@ -181,7 +181,7 @@ export const RaceCard = memo(function RaceCard({ v, now }: { v: RaceView; now: n
           </span>
         </span>
         {!v.winner && fav && fav.prob > 0 && (
-          <span className="lv-prob" style={{ color: PARTY_HEX[fav.c.party] }} title="Model win probability (simulated)">
+          <span className="lv-prob" style={{ color: PARTY_HEX[fav.c.party] }} title="Model win probability">
             {fav.c.party} {Math.round(fav.prob * 100)}%
           </span>
         )}

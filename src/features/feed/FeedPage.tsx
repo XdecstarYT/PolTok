@@ -405,7 +405,7 @@ export default function FeedPage() {
             <span>{counts.story} stories</span>
             <span>{store.saved.length} saved</span>
           </div>
-          {anySim && <p className="fd-muted small">Results, calls and market odds are simulated for demonstration.</p>}
+          {anySim && <p className="fd-muted small">{live.source === 'live' ? 'Results and calls: AP via The New York Times.' : 'Results, calls and market odds are simulated for demonstration.'}</p>}
         </div>
       </aside>
     </div>

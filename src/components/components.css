@@ -161,3 +161,9 @@
 .pt-toast__body { font-size: 13px; color: var(--text-2); }
 .pt-toast__x { flex: none; width: 36px; color: var(--text-3); font-size: 20px; }
 .pt-toast__x:hover { color: var(--text); }
+
+/* Live-source variant of the results badge */
+.pt-simbadge--live { color: #ff6b8b; border-color: rgba(255, 46, 99, 0.5); background: rgba(255, 46, 99, 0.1); }
+.pt-simbadge__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; animation: pt-blink 1.6s ease-in-out infinite; }
+@keyframes pt-blink { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .pt-simbadge__dot { animation: none; } }
