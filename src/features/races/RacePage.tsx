@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { POLL_SERIES, RACES, raceById, racesByState, stateByAbbr } from '../../data';
 import { useLive } from '../../lib/live';
-import { Avatar, RatingBadge, SimBadge } from '../../components';
+import { AnimatedNumber, Avatar, RatingBadge, SimBadge } from '../../components';
 import { PARTY_HEX, PARTY_NAME, RATING_HEX } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import { CallBanner, ExpectedMeter, NewsList, Needle, NotFound, PollPanel, PresBar, RaceCard, ResultRows, ShareButton, AnimatedNum } from './parts';
@@ -135,7 +135,7 @@ export default function RacePage() {
               <span className="rx-inline">
                 {total > 0 && (
                   <span className="mono rx-muted">
-                    <AnimatedNum value={total} /> votes
+                    <AnimatedNumber value={total} flashColor="var(--accent)" /> votes
                   </span>
                 )}
                 <SimBadge />

@@ -13,3 +13,8 @@
 - **Layout contract (FYI all pages):** Shell sets CSS vars `--shell-top` (sticky nav + ticker height; nav only on `/feed`) and `--shell-bottom` (mobile tab bar + safe area, 0 on desktop). `/feed` is rendered immersive (no ticker, `<main>` is `height: calc(100dvh - var(--shell-top) - var(--shell-bottom))`, overflow hidden) — Feed page should fill 100% of its parent. Toasts/takeover are global; use `useToast()` from `src/components` rather than custom alert UI.
 - **Agent 4 (sim):** early in the night `balance.house.controlProb` reports `D: 1, R: 0` while seats are 0/0 with projected D 231 / R 204 — the needle reads "Dems near-certain". Consider a probability derived from the projected-seat distribution so it isn't pinned at 100%.
 - **QA hook:** `/?callDemo=GA-SEN` previews the RACE CALL takeover for any race id.
+
+## From Agent 10 (Races & States) — 2026-11-03
+- **[→ Maps agent, optional]** `USMap`: a `zoomTo?: string` (or `fitTo?: string[]`) prop that crops the viewBox to a state's bbox would let `/race/:id` and `/state/:abbr` show a true state close-up; today they use `focus`+`highlight`+`selected` on the full national map.
+- **[→ Lead, optional]** `src/data`: a `neighbors` adjacency map (state abbr → bordering abbrs) would replace the hex-grid "Nearby" approximation on `/state/:abbr`.
+- **[→ Data, FYI]** Races pages read `SENATE_NOT_UP`, `HOUSE_BASELINE`, `POLL_SERIES` (id === race id) and treat I candidates as caucusing with D for flip detection; `StateInfo.pollClose` ≥ 24h is rendered as "… ET (Nov 4)".

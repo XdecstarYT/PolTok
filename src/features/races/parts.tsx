@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { line as d3line, curveMonotoneX } from 'd3-shape';
 import type { NewsItem, PollSeries, Race, RaceResult, StateInfo } from '../../types';
-import { Avatar, PartyDot, RatingBadge, SimBadge } from '../../components';
+import { AnimatedNumber, Avatar, PartyDot, RatingBadge, SimBadge } from '../../components';
 import { fmtInt, LEAN_HEX, PARTY_COLOR, PARTY_HEX, PARTY_NAME, RATING_HEX, timeAgo } from '../../lib/format';
 import { RACES, stateByAbbr } from '../../data';
 import {
@@ -189,7 +189,7 @@ export function ResultRows({ race, result, big }: { race: Race; result?: RaceRes
               </span>
               <span className="rx-row-num">
                 <b className="mono">{counted ? <AnimatedNum value={s.pct} format={(n) => `${n.toFixed(1)}%`} /> : '—'}</b>
-                <small className="mono">{counted ? <AnimatedNum value={s.votes} /> : '0'} votes</small>
+                <small className="mono">{counted ? <AnimatedNumber value={s.votes} /> : '0'} votes</small>
               </span>
             </div>
             <div className="rx-row-bar">
@@ -382,8 +382,8 @@ export function PollPanel({ series }: { series: PollSeries }) {
               <th>Date</th>
               <th className="hide-sm">Sample</th>
               {keys.map((k) => (
-                <th key={k.key} className="num">
-                  {k.label}
+                <th key={k.key} className="num" title={k.label}>
+                  {k.label.split(' ').pop()}
                 </th>
               ))}
               <th className="num">Net</th>
@@ -400,7 +400,7 @@ export function PollPanel({ series }: { series: PollSeries }) {
                     {p.pollster}
                     {p.grade && <small className="rx-grade">{p.grade}</small>}
                   </td>
-                  <td className="mono">{p.date.slice(5)}</td>
+                  <td className="mono" style={{ whiteSpace: 'nowrap' }}>{p.date.slice(5)}</td>
                   <td className="mono hide-sm">{p.sample ? `${fmtInt(p.sample)} ${p.population ?? ''}` : '—'}</td>
                   {keys.map((k) => (
                     <td key={k.key} className="mono num">
