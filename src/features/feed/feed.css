@@ -133,7 +133,7 @@
 .fd-split span:last-child { justify-content: flex-end; }
 
 /* top bar */
-.fd-top { position: absolute; z-index: 6; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: center; padding: 12px 12px; pointer-events: none; transition: opacity .3s; }
+.fd-top { position: absolute; z-index: 6; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 12px; pointer-events: none; transition: opacity .3s; }
 .fd-top > * { pointer-events: auto; }
 .fd-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 99px; background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .fd-seg button { position: relative; border: 0; background: transparent; color: rgba(255,255,255,.62); font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 99px; white-space: nowrap; }
@@ -141,7 +141,7 @@
 .fd-seg button.on:not(:has(.fd-seg-ind)) { background: #fff; }
 .fd-seg-ind { position: absolute; inset: 0; background: #fff; border-radius: 99px; z-index: -1; }
 .fd-seg button { z-index: 0; isolation: isolate; }
-.fd-top-tools { position: absolute; right: 10px; top: 12px; display: flex; gap: 6px; }
+.fd-top-tools { display: flex; gap: 6px; flex: none; }
 .fd-icon { width: 34px; height: 34px; border-radius: 99px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.4); color: #fff; backdrop-filter: blur(12px); }
 .fd-icon.on { background: var(--accent); color: #0b0d14; border-color: var(--accent); }
 .fd-progress { position: absolute; z-index: 7; top: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,.12); }
@@ -224,7 +224,6 @@
 
 /* phone tweaks */
 @media (max-width: 979px) {
-  .fd-top { justify-content: flex-start; padding-left: 12px; }
   .fd-seg button { padding: 7px 10px; font-size: 12.5px; }
 }
 @media (max-width: 380px) {

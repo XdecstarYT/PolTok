@@ -24,7 +24,7 @@ export function useMonteCarlo(model: SimModel | null, params: SimParams, target:
     let cancelled = false;
     let handle: number | ReturnType<typeof setTimeout> | undefined;
     const schedule = () => {
-      handle = w.requestIdleCallback ? w.requestIdleCallback(tick, { timeout: 60 }) : setTimeout(tick, 0);
+      handle = w.requestIdleCallback ? w.requestIdleCallback(tick, { timeout: 16 }) : setTimeout(tick, 0);
     };
     const tick = () => {
       if (cancelled) return;

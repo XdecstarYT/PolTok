@@ -274,8 +274,9 @@
 @media (max-width: 760px) {
   .lv-hero { grid-template-columns: 1fr; }
   .lv-side { display: flex; }
-  .lv-top-stats { width: 100%; }
-  .lv-top-stats > div { flex: 1; min-width: 0; }
+  .lv-top-stats { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  .lv-top-stats > div { min-width: 0; border-radius: 0 !important; }
+  .lv-top-stats dd { overflow: hidden; text-overflow: ellipsis; }
   .lv-search { max-width: none; margin-left: 0; width: 100%; }
   .lv-grid-h .lv-tabs { width: 100%; }
   .lv-tab { flex: 1; justify-content: center; padding: 6px 6px; }

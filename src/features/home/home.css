@@ -94,7 +94,7 @@
 .hm-map__legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
 
 /* Polls */
-.hm-polls { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+.hm-polls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; }
 .hm-poll { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
 .hm-poll__vals { display: flex; align-items: flex-end; gap: 16px; }
 .hm-poll__vals svg { margin-left: auto; }
@@ -131,6 +131,8 @@
 @media (max-width: 700px) {
   .hm-control, .hm-side, .hm-news__grid { grid-template-columns: minmax(0, 1fr); }
   .hm-races { grid-auto-columns: minmax(250px, 82%); }
+  .hm-chamber__needle { max-width: 210px; }
+  .hm-chamber { padding: 16px; gap: 12px; }
   .hm-cta { min-height: 140px; padding: 16px; }
   .hm-cta__title { font-size: 20px; }
 }

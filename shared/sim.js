@@ -30,7 +30,10 @@
 //   * House seats not individually listed in `races` are modeled in aggregate as safe seats
 //     (split by state partisanship to the 2024 baseline) so House totals sum to 435.
 
-import { SENATE_NOT_UP, HOUSE_TOTAL } from './data/index.js';
+import * as DATA from './data/index.js';
+const { SENATE_NOT_UP, HOUSE_TOTAL } = DATA;
+/** Unlisted (safe) House seats by party, if the data layer provides them. */
+const HOUSE_BASELINE = /** @type {any} */ (DATA).HOUSE_BASELINE;
 
 /** @typedef {import('../src/types').Race} Race */
 /** @typedef {import('../src/types').StateInfo} StateInfo */
@@ -228,7 +231,9 @@ export function createSimulation(opts) {
     const listedHouse = models.filter((m) => m.race.chamber === 'house');
     const remaining = Math.max(0, houseTotal - listedHouse.length);
     const listedR = listedHouse.filter((m) => m.race.incumbentParty === 'R').length;
-    let remR = clamp(HOUSE_BASE_R - listedR, 0, remaining);
+    let remR = HOUSE_BASELINE && Number.isFinite(HOUSE_BASELINE.R) && HOUSE_BASELINE.total === remaining
+      ? HOUSE_BASELINE.R
+      : clamp(HOUSE_BASE_R - listedR, 0, remaining);
     const virtual = buildVirtualSeats(remaining, remR, seed, listedHouse, getState);
 
     return { seed, nationalSwing, models, virtual, getState, stateParams };

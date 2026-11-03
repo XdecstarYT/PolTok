@@ -1,6 +1,7 @@
 /* USMap — owned by Map agent. Uses tokens from src/styles/tokens.css */
 .usmap {
   position: relative;
+  container-type: inline-size;
   width: 100%;
   aspect-ratio: 975 / 610;
   user-select: none;
@@ -204,6 +205,25 @@
 }
 .usmap-tip:empty {
   display: none;
+}
+
+/* Narrow maps: bigger geo labels so they stay legible */
+@container (max-width: 560px) {
+  .usmap.is-geo .usmap-abbr {
+    font-size: 17px;
+  }
+  .usmap.is-geo .usmap-label.on-bg .usmap-abbr {
+    font-size: 15px;
+  }
+  .usmap.is-geo .usmap-label.is-small {
+    opacity: 0;
+  }
+  .usmap.is-hex .usmap-abbr {
+    font-size: 22px;
+  }
+  .usmap.is-hex .usmap-sub {
+    font-size: 14px;
+  }
 }
 
 @media (hover: none) {

@@ -253,11 +253,6 @@ export default function MapPage() {
                 <span>Competitive only</span>
               </label>
             )}
-            {mode === 'live' && (
-              <span className="mp-simtag">
-                <SimBadge />
-              </span>
-            )}
             {mode === 'build' && <span className="mp-hint">Click states to cycle Safe D → Lean D → Toss-up → Lean R → Safe R</span>}
           </div>
 
@@ -366,8 +361,8 @@ function StatsHeader({ mode, chamber, build, onReset }: { mode: MapMode; chamber
           thresholdLabel="51 for control"
           leftValue={now.notUpD + dSide(list)}
           rightValue={now.notUpR + rSide(list)}
-          leftLabel="D-held + favored"
-          rightLabel="R-held + favored"
+          leftLabel="D held/fav."
+          rightLabel="R held/fav."
         />
       </div>
     );
@@ -495,8 +490,8 @@ function StatsHeader({ mode, chamber, build, onReset }: { mode: MapMode; chamber
         segments={BUILD_CYCLE.map((r) => ({ key: r, value: sum[r], color: RATING_HEX[r], label: BUILD_LABEL[r] }))}
         leftValue={D}
         rightValue={R}
-        leftLabel="Democrats"
-        rightLabel="Republicans"
+        leftLabel="Dem"
+        rightLabel="Rep"
       />
     </div>
   );

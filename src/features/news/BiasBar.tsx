@@ -1,5 +1,6 @@
 import type { Coverage, Side } from './newsUtils';
 import { SIDE_HEX, SIDE_LABEL } from './newsUtils';
+import './bias.css';
 
 /** Ground-News-style Left / Center / Right coverage distribution bar. */
 export function CoverageBar({

@@ -125,7 +125,7 @@ export function StoryCard({ cluster, meta, active, reduced, now }: { cluster: Cl
   const gist = firstSentence(lead, 200);
   const [broken, setBroken] = useState(false);
   const leadSide = SIDE_OF[lead.sourceLean] ?? 'U';
-  const others = cluster.items.filter((i) => i.source !== lead.source && (SIDE_OF[i.sourceLean] ?? 'U') !== leadSide);
+  const others = cluster.items.filter((i) => i.source !== lead.source && (SIDE_OF[i.sourceLean] ?? 'U') !== leadSide && SIDE_OF[i.sourceLean] !== 'U');
   const seenSide = new Set<string>();
   const alt = others.filter((i) => {
     const s = SIDE_OF[i.sourceLean];

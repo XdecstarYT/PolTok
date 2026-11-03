@@ -58,8 +58,8 @@ export function ChamberControl({ s, title }: { s: ChamberSummary; title: string 
             </li>
           ) : (
             <>
-              <PathLine party="D" need={s.dNeed} leads={s.dLeads} others={s.rLeads} chamber={s.chamber} undecided={s.undecided} />
-              <PathLine party="R" need={s.rNeed} leads={s.rLeads} others={s.dLeads} chamber={s.chamber} undecided={s.undecided} />
+              <PathLine party="D" need={s.dNeed} leads={s.dLeads} others={s.rLeads} chamber={s.chamber} undecided={s.undecided} projected={s.projD} won={s.dSeats} />
+              <PathLine party="R" need={s.rNeed} leads={s.rLeads} others={s.dLeads} chamber={s.chamber} undecided={s.undecided} projected={s.projR} won={s.rSeats} />
             </>
           )}
         </ul>
@@ -68,20 +68,25 @@ export function ChamberControl({ s, title }: { s: ChamberSummary; title: string 
   );
 }
 
-function PathLine({ party, need, leads, others, chamber, undecided }: { party: 'D' | 'R'; need: number; leads: RaceView[]; others: RaceView[]; chamber: 'senate' | 'house'; undecided: number }) {
+function PathLine({ party, need, leads, others, chamber, undecided, projected, won }: { party: 'D' | 'R'; need: number; leads: RaceView[]; others: RaceView[]; chamber: 'senate' | 'house'; undecided: number; projected: number; won: number }) {
   const color = PARTY_HEX[party];
   if (need <= 0) return <li style={{ color }}>{partyWord[party]} have clinched control.</li>;
   if (need > undecided) return <li className="muted">{partyWord[party]}: no remaining path to a majority.</li>;
-  const holding = leads.length;
+  // Seats the party currently leads/is projected in among the uncalled.
+  const holding = Math.max(0, Math.min(undecided, projected - won));
   const tieNote = chamber === 'senate' && party === 'R' ? ' (50 + VP tiebreak)' : '';
+  const list = chamber === 'senate';
   return (
     <li>
       <b style={{ color }}>{partyWord[party]}</b> need <b className="mono">{need}</b> of <span className="mono">{undecided}</span> uncalled{tieNote}.{' '}
       {holding >= need ? (
-        <>Leading in {holding}{chamber === 'senate' && holding ? ` — ${abbrList(leads)}` : ''}.</>
+        <>
+          {chamber === 'senate' ? 'Leading' : 'Projected ahead'} in {holding}
+          {list && leads.length ? ` — ${abbrList(leads)}` : ''}.
+        </>
       ) : (
         <>
-          Lead in {holding}; must flip {need - holding} more{chamber === 'senate' && others.length ? ` from ${abbrList(others, 4)}` : ''}.
+          Ahead in {holding}; must flip {need - holding} more{list && others.length ? ` from ${abbrList(others, 4)}` : ''}.
         </>
       )}
     </li>

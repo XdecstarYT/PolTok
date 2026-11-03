@@ -172,8 +172,7 @@ function KeyRaceCard({ race, result, i }: { race: Race; result?: RaceResult; i: 
     <motion.li
       className="hm-race"
       initial={reduce ? false : { opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(i, 8) * 0.04 }}
     >
       <Link to={`/race/${race.id}`} className="card card--hover hm-race__card" style={{ '--glow': glow } as CSSProperties}>
@@ -346,7 +345,7 @@ function MapPreview() {
     }
     return f;
   }, [results]);
-  const key = useMemo(() => (RACES ?? []).filter((r) => r.key).map((r) => r.state), []);
+  const key = useMemo(() => [...new Set((RACES ?? []).filter((r) => r.key && r.chamber === 'senate').map((r) => r.state))], []);
   return (
     <Card title="Senate map" live action={<Link to="/map/live" className="link" style={{ fontSize: 13 }}>Full map →</Link>} className="hm-map">
       <USMap fills={fills} variant="geo" labels={false} highlight={key} onStateClick={(a) => navigate(`/state/${a}`)} title="Senate results preview map" />

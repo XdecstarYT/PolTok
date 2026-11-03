@@ -50,6 +50,7 @@ function marginLabel(m: number, a: { label: string; color: string }, b: { label:
   return { text: `${shortLabel(lead.label)}+${Math.abs(m).toFixed(1)}`, color: lead.color };
 }
 const shortLabel = (l: string) => (/^dem/i.test(l) ? 'D' : /^rep/i.test(l) ? 'R' : l);
+const partyOf = (k: { key: string }) => /-(d|r|i|l|g)\d*$/i.exec(k.key)?.[1].toUpperCase();
 /** Compact label for table cells: party letter, Approve/Disapprove → App/Dis, else candidate last name. */
 const cellLabel = (k: { key: string; label: string }) => {
   if (/^(D|R|I|L|G)$/.test(k.key)) return k.key;
@@ -199,7 +200,7 @@ function PollTable() {
         if (m != null && s.keys.length >= 2) {
           const lead = m >= 0 ? s.keys[0] : s.keys[1];
           const mm = Math.abs(m).toFixed(m % 1 ? 1 : 0);
-          marginText = Math.abs(m) < 0.05 ? 'TIE' : /^approve/i.test(s.keys[0].label) ? `Net ${m > 0 ? '+' : '−'}${mm}` : `${cellLabel(lead)}+${mm}`;
+          marginText = Math.abs(m) < 0.05 ? 'TIE' : /^approve/i.test(s.keys[0].label) ? `Net ${m > 0 ? '+' : '−'}${mm}` : `${partyOf(lead) ?? cellLabel(lead)}+${mm}`;
           mc = Math.abs(m) < 0.05 ? 'var(--text-2)' : lead.color;
         }
         out.push({ key: `${s.id}-${i}`, seriesId: s.id, seriesTitle: s.title, pollster: p.pollster, date: p.date, t: parseDay(p.date), sample: p.sample, pop: p.population, result, margin: m, marginText, marginColor: mc, grade: p.grade });

@@ -89,6 +89,12 @@
   .ebar-big {
     font-size: 26px;
   }
+  .ebar-mid {
+    display: none;
+  }
+  .ebar-name {
+    font-size: 10px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .ebar-seg {

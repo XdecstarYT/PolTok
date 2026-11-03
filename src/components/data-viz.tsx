@@ -168,7 +168,7 @@ export function Needle({
   const tickAngles = Array.from({ length: 8 }, (_, i) => (i / 7) * Math.PI);
   return (
     <figure className={`pt-needle ${loading ? 'is-loading' : ''} ${className ?? ''}`} style={{ maxWidth: size }}>
-      <svg viewBox="0 0 200 116" role="img" aria-label={loading ? `${label ?? 'Forecast'}: loading` : `${label ?? 'Forecast'}: Democrats ${Math.round(p * 100)}%, Republicans ${Math.round((1 - p) * 100)}%`}>
+      <svg viewBox="0 -4 200 120" role="img" aria-label={loading ? `${label ?? 'Forecast'}: loading` : `${label ?? 'Forecast'}: Democrats ${Math.round(p * 100)}%, Republicans ${Math.round((1 - p) * 100)}%`}>
         <defs>
           <linearGradient id={gid} x1="0" x2="1" y1="0" y2="0">
             <stop offset="0" stopColor="var(--dem)" />
@@ -187,9 +187,8 @@ export function Needle({
         })}
         {showBands &&
           BANDS.map((b, i) => {
-            if (i % 3 !== 0 && i !== 3) return null;
-            const a = ((i + 0.5) / 7) * Math.PI;
-            const x = 100 + 56 * Math.cos(Math.PI - a), y = 100 - 56 * Math.sin(Math.PI - a);
+            if (i !== 3) return null;
+            const x = 100, y = 4;
             return (
               <text key={i} x={x} y={y + 2} textAnchor="middle" fontSize="6.2" fill="var(--text-3)" fontFamily="var(--font-mono)" letterSpacing="0.05em">
                 {b.toUpperCase()}

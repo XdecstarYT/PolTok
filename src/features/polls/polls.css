@@ -235,3 +235,9 @@
   .pc-fade, .pc-fade-late { animation: none; }
   .fc-bar, .fc-ctl-bar .d, .fc-ctl-bar .r, .fc-seatbar > span { transition: none; }
 }
+@media (max-width: 520px) {
+  .pl-chart-card, .pl-table-card { padding: 14px; }
+  .pl-table-scroll { margin: 0; }
+  .pl-table th, .pl-table td { padding-left: 3px; padding-right: 3px; }
+  .pl-table { font-size: 12.5px; }
+}
