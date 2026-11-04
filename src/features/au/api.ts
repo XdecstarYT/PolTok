@@ -17,9 +17,10 @@ export interface AuResults {
 
 type Feed<T> = { data: T | null; error: boolean; updated: number | null };
 
-function usePoll<T>(url: string, everyMs: number, pick: (j: unknown) => T | null): Feed<T> {
+function usePoll<T>(url: string | null, everyMs: number, pick: (j: unknown) => T | null): Feed<T> {
   const [st, setSt] = useState<Feed<T>>({ data: null, error: false, updated: null });
   useEffect(() => {
+    if (!url) return;
     let dead = false;
     let t: ReturnType<typeof setTimeout>;
     const run = async () => {
@@ -57,8 +58,8 @@ export function useAuMarkets() {
   });
 }
 
-export function useAuResults(contest: string) {
-  return usePoll<AuResults>(`/api/au/results?contest=${encodeURIComponent(contest)}`, 30_000, (j) => {
+export function useAuResults(contest: string | null) {
+  return usePoll<AuResults>(contest ? `/api/au/results?contest=${encodeURIComponent(contest)}` : null, 30_000, (j) => {
     const o = j as AuResults;
     return o && typeof o === 'object' && typeof o.status === 'string' ? { ...o, seats: o.seats ?? {} } : null;
   });

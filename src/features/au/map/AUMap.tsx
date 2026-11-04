@@ -76,7 +76,7 @@ interface Built {
 }
 
 const VB_W = 1000;
-const VB_H: Record<AULayer, number> = { federal: 860, vic: 640 };
+const VB_H: Record<AULayer, number> = { federal: 800, vic: 640 };
 const NEUTRAL = '#1c2031';
 const SRC: Record<AULayer, string> = { federal: '/geo/au-federal.json', vic: '/geo/vic-districts.json' };
 /** lon/lat boxes: [west, south, east, north] */
@@ -388,7 +388,7 @@ function AUMapImpl({
               </g>
             );
           })}
-          {isHex &&
+          {isHex && layer === 'federal' &&
             G.groups.map((g) => (
               <text key={g.name} x={g.x} y={g.y} className="aumap-group" aria-hidden>
                 {g.name}
