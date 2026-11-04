@@ -11,18 +11,18 @@ export default function BillPage() {
   const { data: b, error, loading } = useAsync(() => api.bill(c, id), [id]);
   const back = <Link to={c === 'au' ? '/parliament?c=au' : '/parliament'}>← {c === 'au' ? 'Australian Parliament' : 'US Congress'} bills</Link>;
 
-  if (loading && !b) return <div className="pa-page"><div className="pa-kicker">{back}</div><p className="pa-muted">Loading bill…</p></div>;
+  if (loading && !b) return <div className="page pa-page"><div className="pa-kicker">{back}</div><p className="pa-muted">Loading bill…</p></div>;
   if (error || !b)
     return (
-      <div className="pa-page">
+      <div className="page pa-page">
         <div className="pa-kicker">{back}</div>
         <div className="pa-connect"><b>Bill not available</b><p>{error || 'Not found'} — the live parliament API could not return this bill.</p></div>
       </div>
     );
 
-  const updatedTs = b.updated ? Date.parse(b.updated.endsWith('Z') || /[+-]\d\d:?\d\d$/.test(b.updated) ? b.updated : b.updated + 'Z') : NaN;
+  const updatedTs = b.updated && /(Z|[+-]\d\d:?\d\d)$/.test(b.updated) ? Date.parse(b.updated) : NaN; // zone-less stamps (FRL) are not shown
   return (
-    <div className="pa-page">
+    <div className="page pa-page">
       <div className="pa-kicker">{back}</div>
       <header>
         <div className="pa-bill__top">

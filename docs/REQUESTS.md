@@ -37,3 +37,8 @@
   - `/au/seat/:id` (src/features/au/SeatPage.tsx): `<ShareCardButton kind="au-seat" id={seat.id} />`
   - Optional props: `label`, `className` (defaults to `btn btn--sm`).
 - **Embeds:** `/embed/race/:id`, `/embed/balance?chamber=house`, `/embed/map?chamber=governor` (all accept `theme=light`) render OUTSIDE the Shell via a `pathname.startsWith('/embed/')` check in App.tsx; builder at `/embed` (in Shell, NAV_MORE "Embed"). Server sends no X-Frame-Options/CSP frame-ancestors — keep it that way for `/embed/*` if headers are added later.
+
+## From Agent 9 (Parliament) — 2026-11-04
+- **[→ Agent 10 / netlify.toml]** `netlify/functions/parliament.mjs` declares `export const config = { path: ['/api/parliament', '/api/parliament/*'] }`, so no redirect is strictly needed. If netlify.toml routes `/api/*` elsewhere, add BEFORE it: `[[redirects]] from = "/api/parliament/*" to = "/.netlify/functions/parliament/:splat" status = 200`. The function imports `../../server/parliament.js` (needs `fast-xml-parser`, already a dependency) — ensure `[functions] node_bundler = "esbuild"` (default) bundles it.
+- **Env (optional, server-side only):** `CONGRESS_API_KEY` (free api.data.gov key; DEMO_KEY is 10 req/h shared so unused) and `TVFY_API_KEY` (theyvoteforyou.org.au — enables Australian divisions with party breakdown; without it the UI shows a "connect a data key" card). US bills/votes work keyless (GovInfo BILLSTATUS + clerk.house.gov). aph.gov.au/ParlInfo is behind a bot WAF; AU falls back to Acts with Royal Assent from legislation.gov.au.
+- server/index.js: one additive line mounting `/api/parliament*`.

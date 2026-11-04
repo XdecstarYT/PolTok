@@ -73,3 +73,8 @@ html.emb-doc body::before, html.emb-doc body::after { display: none; }
 .embb__chips .chip { text-transform: capitalize; }
 .embb__preview { min-width: 0; display: grid; justify-items: center; padding: 16px; border-radius: 14px; border: 1px dashed var(--line-2); background: repeating-conic-gradient(var(--bg-1) 0 25%, var(--bg-2) 0 50%) 0 0 / 24px 24px; }
 .embb__frame { box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); border-radius: 12px; }
+/* keep the live preview inside the viewport on phones */
+.embb, .embb * { min-width: 0; }
+.embb__frame { max-width: 100% !important; }
+@media (max-width: 760px) { .embb__grid { grid-template-columns: minmax(0, 1fr); } }
+.embb__preview { grid-template-columns: minmax(0, 1fr); }

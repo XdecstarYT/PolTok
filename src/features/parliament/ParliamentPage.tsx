@@ -41,7 +41,7 @@ export default function ParliamentPage() {
   const counts = stages.map((_, i) => list.filter((b) => b.stage === i).length);
 
   return (
-    <div className="pa-page">
+    <div className="page pa-page">
       <header>
         <div className="pa-kicker">PARLIAMENT · LIVE BILL TRACKER</div>
         <h1>{country === 'us' ? '119th U.S. Congress' : 'Parliament of Australia'}</h1>
