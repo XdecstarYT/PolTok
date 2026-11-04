@@ -298,3 +298,9 @@
   .ct__check { width: 44px; height: 44px; font-size: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .ct__dot, .ct__glitch { animation: none; } }
+.set__looks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.set__look { display: grid; gap: 6px; text-align: left; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-2); }
+.set__look.is-on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.set__look-swatch { height: 44px; border-radius: 8px; }
+.set__look--command .set__look-swatch { background: radial-gradient(circle at 30% 40%, #3d7bff55, transparent 60%), radial-gradient(circle at 75% 60%, #ff3d5555, transparent 60%), #07080d; border: 1px solid #c6ff3d66; }
+.set__look--broadcast .set__look-swatch { background: linear-gradient(180deg, #13306f 0 62%, #fff 62% 100%); border-top: 4px solid #e3122d; }

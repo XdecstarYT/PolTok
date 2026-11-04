@@ -22,6 +22,22 @@ export function SettingsPanel() {
   return (
     <Modal open={open} onClose={onClose} title="Settings" variant="sheet" width={560}>
       <div className="set">
+        <section className="set__sec" aria-labelledby="set-ui">
+          <h3 id="set-ui" className="set__h">Look</h3>
+          <div className="set__looks" role="radiogroup" aria-labelledby="set-ui">
+            {([
+              ['command', 'Command Center', 'Dark neon election-night control room'],
+              ['broadcast', 'Broadcast', 'Cable-news desk: navy & red, lower-third crawl, ALERT bars'],
+            ] as const).map(([v, l, d]) => (
+              <button key={v} type="button" role="radio" aria-checked={settings.ui === v} className={`set__look set__look--${v} ${settings.ui === v ? 'is-on' : ''}`} onClick={() => update({ ui: v })}>
+                <span className="set__look-swatch" aria-hidden="true" />
+                <b>{l}</b>
+                <span className="set__help">{d}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
         <section className="set__sec" aria-labelledby="set-tz">
           <h3 id="set-tz" className="set__h">Time zone</h3>
           <p className="set__help">Every time in PolTok — poll closings, race calls, the clock — is shown in this zone. Now: <b className="num">{fmtTime(now)} {tzAbbr(now)}</b></p>

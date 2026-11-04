@@ -13,6 +13,8 @@ export interface Settings {
   timeZone: string;
   alerts: AlertLevel;
   sound: boolean;
+  /** visual style: 'command' (default dark) or 'broadcast' (cable-news desk) */
+  ui: 'command' | 'broadcast';
 }
 
 export const TIME_ZONES: { id: string; label: string; group: string }[] = [
@@ -37,7 +39,15 @@ export const TIME_ZONES: { id: string; label: string; group: string }[] = [
 ];
 
 const KEY = 'poltok:settings';
-const DEFAULTS: Settings = { timeZone: 'America/New_York', alerts: 'key', sound: false };
+const DEFAULTS: Settings = { timeZone: 'America/New_York', alerts: 'key', sound: false, ui: 'command' };
+
+function applyUi(ui: Settings['ui']) {
+  try {
+    document.documentElement.dataset.ui = ui;
+  } catch {
+    /* no DOM */
+  }
+}
 
 function load(): Settings {
   try {
@@ -61,12 +71,14 @@ export function SettingsProvider({ children }: { children: (settings: Settings) 
   const [settings, setSettings] = useState<Settings>(() => {
     const s = load();
     setDisplayTZ(s.timeZone);
+    applyUi(s.ui);
     return s;
   });
   const update = useCallback((patch: Partial<Settings>) => {
     setSettings((prev) => {
       const next = { ...prev, ...patch };
       if (patch.timeZone) setDisplayTZ(next.timeZone);
+      if (patch.ui) applyUi(next.ui);
       try {
         localStorage.setItem(KEY, JSON.stringify(next));
       } catch {

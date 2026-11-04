@@ -241,3 +241,6 @@
   .pl-table th, .pl-table td { padding-left: 3px; padding-right: 3px; }
   .pl-table { font-size: 12.5px; }
 }
+.fc-live-toggle { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; padding: 10px 14px; border-radius: 12px; background: rgba(198,255,61,0.06); border: 1px solid rgba(198,255,61,0.3); font-size: 14px; color: var(--text-2); cursor: pointer; }
+.fc-live-toggle input { accent-color: var(--accent); margin-top: 3px; }
+.fc-live-toggle b { color: var(--text); }

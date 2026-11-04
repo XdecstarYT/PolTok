@@ -1,0 +1,72 @@
+/* "Broadcast" UI theme — cable-news election-desk look (navy + red + white, condensed caps,
+ * glossy panels, lower-third crawl, ALERT bars). Generic styling; no third-party branding.
+ * Enabled by Settings → Look, which sets <html data-ui="broadcast">. */
+:root[data-ui='broadcast'] {
+  --bg: #04102b;
+  --bg-1: #0a1d47;
+  --bg-2: #0f2659;
+  --bg-3: #163170;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-2: rgba(255, 255, 255, 0.24);
+  --text: #ffffff;
+  --text-2: #c9d6f2;
+  --text-3: #8fa3cf;
+  --dem: #1e6bff;
+  --rep: #e3122d;
+  --accent: #ffcc00;
+  --live: #e3122d;
+  --breaking: #e3122d;
+  --font-display: 'Oswald', 'Roboto Condensed', system-ui, sans-serif;
+  --font-body: 'Roboto Condensed', 'Inter', system-ui, sans-serif;
+  --radius: 4px;
+  --radius-sm: 3px;
+}
+[data-ui='broadcast'] body {
+  background: radial-gradient(120% 80% at 50% -10%, #17357e 0%, #04102b 55%) fixed, #04102b;
+}
+[data-ui='broadcast'] h1,
+[data-ui='broadcast'] h2,
+[data-ui='broadcast'] h3 { text-transform: uppercase; letter-spacing: 0.01em; font-weight: 700; }
+
+/* Glossy panels with a red top rule */
+[data-ui='broadcast'] .card {
+  background: linear-gradient(180deg, #13306f 0%, #0b1f4d 55%, #08183d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: 3px solid var(--rep);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Top bar: deep navy with a red underline stripe */
+[data-ui='broadcast'] .sh-top {
+  background: linear-gradient(180deg, #0d2763, #071a45) !important;
+  border-bottom: 4px solid var(--rep);
+  box-shadow: 0 4px 0 #ffffff22;
+}
+[data-ui='broadcast'] .sh-logo__word { font-family: 'Oswald', sans-serif; font-weight: 700; letter-spacing: 0.04em; font-style: italic; }
+[data-ui='broadcast'] .sh-nav a, [data-ui='broadcast'] .sh-nav__t { text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.04em; }
+[data-ui='broadcast'] .sh-pill.is-live { background: var(--rep); border-color: #fff; color: #fff; border-radius: 3px; }
+
+/* Lower-third crawl */
+[data-ui='broadcast'] .tk { background: #ffffff; border-top: 0; height: 38px; }
+[data-ui='broadcast'] .tk__badge {
+  background: linear-gradient(180deg, #ff2a44, #c40d24); color: #fff; font-family: 'Oswald', sans-serif; font-size: 15px;
+  letter-spacing: 0.08em; clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%); padding-right: 26px;
+}
+[data-ui='broadcast'] .tk__item { color: #0a1d47; font-weight: 700; font-size: 15px; height: 38px; text-transform: uppercase; }
+[data-ui='broadcast'] .tk__label { background: #0a1d47 !important; color: #fff !important; border-color: #0a1d47 !important; border-radius: 2px; }
+[data-ui='broadcast'] .tk__sep { color: var(--rep); }
+
+/* Buttons / chips: squared, bold */
+[data-ui='broadcast'] .btn, [data-ui='broadcast'] .chip { border-radius: 3px; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.04em; }
+[data-ui='broadcast'] .kicker, [data-ui='broadcast'] .eyebrow { color: var(--accent); }
+
+/* Race-call takeover becomes an ALERT bar */
+[data-ui='broadcast'] .ct { background: linear-gradient(180deg, rgba(4, 16, 43, 0.92), rgba(4, 16, 43, 0.97)); }
+[data-ui='broadcast'] .ct__kicker {
+  background: var(--rep); color: #fff; padding: 6px 14px; justify-self: start; font-family: 'Oswald', sans-serif; font-size: 18px;
+  letter-spacing: 0.12em; clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%); padding-right: 30px;
+}
+[data-ui='broadcast'] .ct__state { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+[data-ui='broadcast'] .ct__winner { border-radius: 4px; background: linear-gradient(180deg, #ffffff, #dfe6f5); color: #0a1d47; border: 0; border-left: 8px solid var(--ct); }
+[data-ui='broadcast'] .ct__winner .ct__label { color: var(--rep); opacity: 1; font-weight: 700; }
+[data-ui='broadcast'] .ct__stamp { border-radius: 3px; background: var(--rep); border-color: #fff; }

@@ -7,7 +7,8 @@ import { marginColor, PARTY_HEX } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import { useDebounced } from './hooks';
 import { buildHouseModel, buildSenateModel } from './model';
-import { summarize, type SimModel, type SimSeat, type SimSnapshot } from './sim';
+import { conditionOnLive, summarize, type LiveSeatInput, type SimModel, type SimSeat, type SimSnapshot } from './sim';
+import { raceById } from '../../data';
 import { useMonteCarlo } from './useMonteCarlo';
 import { ControlBar, fmtP, OutcomeDots, SeatHistogram } from './forecastCharts';
 import { MARKET_REFERENCE, COOK_HOUSE } from './forecastData';
@@ -393,8 +394,31 @@ function MarketsPanel({ senateP, houseP, raceP }: { senateP: number | null; hous
 
 /* ---------- page ---------- */
 export default function ForecastPage() {
-  const senate = useMemo(buildSenateModel, []);
-  const house = useMemo(buildHouseModel, []);
+  const baseSenate = useMemo(buildSenateModel, []);
+  const baseHouse = useMemo(buildHouseModel, []);
+  const live = useLive();
+  const [useLiveResults, setUseLiveResults] = useState(true);
+  // Live inputs, keyed so the Monte Carlo only reruns when something material changes.
+  const liveKey = useMemo(() => {
+    const out: Record<string, LiveSeatInput> = {};
+    for (const [id, r] of Object.entries(live.results)) {
+      const race = raceById.get(id);
+      if (!race) continue;
+      const dSide = (pid?: string) => {
+        const p = race.candidates.find((c) => c.id === pid)?.party;
+        return p === 'D' || p === 'I' ? 'D' : p === 'R' ? 'R' : undefined;
+      };
+      let pD = 0;
+      for (const [cid, p] of Object.entries(r.winProb ?? {})) if (dSide(cid) === 'D') pD += p;
+      out[id] = { calledSide: r.calledFor ? dSide(r.calledFor) : undefined, pD: Math.round(pD * 100) / 100, expectedPct: Math.round(r.expectedPct / 5) * 5 };
+    }
+    return JSON.stringify(out);
+  }, [live.results]);
+  const liveInputs = useMemo(() => JSON.parse(liveKey) as Record<string, LiveSeatInput>, [liveKey]);
+  const sCond = useMemo(() => conditionOnLive(baseSenate, useLiveResults ? liveInputs : {}), [baseSenate, liveInputs, useLiveResults]);
+  const hCond = useMemo(() => conditionOnLive(baseHouse, useLiveResults ? liveInputs : {}), [baseHouse, liveInputs, useLiveResults]);
+  const senate = sCond.model as typeof baseSenate;
+  const house = hCond.model as typeof baseHouse;
   const [shift, setShift] = useState(0);
   const [corr, setCorr] = useState(0.55);
   const dShift = useDebounced(shift, 90);
@@ -423,6 +447,13 @@ export default function ForecastPage() {
           simple, stated assumptions. For calls, follow the <Link to="/live">live results desk</Link>.
           {senate.fromResearch && <span className="muted"> Race list loaded from our research file while the data desk syncs.</span>}
         </div>
+        <label className="fc-live-toggle">
+          <input type="checkbox" checked={useLiveResults} onChange={(e) => setUseLiveResults(e.target.checked)} />
+          <span>
+            <b>Use tonight&apos;s results</b> — {sCond.locked + hCond.locked} races locked in from {live.source === 'live' ? 'AP calls' : 'demo calls'},{' '}
+            {sCond.counting + hCond.counting} counting races use the live model.
+          </span>
+        </label>
       </header>
 
       <div className="fc-controls card">
