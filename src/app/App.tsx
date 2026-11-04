@@ -12,6 +12,8 @@ const PollsPage = lazy(() => import('../features/polls/PollsPage'));
 const ForecastPage = lazy(() => import('../features/polls/ForecastPage'));
 const RacePage = lazy(() => import('../features/races/RacePage'));
 const StatePage = lazy(() => import('../features/races/StatePage'));
+const ReplayPage = lazy(() => import('../features/analysis/ReplayPage'));
+const AnalysisPage = lazy(() => import('../features/analysis/AnalysisPage'));
 const RacesIndex = lazy(() => import('../features/races/RacesIndex'));
 const AUPage = lazy(() => import('../features/au/AUPage'));
 const VictoriaPage = lazy(() => import('../features/au/VictoriaPage'));
@@ -46,6 +48,8 @@ export function App() {
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/flips" element={<FlipsPage />} />
           <Route path="/measures" element={<MeasuresPage />} />
+          <Route path="/replay" element={<ReplayPage />} />
+          <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>
