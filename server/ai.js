@@ -16,7 +16,22 @@ export const MAX_CONTEXT = 24000; // chars of JSON context
 export const MAX_BODY = 40000;
 
 const key = (env) => env.GROQ || env.GROQ_API_KEY || '';
-const model = (env) => env.GROQ_MODEL || DEFAULT_MODEL;
+// Groq retires models over time. If the configured one is rejected we ask Groq which models this
+// key can use and pick the best chat model automatically (cached per warm instance).
+let discovered = '';
+const model = (env) => discovered || env.GROQ_MODEL || DEFAULT_MODEL;
+const PREFER = [/gpt-oss-120b/, /llama-4-maverick/, /llama-3\.3-70b/, /kimi-k2/, /qwen3?-.*32b/, /llama-4-scout/, /gpt-oss-20b/, /llama/];
+const NOT_CHAT = /whisper|guard|tts|playai|embed|distil|orpheus|prompt-guard|compound/;
+export async function discoverModel(env, fetchImpl = fetch) {
+  const res = await fetchImpl('https://api.groq.com/openai/v1/models', { headers: { authorization: `Bearer ${key(env)}` }, signal: AbortSignal.timeout(8000) });
+  if (!res.ok) return '';
+  const ids = ((await res.json())?.data || []).filter((m) => m?.active !== false).map((m) => String(m.id)).filter((id) => !NOT_CHAT.test(id));
+  for (const re of PREFER) {
+    const hit = ids.find((id) => re.test(id));
+    if (hit) return hit;
+  }
+  return ids[0] || '';
+}
 const maxTokens = (env) => Math.min(1200, Math.max(64, Number(env.AI_MAX_TOKENS) || 700));
 
 export const SYSTEM_PROMPT = `You are "Ask PolTok", an election-results assistant inside the PolTok app.
@@ -74,7 +89,10 @@ const jsonRes = (status, body, extra = {}) =>
 
 /** Web-standard handler: (Request, {ip, env, fetchImpl}) → Response. */
 export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl = fetch } = {}) {
-  if (req.method === 'GET' || req.method === 'HEAD') return jsonRes(200, { ok: true, configured: !!key(env), model: model(env) });
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    if (key(env) && !discovered && new URL(req.url, 'http://x').searchParams.has('check')) discovered = await discoverModel(env, fetchImpl).catch(() => '');
+    return jsonRes(200, { ok: true, configured: !!key(env), model: model(env) });
+  }
   if (req.method !== 'POST') return jsonRes(405, { error: 'method not allowed', code: 'method' });
   if (!key(env)) return jsonRes(503, { error: 'AI is not configured on this deployment (missing GROQ env var).', code: 'not_configured' });
 
@@ -95,8 +113,8 @@ export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl 
 
   const mode = ['chat', 'race', 'brief'].includes(body.mode) ? body.mode : 'chat';
   let upstream;
-  try {
-    upstream = await fetchImpl(GROQ_URL, {
+  const call = () =>
+    fetchImpl(GROQ_URL, {
       method: 'POST',
       headers: { authorization: `Bearer ${key(env)}`, 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -108,6 +126,19 @@ export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl 
       }),
       signal: AbortSignal.timeout(25000),
     });
+  try {
+    upstream = await call();
+    // Model retired / unknown → discover a working model once and retry.
+    if (upstream.status === 404 || upstream.status === 400) {
+      const detail = await upstream.text().catch(() => '');
+      if (upstream.status === 404 || /model/i.test(detail)) {
+        const m = await discoverModel(env, fetchImpl).catch(() => '');
+        if (m && m !== model(env)) {
+          discovered = m;
+          upstream = await call();
+        }
+      }
+    }
   } catch (e) {
     return jsonRes(502, { error: 'AI provider unreachable', code: 'upstream' });
   }
