@@ -12,7 +12,7 @@
 export const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 export const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
 export const MAX_QUESTION = 600;
-export const MAX_CONTEXT = 24000; // chars of JSON context
+export const MAX_CONTEXT = 9000; // chars of JSON context (fits Groq free-tier per-minute token limits)
 export const MAX_BODY = 40000;
 
 const key = (env) => env.GROQ || env.GROQ_API_KEY || '';
@@ -32,7 +32,7 @@ export async function discoverModel(env, fetchImpl = fetch) {
   }
   return ids[0] || '';
 }
-const maxTokens = (env) => Math.min(1200, Math.max(64, Number(env.AI_MAX_TOKENS) || 700));
+const maxTokens = (env) => Math.min(1200, Math.max(64, Number(env.AI_MAX_TOKENS) || 600));
 
 export const SYSTEM_PROMPT = `You are "Ask PolTok", an election-results assistant inside the PolTok app.
 Today is ${'{TODAY}'}. You answer ONLY from the CONTEXT JSON supplied with each request (live results snapshot from AP via The New York Times, balance of power, prediction markets, news headlines, Australian data).
@@ -51,9 +51,9 @@ const MODE_HINT = {
 };
 
 /** Build the Groq chat messages. Exported for tests. */
-export function buildMessages({ question, context, history = [], mode = 'chat' }, now = new Date()) {
+export function buildMessages({ question, context, history = [], mode = 'chat' }, now = new Date(), cap = MAX_CONTEXT) {
   let ctx = JSON.stringify(context ?? {});
-  if (ctx.length > MAX_CONTEXT) ctx = ctx.slice(0, MAX_CONTEXT) + '…[truncated]';
+  if (ctx.length > cap) ctx = ctx.slice(0, cap) + '…[truncated]';
   const sys = SYSTEM_PROMPT.replace('{TODAY}', now.toISOString().slice(0, 10)) + (MODE_HINT[mode] ? `\n${MODE_HINT[mode]}` : '');
   const hist = (Array.isArray(history) ? history : [])
     .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
@@ -113,13 +113,14 @@ export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl 
 
   const mode = ['chat', 'race', 'brief'].includes(body.mode) ? body.mode : 'chat';
   let upstream;
+  let cap = MAX_CONTEXT;
   const call = () =>
     fetchImpl(GROQ_URL, {
       method: 'POST',
       headers: { authorization: `Bearer ${key(env)}`, 'content-type': 'application/json' },
       body: JSON.stringify({
         model: model(env),
-        messages: buildMessages({ question, context: body.context, history: body.history, mode }),
+        messages: buildMessages({ question, context: body.context, history: body.history, mode }, new Date(), cap),
         temperature: 0.2,
         max_tokens: maxTokens(env),
         stream: true,
@@ -128,6 +129,11 @@ export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl 
     });
   try {
     upstream = await call();
+    // Too large for the plan's per-minute token budget → retry once with a smaller context.
+    if (upstream.status === 413) {
+      cap = 3500;
+      upstream = await call();
+    }
     // Model retired / unknown → discover a working model once and retry.
     if (upstream.status === 404 || upstream.status === 400) {
       const detail = await upstream.text().catch(() => '');
