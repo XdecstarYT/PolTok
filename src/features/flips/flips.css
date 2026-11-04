@@ -1,0 +1,43 @@
+/* /flips — scoped .fl- */
+.fl-page { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; min-width: 0; }
+.fl-page .muted { color: var(--text-3); }
+.fl-kicker { display: flex; gap: 8px; align-items: center; font-size: 11px; letter-spacing: .12em; color: var(--text-3); }
+.fl-head h1 { font-size: clamp(24px, 3.4vw, 38px); line-height: 1.05; margin: 6px 0; }
+.fl-sub { color: var(--text-2); font-size: var(--fs-sm); max-width: 760px; }
+.fl-upd { color: var(--text-3); font-size: 11px; display: block; margin-top: 4px; }
+.fl-h2 { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); margin-bottom: 10px; }
+.fl-tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.fl-tcard { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; min-width: 0; }
+.fl-tcard-h { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
+.fl-tnums { display: flex; flex-wrap: wrap; gap: 4px 14px; font-family: var(--font-display); font-weight: 800; font-size: clamp(20px, 3vw, 30px); font-variant-numeric: tabular-nums; margin: 4px 0; }
+.fl-tfoot { font-size: 11px; color: var(--text-3); }
+.fl-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.fl-seg { display: inline-flex; background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 2px; flex-wrap: wrap; }
+.fl-seg button, .fl-chip, .fl-more { background: none; border: 0; color: var(--text-2); font: inherit; font-size: 13px; padding: 6px 12px; border-radius: var(--radius-pill); cursor: pointer; min-height: 32px; }
+.fl-seg button.on { background: var(--bg-3); color: var(--text); }
+.fl-chip { background: var(--accent-soft); color: var(--text); }
+.fl-more { width: 100%; margin-top: 6px; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.fl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); gap: 16px; align-items: start; }
+.fl-cards { min-width: 0; }
+.fl-cardgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.fl-card { display: flex; gap: 10px; align-items: center; background: var(--bg-1); border: 1px solid var(--line); border-left: 3px solid var(--fl-to); border-radius: var(--radius); padding: 10px; min-width: 0; }
+.fl-shape { width: 72px; height: 56px; flex: none; }
+.fl-cbody { min-width: 0; flex: 1; }
+.fl-ctop { display: flex; justify-content: space-between; gap: 6px; align-items: center; }
+.fl-ctop b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fl-swap { display: inline-flex; gap: 3px; align-items: center; font-size: 10px; color: var(--text-3); flex: none; }
+.fl-swap i { font-style: normal; color: #fff; padding: 1px 5px; border-radius: 3px; font-weight: 700; }
+.fl-cwin { font-size: 14px; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fl-cmeta { font-size: 11px; color: var(--text-3); margin-top: 2px; overflow-wrap: anywhere; }
+.fl-empty { color: var(--text-3); padding: 24px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius); }
+.fl-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.fl-panel { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; min-width: 0; }
+.fl-legend { display: flex; gap: 12px; font-size: 11px; color: var(--text-3); margin-top: 6px; flex-wrap: wrap; }
+.fl-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.fl-watch { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.fl-watch li { display: flex; justify-content: space-between; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.fl-wl { display: flex; flex-direction: column; min-width: 0; }
+.fl-wl small { color: var(--text-3); font-size: 11px; }
+.fl-wr { font-size: 12px; white-space: nowrap; align-self: center; }
+@media (max-width: 960px) { .fl-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .fl-tally { gap: 6px; } .fl-tcard { padding: 10px; } .fl-tnums { font-size: 17px; flex-direction: column; } .fl-cardgrid { grid-template-columns: minmax(0, 1fr); } }
