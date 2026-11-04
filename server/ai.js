@@ -13,7 +13,7 @@ export const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 export const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
 export const MAX_QUESTION = 600;
 export const MAX_CONTEXT = 9000; // chars of JSON context (fits Groq free-tier per-minute token limits)
-export const MAX_BODY = 40000;
+export const MAX_BODY = 400000; // accept big contexts; we trim to MAX_CONTEXT ourselves
 
 const key = (env) => env.GROQ || env.GROQ_API_KEY || '';
 // Groq retires models over time. If the configured one is rejected we ask Groq which models this

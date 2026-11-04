@@ -151,7 +151,7 @@ export async function askAi(
     r = await fetch('/api/ai', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ question: opts.question, context: opts.context, history: opts.history, mode: opts.mode ?? 'chat' }),
+      body: JSON.stringify({ question: opts.question, context: fitContext(opts.context), history: opts.history, mode: opts.mode ?? 'chat' }),
       signal: opts.signal,
     });
   } catch (e) {
@@ -185,4 +185,26 @@ export async function askAi(
 /** Source names cited as [Name] in an answer. */
 export function citedSources(text: string) {
   return [...new Set([...text.matchAll(/\[([^\]\n]{2,40})\]/g)].map((m) => m[1].trim()))];
+}
+
+/**
+ * Keep the AI context small enough for Groq's free-tier token budget (~9k chars of JSON):
+ * repeatedly halve the longest array (headlines, races, calls…) until it fits.
+ */
+export function fitContext(ctx: unknown, maxChars = 8500): unknown {
+  if (ctx == null) return ctx;
+  const c = JSON.parse(JSON.stringify(ctx));
+  const arrays = (o: unknown, out: unknown[][] = []): unknown[][] => {
+    if (Array.isArray(o)) {
+      out.push(o);
+      o.forEach((x) => arrays(x, out));
+    } else if (o && typeof o === 'object') Object.values(o).forEach((x) => arrays(x, out));
+    return out;
+  };
+  for (let i = 0; i < 40 && JSON.stringify(c).length > maxChars; i++) {
+    const list = arrays(c).filter((a) => a.length > 1).sort((a, b) => JSON.stringify(b).length - JSON.stringify(a).length);
+    if (!list.length) break;
+    list[0].splice(Math.ceil(list[0].length / 2));
+  }
+  return c;
 }
