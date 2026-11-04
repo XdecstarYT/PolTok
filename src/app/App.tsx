@@ -15,6 +15,7 @@ const StatePage = lazy(() => import('../features/races/StatePage'));
 const RacesIndex = lazy(() => import('../features/races/RacesIndex'));
 const AUPage = lazy(() => import('../features/au/AUPage'));
 const VictoriaPage = lazy(() => import('../features/au/VictoriaPage'));
+const GamePage = lazy(() => import('../features/game/GamePage'));
 const AUSeatPage = lazy(() => import('../features/au/SeatPage'));
 
 export function App() {
@@ -36,6 +37,7 @@ export function App() {
           <Route path="/au" element={<AUPage />} />
           <Route path="/au/victoria" element={<VictoriaPage />} />
           <Route path="/au/seat/:id" element={<AUSeatPage />} />
+          <Route path="/game" element={<GamePage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>
