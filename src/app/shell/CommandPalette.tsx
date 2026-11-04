@@ -28,6 +28,8 @@ const PAGES: { to: string; label: string; sub: string }[] = [
   { to: '/polls', label: 'Polls', sub: 'Generic ballot, approval & race polls' },
   { to: '/forecast', label: 'Forecast & markets', sub: 'Model & prediction markets' },
   { to: '/races', label: 'All races', sub: 'Senate, House, Governor' },
+  { to: '/flips', label: 'Seats that flipped', sub: 'Seats that changed hands · net gains' },
+  { to: '/measures', label: 'Ballot measures', sub: 'Statewide ballot measures · live results' },
   { to: '/au', label: 'Australia', sub: 'Federal parliament, polls, markets, AU news' },
   { to: '/au/victoria', label: 'Victorian election 2026', sub: 'Australia · 28 Nov results night' },
 ];

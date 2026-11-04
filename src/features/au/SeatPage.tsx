@@ -8,6 +8,7 @@ import { FEDERAL, party, partyKey, pColor, seatById, stateName, VICTORIA } from 
 import { fmtCounted } from './VictoriaPage';
 import { FeedStatus, LeaderCard, NewsPanel } from './widgets';
 import './au.css';
+import { WatchStar } from '../watch/WatchStar';
 
 export default function SeatPage() {
   const { id = '' } = useParams();
@@ -46,6 +47,7 @@ export default function SeatPage() {
             <Link to="/au">AUSTRALIA</Link> / {isVic ? <Link to="/au/victoria">VICTORIA 2026</Link> : 'FEDERAL'} / {seat.state}
           </div>
           <h1 className="au-seat-h"><i style={{ background: c }} />{seat.name}</h1>
+          <WatchStar auSeatId={seat.id} label={seat.name} />
           <p className="au-sub">{isVic ? 'Victorian Legislative Assembly district' : `Federal division · House of Representatives · ${stateName(seat.state)}`}</p>
         </div>
         <dl className="au-stats mono">

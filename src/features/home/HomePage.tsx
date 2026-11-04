@@ -12,6 +12,7 @@ import {
 } from '../../components';
 import { USMap } from '../map/USMap';
 import './home.css';
+import { WatchStrip } from '../watch/WatchStrip';
 
 /* ───────── helpers ───────── */
 
@@ -472,6 +473,7 @@ export default function HomePage() {
   return (
     <div className="page hm">
       <Hero />
+      <WatchStrip />
       <Control />
       <KeyRaces />
       <div className="hm-row">

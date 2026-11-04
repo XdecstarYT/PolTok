@@ -10,6 +10,7 @@ import { CallBanner, ExpectedMeter, NewsList, Needle, NotFound, PollPanel, PresB
 import { demMargin, fmtCloseET, headlinePair, longTitle, relatedNews, sortRacesForState, totalVotes } from './util';
 import { CountyMap } from './CountyMap';
 import './races.css';
+import { WatchStar } from '../watch/WatchStar';
 
 export default function RacePage() {
   const { id = '' } = useParams();
@@ -78,6 +79,7 @@ export default function RacePage() {
             <RatingBadge rating={race.rating} />
             <SimBadge />
             <ShareButton title={longTitle(race)} />
+            <WatchStar raceId={race.id} label={longTitle(race)} />
           </div>
         </div>
 

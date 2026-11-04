@@ -16,10 +16,16 @@ const RacesIndex = lazy(() => import('../features/races/RacesIndex'));
 const AUPage = lazy(() => import('../features/au/AUPage'));
 const VictoriaPage = lazy(() => import('../features/au/VictoriaPage'));
 const AUSeatPage = lazy(() => import('../features/au/SeatPage'));
+const WatchPage = lazy(() => import('../features/watch/WatchPage'));
+const ComparePage = lazy(() => import('../features/watch/ComparePage'));
+import { WatchAlerts } from '../features/watch/WatchAlerts';
+const FlipsPage = lazy(() => import('../features/flips/FlipsPage'));
+const MeasuresPage = lazy(() => import('../features/measures/MeasuresPage'));
 
 export function App() {
   return (
     <Shell>
+      <WatchAlerts />
       <Suspense fallback={<div className="page" style={{ color: 'var(--text-3)' }}>Loading…</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -36,6 +42,10 @@ export function App() {
           <Route path="/au" element={<AUPage />} />
           <Route path="/au/victoria" element={<VictoriaPage />} />
           <Route path="/au/seat/:id" element={<AUSeatPage />} />
+          <Route path="/watch" element={<WatchPage />} />
+          <Route path="/compare" element={<ComparePage />} />
+          <Route path="/flips" element={<FlipsPage />} />
+          <Route path="/measures" element={<MeasuresPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>
