@@ -8,7 +8,7 @@
  *  - /feed renders "immersive": no ticker, no page padding; the page should fill
  *    `height: calc(100dvh - var(--shell-top) - var(--shell-bottom))`.
  */
-import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLive } from '../lib/live';
@@ -30,10 +30,7 @@ export const NAV = [
   { to: '/forecast', label: 'Forecast' },
   { to: '/races', label: 'Races' },
   { to: '/analysis', label: 'Analysis' },
-  { to: '/flips', label: 'Flips' },
-  { to: '/measures', label: 'Measures' },
   { to: '/au', label: 'Australia' },
-  { to: '/watch', label: 'Watch' },
 ];
 
 const TABS = [
@@ -88,6 +85,51 @@ function Clock() {
   );
 }
 
+/** Secondary pages, grouped under the "More" menu so the top bar fits. */
+export const NAV_MORE = [
+  { to: '/flips', label: 'Flips', sub: 'Seats that changed hands' },
+  { to: '/measures', label: 'Ballot measures', sub: 'Live statewide measures' },
+  { to: '/replay', label: 'Replay', sub: 'Relive election night' },
+  { to: '/compare', label: 'Compare', sub: 'Races side by side, polling miss' },
+  { to: '/watch', label: 'Watchlist', sub: 'Your starred races' },
+];
+
+function MoreMenu() {
+  const loc = useLocation();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => setOpen(false), [loc.pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const off = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('pointerdown', off);
+    window.addEventListener('keydown', esc);
+    return () => {
+      window.removeEventListener('pointerdown', off);
+      window.removeEventListener('keydown', esc);
+    };
+  }, [open]);
+  const active = NAV_MORE.some((n) => loc.pathname.startsWith(n.to));
+  return (
+    <div className="sh-more" ref={ref}>
+      <button type="button" className={`sh-nav__a sh-more__btn ${active ? 'is-active' : ''}`} aria-expanded={open} aria-haspopup="menu" onClick={() => setOpen((o) => !o)}>
+        <span className="sh-nav__t">More ▾</span>
+      </button>
+      {open && (
+        <div className="sh-more__menu" role="menu">
+          {NAV_MORE.map((n) => (
+            <NavLink key={n.to} to={n.to} role="menuitem" className={({ isActive }) => `sh-more__item ${isActive ? 'is-on' : ''}`}>
+              <b>{n.label}</b>
+              <span>{n.sub}</span>
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Shell({ children }: { children: ReactNode }) {
   const loc = useLocation();
   const reduce = useReducedMotion();
@@ -136,6 +178,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 <span className="sh-nav__t">{n.label}</span>
               </NavLink>
             ))}
+            <MoreMenu />
           </nav>
           <div className="sh-right">
             <Clock />

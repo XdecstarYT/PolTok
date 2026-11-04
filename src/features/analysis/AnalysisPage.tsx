@@ -26,7 +26,7 @@ export default function AnalysisPage() {
 
 function Analysis({ ov }: { ov: Overview }) {
   const statewide = useMemo(() => ov.races.filter((r) => r.chamber !== 'house'), [ov]);
-  const contested = (r: NRace) => r.margin != null && !r.uncontested;
+  const contested = (r: NRace) => r.margin != null && !r.uncontested && !r.jungle;
 
   /* ── House popular vote ── */
   const hpv = useMemo(() => {
@@ -193,7 +193,7 @@ function Analysis({ ov }: { ov: Overview }) {
       </section>
 
       <section className="an-sec">
-        <SectionHeader as="h2" kicker="Over- & under-performers" title="Biggest moves vs the top of the ticket in 2024" sub="All Senate, governor and House races with ≥90% of the expected vote counted and both a D and an R on the ballot. House baselines are 2024 presidential results by district as published by NYT." />
+        <SectionHeader as="h2" kicker="Over- & under-performers" title="Biggest moves vs the top of the ticket in 2024" sub="All Senate, governor and House races with ≥90% of the expected vote counted and both a D and an R on the ballot (Louisiana all-party primaries excluded). House baselines are 2024 presidential results by district as published by NYT." />
         <div className="an-grid an-grid--2">
           {([['Most toward Democrats', over.slice(0, 10)], ['Most toward Republicans (or least toward D)', over.slice(-10).reverse()]] as const).map(([title, rows]) => (
             <Card key={title} title={title} flush>

@@ -33,8 +33,10 @@ export default function ReplayPage() {
 function Replay({ ov }: { ov: Overview }) {
   const calls = useMemo(() => ov.races.filter((r) => r.winner).sort((a, b) => a.winner!.at - b.winner!.at), [ov]);
   const t0 = useMemo(() => {
-    const first = Math.min(...ov.pollCloses.map((p) => p.at), calls[0]?.winner!.at ?? Infinity, ov.model[0]?.t ?? Infinity);
-    return Math.floor((first - 15 * 60e3) / 60e3) * 60e3;
+    const first = Math.min(calls[0]?.winner!.at ?? Infinity, ov.model[0]?.t ?? Infinity);
+    // Start at the first poll closing of the night (within 3h before the first call), else 30 min before it.
+    const closes = ov.pollCloses.map((p) => p.at).filter((a) => a <= first && a >= first - 3 * 3600e3);
+    return Math.floor((Math.min(first - 30 * 60e3, ...closes) - 10 * 60e3) / 60e3) * 60e3;
   }, [ov, calls]);
   const t1 = useMemo(() => Math.max(calls.at(-1)?.winner!.at ?? 0, ov.model.at(-1)?.t ?? 0) + 5 * 60e3, [ov, calls]);
 

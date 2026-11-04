@@ -39,6 +39,8 @@ export interface NRace {
   winner?: { party: P; name: string; at: number };
   flipped: boolean;
   uncontested: boolean;
+  /** Louisiana-style all-party primary: party margins are not comparable */
+  jungle: boolean;
   totalVotes: number;
   expectedVote: number;
   eevp: number;
@@ -93,6 +95,7 @@ function parseRace(r: Json, chamber: Chamber): NRace | null {
     winner: won && at ? { party: toP(meta[won]?.party?.nyt_id), name: name(won), at: Date.parse(at) } : undefined,
     flipped: !!r.outcome?.gained,
     uncontested: !!r.uncontested,
+    jungle: r.race_type_id === 'L',
     totalVotes: total,
     expectedVote: t.total_expected_vote ?? 0,
     eevp: t.eevp ?? 0,
