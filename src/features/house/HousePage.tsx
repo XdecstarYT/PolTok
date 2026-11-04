@@ -94,7 +94,7 @@ export default function HousePage() {
     <div className="hs page">
       <header className="hs-head">
         <div>
-          <p className="hs-kicker"><LiveDot /> Live · U.S. House 2026</p>
+          <p className="hs-kicker"><LiveDot /> U.S. House 2026</p>
           <h1>All 435 House races</h1>
           <p className="hs-sub">
             {ATTRIBUTION}. {data?.updatedAt ? <>Results updated {fmtTime(data.updatedAt)} {tzAbbr(data.updatedAt)}. </> : null}
