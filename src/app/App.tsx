@@ -13,6 +13,9 @@ const ForecastPage = lazy(() => import('../features/polls/ForecastPage'));
 const RacePage = lazy(() => import('../features/races/RacePage'));
 const StatePage = lazy(() => import('../features/races/StatePage'));
 const RacesIndex = lazy(() => import('../features/races/RacesIndex'));
+const AUPage = lazy(() => import('../features/au/AUPage'));
+const VictoriaPage = lazy(() => import('../features/au/VictoriaPage'));
+const AUSeatPage = lazy(() => import('../features/au/SeatPage'));
 
 export function App() {
   return (
@@ -30,6 +33,9 @@ export function App() {
           <Route path="/races" element={<RacesIndex />} />
           <Route path="/race/:id" element={<RacePage />} />
           <Route path="/state/:abbr" element={<StatePage />} />
+          <Route path="/au" element={<AUPage />} />
+          <Route path="/au/victoria" element={<VictoriaPage />} />
+          <Route path="/au/seat/:id" element={<AUSeatPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>

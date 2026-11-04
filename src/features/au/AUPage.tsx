@@ -4,18 +4,13 @@ import { Link } from 'react-router-dom';
 import { Card, Countdown, LiveDot } from '../../components';
 import { fmtDay } from '../../components/time';
 import { useAuMarkets, useAuNews } from './api';
-import { MapPanel, type Region } from './MapPanel';
-import { AU_POLLS, counts, FEDERAL, leader, normPolls, OTHER, VIC_CLOSE, VICTORIA, type AuSeat } from './model';
+import { FED_ZOOMS, MapPanel } from './MapPanel';
+import { AU_POLLS, counts, FEDERAL, leader, normPolls, OTHER, VIC_CLOSE, VICTORIA } from './model';
 import { FeedStatus, Hemicycle, LeaderCard, MarketsPanel, NewsPanel, PollsPanel, Pendulum, TallyBar } from './widgets';
 import './au.css';
 
 const NSW_DATE = Date.parse('2027-03-27T07:00:00Z');
 
-export const FED_REGIONS: Region[] = [
-  { id: 'all', label: 'All', match: () => true },
-  ...['NSW', 'VIC', 'QLD', 'WA', 'SA'].map((st) => ({ id: st, label: st, match: (s: AuSeat) => s.state === st })),
-  { id: 'small', label: 'TAS·ACT·NT', match: (s: AuSeat) => ['TAS', 'ACT', 'NT'].includes(s.state) },
-];
 
 export default function AUPage() {
   const news = useAuNews();
@@ -81,7 +76,7 @@ export default function AUPage() {
         seats={seats}
         title="Federal electorates"
         kicker="150 divisions · coloured by holding party"
-        regions={FED_REGIONS}
+        regions={FED_ZOOMS}
         legendNote="Click a division for its member, margin and news. Boundaries: ABS CED 2025."
       />
 
@@ -92,7 +87,7 @@ export default function AUPage() {
         <div className="au-el-grid">
           <Link to="/au/victoria" className="au-el au-el--hot">
             <span className="mono">VICTORIA · STATE</span>
-            <b>{fmtDay(Date.parse('2026-11-28T00:00:00Z'))}</b>
+            <b>{fmtDay(Date.parse('2026-11-28T01:00:00Z'))}</b>
             <span className="muted">88 Assembly seats · polls close 6pm AEDT</span>
             <Countdown to={VIC_CLOSE} doneLabel="Polls closed" />
           </Link>

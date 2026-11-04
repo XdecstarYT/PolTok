@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AnimatedNumber, Card, Countdown, LiveDot } from '../../components';
 import { fmtTime, tzAbbr } from '../../components/time';
 import { relatedNews, useAuMarkets, useAuNews, useAuResults, type AuResults } from './api';
-import { MapPanel } from './MapPanel';
+import { MapPanel, VIC_ZOOMS } from './MapPanel';
 import { AU_POLLS, counts, leader, normPolls, party, partyKey, pColor, VIC_CLOSE, VIC_MAJORITY, VIC_TOTAL, VICTORIA, type AuSeat } from './model';
 import { FeedStatus, LeaderCard, MarketsPanel, NewsPanel, PollsPanel, Pendulum, TallyBar } from './widgets';
 import './au.css';
@@ -150,6 +150,7 @@ export default function VictoriaPage() {
           seats={seats}
           fills={fills}
           title="Assembly districts"
+          regions={VIC_ZOOMS}
           kicker={live ? 'Coloured by leader (faded = not yet called)' : 'BASELINE · coloured by current holder'}
           tooltip={(s) => {
             const o = seatOutcome(res.data, s.id);

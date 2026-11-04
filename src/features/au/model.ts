@@ -108,6 +108,8 @@ export function normPolls(list: unknown): PollRow[] {
       }
       if (typeof t.ALP_v_ONP === 'string') tpp.label = `ALP v ONP ${t.ALP_v_ONP}`;
     }
+    const vo = o.tppVsOnp as { ALP?: number; ONP?: number } | undefined;
+    if (vo && typeof vo.ALP === 'number') tpp.label = `ALP v ONP ${vo.ALP}–${vo.ONP}`;
     if (Number.isFinite(ts)) rows.push({ pollster: String(o.pollster ?? '—'), date, ts, primary, tpp });
   }
   return rows.sort((a, b) => b.ts - a.ts);

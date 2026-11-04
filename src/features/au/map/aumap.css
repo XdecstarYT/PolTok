@@ -1,5 +1,5 @@
 /* AUMap — owned by AU-MAP. Mirrors src/features/map/map.css; tokens from src/styles/tokens.css */
-.aumap { position: relative; width: 100%; user-select: none; -webkit-tap-highlight-color: transparent; }
+.aumap { position: relative; width: 100%; overflow: hidden; border-radius: 12px; user-select: none; -webkit-tap-highlight-color: transparent; }
 .aumap-svg { display: block; width: 100%; height: 100%; overflow: hidden; }
 .aumap.is-loading { display: grid; place-items: center; border-radius: 12px; background: var(--bg-1); }
 .aumap-status { color: var(--text-3); font-size: 13px; }
@@ -74,3 +74,4 @@
   .aumap-pulse { animation: none; stroke-width: 3; }
   .aumap-flash, .aumap-ring { animation: none; }
 }
+.aumap-svg { overflow: hidden; display: block; width: 100%; height: 100%; }

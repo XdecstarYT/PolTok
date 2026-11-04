@@ -190,7 +190,7 @@ export const FEDERAL: {
     {"id": "new-england", "name": "New England", "state": "NSW", "party": "ONP", "member": "Barnaby Joyce", "margin": 17.06, "chamber": "federal", "party2025": "NAT", "contest": "NAT", "note": "Elected as NAT 2025; quit Nationals 27 Nov 2025, joined One Nation 8 Dec 2025"},
     {"id": "newcastle", "name": "Newcastle", "state": "NSW", "party": "ALP", "member": "Sharon Claydon", "margin": 15.8, "chamber": "federal", "contest": "ALP v GRN"},
     {"id": "nicholls", "name": "Nicholls", "state": "VIC", "party": "NAT", "member": "Sam Birrell", "margin": 14.38, "chamber": "federal", "contest": "NAT"},
-    {"id": "oconnor", "name": "O'Connor", "state": "WA", "party": "LIB", "member": "Rick Wilson", "margin": 13.28, "chamber": "federal", "contest": "LIB"},
+    {"id": "o-connor", "name": "O'Connor", "state": "WA", "party": "LIB", "member": "Rick Wilson", "margin": 13.28, "chamber": "federal", "contest": "LIB"},
     {"id": "oxley", "name": "Oxley", "state": "QLD", "party": "ALP", "member": "Milton Dick", "margin": 19.19, "chamber": "federal", "contest": "ALP"},
     {"id": "page", "name": "Page", "state": "NSW", "party": "NAT", "member": "Kevin Hogan", "margin": 9.29, "chamber": "federal", "contest": "NAT"},
     {"id": "parkes", "name": "Parkes", "state": "NSW", "party": "NAT", "member": "Jamie Chaffey", "margin": 12.97, "chamber": "federal", "contest": "NAT"},

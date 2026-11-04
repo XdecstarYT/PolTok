@@ -1,33 +1,28 @@
-import { lazy, Suspense, useMemo, useState, type ComponentType, type ReactNode } from 'react';
+import { lazy, Suspense, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Skeleton, Tabs } from '../../components';
 import { party, pColor, partyKey, type AuSeat } from './model';
 
-interface AUMapProps {
-  layer: 'federal' | 'vic';
-  fills: Record<string, string>;
-  variant?: 'geo' | 'hex';
-  onSeatClick?: (id: string) => void;
-  renderTooltip?: (id: string) => ReactNode;
-  highlight?: string[];
-  selected?: string;
-}
-const AUMap = lazy(() =>
-  import('./map/AUMap').then((m) => {
-    const mod = m as unknown as Record<string, ComponentType<AUMapProps> | undefined>;
-    return { default: (mod.AUMap ?? mod.default) as ComponentType<AUMapProps> };
-  }),
-);
+const AUMap = lazy(() => import('./map/AUMap'));
 
-export interface Region {
-  id: string;
-  label: string;
-  match: (s: AuSeat) => boolean;
-}
+import type { AUZoom } from './map/AUMap';
+export type Region = { id: AUZoom; label: string };
+export const FED_ZOOMS: Region[] = [
+  { id: 'all', label: 'Australia' },
+  { id: 'sydney', label: 'Sydney' },
+  { id: 'melbourne', label: 'Melbourne' },
+  { id: 'brisbane', label: 'Brisbane' },
+  { id: 'perth', label: 'Perth' },
+  { id: 'adelaide', label: 'Adelaide' },
+];
+export const VIC_ZOOMS: Region[] = [
+  { id: 'all', label: 'Victoria' },
+  { id: 'melbourne', label: 'Melbourne' },
+];
 
 /** Electorate map (AU-MAP's AUMap) coloured by holding party (or live leader when given). */
 export function MapPanel({
-  layer, seats, title, kicker, fills, regions, tooltip, action, legendNote, selected,
+  layer, seats, title, kicker, fills, regions, tooltip, action, legendNote, selected, focus,
 }: {
   layer: 'federal' | 'vic';
   seats: AuSeat[];
@@ -39,14 +34,13 @@ export function MapPanel({
   action?: ReactNode;
   legendNote?: ReactNode;
   selected?: string;
+  focus?: string[];
 }) {
   const nav = useNavigate();
   const [variant, setVariant] = useState<'geo' | 'hex'>('geo');
-  const [region, setRegion] = useState(regions?.[0]?.id ?? 'all');
+  const [region, setRegion] = useState<AUZoom>('all');
   const byId = useMemo(() => new Map(seats.map((s) => [s.id, s])), [seats]);
   const baseFills = useMemo(() => fills ?? Object.fromEntries(seats.map((s) => [s.id, pColor(s.party)])), [fills, seats]);
-  const reg = regions?.find((r) => r.id === region);
-  const highlight = useMemo(() => (reg && region !== 'all' ? seats.filter(reg.match).map((s) => s.id) : undefined), [reg, region, seats]);
   const legend = useMemo(() => {
     const m = new Map<string, number>();
     for (const s of seats) m.set(partyKey(s.party), (m.get(partyKey(s.party)) ?? 0) + 1);
@@ -66,9 +60,9 @@ export function MapPanel({
         </div>
       }
     >
-      {regions && regions.length > 1 && (
+      {regions && regions.length > 1 && variant === 'geo' && (
         <div className="au-map-tabs">
-          <Tabs tabs={regions.map((r) => ({ id: r.id, label: r.label }))} value={region} onChange={setRegion} variant="pill" ariaLabel="Zoom to region" />
+          <Tabs tabs={regions.map((r) => ({ id: r.id, label: r.label }))} value={region} onChange={(v) => setRegion(v)} variant="pill" ariaLabel="Zoom to region" />
         </div>
       )}
       <div className="au-map-canvas">
@@ -77,8 +71,9 @@ export function MapPanel({
             layer={layer}
             variant={variant}
             fills={baseFills}
-            highlight={highlight}
+            zoom={variant === 'geo' ? region : 'all'}
             selected={selected}
+            focus={focus}
             onSeatClick={(id: string) => nav(`/au/seat/${id}`)}
             renderTooltip={(id: string) => {
               const s = byId.get(id);

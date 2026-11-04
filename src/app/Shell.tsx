@@ -29,6 +29,7 @@ export const NAV = [
   { to: '/polls', label: 'Polls' },
   { to: '/forecast', label: 'Forecast' },
   { to: '/races', label: 'Races' },
+  { to: '/au', label: 'Australia' },
 ];
 
 const TABS = [
