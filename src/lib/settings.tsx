@@ -13,8 +13,8 @@ export interface Settings {
   timeZone: string;
   alerts: AlertLevel;
   sound: boolean;
-  /** visual style: 'command' (default dark) or 'broadcast' (cable-news desk) */
-  ui: 'command' | 'broadcast';
+  /** visual style: 'command' (default dark), 'broadcast' (cable-news desk), 'paper', 'terminal', 'aurora' */
+  ui: 'command' | 'broadcast' | 'paper' | 'terminal' | 'aurora';
 }
 
 export const TIME_ZONES: { id: string; label: string; group: string }[] = [
@@ -41,9 +41,27 @@ export const TIME_ZONES: { id: string; label: string; group: string }[] = [
 const KEY = 'poltok:settings';
 const DEFAULTS: Settings = { timeZone: 'America/New_York', alerts: 'key', sound: false, ui: 'command' };
 
+const UI_IDS: Settings['ui'][] = ['command', 'broadcast', 'paper', 'terminal', 'aurora'];
+const THEME_COLOR: Record<Settings['ui'], string> = {
+  command: '#05070d',
+  broadcast: '#04102b',
+  paper: '#f4efe4',
+  terminal: '#000000',
+  aurora: '#160b33',
+};
+
 function applyUi(ui: Settings['ui']) {
   try {
+    if (!UI_IDS.includes(ui)) ui = 'command';
     document.documentElement.dataset.ui = ui;
+    document.documentElement.style.colorScheme = ui === 'paper' ? 'light' : 'dark';
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      document.head.appendChild(meta);
+    }
+    meta.content = THEME_COLOR[ui];
   } catch {
     /* no DOM */
   }
@@ -52,7 +70,9 @@ function applyUi(ui: Settings['ui']) {
 function load(): Settings {
   try {
     const raw = JSON.parse(localStorage.getItem(KEY) || '{}') as Partial<Settings>;
-    return { ...DEFAULTS, ...raw };
+    const s = { ...DEFAULTS, ...raw };
+    if (!UI_IDS.includes(s.ui)) s.ui = 'command';
+    return s;
   } catch {
     return DEFAULTS;
   }

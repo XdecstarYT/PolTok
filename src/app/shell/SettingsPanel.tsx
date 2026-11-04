@@ -28,6 +28,9 @@ export function SettingsPanel() {
             {([
               ['command', 'Command Center', 'Dark neon election-night control room'],
               ['broadcast', 'Broadcast', 'Cable-news desk: navy & red, lower-third crawl, ALERT bars'],
+              ['paper', 'Paper', 'Light broadsheet: newsprint, black ink, serif headlines'],
+              ['terminal', 'Terminal', 'Market terminal: black, amber monospace, dense & square'],
+              ['aurora', 'Aurora', 'Vibrant glass: purple-teal mesh, neon pink & cyan'],
             ] as const).map(([v, l, d]) => (
               <button key={v} type="button" role="radio" aria-checked={settings.ui === v} className={`set__look set__look--${v} ${settings.ui === v ? 'is-on' : ''}`} onClick={() => update({ ui: v })}>
                 <span className="set__look-swatch" aria-hidden="true" />

@@ -1,0 +1,74 @@
+/* "Terminal" UI theme — market-terminal look: pure black, amber monospace, dense, square corners,
+ * green/red data. Enabled by Settings → Look (<html data-ui="terminal">). */
+:root[data-ui='terminal'] {
+  --bg: #000000;
+  --bg-1: #070707;
+  --bg-2: #0d0d0d;
+  --bg-3: #1a1a1a;
+  --bg-4: #262626;
+  --line: rgba(255, 159, 26, 0.18);
+  --line-2: rgba(255, 159, 26, 0.32);
+  --line-3: rgba(255, 159, 26, 0.5);
+  --text: #ffb340;
+  --text-2: #e0a24a;
+  --text-3: #b5843f;
+  --text-4: #7a5a2c;
+  --dem: #3d9bff;
+  --dem-glow: #6ab4ff;
+  --rep: #ff4a4a;
+  --rep-glow: #ff7a7a;
+  --accent: #ff9f1a;
+  --accent-soft: rgba(255, 159, 26, 0.16);
+  --accent-ink: #000000;
+  --signal: #4fc3ff;
+  --terminal: #ffb340;
+  --ok: #00d26a;
+  --grn: #00d26a;
+  --danger: #ff4a4a;
+  --live: #ff4a4a;
+  --breaking: #ff4a4a;
+  --font-display: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-body: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: clamp(22px, 3vw, 30px);
+  --fs-hero: clamp(30px, 5vw, 60px);
+  --radius: 0px;
+  --radius-sm: 0px;
+  --radius-lg: 0px;
+  --radius-pill: 0px;
+  --shadow: none;
+  --shadow-sm: none;
+  --shadow-lg: none;
+  --glass: rgba(0, 0, 0, 0.92);
+  --glass-strong: #000;
+  --glass-blur: none;
+  --glow-dem: 0 0 0 1px var(--dem);
+  --glow-rep: 0 0 0 1px var(--rep);
+  --glow-accent: 0 0 0 1px var(--accent);
+  --glow-live: 0 0 0 1px var(--live);
+  --glow-tossup: 0 0 0 1px var(--tossup);
+  --grad-panel: none;
+  --grad-hero: none;
+  --grad-accent: linear-gradient(90deg, #ff9f1a, #ffcc4d);
+  --sp-4: 12px;
+  --sp-5: 16px;
+  --sp-6: 18px;
+  --sp-8: 24px;
+}
+[data-ui='terminal'] body { background: #000; letter-spacing: 0; }
+[data-ui='terminal'] *, [data-ui='terminal'] *::before, [data-ui='terminal'] *::after { border-radius: 0 !important; text-shadow: none !important; }
+[data-ui='terminal'] h1, [data-ui='terminal'] h2, [data-ui='terminal'] h3 { text-transform: uppercase; letter-spacing: 0.02em; color: #ffcc4d; }
+[data-ui='terminal'] .card { background: #050505; border: 1px solid var(--line-2); box-shadow: none; }
+[data-ui='terminal'] .sh-top { background: #000 !important; border-bottom: 1px solid var(--accent); box-shadow: none; backdrop-filter: none; }
+[data-ui='terminal'] .sh-nav a, [data-ui='terminal'] .sh-nav__t { text-transform: uppercase; }
+[data-ui='terminal'] .tk { background: #ff9f1a; border-top: 0; }
+[data-ui='terminal'] .tk__item { color: #000; font-weight: 600; }
+[data-ui='terminal'] .tk__badge { background: #000; color: #ff9f1a; }
+[data-ui='terminal'] .tk__label { background: #000 !important; color: #ffb340 !important; border-color: #000 !important; }
+[data-ui='terminal'] .tk__sep { color: #000; }
+[data-ui='terminal'] .btn, [data-ui='terminal'] .chip { text-transform: uppercase; font-family: var(--font-mono); }
+[data-ui='terminal'] .ct { background: rgba(0, 0, 0, 0.96); }
+[data-ui='terminal'] .ct__kicker { background: #ff9f1a; color: #000; padding: 4px 10px; justify-self: start; }

@@ -19,7 +19,7 @@ import { CommandPalette } from './shell/CommandPalette';
 import { RaceCallWatcher } from './shell/RaceCallWatcher';
 import { AskPolTok } from '../features/ask/AskPolTok';
 import { UpdatePrompt } from '../lib/pwa';
-import { IconFeed, IconHome, IconLive, IconMap, IconNews, IconSearch } from './shell/icons';
+import { IconGrid, IconHome, IconLive, IconMap, IconNews, IconSearch } from './shell/icons';
 import './shell/shell.css';
 
 export const NAV = [
@@ -39,8 +39,8 @@ const TABS = [
   { to: '/', label: 'Home', Icon: IconHome },
   { to: '/live', label: 'Live', Icon: IconLive },
   { to: '/map', label: 'Map', Icon: IconMap },
-  { to: '/feed', label: 'PolTok', Icon: IconFeed },
   { to: '/news', label: 'News', Icon: IconNews },
+  { to: '/menu', label: 'Menu', Icon: IconGrid },
 ];
 
 function Wordmark() {
@@ -179,6 +179,10 @@ export function Shell({ children }: { children: ReactNode }) {
       <a href="#main" className="sh-skip">Skip to content</a>
       <div className={`sh-chrome ${immersive ? 'is-immersive' : ''}`}>
         <header className="sh-top">
+          <Link to="/menu" className={`sh-menubtn ${isActive('/menu') ? 'is-active' : ''}`} aria-label="Main menu" title="Main menu" aria-current={isActive('/menu') ? 'page' : undefined}>
+            <IconGrid width={18} height={18} />
+            <span className="sh-menubtn__t">Menu</span>
+          </Link>
           <Wordmark />
           <nav className="sh-nav" aria-label="Primary">
             {NAV.map((n) => (

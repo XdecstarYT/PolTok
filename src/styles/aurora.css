@@ -1,0 +1,61 @@
+/* "Aurora" UI theme — vibrant glass: deep purple/teal mesh, frosted cards, neon pink & cyan.
+ * Enabled by Settings → Look (<html data-ui="aurora">). */
+:root[data-ui='aurora'] {
+  --bg: #160b33;
+  --bg-1: rgba(32, 18, 74, 0.72);
+  --bg-2: rgba(44, 26, 96, 0.62);
+  --bg-3: rgba(62, 40, 124, 0.66);
+  --bg-4: rgba(84, 58, 150, 0.7);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-2: rgba(255, 255, 255, 0.2);
+  --line-3: rgba(255, 255, 255, 0.34);
+  --text: #ffffff;
+  --text-2: #d9d2ff;
+  --text-3: #a99fdc;
+  --text-4: #7a70ad;
+  --dem: #4d9dff;
+  --dem-glow: #7cc0ff;
+  --rep: #ff4d7d;
+  --rep-glow: #ff85a8;
+  --accent: #ff3cac;
+  --accent-soft: rgba(255, 60, 172, 0.18);
+  --accent-ink: #ffffff;
+  --signal: #2bd9fe;
+  --signal-soft: rgba(43, 217, 254, 0.16);
+  --terminal: #2bd9fe;
+  --live: #ff3cac;
+  --breaking: #ff3cac;
+  --radius: 22px;
+  --radius-sm: 12px;
+  --radius-lg: 28px;
+  --glass: rgba(40, 22, 90, 0.42);
+  --glass-strong: rgba(30, 16, 70, 0.78);
+  --glass-blur: blur(22px) saturate(170%);
+  --glow-accent: 0 0 0 1px rgba(255, 60, 172, 0.5), 0 0 30px -4px #ff3cac;
+  --grad-accent: linear-gradient(90deg, #ff3cac, #784ba0 50%, #2bd9fe);
+  --grad-hero: radial-gradient(900px 500px at 10% -10%, rgba(255, 60, 172, 0.25), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(43, 217, 254, 0.22), transparent 60%);
+  --shadow: 0 16px 48px rgba(10, 0, 40, 0.5);
+}
+[data-ui='aurora'] body {
+  background:
+    radial-gradient(60% 50% at 10% 10%, rgba(255, 60, 172, 0.35), transparent 70%),
+    radial-gradient(55% 55% at 90% 20%, rgba(43, 217, 254, 0.3), transparent 70%),
+    radial-gradient(60% 60% at 70% 95%, rgba(120, 75, 160, 0.55), transparent 70%),
+    radial-gradient(50% 50% at 15% 85%, rgba(11, 140, 150, 0.4), transparent 70%),
+    linear-gradient(135deg, #1c0b45 0%, #160b33 50%, #062a36 100%) fixed;
+  background-attachment: fixed;
+}
+[data-ui='aurora'] .card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 16px 40px rgba(10, 0, 40, 0.35);
+}
+[data-ui='aurora'] .sh-top { background: rgba(24, 12, 60, 0.55) !important; backdrop-filter: blur(20px) saturate(170%); border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+[data-ui='aurora'] .tk { background: rgba(20, 10, 50, 0.6); backdrop-filter: blur(16px); }
+[data-ui='aurora'] .tk__badge { background: linear-gradient(90deg, #ff3cac, #784ba0); color: #fff; }
+[data-ui='aurora'] .btn--primary, [data-ui='aurora'] .btn.is-primary { background: linear-gradient(90deg, #ff3cac, #2bd9fe); color: #fff; border: 0; }
+[data-ui='aurora'] .kicker, [data-ui='aurora'] .eyebrow { color: var(--signal); }
+[data-ui='aurora'] .ct { background: radial-gradient(circle at 50% 30%, rgba(255, 60, 172, 0.3), transparent 60%), rgba(22, 11, 51, 0.88); backdrop-filter: blur(12px); }

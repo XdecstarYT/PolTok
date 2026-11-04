@@ -1,0 +1,118 @@
+/* "Paper" UI theme — light broadsheet: newsprint background, black ink, serif headlines, thin rules,
+ * muted party colours, no glows. Enabled by Settings → Look (<html data-ui="paper">).
+ * All text tokens meet WCAG AA (≥4.5:1) on --bg … --bg-3. */
+:root[data-ui='paper'] {
+  color-scheme: light;
+  --bg: #f4efe4;
+  --bg-1: #f8f4ea;
+  --bg-2: #fbf8f1;
+  --bg-3: #ebe4d4;
+  --bg-4: #ddd4c0;
+  --line: rgba(26, 22, 16, 0.14);
+  --line-2: rgba(26, 22, 16, 0.26);
+  --line-3: rgba(26, 22, 16, 0.45);
+  --text: #141210;
+  --text-2: #3b362e;
+  --text-3: #5a5347;   /* 6.6:1 on #f4efe4 */
+  --text-4: #6e665a;   /* 5.0:1 */
+  --dem: #1f4f8a;
+  --dem-glow: #1f4f8a;
+  --dem-deep: #c9d6e8;
+  --dem-soft: rgba(31, 79, 138, 0.12);
+  --rep: #a3302a;
+  --rep-glow: #a3302a;
+  --rep-deep: #ecd0cc;
+  --rep-soft: rgba(163, 48, 42, 0.12);
+  --ind: #5e3d8f;
+  --ind-soft: rgba(94, 61, 143, 0.12);
+  --lib: #8a6a00;
+  --grn: #2d6a3e;
+  --oth: #5f5a50;
+  --tossup: #8a6a00;
+  --tossup-soft: rgba(138, 106, 0, 0.14);
+  --accent: #141210;
+  --accent-soft: rgba(20, 18, 16, 0.08);
+  --accent-ink: #f8f4ea;
+  --breaking: #a3302a;
+  --live: #a3302a;
+  --signal: #1f4f8a;
+  --signal-soft: rgba(31, 79, 138, 0.1);
+  --terminal: #7a4a00;
+  --ok: #2d6a3e;
+  --warn: #8a6a00;
+  --danger: #a3302a;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --radius: 2px;
+  --radius-sm: 2px;
+  --radius-lg: 3px;
+  --shadow: 0 1px 0 rgba(20, 18, 16, 0.12);
+  --shadow-sm: none;
+  --shadow-lg: 0 12px 40px rgba(20, 18, 16, 0.18);
+  --glass: rgba(248, 244, 234, 0.94);
+  --glass-strong: rgba(248, 244, 234, 0.98);
+  --glass-blur: none;
+  --glow-dem: 0 0 0 1px var(--dem);
+  --glow-rep: 0 0 0 1px var(--rep);
+  --glow-accent: 0 0 0 1px var(--text);
+  --glow-live: 0 0 0 1px var(--live);
+  --glow-tossup: 0 0 0 1px var(--tossup);
+  --grad-dr: linear-gradient(90deg, var(--dem) 0%, #6b4a7a 50%, var(--rep) 100%);
+  --grad-panel: none;
+  --grad-hero: none;
+  --grad-accent: linear-gradient(90deg, #141210, #3b362e);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--dem);
+}
+[data-ui='paper'] body { background: #f4efe4; color: var(--text); }
+[data-ui='paper'] *, [data-ui='paper'] *::before, [data-ui='paper'] *::after { text-shadow: none !important; }
+[data-ui='paper'] h1, [data-ui='paper'] h2, [data-ui='paper'] h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.005em; }
+[data-ui='paper'] .card { background: var(--bg-2); border: 1px solid var(--line-2); border-top: 2px solid var(--text); box-shadow: none; backdrop-filter: none; }
+[data-ui='paper'] .sh-top { background: #f8f4ea !important; border-bottom: 3px double #141210; box-shadow: none; backdrop-filter: none; }
+[data-ui='paper'] .sh-logo__word { font-family: 'Playfair Display', serif; font-weight: 900; }
+[data-ui='paper'] .tk { background: #141210; border-top: 0; }
+[data-ui='paper'] .tk__item, [data-ui='paper'] .tk__item a { color: #f4efe4; }
+[data-ui='paper'] .tk__badge { background: #a3302a; color: #fff; }
+[data-ui='paper'] .tk__label { background: #f4efe4 !important; color: #141210 !important; border-color: #f4efe4 !important; }
+[data-ui='paper'] .tk__sep { color: #b9b0a0; }
+[data-ui='paper'] .kicker, [data-ui='paper'] .eyebrow { color: var(--rep); }
+
+/* Race-call takeover: an "EXTRA" front page */
+[data-ui='paper'] .ct { background: rgba(244, 239, 228, 0.97); backdrop-filter: none; }
+[data-ui='paper'] .ct__bloom, [data-ui='paper'] .ct__grid, [data-ui='paper'] .ct__glitch { display: none; }
+[data-ui='paper'] .ct__copy, [data-ui='paper'] .ct__kicker, [data-ui='paper'] .ct__time { color: #141210; }
+[data-ui='paper'] .ct__office { color: #3b362e; }
+[data-ui='paper'] .ct__state { color: #141210; border-bottom: 3px double #141210; padding-bottom: 6px; }
+[data-ui='paper'] .ct__winner { background: #fbf8f1; color: #141210; border: 1px solid #141210; border-left: 8px solid var(--ct); border-radius: 2px; box-shadow: none; }
+[data-ui='paper'] .ct__winner .pt-avatar { border-color: #141210 !important; box-shadow: none; }
+[data-ui='paper'] .ct__stamp { background: var(--ct); border-color: #141210; color: #fff; box-shadow: none; border-radius: 2px; }
+[data-ui='paper'] .ct__actions .btn--ghost { --btn-bd: #141210; --btn-fg: #141210; }
+[data-ui='paper'] .ct__timer, [data-ui='paper'] .ct__dot { box-shadow: none; }
+
+/* ── Shared fixes: components that hard-code dark surfaces ── */
+[data-ui='paper'] body::before, [data-ui='paper'] body::after { display: none; }
+[data-ui='paper'] .sh-chrome { background: #f8f4ea; }
+[data-ui='paper'] .sh-tabbar { background: rgba(248, 244, 234, 0.97); border-top: 1px solid #141210; }
+[data-ui='paper'] .sh-pill.is-live { color: #a3302a; background: #fbf8f1; border-color: #a3302a; box-shadow: none; }
+[data-ui='paper'] .hm-hero__title, [data-ui='paper'] .mp-title h1, [data-ui='paper'] .rx-404-code {
+  background: none; -webkit-text-fill-color: currentColor; color: var(--text);
+}
+[data-ui='paper'] .hm-banner { --banner-a: transparent; --banner-b: transparent; background: var(--bg-2); border: 1px solid #141210; border-top: 6px double #141210; box-shadow: none; }
+[data-ui='paper'] .hm-lead__img--blank { background: repeating-linear-gradient(135deg, #e7e0cf 0 2px, #f1ebdd 2px 8px); }
+[data-ui='paper'] .mp-bg { display: none; }
+[data-ui='paper'] .mp-stats, [data-ui='paper'] .mp-panel, [data-ui='paper'] .fd-panel { background: var(--bg-2); border-color: var(--line-2); backdrop-filter: none; box-shadow: none; }
+[data-ui='paper'] .usmap-tip, [data-ui='paper'] .aumap-tip, [data-ui='paper'] .pc-tip, [data-ui='paper'] .cm__tip,
+[data-ui='paper'] .lv-sticky, [data-ui='paper'] .nw-toolbar, [data-ui='paper'] .fc-controls { background: rgba(251, 248, 241, 0.97); color: var(--text); backdrop-filter: none; }
+[data-ui='paper'] .lv-top-stats dd, [data-ui='paper'] .lv-panel-sub b { color: #7a4a00; }
+[data-ui='paper'] .lv-page { --lv-amber: #7a4a00; }
+[data-ui='paper'] .lv-gain { color: #fff; }
+[data-ui='paper'] .pt-modal__backdrop, [data-ui='paper'] .rc { background: rgba(40, 34, 24, 0.45); backdrop-filter: none; }
+[data-ui='paper'] .set__switch:checked::after { background: #f8f4ea; }
+[data-ui='paper'] .usmap, [data-ui='paper'] .aumap svg { filter: saturate(0.75) brightness(0.95); }
+/* Text on --accent (black in Paper) must flip to newsprint */
+[data-ui='paper'] .mp-tab.is-on, [data-ui='paper'] .mp-tab.is-on *, [data-ui='paper'] .mp-cta, [data-ui='paper'] .mp-buildpick button.is-on,
+[data-ui='paper'] .nw-chip.on, [data-ui='paper'] .nw-read-btn, [data-ui='paper'] .lv-seg-b.is-on, [data-ui='paper'] .fd-icon.on,
+[data-ui='paper'] .fd-cta { color: var(--accent-ink); }
+[data-ui='paper'] .mp-tab.is-on .mp-livedot { background: var(--accent-ink); }
+[data-ui='paper'] .mp-flip, [data-ui='paper'] .fd-flip, [data-ui='paper'] .fd-chip.amber { color: #fff; }
+[data-ui='paper'] .ct { background: rgba(246, 241, 230, 0.97) !important; }

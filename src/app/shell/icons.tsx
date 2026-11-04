@@ -32,3 +32,6 @@ export const IconChart = (p: SVGProps<SVGSVGElement>) => (
 export const IconFlag = (p: SVGProps<SVGSVGElement>) => (
   <svg {...base(p)}><path d="M5 21V4M5 4h11l-2 4 2 4H5" /></svg>
 );
+export const IconGrid = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}><rect x="3.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" /></svg>
+);

@@ -38,6 +38,7 @@ const ParliamentBillPage = lazy(() => import('../features/parliament/BillPage'))
 const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
 const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
 
+const MenuPage = lazy(() => import('../features/menu/MenuPage'));
 const AskPage = lazy(() => import('../features/ask/AskPage'));
 
 export function App() {
@@ -81,6 +82,7 @@ export function App() {
           <Route path="/parliament" element={<ParliamentPage />} />
           <Route path="/parliament/bill/:id" element={<ParliamentBillPage />} />
           <Route path="/embed" element={<EmbedBuilder />} />
+          <Route path="/menu" element={<MenuPage />} />
           <Route path="/ask" element={<AskPage />} />
           <Route path="*" element={<Home />} />
         </Routes>

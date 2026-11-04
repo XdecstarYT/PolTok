@@ -13,7 +13,7 @@ const BILL_NO = /^\s*(h\.?\s*r\.?|s\.?|h\.?\s*j\.?\s*res\.?|s\.?\s*j\.?\s*res\.?
 
 export default function ParliamentPage() {
   const [sp, setSp] = useSearchParams();
-  const country: Country = sp.get('c') === 'au' ? 'au' : 'us';
+  const country: Country = sp.get('c') === 'au' || sp.get('tab') === 'au' ? 'au' : 'us';
   const setCountry = (c: Country) => setSp(c === 'us' ? {} : { c }, { replace: true });
   const [q, setQ] = useState('');
   const [lookup, setLookup] = useState('');
