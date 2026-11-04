@@ -12,7 +12,8 @@ import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } 
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLive } from '../lib/live';
-import { SimBadge, ToastProvider, Kbd, useNow, useReducedMotion } from '../components';
+import { useSettings } from '../lib/settings';
+import { ToastProvider, Kbd, useNow, useReducedMotion, fmtTime, tzAbbr } from '../components';
 import { Ticker } from './shell/Ticker';
 import { CommandPalette } from './shell/CommandPalette';
 import { RaceCallWatcher } from './shell/RaceCallWatcher';
@@ -54,32 +55,18 @@ function Wordmark() {
 }
 
 function LiveStatus() {
-  const { mode, connected, source, setSource } = useLive();
+  const { mode, connected, source } = useLive();
   const local = mode === 'browser-live' || mode === 'browser-simulation';
   const state =
     mode === 'connecting' ? { cls: 'is-wait', label: 'CONNECTING' }
     : !connected && !local ? { cls: 'is-wait', label: 'RECONNECTING' }
-    : { cls: 'is-live', label: source === 'live' ? 'LIVE' : 'SIM' };
+    : source === 'live' ? { cls: 'is-live', label: 'LIVE' }
+    : { cls: 'is-demo', label: 'DEMO' };
   return (
     <span className="sh-status">
-      <span className={`sh-pill ${state.cls}`} role="status" aria-live="polite" title={source === 'live' ? 'Real results: AP via The New York Times' : 'Simulated election night'}>
+      <span className={`sh-pill ${state.cls}`} role="status" aria-live="polite" title={source === 'live' ? 'Real results: AP via The New York Times' : 'Demo replay (simulated) — change in Settings'}>
         <span className="pulse" aria-hidden="true" />
         {state.label}
-      </span>
-      <span className="sh-source" role="radiogroup" aria-label="Results source">
-        {(['live', 'simulation'] as const).map((s) => (
-          <button
-            key={s}
-            type="button"
-            role="radio"
-            aria-checked={source === s}
-            className={`sh-source__opt ${source === s ? 'is-on' : ''} ${s === 'live' ? 'is-live' : ''}`}
-            onClick={() => setSource(s)}
-            title={s === 'live' ? 'Real AP results via The New York Times' : 'Simulated election night (demo)'}
-          >
-            {s === 'live' ? 'Live' : 'Simulated'}
-          </button>
-        ))}
       </span>
     </span>
   );
@@ -87,10 +74,11 @@ function LiveStatus() {
 
 function Clock() {
   const now = useNow(1000);
-  const t = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', second: '2-digit' }).format(now);
+  const t = fmtTime(now, true);
+  const z = tzAbbr(now);
   return (
-    <span className="sh-clock num" aria-label={`Eastern time ${t}`}>
-      {t} <span>ET</span>
+    <span className="sh-clock num" aria-label={`${t} ${z}`}>
+      {t} <span>{z}</span>
     </span>
   );
 }
@@ -100,6 +88,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const reduce = useReducedMotion();
   const immersive = loc.pathname === '/feed' || loc.pathname.startsWith('/feed/');
   const [cmdk, setCmdk] = useState(false);
+  const { setPanelOpen: setSettingsOpen } = useSettings();
   const closeCmdk = useCallback(() => setCmdk(false), []);
 
   useEffect(() => {
@@ -145,6 +134,9 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="sh-right">
             <Clock />
             <LiveStatus />
+            <button type="button" className="sh-gear" onClick={() => setSettingsOpen(true)} aria-label="Settings" title="Settings">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+            </button>
             <button type="button" className="sh-search" onClick={() => setCmdk(true)} aria-label="Search (Ctrl+K)">
               <IconSearch width={17} height={17} />
               <span className="sh-search__t">Search</span>

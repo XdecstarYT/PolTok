@@ -7,7 +7,7 @@ import { PARTY_HEX, PARTY_NAME, RATING_HEX, fmtPct, marginColor, timeAgo } from 
 import type { NewsItem, PollSeries, Race, RaceResult } from '../../types';
 import {
   Avatar, BalanceBar, BiasBar, Button, Card, Chip, Countdown, ELECTION_DATE, EmptyState, LiveDot, MarginChip, Needle,
-  PartyDot, ProgressBar, RatingBadge, SectionHeader, SimBadge, Skeleton, Sparkline, fmtHHMM, leanCounts, useNow,
+  PartyDot, ProgressBar, RatingBadge, SectionHeader, SimBadge, Skeleton, Sparkline, fmtHHMM, fmtDay, tzAbbr, leanCounts, useNow,
   useReducedMotion, zonedTime,
 } from '../../components';
 import { USMap } from '../map/USMap';
@@ -72,7 +72,7 @@ function Hero() {
   // poll-closing countdown agrees with the race calls on screen.
   const now = clock ? zonedTime(ELECTION_DATE, '18:00') + clock.simMinute * 60000 : wallNow;
   const { next, closed, list } = useClosings(now);
-  const etDate = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'short', day: 'numeric' }).format(now);
+  const etDate = fmtDay(now);
   return (
     <section className="hm-hero" aria-labelledby="hm-title">
       <div className="hm-hero__copy">
@@ -101,13 +101,13 @@ function Hero() {
       <div className="hm-close card card--accent">
         <div className="row spread">
           <span className="panel-title">Next poll closing</span>
-          <span className="kicker kicker--muted">Eastern time</span>
+          <span className="kicker kicker--muted">{tzAbbr()} time</span>
         </div>
         {next ? (
           <>
             <div className="hm-close__time">
               <span className="num">{fmtHHMM(next.hhmm)}</span>
-              <span className="faint"> ET</span>
+              <span className="faint"> {tzAbbr(next.at)}</span>
             </div>
             {clock ? (
               <p className="muted num" style={{ fontSize: 14 }}>

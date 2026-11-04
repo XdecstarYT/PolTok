@@ -1,3 +1,4 @@
+import { fmtHHMM, fmtTime } from '../../components/time';
 /**
  * Live election-night derived data. Pure functions over RACES / STATES / live results.
  * Everything here is defensive: results, balance, states may be empty while data loads.
@@ -45,17 +46,13 @@ export function closeMinutes(hhmm: string | undefined): number {
   return v < 12 * 60 ? v + 24 * 60 : v;
 }
 
+/** Election-night ET minutes (≥1440 = Nov 4) → "8 PM" / "8:30 PM" in the viewer's display zone. */
 export function fmtClock(min: number): string {
-  const m = ((Math.floor(min) % 1440) + 1440) % 1440;
-  const h = Math.floor(m / 60);
-  const mm = m % 60;
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}${mm ? ':' + String(mm).padStart(2, '0') : ''} ${h < 12 ? 'AM' : 'PM'}`;
+  const m = Math.floor(min);
+  return fmtHHMM(`${Math.floor(m / 60)}:${String(((m % 60) + 60) % 60).padStart(2, '0')}`);
 }
 
 const etFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
-const etFull = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', second: '2-digit' });
-const etShort = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' });
 
 /** Current ET minutes on the election-night axis (after-midnight hours roll to 24+). */
 export function etNowMinutes(now = Date.now()): number {
@@ -65,8 +62,9 @@ export function etNowMinutes(now = Date.now()): number {
   const v = h * 60 + m;
   return h < 6 ? v + 24 * 60 : v;
 }
-export const fmtEtTime = (ts: number) => etShort.format(ts);
-export const fmtEtTimeSec = (ts: number) => etFull.format(ts);
+/** Times in the viewer's display zone (names kept for compatibility). */
+export const fmtEtTime = (ts: number) => fmtTime(ts);
+export const fmtEtTimeSec = (ts: number) => fmtTime(ts, true);
 
 export function buildRaceView(race: Race, result: RaceResult | undefined): RaceView {
   const state = stateByAbbr.get(race.state);

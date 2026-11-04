@@ -182,7 +182,15 @@ function USMapImpl({
           {!isHex &&
             hl.map((a) => {
               const g = G.geoByAbbr.get(a);
-              return g ? <path key={a} className="usmap-pulse" d={g.d} /> : null;
+              return g ? (
+                <g key={a}>
+                  {/* one-shot "called" burst: white flash + expanding rings, then the looping pulse */}
+                  <path className="usmap-flash" d={g.d} />
+                  <circle className="usmap-ring" cx={g.centroid[0]} cy={g.centroid[1]} r={6} />
+                  <circle className="usmap-ring usmap-ring--2" cx={g.centroid[0]} cy={g.centroid[1]} r={6} />
+                  <path className="usmap-pulse" d={g.d} />
+                </g>
+              ) : null;
             })}
           {labels &&
             G.geo

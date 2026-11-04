@@ -1,3 +1,4 @@
+import { fmtHHMM, tzAbbr } from '../../components/time';
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RACES, STATES } from '../../data';
@@ -40,7 +41,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   const all = useMemo<Entry[]>(() => {
     const pages: Entry[] = PAGES.map((p) => ({ id: `p${p.to}`, kind: 'Page', label: p.label, sub: p.sub, to: p.to, hay: norm(`${p.label} ${p.sub}`) }));
-    const states: Entry[] = (STATES ?? []).map((s) => ({ id: `s${s.abbr}`, kind: 'State', label: s.name, sub: `${s.abbr} · polls close ${s.pollClose} ET`, to: `/state/${s.abbr}`, hay: norm(`${s.name} ${s.abbr}`) }));
+    const states: Entry[] = (STATES ?? []).map((s) => ({ id: `s${s.abbr}`, kind: 'State', label: s.name, sub: `${s.abbr} · polls close ${fmtHHMM(s.pollClose)} ${tzAbbr()}`, to: `/state/${s.abbr}`, hay: norm(`${s.name} ${s.abbr}`) }));
     const races: Entry[] = (RACES ?? []).map((r) => ({
       id: `r${r.id}`, kind: 'Race', label: r.title, sub: `${r.id} · ${(r.candidates ?? []).map((c) => `${c.name} (${c.party})`).join(' vs ') || 'Candidates TBD'}`,
       to: `/race/${r.id}`, rating: r.rating, hay: norm(`${r.title} ${r.id} ${r.state} ${r.chamber} ${(r.candidates ?? []).map((c) => c.name).join(' ')}`),

@@ -9,7 +9,7 @@
 // Data © The New York Times / The Associated Press. Displayed with attribution in the UI.
 
 import { correlatedAtLeast } from './sim.js';
-import * as DATA from './data/index.js';
+import { createMarketsFeed } from './markets.js';
 
 const BASE = 'https://static01.nyt.com/elections-assets/pages/data/2026-11-03';
 export const NYT_SOURCES = {
@@ -171,6 +171,7 @@ export function createNytProvider(opts) {
       updatedAt: Date.parse(nr.updated_at || '') || Date.now(),
       status,
       candidates: race.candidates.map((c) => ({ ...c })),
+      sourceUrl: typeof nr.url === 'string' ? nr.url : undefined,
       race,
       nr,
     };
@@ -285,21 +286,18 @@ export function createNytProvider(opts) {
     return out;
   }
 
-  function markets() {
-    const mb = /** @type {any} */ (DATA).MARKETS_BASELINE;
-    if (!mb?.kalshi) return [];
-    const src = `Kalshi · closing odds ${mb.asOf ? new Date(mb.asOf).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}`.trim();
-    const mk = (id, question, d) => ({
-      id,
-      question,
-      source: src,
-      outcomes: [
-        { label: 'Democrats', prob: d / 100, color: '#3d7bff' },
-        { label: 'Republicans', prob: 1 - d / 100, color: '#ff3d55' },
-      ],
-    });
-    return [mk('house-control', 'Which party will win the House?', mb.kalshi.houseDem), mk('senate-control', 'Which party will win the Senate?', mb.kalshi.senateDem)];
-  }
+  // Real prediction-market odds (Polymarket), refreshed every minute.
+  let marketList = [];
+  const marketsFeed = createMarketsFeed({
+    races,
+    fetchImpl,
+    log,
+    onMarkets: (m) => {
+      marketList = m;
+      emit({ type: 'markets', markets: m });
+    },
+  });
+  const markets = () => marketList;
 
   async function load(kind) {
     try {
@@ -322,7 +320,7 @@ export function createNytProvider(opts) {
     start() {
       if (started) return;
       started = true;
-      emit({ type: 'markets', markets: markets() });
+      marketsFeed.start();
       load('senate');
       load('governor');
       load('house');
@@ -331,6 +329,7 @@ export function createNytProvider(opts) {
     },
     stop() {
       started = false;
+      marketsFeed.stop();
       timers.forEach(clearInterval);
       timers = [];
     },

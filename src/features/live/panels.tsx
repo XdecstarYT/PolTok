@@ -1,3 +1,4 @@
+import { tzAbbr } from '../../components/time';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Market, RaceCallEvent, StateInfo } from '../../types';
@@ -126,7 +127,7 @@ export function PollTimeline({ views, now, simMin }: { views: RaceView[]; now: n
   return (
     <section className="lv-panel lv-timeline" aria-labelledby="lv-tl-h">
       <header className="lv-panel-h">
-        <h2 id="lv-tl-h">Poll closings · ET</h2>
+        <h2 id="lv-tl-h">Poll closings · {tzAbbr()}</h2>
         <span className="lv-panel-sub mono">
           {next ? (
             <>
@@ -166,7 +167,7 @@ export function PollTimeline({ views, now, simMin }: { views: RaceView[]; now: n
                           to={`/state/${s.abbr}`}
                           className={`lv-tl-st mono ${has ? 'has-race' : ''}`}
                           style={c ? { background: PARTY_HEX[c] + '33', borderColor: PARTY_HEX[c] } : undefined}
-                          title={`${s.name} — polls close ${fmtClock(g.min)} ET${has ? '' : ' (no statewide race)'}`}
+                          title={`${s.name} — polls close ${fmtClock(g.min)} ${tzAbbr()}${has ? '' : ' (no statewide race)'}`}
                         >
                           {s.abbr}
                         </Link>
@@ -309,7 +310,7 @@ function MapTip({ v, abbr }: { v?: RaceView; abbr: string }) {
           <b>{v.total > 0 ? `${c.pct.toFixed(1)}%` : '—'}</b>
         </div>
       ))}
-      <div className="lv-tip-f mono">{v.status === 'not-started' ? `Polls close ${fmtClock(v.closeMin)} ET` : `${Math.round(v.expectedPct)}% of est. vote in`}</div>
+      <div className="lv-tip-f mono">{v.status === 'not-started' ? `Polls close ${fmtClock(v.closeMin)} ${tzAbbr()}` : `${Math.round(v.expectedPct)}% of est. vote in`}</div>
     </div>
   );
 }

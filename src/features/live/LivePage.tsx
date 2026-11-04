@@ -1,3 +1,4 @@
+import { tzAbbr } from '../../components/time';
 /**
  * /live — Election-night control room. Owned by the Live agent (src/features/live/**).
  * Results come from useLive(): live AP data (via NYT) or the simulation, per the user toggle.
@@ -47,7 +48,8 @@ export default function LivePage() {
   // Sim clock: prefer an explicit clock from the provider (if the lead exposes one), else infer
   // from the latest poll-closing wave that has started reporting.
   const simMin = useMemo(() => {
-    const clk = (live as { clock?: { simMinute?: number } }).clock;
+    const clk = (live as { clock?: { simMinute?: number; live?: boolean } }).clock;
+    if (clk?.live) return undefined; // real wall clock
     if (clk && typeof clk.simMinute === 'number') return 18 * 60 + clk.simMinute;
     if (live.mode === 'live' || live.mode === 'connecting') return undefined;
     let m = 0;
@@ -72,7 +74,7 @@ export default function LivePage() {
         </div>
         <dl className="lv-top-stats mono">
           <div>
-            <dt>ET</dt>
+            <dt>{tzAbbr()}</dt>
             <dd>{fmtEtTimeSec(now)}</dd>
           </div>
           <div>

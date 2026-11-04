@@ -294,3 +294,56 @@ export function summarize(model: SimModel, s: SimSnapshot) {
     avgMargin: (id: string) => (s.marginSum[id] ?? 0) / n,
   };
 }
+
+/* ── Live conditioning ───────────────────────────────────────────────────────── */
+
+/** Inverse standard-normal CDF (Acklam's approximation). */
+function probit(p: number): number {
+  const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472, 2.50662827745924];
+  const b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857];
+  const c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373, 4.37466414146497, 2.93816398269878];
+  const d = [0.00778469570904146, 0.32246712907004, 2.445134137143, 3.75440866190742];
+  const q = Math.min(1 - 1e-9, Math.max(1e-9, p));
+  if (q < 0.02425) {
+    const r = Math.sqrt(-2 * Math.log(q));
+    return (((((c[0] * r + c[1]) * r + c[2]) * r + c[3]) * r + c[4]) * r + c[5]) / ((((d[0] * r + d[1]) * r + d[2]) * r + d[3]) * r + 1);
+  }
+  if (q > 1 - 0.02425) return -probit(1 - q);
+  const r = q - 0.5;
+  const t = r * r;
+  return ((((((a[0] * t + a[1]) * t + a[2]) * t + a[3]) * t + a[4]) * t + a[5]) * r) / (((((b[0] * t + b[1]) * t + b[2]) * t + b[3]) * t + b[4]) * t + 1);
+}
+
+export interface LiveSeatInput {
+  /** AP call: party side that won */
+  calledSide?: 'D' | 'R';
+  /** current D-side win probability from the live model */
+  pD?: number;
+  /** % of expected vote counted */
+  expectedPct?: number;
+}
+
+/**
+ * Condition a model on live results: called races are locked; races being counted take the
+ * live model's probability, with uncertainty shrinking as the count progresses.
+ * Returns the model unchanged when there's nothing live.
+ */
+export function conditionOnLive(model: SimModel, live: Record<string, LiveSeatInput>): { model: SimModel; locked: number; counting: number } {
+  let locked = 0;
+  let counting = 0;
+  const seats = model.seats.map((s) => {
+    const l = live[s.id];
+    if (!l || s.weight > 1) return s;
+    if (l.calledSide) {
+      locked++;
+      return { ...s, prior: l.calledSide === 'D' ? 60 : -60, sigma: 0.01 };
+    }
+    if (l.pD != null && (l.expectedPct ?? 0) > 0) {
+      counting++;
+      const sigma = s.sigma * Math.max(0.25, 1 - ((l.expectedPct ?? 0) / 100) * 0.75);
+      return { ...s, prior: probit(Math.min(0.995, Math.max(0.005, l.pD))) * sigma, sigma };
+    }
+    return s;
+  });
+  return { model: locked || counting ? { ...model, seats } : model, locked, counting };
+}

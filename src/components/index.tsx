@@ -13,4 +13,4 @@ export { AnimatedNumber, CountUp, Sparkline, Needle, Gauge, BalanceBar, BiasBar,
 export { Tabs, Countdown, Modal, Sheet, ToastProvider, useToast } from './interactive';
 export type { TabItem, ToastInput } from './interactive';
 export { useNow, useReducedMotion, usePrevious } from './hooks';
-export { ELECTION_DATE, ET, zonedTime, fmtET, fmtHHMM, splitDuration } from './time';
+export { ELECTION_DATE, ET, zonedTime, fmtET, fmtHHMM, splitDuration, fmtTime, fmtDay, tzAbbr, setDisplayTZ, displayTZ, etClockToTs, LOCAL_TZ } from './time';

@@ -242,3 +242,14 @@
     stroke-width: 3;
   }
 }
+
+/* One-shot burst when a state is newly highlighted (e.g. just called) */
+.usmap-flash { fill: #fff; pointer-events: none; opacity: 0; animation: usmap-flash 1.1s ease-out 1; }
+@keyframes usmap-flash { 0% { opacity: 0.95; } 100% { opacity: 0; } }
+.usmap-ring {
+  fill: none; stroke: #fff; stroke-width: 2; pointer-events: none; opacity: 0;
+  transform-box: fill-box; transform-origin: center; animation: usmap-ring 1.5s cubic-bezier(0.2, 0.6, 0.3, 1) 1;
+}
+.usmap-ring--2 { stroke: var(--accent); animation-delay: 0.25s; }
+@keyframes usmap-ring { 0% { opacity: 1; transform: scale(1); stroke-width: 3; } 100% { opacity: 0; transform: scale(16); stroke-width: 0.4; } }
+@media (prefers-reduced-motion: reduce) { .usmap-flash, .usmap-ring { animation: none; } }

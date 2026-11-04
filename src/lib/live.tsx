@@ -131,7 +131,8 @@ function reduce(s: LiveState, ev: LiveEvent): LiveState {
   }
 }
 
-const SOURCE_KEY = 'poltok:source';
+// v2: everyone defaults back to live results; the demo replay is opt-in from Settings.
+const SOURCE_KEY = 'poltok:source:v2';
 function readSource(): ResultsSource {
   try {
     const v = localStorage.getItem(SOURCE_KEY);

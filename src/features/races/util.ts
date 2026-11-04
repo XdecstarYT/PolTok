@@ -1,3 +1,4 @@
+import { etClockToTs, fmtDay, fmtTime, tzAbbr } from '../../components/time';
 // Helpers for the Races & States feature (owned by agent 10).
 import type { Candidate, NewsItem, Party, Race, RaceResult, Rating, StateInfo } from '../../types';
 import { HOUSE_BASELINE, RACES, SENATE_NOT_UP, STATES } from '../../data';
@@ -103,9 +104,9 @@ export function fmtCloseET(hhmm?: string): string {
   if (!hhmm) return 'TBD';
   const [h, m] = hhmm.split(':').map((x) => parseInt(x, 10));
   if (Number.isNaN(h)) return hhmm;
-  const hh = h % 24;
-  const h12 = ((hh + 11) % 12) + 1;
-  return `${h12}:${String(m || 0).padStart(2, '0')} ${hh >= 12 ? 'PM' : 'AM'} ET${h >= 24 ? ' (Nov 4)' : ''}`;
+  const ts = etClockToTs(`${h}:${m || 0}`);
+  const day = fmtDay(ts, 'short');
+  return `${fmtTime(ts)} ${tzAbbr(ts)}${/Nov 3/.test(day) ? '' : ` (${day.replace(/^\w+, /, '')})`}`;
 }
 
 export function ordinal(n: number): string {

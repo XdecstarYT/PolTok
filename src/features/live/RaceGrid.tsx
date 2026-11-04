@@ -1,3 +1,4 @@
+import { tzAbbr } from '../../components/time';
 import { memo, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Chamber } from '../../types';
@@ -177,7 +178,7 @@ export const RaceCard = memo(function RaceCard({ v, now }: { v: RaceView; now: n
             <i style={{ width: `${Math.min(100, v.expectedPct)}%` }} />
           </span>
           <span>
-            {v.status === 'not-started' ? `Polls close ${fmtClock(v.closeMin)} ET` : `${Math.round(v.expectedPct)}% in`}
+            {v.status === 'not-started' ? `Polls close ${fmtClock(v.closeMin)} ${tzAbbr()}` : `${Math.round(v.expectedPct)}% in`}
           </span>
         </span>
         {!v.winner && fav && fav.prob > 0 && (

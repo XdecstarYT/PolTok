@@ -8,6 +8,7 @@ import { PARTY_HEX, PARTY_NAME, RATING_HEX } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import { CallBanner, ExpectedMeter, NewsList, Needle, NotFound, PollPanel, PresBar, RaceCard, ResultRows, ShareButton, AnimatedNum } from './parts';
 import { demMargin, fmtCloseET, headlinePair, longTitle, relatedNews, sortRacesForState, totalVotes } from './util';
+import { CountyMap } from './CountyMap';
 import './races.css';
 
 export default function RacePage() {
@@ -27,6 +28,7 @@ export default function RacePage() {
   if (!race) return <NotFound kind="race" query={id} />;
 
   const result = live.results[race.id];
+  const raceMarket = live.markets.find((m) => m.raceId === race.id);
   const [a, b] = headlinePair(race);
   const ca = a ? PARTY_HEX[a.party] : PARTY_HEX.O;
   const cb = b ? PARTY_HEX[b.party] : PARTY_HEX.O;
@@ -154,6 +156,44 @@ export default function RacePage() {
             </header>
             <Needle right={right} leftLabel={a?.name ?? 'TBD'} rightLabel={b?.name ?? 'TBD'} leftColor={ca} rightColor={cb} jitter={!winnerId && result?.status === 'counting'} />
           </section>
+
+          {/* ---------- COUNTIES (live) ---------- */}
+          {live.source === 'live' && st && race.chamber !== 'house' && (
+            <section className="card rx-sec" aria-labelledby="rx-county-h">
+              <header className="rx-sec-head">
+                <h3 id="rx-county-h">Results by county</h3>
+                <SimBadge />
+              </header>
+              <CountyMap race={race} st={st} sourceUrl={result?.sourceUrl} />
+            </section>
+          )}
+
+          {/* ---------- MARKET (Polymarket) ---------- */}
+          {raceMarket && (
+            <section className="card rx-sec" aria-labelledby="rx-mkt-h">
+              <header className="rx-sec-head">
+                <h3 id="rx-mkt-h">Prediction market</h3>
+                <a className="rx-link" href={raceMarket.url} target="_blank" rel="noopener noreferrer">
+                  {raceMarket.source} ↗
+                </a>
+              </header>
+              <div className="rx-mkt">
+                {raceMarket.outcomes.map((o) => (
+                  <div key={o.label} className="rx-mkt-row">
+                    <span className="rx-mkt-l">{o.label}</span>
+                    <span className="rx-mkt-bar">
+                      <i style={{ width: `${(o.prob * 100).toFixed(1)}%`, background: o.color }} />
+                    </span>
+                    <b className="mono">{(o.prob * 100).toFixed(o.prob > 0.99 || o.prob < 0.01 ? 1 : 0)}%</b>
+                  </div>
+                ))}
+                <p className="rx-muted rx-small">
+                  Real-money trader odds (implied chance of winning).
+                  {raceMarket.volume ? ` $${Math.round(raceMarket.volume / 1000).toLocaleString('en-US')}k traded.` : ''}
+                </p>
+              </div>
+            </section>
+          )}
 
           {/* ---------- POLLS ---------- */}
           <section className="card rx-sec" aria-labelledby="rx-polls-h">

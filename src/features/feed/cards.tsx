@@ -1,3 +1,4 @@
+import { fmtHHMM, tzAbbr } from '../../components/time';
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -483,7 +484,7 @@ export function FactCard({ abbr, meta, active, reduced }: { abbr: string; meta: 
           </div>
         </Rise>
         <Rise active={active} reduced={reduced} delay={0.32} className="fd-foot-note">
-          2024 presidential result · {races.length ? `${races.length} race${races.length === 1 ? '' : 's'} on tonight’s ballot here` : 'final polls close ' + s.pollClose + ' ET'}
+          2024 presidential result · {races.length ? `${races.length} race${races.length === 1 ? '' : 's'} on tonight’s ballot here` : 'final polls close ' + fmtHHMM(s.pollClose) + ' ' + tzAbbr()}
         </Rise>
         <Rise active={active} reduced={reduced} delay={0.4}>
           <Link className="fd-cta" to={`/state/${abbr}`}>

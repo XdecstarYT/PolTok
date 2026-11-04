@@ -72,6 +72,8 @@ export interface RaceResult {
   reportingNote?: string;
   updatedAt: number;
   status: 'not-started' | 'polls-closed' | 'counting' | 'called' | 'too-close';
+  /** Live mode only: NYT results page for this race (county data lives next to it). */
+  sourceUrl?: string;
   /** Live mode only: authoritative candidate list (names/photos from the results provider). */
   candidates?: Candidate[];
 }
@@ -126,10 +128,18 @@ export interface Market {
   outcomes: { label: string; prob: number; color?: string }[];
   source: string; // "Polymarket (simulated)" etc.
   history?: { t: number; p: number }[]; // prob of outcomes[0] over time
+  /** race-level market: our race id (e.g. "GA-SEN") */
+  raceId?: string;
+  /** link to the market page */
+  url?: string;
+  /** traded volume in USD */
+  volume?: number;
 }
 
 export interface RaceCallEvent {
   type: 'call';
+  /** UI-only: animation preview, not a real projection */
+  preview?: boolean;
   raceId: string;
   candidateId: string;
   party: Party;

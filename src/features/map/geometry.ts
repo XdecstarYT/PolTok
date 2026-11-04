@@ -175,3 +175,20 @@ export function luminance(color: string | undefined): number {
   };
   return 0.2126 * f((n >> 16) & 255) + 0.7152 * f((n >> 8) & 255) + 0.0722 * f(n & 255);
 }
+
+/**
+ * A single state's outline, fitted to a w×h box (used by the race-call takeover).
+ * Uses AlbersUSA so AK/HI render sensibly.
+ */
+export function stateShape(abbr: string, w: number, h: number, pad = 8): { d: string; cx: number; cy: number } | null {
+  const topo = statesTopo as unknown as Topology<{ states: GeometryCollection }>;
+  const fc = feature(topo, topo.objects.states) as FeatureCollection<Geometry, { name?: string }>;
+  const f = fc.features.find((x) => abbrFromFips(String(x.id)) === abbr);
+  if (!f) return null;
+  const proj = geoAlbersUsa().fitExtent([[pad, pad], [w - pad, h - pad]], f as Feature);
+  const path = geoPath(proj);
+  const d = path(f as Feature);
+  if (!d) return null;
+  const [cx, cy] = path.centroid(f as Feature);
+  return { d, cx, cy };
+}
