@@ -26,7 +26,7 @@ export const SHARE_SIZES: Record<ShareFormat, { w: number; h: number; label: str
   story: { w: 1080, h: 1920, label: 'Story · 1080×1920' },
 };
 export const US_ATTRIBUTION = 'Results: AP via NYT';
-const AU_ATTRIBUTION = 'Seat data: AEC / VEC via PolTok';
+const AU_ATTRIBUTION = 'Margins: Wikipedia pendulum (AEC / VEC)';
 
 const C = {
   bg0: '#05070d', bg1: '#0b0e18', bg2: '#121726', bg3: '#1a2033',
@@ -110,7 +110,7 @@ export function buildCardModel(kind: ShareKind, id: string, live: Pick<LiveState
     title: seat.name,
     subtitle: auStateName(seat.state),
     status: seat.vacant ? { text: 'VACANT', color: C.text3 } : { text: `${p.short} HELD`, color: pColor(seat.party) },
-    au: { member: seat.vacant ? 'Vacant' : seat.member, party: p.short, partyName: p.name, color: pColor(seat.party), margin: seat.margin, vs: seat.vs, contest: seat.contest, note: seat.note },
+    au: { member: seat.vacant ? 'Vacant' : seat.member, party: p.short, partyName: p.name, color: pColor(seat.party), margin: seat.margin, vs: seat.vs, contest: seat.contest, note: seat.note && !/verify|TBD|garbled|uncertain/i.test(seat.note) ? seat.note : undefined },
     updated: Date.now(), attribution: AU_ATTRIBUTION,
   };
 }
@@ -312,12 +312,15 @@ export async function renderShareCanvas(model: CardModel, format: ShareFormat): 
   ctx.font = f(story ? 28 : 19, 600);
   ctx.fillStyle = C.text2;
   ctx.textAlign = 'left';
+  ctx.font = f(story ? 28 : 19, 800);
+  const hostW = ctx.measureText(location.host || 'poltok').width + 32;
+  ctx.font = f(story ? 28 : 19, 600);
   if (story) {
-    ctx.fillText(model.attribution, pad, fy - 22);
+    ctx.fillText(ellipsize(ctx, model.attribution, W - pad * 2 - hostW), pad, fy - 22);
     ctx.fillStyle = C.text3;
     ctx.fillText(`As of ${stamp(model.updated)}`, pad, fy + 22);
   } else {
-    ctx.fillText(`${model.attribution}  ·  As of ${stamp(model.updated)}`, pad, fy);
+    ctx.fillText(ellipsize(ctx, `${model.attribution}  ·  As of ${stamp(model.updated)}`, W - pad * 2 - hostW), pad, fy);
   }
   ctx.textAlign = 'right';
   ctx.fillStyle = C.accent;
@@ -342,7 +345,7 @@ function drawRows(ctx: Ctx, rows: CandRow[], imgs: (HTMLImageElement | null)[], 
     const ix = x + rowH * 0.14;
     avatar(ctx, ix, ry + (rowH - av) / 2, av, r.name, r.color, imgs[i]);
     const tx = ix + av + rowH * 0.18;
-    const pctW = story ? 250 : 190;
+    const pctW = story ? 290 : 190;
     const nameW = x + w - tx - pctW - 20;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
@@ -353,7 +356,8 @@ function drawRows(ctx: Ctx, rows: CandRow[], imgs: (HTMLImageElement | null)[], 
     ctx.font = f(story ? 28 : Math.min(19, rowH * 0.18), 600);
     ctx.fillStyle = r.color;
     const meta = `${PARTY_NAME[r.party as Party] ?? r.party}${r.incumbent ? ' · Incumbent' : ''}${r.votes != null ? `  ·  ${fmtN(r.votes)} votes` : ''}`;
-    ctx.fillText(ellipsize(ctx, meta, nameW), tx, nameY + (story ? 44 : rowH * 0.24));
+    const meta2 = ctx.measureText(meta).width > nameW ? meta.replace(' · Incumbent', '') : meta;
+    ctx.fillText(ellipsize(ctx, meta2, nameW), tx, nameY + (story ? 44 : rowH * 0.24));
     // bar
     const by = ry + rowH * 0.78, bw = x + w - tx - rowH * 0.2, bh = story ? 14 : 8;
     rr(ctx, tx, by, bw, bh, bh / 2);

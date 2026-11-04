@@ -110,6 +110,7 @@ export default function HousePage() {
       {data && c && (
         <>
           <Tally c={c} lead={lead} />
+          <p className="hs-note">Seat totals match NYT's party balance used across PolTok: AP-called races plus same-party contests (e.g. California top-two Democrat-vs-Democrat) whose party is already certain before AP names a winner.</p>
 
           <section className="card hs-mapcard" aria-labelledby="hs-map-h">
             <div className="hs-mapbar">

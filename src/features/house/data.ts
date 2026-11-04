@@ -166,6 +166,16 @@ export function parseHouse(json: any): HouseData {
   // Seat counts computed from the race calls themselves (cross-checks NYT's balance figure).
   const cnt = { D: 0, R: 0, I: 0 };
   let fD = 0, fR = 0;
+  // Same-party contests (e.g. California top-two D-vs-D) are locked for that party before AP names a
+  // winner; NYT's party balance counts them, so we do too — keeps /house in step with home/embeds.
+  for (const raw of json?.races ?? []) {
+    if (raw?.top_reporting_unit?.state_postal === 'US' || raw?.outcome?.won?.length || !raw?.in_party_control) continue;
+    const ids: string[] = raw.outcome?.advanced_to_runoff?.length ? raw.outcome.advanced_to_runoff : (raw.top_reporting_unit?.candidates ?? []).map((c: any) => c.nyt_id);
+    const ps = new Set(ids.map((id) => raw.candidate_metadata?.[id]?.party?.nyt_id));
+    if (ps.size !== 1) continue;
+    const only = [...ps][0];
+    cnt[only === 'DEM' ? 'D' : only === 'GOP' ? 'R' : 'I']++;
+  }
   for (const r of races) {
     if (!r.winner) continue;
     const p = r.winner.party === 'D' ? 'D' : r.winner.party === 'R' ? 'R' : 'I';

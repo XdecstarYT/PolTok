@@ -15,7 +15,8 @@
 //         https://www.govinfo.gov/bulkdata/json/BILLSTATUS/119/{hr,s,hjres,sjres}
 //       — api.congress.gov v3 (optional, CONGRESS_API_KEY from api.data.gov — DEMO_KEY is shared and
 //         rate-limited to ~10 req/h, so it is not used) for the "recently updated" ordering
-//       — clerk.house.gov roll-call XML (party breakdowns), senate.gov LIS vote menu (best effort)
+//       — clerk.house.gov roll-call XML (party breakdowns), senate.gov LIS vote menu (best effort),
+//         falling back to Voteview CSV (voteview.com) with party breakdowns
 //       — congress.gov RSS: house-floor-today / senate-floor-today
 //   AU  — APH ParlInfo "bills currently before Parliament" RSS (best effort: aph.gov.au sits behind a WAF)
 //       — Federal Register of Legislation API (keyless): Acts as made = bills that received assent
@@ -322,6 +323,65 @@ async function latestHouseRoll(year) {
   return lo;
 }
 
+/* Voteview (voteview.com, UCLA) — keyless CSV mirror of every Senate roll call with member-level
+   votes; used when senate.gov's WAF blocks us. cast_code 1-3 yea, 4-6 nay, 7-8 present, 9 not voting. */
+function csvRows(s) {
+  const rows = [];
+  let row = [], f = '', q = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (q) { if (c === '"') { if (s[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n') { row.push(f); rows.push(row); row = []; f = ''; }
+    else if (c !== '\r') f += c;
+  }
+  if (f || row.length) { row.push(f); rows.push(row); }
+  const [head, ...rest] = rows;
+  return rest.filter((r) => r.length >= head.length).map((r) => Object.fromEntries(head.map((h, i) => [h, r[i]])));
+}
+const voteviewSenate = () =>
+  cached('senate:voteview', 60 * 60e3, async () => {
+    const base = 'https://voteview.com/static/data/out';
+    const [rc, vt, mb] = await Promise.all([
+      get(`${base}/rollcalls/S${CONGRESS}_rollcalls.csv`, { timeout: 15000 }),
+      get(`${base}/votes/S${CONGRESS}_votes.csv`, { timeout: 20000 }),
+      get(`${base}/members/S${CONGRESS}_members.csv`, { timeout: 15000 }),
+    ]);
+    const party = new Map(csvRows(mb).map((m) => [m.icpsr, m.party_code === '100' ? 'D' : m.party_code === '200' ? 'R' : 'I']));
+    const calls = csvRows(rc).filter((r) => r.chamber === 'Senate').sort((a, b) => b.rollnumber - a.rollnumber).slice(0, 15);
+    const want = new Set(calls.map((c) => c.rollnumber));
+    const tally = new Map();
+    for (const v of csvRows(vt)) {
+      if (!want.has(v.rollnumber)) continue;
+      const p = party.get(v.icpsr) || 'I';
+      const k = +v.cast_code <= 3 ? 'yea' : +v.cast_code <= 6 ? 'nay' : +v.cast_code <= 8 ? 'present' : 'notVoting';
+      const t = tally.get(v.rollnumber) || {};
+      t[p] = t[p] || { party: p, name: p === 'D' ? 'Democratic' : p === 'R' ? 'Republican' : 'Independent', yea: 0, nay: 0, present: 0, notVoting: 0 };
+      t[p][k]++;
+      tally.set(v.rollnumber, t);
+    }
+    return calls.map((c) => {
+      const parties = Object.values(tally.get(c.rollnumber) || {}).sort((a, b) => a.party.localeCompare(b.party));
+      const sess = Number(c.session) || 1;
+      const n = c.clerk_rollnumber || c.rollnumber;
+      return {
+        id: `senate-${CONGRESS}-${sess}-${n}`,
+        chamber: 'Senate',
+        roll: Number(n),
+        date: c.date,
+        ts: Date.parse(`${c.date}T17:00:00Z`),
+        measure: c.bill_number || '',
+        question: c.vote_question,
+        description: c.vote_desc || c.dtl_desc,
+        result: c.vote_result,
+        totals: { yea: Number(c.yea_count) || sum(parties, 'yea'), nay: Number(c.nay_count) || sum(parties, 'nay'), present: sum(parties, 'present'), notVoting: sum(parties, 'notVoting') },
+        parties,
+        url: `https://www.senate.gov/legislative/LIS/roll_call_votes/vote${CONGRESS}${sess}/vote_${CONGRESS}_${sess}_${String(n).padStart(5, '0')}.htm`,
+      };
+    });
+  });
+
 async function usVotes() {
   const notes = [];
   const year = new Date().getUTCFullYear();
@@ -352,12 +412,21 @@ async function usVotes() {
       parties: [],
       url: `https://www.senate.gov/legislative/LIS/roll_call_votes/vote${CONGRESS}${year % 2 === 0 ? 2 : 1}/vote_${CONGRESS}_${year % 2 === 0 ? 2 : 1}_${txt(v.vote_number).padStart(5, '0')}.htm`,
     }));
-  }).catch(() => {
-    notes.push('senate.gov roll-call list was unreachable from this server (it blocks many cloud hosts); Senate votes omitted.');
-    return [];
-  });
-  const votes = [...house, ...senate].sort((a, b) => (b.ts || 0) - (a.ts || 0));
-  return { votes, missing: [], notes, source: 'clerk.house.gov roll-call XML; senate.gov LIS', fetchedAt: Date.now() };
+  }).catch(() => null);
+  let senateVotes = senate || [];
+  let senateSrc = 'senate.gov LIS';
+  if (!senate) {
+    senateVotes = await voteviewSenate().catch(() => null);
+    if (senateVotes?.length) {
+      senateSrc = 'Voteview (UCLA) Senate roll calls';
+      notes.push(`senate.gov blocks this server, so Senate roll calls come from Voteview (voteview.com, UCLA), which republishes official Senate votes with a lag — latest available: ${senateVotes[0].date}.`);
+    } else {
+      senateVotes = [];
+      notes.push('senate.gov and Voteview were both unreachable; Senate votes omitted.');
+    }
+  }
+  const votes = [...house, ...senateVotes].sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  return { votes, missing: [], notes, source: `clerk.house.gov roll-call XML; ${senateSrc}`, fetchedAt: Date.now() };
 }
 
 function parseRss(s) {
