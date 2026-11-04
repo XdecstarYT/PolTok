@@ -17,6 +17,8 @@ import { ToastProvider, Kbd, useNow, useReducedMotion, fmtTime, tzAbbr } from '.
 import { Ticker } from './shell/Ticker';
 import { CommandPalette } from './shell/CommandPalette';
 import { RaceCallWatcher } from './shell/RaceCallWatcher';
+import { AskPolTok } from '../features/ask/AskPolTok';
+import { UpdatePrompt } from '../lib/pwa';
 import { IconFeed, IconHome, IconLive, IconMap, IconNews, IconSearch } from './shell/icons';
 import './shell/shell.css';
 
@@ -96,6 +98,7 @@ export const NAV_MORE = [
   { to: '/replay', label: 'Replay', sub: 'Relive election night' },
   { to: '/compare', label: 'Compare', sub: 'Races side by side, polling miss' },
   { to: '/watch', label: 'Watchlist', sub: 'Your starred races' },
+  { to: '/parliament', label: 'Parliament', sub: 'Live bills — US Congress & Australia' },
 ];
 
 function MoreMenu() {
@@ -228,6 +231,8 @@ export function Shell({ children }: { children: ReactNode }) {
 
       <CommandPalette open={cmdk} onClose={closeCmdk} />
       <RaceCallWatcher />
+      <AskPolTok />
+      <UpdatePrompt />
     </ToastProvider>
   );
 }

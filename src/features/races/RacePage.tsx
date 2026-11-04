@@ -9,6 +9,7 @@ import { USMap } from '../map/USMap';
 import { CallBanner, ExpectedMeter, NewsList, Needle, NotFound, PollPanel, PresBar, RaceCard, ResultRows, ShareButton, AnimatedNum } from './parts';
 import { demMargin, fmtCloseET, headlinePair, longTitle, relatedNews, sortRacesForState, totalVotes } from './util';
 import { CountyMap } from './CountyMap';
+import { AiRaceSummary } from '../ask/AiRaceSummary';
 import './races.css';
 import { WatchStar } from '../watch/WatchStar';
 
@@ -149,6 +150,8 @@ export default function RacePage() {
             <ExpectedMeter pct={result?.expectedPct ?? 0} />
             {!result && <p className="rx-muted rx-small">Waiting for the results feed{st ? ` — polls close ${fmtCloseET(st.pollClose)}` : ''}.</p>}
           </section>
+
+          <AiRaceSummary raceId={race.id} />
 
           {/* ---------- NEEDLE ---------- */}
           <section className="card rx-sec" aria-labelledby="rx-needle-h">

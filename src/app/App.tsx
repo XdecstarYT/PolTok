@@ -33,8 +33,12 @@ const GovStatePage = lazy(() => import('../features/governors/GovStatePage'));
 const SearchPage = lazy(() => import('../features/search/SearchPage'));
 const CandidatesIndex = lazy(() => import('../features/candidates/CandidatesIndex'));
 const CandidatePage = lazy(() => import('../features/candidates/CandidatePage'));
+const ParliamentPage = lazy(() => import('../features/parliament/ParliamentPage'));
+const ParliamentBillPage = lazy(() => import('../features/parliament/BillPage'));
 const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
 const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
+
+const AskPage = lazy(() => import('../features/ask/AskPage'));
 
 export function App() {
   const { pathname } = useLocation();
@@ -74,7 +78,10 @@ export function App() {
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/candidates" element={<CandidatesIndex />} />
           <Route path="/candidate/:id" element={<CandidatePage />} />
+          <Route path="/parliament" element={<ParliamentPage />} />
+          <Route path="/parliament/bill/:id" element={<ParliamentBillPage />} />
           <Route path="/embed" element={<EmbedBuilder />} />
+          <Route path="/ask" element={<AskPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>

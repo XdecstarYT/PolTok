@@ -152,6 +152,7 @@ async function main() {
         if (p === '/api/ai') return (await import('./ai.js')).nodeAiHandler(req, res);
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
         if (p.startsWith('/api/au/') && (await au.handle(p, url, json, res))) return;
+        if (p.startsWith('/api/parliament')) return (await import('./parliament.js')).nodeParliamentHandler(p, url, json, res);
         switch (p) {
           case '/api/health': {
             const source = pick(url.searchParams.get('source'));

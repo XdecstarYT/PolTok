@@ -22,3 +22,10 @@
 ## From Agent 3 (PWA) — 2026-11-04
 - **[→ Lead]** Mount the update banner: in `src/app/App.tsx` add `import { UpdatePrompt } from '../lib/pwa';` and render `<UpdatePrompt />` once inside the root (e.g. next to `<Shell>`/routes, inside ToastProvider is fine). Importing `src/lib/pwa` also registers `/sw.js` (production builds only), so the import is required for the PWA to work. Alternatively `import '../lib/pwa'` in `src/main.tsx`.
 - SW never intercepts `/api/stream` or `text/event-stream`. `/api/*` + NYT JSON are network-first with a 10-min offline fallback. Bump `VERSION` in `public/sw.js` to force cache purge. Icons regenerate via `NODE_PATH=$(npm root -g) node public/icons/generate.mjs`.
+
+## From Agent 10 (Netlify + AI) — 2026-11-04
+- **[→ Lead] Mount Ask PolTok:** in `src/app/Shell.tsx` (or App.tsx inside `<Shell>`) add `import { AskPolTok } from '../features/ask';` and render `<AskPolTok />` once (floating button + slide-over; hides itself on `/embed/*` and `/ask`).
+- **[→ Lead] Route:** `const AskPage = lazy(() => import('../features/ask/AskPage'));` + `<Route path="/ask" element={<AskPage />} />`; optional NAV_MORE `{ to: '/ask', label: 'Ask PolTok', sub: 'AI answers from live data' }`.
+- **[→ Lead / Races owner] Race summary:** on `/race/:id` render `<AiRaceSummary raceId={id} />` (from `src/features/ask`) below the results card. Renders nothing when AI is not configured.
+- `src/lib/live.tsx`: now probes `/api/health` first; `stream:false` (Netlify) or no answer → in-browser provider immediately (no 3.5s SSE wait); Node server health reports `stream:true`. Clock polling skips while in browser mode.
+- Netlify: `netlify.toml` + `netlify/functions/*.mjs` (health, stream→404, news, au, snapshot?source=live, polls, ai). Env: `GROQ` (or `GROQ_API_KEY`), optional `GROQ_MODEL`, `AI_MAX_TOKENS`, `AI_RATE_PER_MIN`. Node server: `POST /api/ai` via `server/ai.js`.

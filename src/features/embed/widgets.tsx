@@ -37,7 +37,7 @@ export function EmbedFrame({ title, link, children }: { title: string; link: str
     <div className="emb" data-theme={theme}>
       <header className="emb__head">
         <a className="emb__brand" href={origin + link} target="_blank" rel="noopener noreferrer" aria-label="Open on PolTok">
-          <span className="emb__dot" aria-hidden="true" />Pol<b>Tok</b>
+          <span className="emb__dot" aria-hidden="true" /><span>Pol<b>Tok</b></span>
         </a>
         <span className={`emb__live ${live.connected ? 'is-on' : ''}`}>{live.connected ? 'LIVE' : 'Connecting…'}</span>
       </header>
