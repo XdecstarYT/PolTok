@@ -17,8 +17,12 @@ export default function SearchPage() {
   const [shown, setShown] = useState(PAGE);
   const index = useSearchIndex();
 
-  useEffect(() => setDraft(q), [q]);
-  useEffect(() => setShown(PAGE), [q, type]);
+  useEffect(() => {
+    setDraft(q);
+  }, [q]);
+  useEffect(() => {
+    setShown(PAGE);
+  }, [q, type]);
   // debounce typing into the URL (replace, so history isn't spammed)
   useEffect(() => {
     if (draft === q) return;

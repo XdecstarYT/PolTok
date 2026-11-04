@@ -73,7 +73,9 @@ export default function NewsPage() {
   const [limit, setLimit] = useState(36);
   const [apiSources, setApiSources] = useState<{ name: string; lean: Lean; ok: boolean }[] | null>(null);
 
-  useEffect(() => savePrefs({ view, balance }), [view, balance]);
+  useEffect(() => {
+    savePrefs({ view, balance });
+  }, [view, balance]);
 
   // Source health list from the aggregator (optional; falls back to items).
   useEffect(() => {
@@ -626,7 +628,9 @@ function ReadingPane({ cluster, now, onClose }: { cluster: Cluster; now: number;
   const lead = cluster.lead;
   const gist = firstSentence(lead, 320);
   const closeRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => closeRef.current?.focus(), [cluster.id]);
+  useEffect(() => {
+    closeRef.current?.focus();
+  }, [cluster.id]);
   const bySide: Record<'L' | 'C' | 'R', NewsItem[]> = { L: [], C: [], R: [] };
   for (const i of cluster.items) {
     const s = SIDE_OF[i.sourceLean] ?? 'U';

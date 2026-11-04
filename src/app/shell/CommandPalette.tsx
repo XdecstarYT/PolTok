@@ -54,7 +54,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     return { rows, items, total: hits.length };
   }, [q, index, recent]);
 
-  useEffect(() => setIdx(0), [q]);
+  useEffect(() => {
+    setIdx(0);
+  }, [q]);
   useEffect(() => {
     if (open) { setQ(''); setRecent(loadRecent()); }
   }, [open]);

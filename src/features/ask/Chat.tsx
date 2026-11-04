@@ -27,7 +27,9 @@ export function Chat({ autoFocus }: { autoFocus?: boolean }) {
   const [q, setQ] = useState('');
   const end = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
-  useEffect(() => end.current?.scrollIntoView({ block: 'end' }), [msgs]);
+  useEffect(() => {
+    end.current?.scrollIntoView({ block: 'end' });
+  }, [msgs]);
   useEffect(() => {
     if (autoFocus) input.current?.focus();
   }, [autoFocus]);

@@ -39,7 +39,9 @@ export default function FeedPage() {
   const activeRef = useRef(0);
   activeRef.current = active;
 
-  useEffect(() => saveStore({ ...store, auto }), [store, auto]);
+  useEffect(() => {
+    saveStore({ ...store, auto });
+  }, [store, auto]);
 
   // ---------- derive pools; keep a sticky cluster snapshot so cards never vanish mid-swipe
   const clusters = useMemo(() => clusterNews(live.news), [live.news]);

@@ -105,7 +105,9 @@ function MoreMenu() {
   const loc = useLocation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => setOpen(false), [loc.pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [loc.pathname]);
   useEffect(() => {
     if (!open) return;
     const off = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
