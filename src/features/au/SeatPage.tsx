@@ -9,6 +9,8 @@ import { fmtCounted } from './VictoriaPage';
 import { FeedStatus, LeaderCard, NewsPanel } from './widgets';
 import './au.css';
 import { WatchStar } from '../watch/WatchStar';
+import { AuNav } from './AuNav';
+import { VicCandidates } from './Candidates';
 
 export default function SeatPage() {
   const { id = '' } = useParams();
@@ -41,6 +43,7 @@ export default function SeatPage() {
   const c = pColor(seat.party);
   return (
     <div className="page au-page">
+      <AuNav />
       <header className="au-head" style={{ ['--pc' as string]: c }}>
         <div>
           <div className="au-kicker mono">
@@ -82,6 +85,7 @@ export default function SeatPage() {
             )}
             {isVic && <FeedStatus updated={res.updated} error={res.error} label={res.data?.source ?? 'results'} />}
           </Card>
+          {isVic && <VicCandidates id={seat.id} />}
           <Card title="Similar margins">
             <ul className="au-keyseats">
               {neighbours.map((s) => (

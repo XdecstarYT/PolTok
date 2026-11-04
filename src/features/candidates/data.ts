@@ -122,7 +122,14 @@ export function mergedCandidates(race: Race, result?: RaceResult): Candidate[] {
   const byId = new Map(live.map((c) => [c.id, c]));
   const out = (race.candidates ?? []).map((c) => ({ ...c, ...(byId.get(c.id) ?? {}) }));
   for (const c of live) if (!out.some((x) => x.id === c.id)) out.push(c);
-  return out;
+  // The provider can list the same minor candidate under several ids; keep the one with votes.
+  const seen = new Map<string, Candidate>();
+  for (const c of out) {
+    const k = norm(c.name);
+    const prev = seen.get(k);
+    if (!prev || (result?.votes?.[c.id] ?? 0) > (result?.votes?.[prev.id] ?? 0)) seen.set(k, c);
+  }
+  return out.filter((c) => seen.get(norm(c.name)) === c);
 }
 
 function entriesFor(race: Race, result: RaceResult | undefined, idx: MetaIndex | null): CandEntry[] {
@@ -164,10 +171,17 @@ export const officeLabel = (race: Race) =>
   race.chamber === 'senate' ? `U.S. Senate${race.special ? ' (special)' : ''}` : race.chamber === 'governor' ? 'Governor' : `U.S. House, ${race.id}`;
 
 /** Real headlines naming the candidate (full name or distinctive surname). */
-export function candidateNews(news: NewsItem[], c: Candidate, limit = 8): NewsItem[] {
+export function candidateNews(news: NewsItem[], c: Candidate, stateName: string, limit = 8): NewsItem[] {
   const last = lastName(c.name);
   const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const full = new RegExp(`\\b${esc(c.name)}\\b`, 'i');
   const sur = last.length >= 5 ? new RegExp(`\\b${esc(last)}\\b`) : null;
-  return news.filter((n) => full.test(n.title) || (sur && sur.test(`${n.title} ${n.summary ?? ''}`))).slice(0, limit);
+  const stRe = new RegExp(`\\b${esc(stateName)}\\b`, 'i');
+  // Surname alone is ambiguous (e.g. two Collinses), so it also needs the state named.
+  return news
+    .filter((n) => {
+      const t = `${n.title} ${n.summary ?? ''}`;
+      return full.test(t) || (sur && sur.test(t) && stRe.test(t));
+    })
+    .slice(0, limit);
 }

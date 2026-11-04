@@ -18,6 +18,10 @@ const RacesIndex = lazy(() => import('../features/races/RacesIndex'));
 const AUPage = lazy(() => import('../features/au/AUPage'));
 const VictoriaPage = lazy(() => import('../features/au/VictoriaPage'));
 const AUSeatPage = lazy(() => import('../features/au/SeatPage'));
+const AUSenatePage = lazy(() => import('../features/au/SenatePage'));
+const AUPartyPage = lazy(() => import('../features/au/PartyPage'));
+const AUNSWPage = lazy(() => import('../features/au/NSWPage'));
+const AUSwingPage = lazy(() => import('../features/au/SwingPage'));
 const WatchPage = lazy(() => import('../features/watch/WatchPage'));
 const ComparePage = lazy(() => import('../features/watch/ComparePage'));
 import { WatchAlerts } from '../features/watch/WatchAlerts';
@@ -54,6 +58,10 @@ export function App() {
           <Route path="/au" element={<AUPage />} />
           <Route path="/au/victoria" element={<VictoriaPage />} />
           <Route path="/au/seat/:id" element={<AUSeatPage />} />
+          <Route path="/au/senate" element={<AUSenatePage />} />
+          <Route path="/au/party/:id" element={<AUPartyPage />} />
+          <Route path="/au/nsw" element={<AUNSWPage />} />
+          <Route path="/au/swingometer" element={<AUSwingPage />} />
           <Route path="/watch" element={<WatchPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/flips" element={<FlipsPage />} />

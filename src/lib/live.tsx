@@ -294,7 +294,9 @@ export function LiveProvider({ children }: { children: ReactNode }) {
           startBrowser();
         }
       })
-      .catch(() => !cancelled && startBrowser());
+      .catch(() => {
+        if (!cancelled) startBrowser();
+      });
 
     return () => {
       cancelled = true;

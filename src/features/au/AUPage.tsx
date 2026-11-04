@@ -7,9 +7,10 @@ import { useAuMarkets, useAuNews } from './api';
 import { FED_ZOOMS, MapPanel } from './MapPanel';
 import { AU_POLLS, counts, FEDERAL, leader, normPolls, OTHER, VIC_CLOSE, VICTORIA } from './model';
 import { FeedStatus, Hemicycle, LeaderCard, MarketsPanel, NewsPanel, PollsPanel, Pendulum, TallyBar } from './widgets';
+import { AuNav } from './AuNav';
 import './au.css';
 
-const NSW_DATE = Date.parse('2027-03-27T07:00:00Z');
+const NSW_DATE = Date.parse('2027-03-13T07:00:00Z');
 
 
 export default function AUPage() {
@@ -29,6 +30,7 @@ export default function AUPage() {
 
   return (
     <div className="page au-page">
+      <AuNav />
       <header className="au-head">
         <div>
           <div className="au-kicker mono"><LiveDot /> AUSTRALIA · 48TH PARLIAMENT</div>
@@ -91,12 +93,12 @@ export default function AUPage() {
             <span className="muted">88 Assembly seats · polls close 6pm AEDT</span>
             <Countdown to={VIC_CLOSE} doneLabel="Polls closed" />
           </Link>
-          <div className="au-el">
+          <Link to="/au/nsw" className="au-el">
             <span className="mono">NEW SOUTH WALES · STATE</span>
-            <b>27 March 2027</b>
+            <b>13 March 2027</b>
             <span className="muted">93 Assembly seats</span>
             <Countdown to={NSW_DATE} compact />
-          </div>
+          </Link>
           {OTHER.filter((e) => !/new south wales/i.test(e.name)).map((e) => (
             <div className={`au-el ${e.status === 'held' ? 'is-past' : ''}`} key={e.name + e.date}>
               <span className="mono">{e.status.toUpperCase()}</span>

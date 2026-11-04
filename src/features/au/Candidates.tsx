@@ -1,0 +1,26 @@
+/** Victorian district candidate list from the VEC nominations report (partial until nominations close). */
+import { Card } from '../../components';
+import { fmtDay, fmtTime, tzAbbr } from '../../components/time';
+import { VIC_CANDIDATES } from '../../data/au';
+import { party, pColor } from './model';
+
+export function VicCandidates({ id }: { id: string }) {
+  const list = VIC_CANDIDATES.byDistrict[id] ?? [];
+  const close = Date.parse(VIC_CANDIDATES.nominationsClose);
+  const closed = Date.now() >= close;
+  return (
+    <Card title="Candidates" kicker={`VEC nominations · as at ${VIC_CANDIDATES.asAt}`}>
+      {list.length ? (
+        <ul className="au-cands">
+          {list.map(([n, p]) => (
+            <li key={n}><i style={{ background: pColor(p) }} /><span>{n}</span><span className="mono muted">{p === 'IND' ? 'Independent' : party(p).name}</span></li>
+          ))}
+        </ul>
+      ) : <p className="muted">Nominations not yet published for this district.</p>}
+      <p className="au-note">
+        {VIC_CANDIDATES.final ? 'Final list.' : <>Partial list — nominations close {fmtDay(close)} {fmtTime(close)} {tzAbbr(close)}{closed ? ' (now closed; final list and ballot order pending update)' : ''}. Labor, Liberal, One Nation and other bulk party nominations had not been lodged at this snapshot.</>}{' '}
+        <a href={VIC_CANDIDATES.source} target="_blank" rel="noreferrer">VEC</a>
+      </p>
+    </Card>
+  );
+}

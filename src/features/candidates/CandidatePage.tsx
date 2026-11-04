@@ -43,8 +43,8 @@ export default function CandidatePage() {
   const field = useMemo(() => (e ? all.filter((x) => x.race.id === e.race.id).sort((a, b) => b.votes - a.votes) : []), [all, e]);
   const news = useMemo(() => {
     if (!e) return { mine: [], state: [] };
-    const mine = candidateNews(live.news, e.cand, 8);
     const st = stateByAbbr.get(e.race.state);
+    const mine = candidateNews(live.news, e.cand, st?.name ?? e.race.state, 8);
     const state = mine.length >= 3 ? [] : relatedNews(live.news, st, [e.race], 6).filter((n) => !mine.includes(n));
     return { mine, state };
   }, [live.news, e]);

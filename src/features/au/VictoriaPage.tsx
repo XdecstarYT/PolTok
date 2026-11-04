@@ -7,6 +7,7 @@ import { relatedNews, useAuMarkets, useAuNews, useAuResults, type AuResults } fr
 import { MapPanel, VIC_ZOOMS } from './MapPanel';
 import { AU_POLLS, counts, leader, normPolls, party, partyKey, pColor, VIC_CLOSE, VIC_MAJORITY, VIC_TOTAL, VICTORIA, type AuSeat } from './model';
 import { FeedStatus, LeaderCard, MarketsPanel, NewsPanel, PollsPanel, Pendulum, TallyBar } from './widgets';
+import { AuNav } from './AuNav';
 import './au.css';
 
 const NOT_REPORTING = '#2a3048';
@@ -75,6 +76,7 @@ export default function VictoriaPage() {
 
   return (
     <div className="page au-page">
+      <AuNav />
       <header className="au-head">
         <div>
           <div className="au-kicker mono">

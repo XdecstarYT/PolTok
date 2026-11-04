@@ -143,7 +143,7 @@ function ellipsize(ctx: Ctx, text: string, maxW: number) {
 
 const imgCache = new Map<string, Promise<HTMLImageElement | null>>();
 /** Loads an image with CORS; resolves null if the host doesn't allow it (keeps canvas untainted). */
-export function loadCorsImage(src?: string, timeout = 3500): Promise<HTMLImageElement | null> {
+export function loadCorsImage(src?: string, timeout = 2000): Promise<HTMLImageElement | null> {
   if (!src) return Promise.resolve(null);
   let p = imgCache.get(src);
   if (!p) {
@@ -276,29 +276,29 @@ export async function renderShareCanvas(model: CardModel, format: ShareFormat): 
   pill(ctx, model.status.text, model.status.color, W - pad, headY - (story ? 48 : 34), story ? 26 : 18);
 
   // titles
-  let y = headY + (story ? 150 : 70);
+  let y = headY + (story ? 150 : 56);
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = C.text2;
   ctx.font = f(story ? 32 : 22, 700);
   ctx.fillText(model.kicker.toUpperCase(), pad, y);
-  y += story ? 92 : 62;
+  y += story ? 92 : 56;
   const ts = fitText(ctx, model.title, W - pad * 2, story ? 96 : 60, 800, 30);
   ctx.fillStyle = C.text;
   ctx.fillText(model.title, pad, y);
   if (model.subtitle) {
-    y += story ? 60 : 38;
+    y += story ? 60 : 34;
     ctx.font = f(story ? 32 : 22, 500);
     ctx.fillStyle = C.text3;
     ctx.fillText(model.subtitle, pad, y);
   }
-  y += story ? 90 : 40;
+  y += story ? 90 : 30;
   void ts;
 
   const footH = story ? 150 : 74;
   const bodyBottom = H - footH - (story ? 40 : 10);
 
-  if (model.rows) drawRows(ctx, model.rows, imgs, pad, y, W - pad * 2, bodyBottom - y, story);
+  if (model.rows) drawRows(ctx, model.rows.slice(0, story ? 4 : 3), imgs, pad, y, W - pad * 2, bodyBottom - y, story);
   else if (model.balance) drawBalance(ctx, model.balance, pad, y, W - pad * 2, bodyBottom - y, story);
   else if (model.au) drawAu(ctx, model, pad, y, W - pad * 2, bodyBottom - y, story);
 
