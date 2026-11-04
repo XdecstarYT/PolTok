@@ -29,3 +29,11 @@
 - **[→ Lead / Races owner] Race summary:** on `/race/:id` render `<AiRaceSummary raceId={id} />` (from `src/features/ask`) below the results card. Renders nothing when AI is not configured.
 - `src/lib/live.tsx`: now probes `/api/health` first; `stream:false` (Netlify) or no answer → in-browser provider immediately (no 3.5s SSE wait); Node server health reports `stream:true`. Clock polling skips while in browser mode.
 - Netlify: `netlify.toml` + `netlify/functions/*.mjs` (health, stream→404, news, au, snapshot?source=live, polls, ai). Env: `GROQ` (or `GROQ_API_KEY`), optional `GROQ_MODEL`, `AI_MAX_TOKENS`, `AI_RATE_PER_MIN`. Node server: `POST /api/ai` via `server/ai.js`.
+
+## From Agent 7 (SHARE) — 2026-11-04
+- **[→ Lead] Mount share cards:** `import { ShareCardButton } from '../../lib/share';` (or `../embed/ShareCardButton`).
+  - `/race/:id` (src/features/races/RacePage.tsx, header actions): `<ShareCardButton kind="race" id={race.id} />`
+  - Home (src/features/home, next to the balance-of-power module): `<ShareCardButton kind="balance" id="senate" />` and `id="house"`
+  - `/au/seat/:id` (src/features/au/SeatPage.tsx): `<ShareCardButton kind="au-seat" id={seat.id} />`
+  - Optional props: `label`, `className` (defaults to `btn btn--sm`).
+- **Embeds:** `/embed/race/:id`, `/embed/balance?chamber=house`, `/embed/map?chamber=governor` (all accept `theme=light`) render OUTSIDE the Shell via a `pathname.startsWith('/embed/')` check in App.tsx; builder at `/embed` (in Shell, NAV_MORE "Embed"). Server sends no X-Frame-Options/CSP frame-ancestors — keep it that way for `/embed/*` if headers are added later.

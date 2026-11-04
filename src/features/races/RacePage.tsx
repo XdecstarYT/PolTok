@@ -10,6 +10,7 @@ import { CallBanner, ExpectedMeter, NewsList, Needle, NotFound, PollPanel, PresB
 import { demMargin, fmtCloseET, headlinePair, longTitle, relatedNews, sortRacesForState, totalVotes } from './util';
 import { CountyMap } from './CountyMap';
 import { AiRaceSummary } from '../ask/AiRaceSummary';
+import { ShareCardButton } from '../embed/ShareCardButton';
 import './races.css';
 import { WatchStar } from '../watch/WatchStar';
 
@@ -81,6 +82,7 @@ export default function RacePage() {
             <SimBadge />
             <ShareButton title={longTitle(race)} />
             <WatchStar raceId={race.id} label={longTitle(race)} />
+            <ShareCardButton kind="race" id={race.id} />
           </div>
         </div>
 

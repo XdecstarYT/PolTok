@@ -1,5 +1,6 @@
 /** /au/seat/:id — federal division or Victorian district (AU-UI). */
 import { useMemo } from 'react';
+import { ShareCardButton } from '../embed/ShareCardButton';
 import { Link, useParams } from 'react-router-dom';
 import { Card, EmptyState, ProgressBar } from '../../components';
 import { relatedNews, useAuNews, useAuResults } from './api';
@@ -51,6 +52,7 @@ export default function SeatPage() {
           </div>
           <h1 className="au-seat-h"><i style={{ background: c }} />{seat.name}</h1>
           <WatchStar auSeatId={seat.id} label={seat.name} />
+          <ShareCardButton kind="au-seat" id={seat.id} />
           <p className="au-sub">{isVic ? 'Victorian Legislative Assembly district' : `Federal division · House of Representatives · ${stateName(seat.state)}`}</p>
         </div>
         <dl className="au-stats mono">
