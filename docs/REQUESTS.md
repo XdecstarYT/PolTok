@@ -18,3 +18,7 @@
 - **[→ Maps agent, optional]** `USMap`: a `zoomTo?: string` (or `fitTo?: string[]`) prop that crops the viewBox to a state's bbox would let `/race/:id` and `/state/:abbr` show a true state close-up; today they use `focus`+`highlight`+`selected` on the full national map.
 - **[→ Lead, optional]** `src/data`: a `neighbors` adjacency map (state abbr → bordering abbrs) would replace the hex-grid "Nearby" approximation on `/state/:abbr`.
 - **[→ Data, FYI]** Races pages read `SENATE_NOT_UP`, `HOUSE_BASELINE`, `POLL_SERIES` (id === race id) and treat I candidates as caucusing with D for flip detection; `StateInfo.pollClose` ≥ 24h is rendered as "… ET (Nov 4)".
+
+## From Agent 3 (PWA) — 2026-11-04
+- **[→ Lead]** Mount the update banner: in `src/app/App.tsx` add `import { UpdatePrompt } from '../lib/pwa';` and render `<UpdatePrompt />` once inside the root (e.g. next to `<Shell>`/routes, inside ToastProvider is fine). Importing `src/lib/pwa` also registers `/sw.js` (production builds only), so the import is required for the PWA to work. Alternatively `import '../lib/pwa'` in `src/main.tsx`.
+- SW never intercepts `/api/stream` or `text/event-stream`. `/api/*` + NYT JSON are network-first with a 10-min offline fallback. Bump `VERSION` in `public/sw.js` to force cache purge. Icons regenerate via `NODE_PATH=$(npm root -g) node public/icons/generate.mjs`.

@@ -23,6 +23,11 @@ const ComparePage = lazy(() => import('../features/watch/ComparePage'));
 import { WatchAlerts } from '../features/watch/WatchAlerts';
 const FlipsPage = lazy(() => import('../features/flips/FlipsPage'));
 const MeasuresPage = lazy(() => import('../features/measures/MeasuresPage'));
+const GovernorsPage = lazy(() => import('../features/governors/GovernorsPage'));
+const GovStatePage = lazy(() => import('../features/governors/GovStatePage'));
+const SearchPage = lazy(() => import('../features/search/SearchPage'));
+const CandidatesIndex = lazy(() => import('../features/candidates/CandidatesIndex'));
+const CandidatePage = lazy(() => import('../features/candidates/CandidatePage'));
 
 export function App() {
   return (
@@ -48,8 +53,13 @@ export function App() {
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/flips" element={<FlipsPage />} />
           <Route path="/measures" element={<MeasuresPage />} />
+          <Route path="/governors" element={<GovernorsPage />} />
+          <Route path="/governors/:abbr" element={<GovStatePage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/replay" element={<ReplayPage />} />
           <Route path="/analysis" element={<AnalysisPage />} />
+          <Route path="/candidates" element={<CandidatesIndex />} />
+          <Route path="/candidate/:id" element={<CandidatePage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>

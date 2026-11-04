@@ -19,3 +19,8 @@ Read docs/ARCHITECTURE.md first. Stack: Vite+React18+TS strict, plain CSS + toke
 Real data only, never fabricate (label anything uncertain). Responsive 375→1440, no horizontal scroll, accessible. `npx tsc -b --noEmit` must pass.
 Test server: `npm run build && NODE_ENV=production PORT=<your port> node server/index.js &`; stop with: for p in $(pgrep -f "PORT=<port>|^node server/index.js"); do ...; done — prefer killing only the PID you started ($!). Ports: agent N uses 880N.
 No git commits (the lead commits). Final message <150 words.
+
+## Added mid-update
+9  PARLIAMENT  src/features/parliament/**, server/parliament.js, netlify/functions/parliament*.mjs  — /parliament bill tracker (US Congress + Australian Parliament)
+10 NETLIFY+AI  netlify.toml, netlify/** (except parliament*), src/features/ask/**, src/lib/ai.ts, src/lib/api.ts  — Netlify deployment + GROQ AI
+Hosting: the site is deployed on NETLIFY (static dist/ + Netlify Functions). The Node server/ does not run there. Env var GROQ (Groq API key) is set in Netlify — server-side only, never shipped to the browser.

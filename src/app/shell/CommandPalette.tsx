@@ -1,82 +1,62 @@
-import { fmtHHMM, tzAbbr } from '../../components/time';
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RACES, STATES } from '../../data';
 import { Modal, Kbd, RatingBadge } from '../../components';
 import { IconSearch, IconArrow } from './icons';
+import { KINDS, KIND_PLURAL, PAGES, clearRecent, loadRecent, pushRecent, search, useSearchIndex, type Entry, type Kind } from '../../features/search/searchIndex';
+import { Highlight } from '../../features/search/Highlight';
+import '../../features/search/search.css';
 
-interface Entry {
-  id: string;
-  kind: 'Page' | 'State' | 'Race';
-  label: string;
-  sub?: string;
-  to: string;
-  hay: string;
-  rating?: import('../../types').Rating;
-}
+type Row = { type: 'head'; label: string; clear?: boolean } | { type: 'item'; e: Entry; i: number };
 
-const PAGES: { to: string; label: string; sub: string }[] = [
-  { to: '/', label: 'Home', sub: 'Election night dashboard' },
-  { to: '/live', label: 'Live results', sub: 'Election night command center' },
-  { to: '/map', label: 'Map', sub: 'Electoral & results map' },
-  { to: '/map/senate', label: 'Senate map', sub: 'Map · Senate races' },
-  { to: '/map/house', label: 'House map', sub: 'Map · House races' },
-  { to: '/map/governor', label: 'Governor map', sub: 'Map · Governor races' },
-  { to: '/map/pres2024', label: '2024 presidential map', sub: 'Map · baseline' },
-  { to: '/feed', label: 'PolTok feed', sub: 'Vertical story feed' },
-  { to: '/news', label: 'News', sub: 'Aggregated headlines with bias' },
-  { to: '/polls', label: 'Polls', sub: 'Generic ballot, approval & race polls' },
-  { to: '/forecast', label: 'Forecast & markets', sub: 'Model & prediction markets' },
-  { to: '/races', label: 'All races', sub: 'Senate, House, Governor' },
-  { to: '/replay', label: 'Relive election night', sub: 'Replay race calls & the needle' },
-  { to: '/analysis', label: 'What happened', sub: 'Swing, polling error, turnout, county shifts' },
-  { to: '/flips', label: 'Seats that flipped', sub: 'Seats that changed hands · net gains' },
-  { to: '/measures', label: 'Ballot measures', sub: 'Statewide ballot measures · live results' },
-  { to: '/au', label: 'Australia', sub: 'Federal parliament, polls, markets, AU news' },
-  { to: '/au/victoria', label: 'Victorian election 2026', sub: 'Australia · 28 Nov results night' },
-];
+const PER_GROUP: Partial<Record<Kind, number>> = { News: 4, Action: 4 };
 
-const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-
-/** ⌘K / Ctrl+K palette searching pages, states and races. */
+/** ⌘K / Ctrl+K palette: global fuzzy search, quick actions, recents. */
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const nav = useNavigate();
+  const index = useSearchIndex();
   const [q, setQ] = useState('');
   const [idx, setIdx] = useState(0);
+  const [recent, setRecent] = useState(loadRecent);
   const listRef = useRef<HTMLUListElement>(null);
 
-  const all = useMemo<Entry[]>(() => {
-    const pages: Entry[] = PAGES.map((p) => ({ id: `p${p.to}`, kind: 'Page', label: p.label, sub: p.sub, to: p.to, hay: norm(`${p.label} ${p.sub}`) }));
-    const states: Entry[] = (STATES ?? []).map((s) => ({ id: `s${s.abbr}`, kind: 'State', label: s.name, sub: `${s.abbr} · polls close ${fmtHHMM(s.pollClose)} ${tzAbbr()}`, to: `/state/${s.abbr}`, hay: norm(`${s.name} ${s.abbr}`) }));
-    const races: Entry[] = (RACES ?? []).map((r) => ({
-      id: `r${r.id}`, kind: 'Race', label: r.title, sub: `${r.id} · ${(r.candidates ?? []).map((c) => `${c.name} (${c.party})`).join(' vs ') || 'Candidates TBD'}`,
-      to: `/race/${r.id}`, rating: r.rating, hay: norm(`${r.title} ${r.id} ${r.state} ${r.chamber} ${(r.candidates ?? []).map((c) => c.name).join(' ')}`),
-    }));
-    return [...pages, ...states, ...races];
-  }, []);
-
-  const results = useMemo(() => {
-    const n = norm(q.trim());
-    if (!n) return all.filter((e) => e.kind === 'Page' || (e.kind === 'Race' && RACES.find((r) => `r${r.id}` === e.id)?.key)).slice(0, 14);
-    const terms = n.split(/\s+/);
-    const scored: { e: Entry; s: number }[] = [];
-    for (const e of all) {
-      if (!terms.every((t) => e.hay.includes(t))) continue;
-      let s = 0;
-      const l = norm(e.label);
-      if (l === n) s += 100;
-      if (l.startsWith(n)) s += 40;
-      if (e.kind === 'State' && e.id.slice(1).toLowerCase() === n) s += 120;
-      if (e.kind === 'Page') s += 10;
-      s -= l.length * 0.1;
-      scored.push({ e, s });
+  const { rows, items, total } = useMemo(() => {
+    const rows: Row[] = [];
+    const items: Entry[] = [];
+    const add = (e: Entry) => { rows.push({ type: 'item', e, i: items.length }); items.push(e); };
+    const query = q.trim();
+    if (!query) {
+      if (recent.length) {
+        rows.push({ type: 'head', label: 'Recent', clear: true });
+        for (const r of recent) add({ ...r, id: `recent:${r.id}`, keys: '', sub: r.q ? `Search · “${r.q}”` : r.kind });
+      }
+      rows.push({ type: 'head', label: 'Pages' });
+      PAGES.slice(0, 8).forEach((p) => add(index.find((e) => e.id === `p${p.to}`)!));
+      rows.push({ type: 'head', label: 'Quick actions' });
+      index.filter((e) => e.id === 'x:ui' || e.id === 'x:tz:Australia/Melbourne' || e.id === 'x:tz:America/New_York' || e.id === 'x:settings').forEach(add);
+      return { rows, items, total: 0 };
     }
-    return scored.sort((a, b) => b.s - a.s).slice(0, 30).map((x) => x.e);
-  }, [q, all]);
+    const hits = search(index, query);
+    const groups = new Map<Kind, Entry[]>();
+    for (const h of hits) {
+      const g = groups.get(h.e.kind) ?? [];
+      if (g.length < (PER_GROUP[h.e.kind] ?? 6)) g.push(h.e);
+      groups.set(h.e.kind, g);
+    }
+    // groups ordered by their best hit (hits are sorted, so Map insertion order already reflects that)
+    for (const [k, g] of groups) {
+      rows.push({ type: 'head', label: KIND_PLURAL[k] });
+      g.forEach(add);
+    }
+    if (hits.length) {
+      rows.push({ type: 'head', label: '' });
+      add({ id: 'all', kind: 'Page', label: `See all ${hits.length} results for “${query}”`, to: `/search?q=${encodeURIComponent(query)}`, keys: '' });
+    }
+    return { rows, items, total: hits.length };
+  }, [q, index, recent]);
 
   useEffect(() => setIdx(0), [q]);
   useEffect(() => {
-    if (open) setQ('');
+    if (open) { setQ(''); setRecent(loadRecent()); }
   }, [open]);
   useEffect(() => {
     listRef.current?.querySelector<HTMLElement>(`[data-i="${idx}"]`)?.scrollIntoView({ block: 'nearest' });
@@ -84,15 +64,27 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   const go = (e?: Entry) => {
     if (!e) return;
+    const query = q.trim();
+    const realId = e.id.replace(/^recent:/, '');
+    if (e.id === 'all') pushRecent({ id: `q:${query}`, kind: 'Page', label: query, to: e.to, q: query });
+    else if (!e.run && !realId.startsWith('q:')) pushRecent({ id: realId, kind: e.kind, label: e.label, to: e.to, href: e.href });
     onClose();
-    nav(e.to);
+    if (e.run) e.run();
+    else if (e.href) window.open(e.href, '_blank', 'noopener');
+    else if (e.to) nav(e.to);
   };
   const onKey = (ev: KeyboardEvent) => {
-    if (ev.key === 'ArrowDown') { ev.preventDefault(); setIdx((i) => Math.min(results.length - 1, i + 1)); }
+    if (ev.key === 'ArrowDown') { ev.preventDefault(); setIdx((i) => Math.min(items.length - 1, i + 1)); }
     else if (ev.key === 'ArrowUp') { ev.preventDefault(); setIdx((i) => Math.max(0, i - 1)); }
-    else if (ev.key === 'Enter') { ev.preventDefault(); go(results[idx]); }
+    else if (ev.key === 'Home' && ev.ctrlKey) { ev.preventDefault(); setIdx(0); }
+    else if (ev.key === 'Enter') {
+      ev.preventDefault();
+      if ((ev.metaKey || ev.ctrlKey) && q.trim()) go({ id: 'all', kind: 'Page', label: '', to: `/search?q=${encodeURIComponent(q.trim())}`, keys: '' });
+      else go(items[idx]);
+    }
   };
 
+  const query = q.trim();
   return (
     <Modal open={open} onClose={onClose} hideClose ariaLabel="Search PolTok" width={640}>
       <div className="cmdk">
@@ -103,42 +95,56 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={onKey}
-            placeholder="Search states, races, candidates, pages…"
+            placeholder="Search races, candidates, states, AU seats, news…"
             aria-label="Search"
             role="combobox"
             aria-expanded="true"
             aria-controls="cmdk-list"
-            aria-activedescendant={results[idx] ? `cmdk-${results[idx].id}` : undefined}
+            aria-autocomplete="list"
+            aria-activedescendant={items[idx] ? `cmdk-${items[idx].id}` : undefined}
+            enterKeyHint="search"
+            autoComplete="off"
+            spellCheck={false}
           />
           <Kbd>esc</Kbd>
         </div>
-        <ul className="cmdk__list" id="cmdk-list" role="listbox" ref={listRef}>
-          {results.length === 0 && <li className="cmdk__empty">No matches for “{q}”.</li>}
-          {results.map((e, i) => (
-            <li
-              key={e.id}
-              id={`cmdk-${e.id}`}
-              data-i={i}
-              role="option"
-              aria-selected={i === idx}
-              className="cmdk__item"
-              onMouseMove={() => setIdx(i)}
-              onClick={() => go(e)}
-            >
-              <span className={`cmdk__kind cmdk__kind--${e.kind.toLowerCase()}`}>{e.kind}</span>
-              <span className="cmdk__text">
-                <span className="cmdk__label truncate">{e.label}</span>
-                {e.sub && <span className="cmdk__sub truncate">{e.sub}</span>}
-              </span>
-              {e.rating && <RatingBadge rating={e.rating} />}
-              <IconArrow width={16} height={16} className="cmdk__go" />
-            </li>
-          ))}
+        <ul className="cmdk__list" id="cmdk-list" role="listbox" ref={listRef} aria-label="Results">
+          {query && items.length === 0 && <li className="cmdk__empty">No matches for “{q}”.</li>}
+          {rows.map((r, k) =>
+            r.type === 'head' ? (
+              r.label ? (
+                <li key={`h${k}`} className="cmdk__group" role="presentation">
+                  <span>{r.label}</span>
+                  {r.clear && <button type="button" onClick={() => { clearRecent(); setRecent([]); }}>Clear</button>}
+                </li>
+              ) : null
+            ) : (
+              <li
+                key={r.e.id}
+                id={`cmdk-${r.e.id}`}
+                data-i={r.i}
+                role="option"
+                aria-selected={r.i === idx}
+                className={`cmdk__item${r.e.id === 'all' ? ' cmdk__item--all' : ''}`}
+                onMouseMove={() => setIdx(r.i)}
+                onClick={() => go(r.e)}
+              >
+                <span className={`cmdk__kind cmdk__kind--${r.e.kind.toLowerCase().replace(/\s+/g, '-')}`}>{r.e.kind}</span>
+                <span className="cmdk__text">
+                  <span className="cmdk__label truncate">{r.e.id === 'all' ? r.e.label : <Highlight text={r.e.label} q={query} />}</span>
+                  {r.e.sub && <span className="cmdk__sub truncate">{r.e.sub}</span>}
+                </span>
+                {r.e.rating && <RatingBadge rating={r.e.rating} />}
+                <IconArrow width={16} height={16} className="cmdk__go" />
+              </li>
+            ),
+          )}
         </ul>
         <div className="cmdk__foot">
           <span><Kbd>↑</Kbd> <Kbd>↓</Kbd> navigate</span>
           <span><Kbd>↵</Kbd> open</span>
-          <span className="faint">{all.length} items indexed</span>
+          <span><Kbd>⌘↵</Kbd> all results</span>
+          <span className="faint">{query ? `${total} matches` : `${index.length} items · ${KINDS.length} types`}</span>
         </div>
       </div>
     </Modal>

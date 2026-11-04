@@ -87,8 +87,10 @@ function Clock() {
 
 /** Secondary pages, grouped under the "More" menu so the top bar fits. */
 export const NAV_MORE = [
+  { to: '/candidates', label: 'Candidates', sub: 'Every nominee, headshots & results' },
   { to: '/flips', label: 'Flips', sub: 'Seats that changed hands' },
   { to: '/measures', label: 'Ballot measures', sub: 'Live statewide measures' },
+  { to: '/governors', label: 'Governors', sub: '36 races + state dashboards' },
   { to: '/replay', label: 'Replay', sub: 'Relive election night' },
   { to: '/compare', label: 'Compare', sub: 'Races side by side, polling miss' },
   { to: '/watch', label: 'Watchlist', sub: 'Your starred races' },
