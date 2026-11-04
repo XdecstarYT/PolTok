@@ -1,0 +1,3017 @@
+{
+ "_meta": {
+  "compiled": "2026-11-04",
+  "sources": [
+   "https://en.wikipedia.org/wiki/Post-election_pendulum_for_the_2025_Australian_federal_election",
+   "https://results.aec.gov.au/31496/Website/Downloads/HouseTppByDivisionDownload-31496.csv",
+   "https://en.wikipedia.org/wiki/48th_Parliament_of_Australia",
+   "https://en.wikipedia.org/wiki/2026_Victorian_state_election",
+   "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2026_Victorian_state_election",
+   "https://www.pollbludger.net/category/federal-politics-2025-2028/"
+  ],
+  "notes": "margin = 2025 two-candidate-preferred margin (% points above 50) from Wikipedia post-election pendulum; member names cross-checked against AEC members-elected CSV (150/150 match). tpp2025_alp = AEC Labor-vs-Coalition 2PP %. Victorian margins are Wikipedia pre-election pendulum (2022 results, by-election updates); not verified against VEC."
+ },
+ "federal": {
+  "electionDate": "2025-05-03",
+  "nextElectionDue": "by 2028 (TBD)",
+  "houseComposition": {
+   "asOf": "2026-06-25",
+   "ALP": 94,
+   "LIB": 17,
+   "LNP": 16,
+   "NAT": 8,
+   "ONP": 2,
+   "GRN": 1,
+   "CA": 1,
+   "KAP": 1,
+   "CSA": 2,
+   "IND": 8,
+   "total": 150,
+   "after2025Election": {
+    "ALP": 94,
+    "LIB": 18,
+    "LNP": 16,
+    "NAT": 9,
+    "GRN": 1,
+    "CA": 1,
+    "KAP": 1,
+    "IND": 10
+   }
+  },
+  "senateComposition": {
+   "asOf": "2026-05-14",
+   "ALP": 30,
+   "LIB": 23,
+   "NAT": 4,
+   "crossbench": 19,
+   "crossbenchBreakdown_uncertain": {
+    "GRN": 10,
+    "ONP": 4,
+    "IND": 2,
+    "JLN": 1,
+    "UAP": 1,
+    "AV": 1
+   },
+   "total": 76,
+   "note": "LIB/NAT split per Wikipedia (LNP/CLP senators folded into party rooms). Crossbench breakdown inferred from start-of-parliament list minus Dorinda Cox (GRN->ALP Jun 2025) and Tammy Tyrrell (IND->ALP May 2026) - verify."
+  },
+  "pm": {
+   "name": "Anthony Albanese",
+   "party": "ALP",
+   "since": "2022-05-23"
+  },
+  "opposition": {
+   "name": "Angus Taylor",
+   "party": "LIB",
+   "note": "replaced Sussan Ley (date TBD, early 2026; Ley resigned Farrer 27 Feb 2026)"
+  },
+  "divisions": [
+   {
+    "name": "Adelaide",
+    "state": "SA",
+    "party": "ALP",
+    "member": "Steve Georganas",
+    "margin": 19.07,
+    "contest": "ALP",
+    "tpp2025_alp": 69.07,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Aston",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Mary Doyle",
+    "margin": 3.43,
+    "contest": "ALP",
+    "tpp2025_alp": 53.43,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Ballarat",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Catherine King",
+    "margin": 10.66,
+    "contest": "ALP",
+    "tpp2025_alp": 60.66,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Banks",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Zhi Soon",
+    "margin": 2.39,
+    "contest": "ALP",
+    "tpp2025_alp": 52.39,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Barker",
+    "state": "SA",
+    "party": "LIB",
+    "member": "Tony Pasin",
+    "margin": 12.98,
+    "contest": "LIB",
+    "tpp2025_alp": 37.02,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Barton",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Ash Ambihaipahar",
+    "margin": 16.0,
+    "contest": "ALP",
+    "tpp2025_alp": 66.0,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bass",
+    "state": "TAS",
+    "party": "ALP",
+    "member": "Jess Teesdale",
+    "margin": 8.01,
+    "contest": "ALP",
+    "tpp2025_alp": 58.01,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bean",
+    "state": "ACT",
+    "party": "ALP",
+    "member": "David Smith",
+    "margin": 0.34,
+    "contest": "ALP v IND",
+    "tpp2025_alp": 69.29,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bendigo",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Lisa Chesters",
+    "margin": 1.4,
+    "contest": "ALP v NAT",
+    "tpp2025_alp": 51.4,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bennelong",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Jerome Laxale",
+    "margin": 9.26,
+    "contest": "ALP",
+    "tpp2025_alp": 59.26,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Berowra",
+    "state": "NSW",
+    "party": "LIB",
+    "member": "Julian Leeser",
+    "margin": 1.63,
+    "contest": "LIB",
+    "tpp2025_alp": 48.37,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Blair",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Shayne Neumann",
+    "margin": 5.71,
+    "contest": "ALP",
+    "tpp2025_alp": 55.71,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Blaxland",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Jason Clare",
+    "margin": 21.9,
+    "contest": "ALP",
+    "tpp2025_alp": 71.9,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bonner",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Kara Cook",
+    "margin": 5.0,
+    "contest": "ALP",
+    "tpp2025_alp": 55.0,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Boothby",
+    "state": "SA",
+    "party": "ALP",
+    "member": "Louise Miller-Frost",
+    "margin": 11.1,
+    "contest": "ALP",
+    "tpp2025_alp": 61.1,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bowman",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Henry Pike",
+    "margin": 2.43,
+    "contest": "LNP",
+    "tpp2025_alp": 47.57,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Braddon",
+    "state": "TAS",
+    "party": "ALP",
+    "member": "Anne Urquhart",
+    "margin": 7.2,
+    "contest": "ALP",
+    "tpp2025_alp": 57.2,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bradfield",
+    "state": "NSW",
+    "party": "IND",
+    "member": "Nicolette Boele",
+    "margin": 0.01,
+    "contest": "IND v LIB",
+    "tpp2025_alp": 45.05,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "Brand",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Madeleine King",
+    "margin": 16.92,
+    "contest": "ALP",
+    "tpp2025_alp": 66.92,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Brisbane",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Madonna Jarrett",
+    "margin": 8.96,
+    "contest": "ALP",
+    "tpp2025_alp": 58.96,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bruce",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Julian Hill",
+    "margin": 14.62,
+    "contest": "ALP",
+    "tpp2025_alp": 64.62,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bullwinkel",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Trish Cook",
+    "margin": 0.51,
+    "contest": "ALP",
+    "tpp2025_alp": 50.51,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Burt",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Matt Keogh",
+    "margin": 15.71,
+    "contest": "ALP",
+    "tpp2025_alp": 65.71,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Calare",
+    "state": "NSW",
+    "party": "IND",
+    "member": "Andrew Gee",
+    "margin": 6.78,
+    "contest": "IND v NAT",
+    "tpp2025_alp": 37.74,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "Calwell",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Basem Abdo",
+    "margin": 5.08,
+    "contest": "ALP v IND",
+    "tpp2025_alp": 64.71,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Canberra",
+    "state": "ACT",
+    "party": "ALP",
+    "member": "Alicia Payne",
+    "margin": 19.52,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 76.42,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Canning",
+    "state": "WA",
+    "party": "LIB",
+    "member": "Andrew Hastie",
+    "margin": 6.55,
+    "contest": "LIB",
+    "tpp2025_alp": 43.45,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Capricornia",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Michelle Landry",
+    "margin": 5.83,
+    "contest": "LNP",
+    "tpp2025_alp": 44.17,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Casey",
+    "state": "VIC",
+    "party": "LIB",
+    "member": "Aaron Violi",
+    "margin": 2.89,
+    "contest": "LIB",
+    "tpp2025_alp": 47.11,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Chifley",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Ed Husic",
+    "margin": 19.83,
+    "contest": "ALP",
+    "tpp2025_alp": 69.83,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Chisholm",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Carina Garland",
+    "margin": 5.7,
+    "contest": "ALP",
+    "tpp2025_alp": 55.7,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Clark",
+    "state": "TAS",
+    "party": "IND",
+    "member": "Andrew Wilkie",
+    "margin": 20.38,
+    "contest": "IND v ALP",
+    "tpp2025_alp": 70.89,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "Cook",
+    "state": "NSW",
+    "party": "LIB",
+    "member": "Simon Kennedy",
+    "margin": 7.19,
+    "contest": "LIB",
+    "tpp2025_alp": 42.81,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Cooper",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Ged Kearney",
+    "margin": 9.72,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 78.53,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Corangamite",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Libby Coker",
+    "margin": 8.05,
+    "contest": "ALP",
+    "tpp2025_alp": 58.05,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Corio",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Richard Marles",
+    "margin": 13.23,
+    "contest": "ALP",
+    "tpp2025_alp": 63.23,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Cowan",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Anne Aly",
+    "margin": 13.63,
+    "contest": "ALP",
+    "tpp2025_alp": 63.63,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Cowper",
+    "state": "NSW",
+    "party": "NAT",
+    "member": "Pat Conaghan",
+    "margin": 2.54,
+    "contest": "NAT v IND",
+    "tpp2025_alp": 40.92,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "Cunningham",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Alison Byrnes",
+    "margin": 17.52,
+    "contest": "ALP",
+    "tpp2025_alp": 67.52,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Curtin",
+    "state": "WA",
+    "party": "IND",
+    "member": "Kate Chaney",
+    "margin": 3.27,
+    "contest": "IND v LIB",
+    "tpp2025_alp": 47.84,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "Dawson",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Andrew Willcox",
+    "margin": 11.83,
+    "contest": "LNP",
+    "tpp2025_alp": 38.17,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Deakin",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Matt Gregg",
+    "margin": 2.82,
+    "contest": "ALP",
+    "tpp2025_alp": 52.82,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Dickson",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Ali France",
+    "margin": 5.99,
+    "contest": "ALP",
+    "tpp2025_alp": 55.99,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Dobell",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Emma McBride",
+    "margin": 9.43,
+    "contest": "ALP",
+    "tpp2025_alp": 59.43,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Dunkley",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Jodie Belyea",
+    "margin": 7.08,
+    "contest": "ALP",
+    "tpp2025_alp": 57.08,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Durack",
+    "state": "WA",
+    "party": "LIB",
+    "member": "Melissa Price",
+    "margin": 10.15,
+    "contest": "LIB",
+    "tpp2025_alp": 39.85,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Eden-Monaro",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Kristy McBain",
+    "margin": 7.21,
+    "contest": "ALP",
+    "tpp2025_alp": 57.21,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Fadden",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Cameron Caldwell",
+    "margin": 6.88,
+    "contest": "LNP",
+    "tpp2025_alp": 43.12,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Fairfax",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Ted O'Brien",
+    "margin": 3.23,
+    "contest": "LNP",
+    "tpp2025_alp": 46.77,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Farrer",
+    "state": "NSW",
+    "party": "ONP",
+    "member": "David Farley",
+    "margin": 6.19,
+    "contest": "LIB v IND",
+    "tpp2025_alp": 37.11,
+    "party2025": "LIB",
+    "note": "Sussan Ley (LIB) resigned 27 Feb 2026; One Nation won by-election 9 May 2026; 2025 margin no longer applicable"
+   },
+   {
+    "name": "Fenner",
+    "state": "ACT",
+    "party": "ALP",
+    "member": "Andrew Leigh",
+    "margin": 22.08,
+    "contest": "ALP",
+    "tpp2025_alp": 72.08,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Fisher",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Andrew Wallace",
+    "margin": 6.03,
+    "contest": "LNP",
+    "tpp2025_alp": 43.97,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Flinders",
+    "state": "VIC",
+    "party": "LIB",
+    "member": "Zoe McKenzie",
+    "margin": 2.29,
+    "contest": "LIB v IND",
+    "tpp2025_alp": 45.22,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Flynn",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Colin Boyce",
+    "margin": 10.24,
+    "contest": "LNP",
+    "tpp2025_alp": 39.76,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Forde",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Rowan Holzberger",
+    "margin": 1.77,
+    "contest": "ALP",
+    "tpp2025_alp": 51.77,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Forrest",
+    "state": "WA",
+    "party": "LIB",
+    "member": "Ben Small",
+    "margin": 2.24,
+    "contest": "LIB",
+    "tpp2025_alp": 47.76,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Fowler",
+    "state": "NSW",
+    "party": "IND",
+    "member": "Dai Le",
+    "margin": 2.68,
+    "contest": "IND v ALP",
+    "tpp2025_alp": 68.19,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "Franklin",
+    "state": "TAS",
+    "party": "ALP",
+    "member": "Julie Collins",
+    "margin": 7.78,
+    "contest": "ALP v IND",
+    "tpp2025_alp": 69.44,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Fraser",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Daniel Mulino",
+    "margin": 9.23,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 72.02,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Fremantle",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Josh Wilson",
+    "margin": 0.69,
+    "contest": "ALP v IND",
+    "tpp2025_alp": 68.68,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Gellibrand",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Tim Watts",
+    "margin": 15.1,
+    "contest": "ALP",
+    "tpp2025_alp": 65.1,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Gilmore",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Fiona Phillips",
+    "margin": 5.13,
+    "contest": "ALP",
+    "tpp2025_alp": 55.13,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Gippsland",
+    "state": "VIC",
+    "party": "NAT",
+    "member": "Darren Chester",
+    "margin": 19.36,
+    "contest": "NAT",
+    "tpp2025_alp": 30.64,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "Goldstein",
+    "state": "VIC",
+    "party": "LIB",
+    "member": "Tim Wilson",
+    "margin": 0.08,
+    "contest": "LIB v IND",
+    "tpp2025_alp": 46.03,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Gorton",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Alice Jordan-Baird",
+    "margin": 10.28,
+    "contest": "ALP",
+    "tpp2025_alp": 60.28,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Grayndler",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Anthony Albanese",
+    "margin": 16.86,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 80.18,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Greenway",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Michelle Rowland",
+    "margin": 13.76,
+    "contest": "ALP",
+    "tpp2025_alp": 63.76,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Grey",
+    "state": "SA",
+    "party": "LIB",
+    "member": "Tom Venning",
+    "margin": 4.64,
+    "contest": "LIB",
+    "tpp2025_alp": 45.36,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Griffith",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Renee Coffey",
+    "margin": 10.57,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 65.94,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Groom",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Garth Hamilton",
+    "margin": 5.67,
+    "contest": "LNP v IND",
+    "tpp2025_alp": 36.65,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Hasluck",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Tania Lawrence",
+    "margin": 15.97,
+    "contest": "ALP",
+    "tpp2025_alp": 65.97,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Hawke",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Sam Rae",
+    "margin": 7.63,
+    "contest": "ALP",
+    "tpp2025_alp": 57.63,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Herbert",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Phillip Thompson",
+    "margin": 13.41,
+    "contest": "LNP",
+    "tpp2025_alp": 36.59,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Hindmarsh",
+    "state": "SA",
+    "party": "ALP",
+    "member": "Mark Butler",
+    "margin": 16.35,
+    "contest": "ALP",
+    "tpp2025_alp": 66.35,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Hinkler",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "David Batt",
+    "margin": 6.26,
+    "contest": "LNP",
+    "tpp2025_alp": 43.74,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Holt",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Cassandra Fernando",
+    "margin": 14.03,
+    "contest": "ALP",
+    "tpp2025_alp": 64.03,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Hotham",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Clare O'Neil",
+    "margin": 16.86,
+    "contest": "ALP",
+    "tpp2025_alp": 66.86,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Hughes",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "David Moncrieff",
+    "margin": 3.06,
+    "contest": "ALP",
+    "tpp2025_alp": 53.06,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Hume",
+    "state": "NSW",
+    "party": "LIB",
+    "member": "Angus Taylor",
+    "margin": 8.06,
+    "contest": "LIB",
+    "tpp2025_alp": 41.94,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Hunter",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Daniel Repacholi",
+    "margin": 9.04,
+    "contest": "ALP v ONP",
+    "tpp2025_alp": 59.48,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Indi",
+    "state": "VIC",
+    "party": "IND",
+    "member": "Helen Haines",
+    "margin": 8.64,
+    "contest": "IND v LIB",
+    "tpp2025_alp": 43.34,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "Isaacs",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Mark Dreyfus",
+    "margin": 14.34,
+    "contest": "ALP",
+    "tpp2025_alp": 64.34,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Jagajaga",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Kate Thwaites",
+    "margin": 12.88,
+    "contest": "ALP",
+    "tpp2025_alp": 62.88,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Kennedy",
+    "state": "QLD",
+    "party": "KAP",
+    "member": "Bob Katter",
+    "margin": 15.75,
+    "contest": "KAP v LNP",
+    "tpp2025_alp": 40.68,
+    "party2025": "KAP",
+    "note": null
+   },
+   {
+    "name": "Kingsford Smith",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Matt Thistlethwaite",
+    "margin": 17.19,
+    "contest": "ALP",
+    "tpp2025_alp": 67.19,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Kingston",
+    "state": "SA",
+    "party": "ALP",
+    "member": "Amanda Rishworth",
+    "margin": 20.74,
+    "contest": "ALP",
+    "tpp2025_alp": 70.74,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Kooyong",
+    "state": "VIC",
+    "party": "IND",
+    "member": "Monique Ryan",
+    "margin": 0.67,
+    "contest": "IND v LIB",
+    "tpp2025_alp": 47.63,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "La Trobe",
+    "state": "VIC",
+    "party": "LIB",
+    "member": "Jason Wood",
+    "margin": 2.06,
+    "contest": "LIB",
+    "tpp2025_alp": 47.94,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Lalor",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Joanne Ryan",
+    "margin": 13.21,
+    "contest": "ALP",
+    "tpp2025_alp": 63.21,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Leichhardt",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Matt Smith",
+    "margin": 6.06,
+    "contest": "ALP",
+    "tpp2025_alp": 56.06,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Lilley",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Anika Wells",
+    "margin": 14.52,
+    "contest": "ALP",
+    "tpp2025_alp": 64.52,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Lindsay",
+    "state": "NSW",
+    "party": "LIB",
+    "member": "Melissa McIntosh",
+    "margin": 2.78,
+    "contest": "LIB",
+    "tpp2025_alp": 47.22,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Lingiari",
+    "state": "NT",
+    "party": "ALP",
+    "member": "Marion Scrymgour",
+    "margin": 8.13,
+    "contest": "ALP",
+    "tpp2025_alp": 58.13,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Longman",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Terry Young",
+    "margin": 0.11,
+    "contest": "LNP",
+    "tpp2025_alp": 49.89,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Lyne",
+    "state": "NSW",
+    "party": "NAT",
+    "member": "Alison Penfold",
+    "margin": 9.78,
+    "contest": "NAT",
+    "tpp2025_alp": 40.22,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "Lyons",
+    "state": "TAS",
+    "party": "ALP",
+    "member": "Rebecca White",
+    "margin": 11.58,
+    "contest": "ALP",
+    "tpp2025_alp": 61.58,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Macarthur",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Mike Freelander",
+    "margin": 15.61,
+    "contest": "ALP",
+    "tpp2025_alp": 65.61,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Mackellar",
+    "state": "NSW",
+    "party": "IND",
+    "member": "Sophie Scamps",
+    "margin": 5.66,
+    "contest": "IND v LIB",
+    "tpp2025_alp": 46.34,
+    "party2025": "IND",
+    "note": null
+   },
+   {
+    "name": "Macnamara",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Josh Burns",
+    "margin": 11.8,
+    "contest": "ALP",
+    "tpp2025_alp": 61.8,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Macquarie",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Susan Templeman",
+    "margin": 7.71,
+    "contest": "ALP",
+    "tpp2025_alp": 57.71,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Makin",
+    "state": "SA",
+    "party": "ALP",
+    "member": "Tony Zappia",
+    "margin": 14.66,
+    "contest": "ALP",
+    "tpp2025_alp": 64.66,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Mallee",
+    "state": "VIC",
+    "party": "NAT",
+    "member": "Anne Webster",
+    "margin": 19.04,
+    "contest": "NAT",
+    "tpp2025_alp": 30.96,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "Maranoa",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "David Littleproud",
+    "margin": 20.1,
+    "contest": "LNP v ONP",
+    "tpp2025_alp": 26.04,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Maribyrnong",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Jo Briskey",
+    "margin": 12.65,
+    "contest": "ALP",
+    "tpp2025_alp": 62.65,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Mayo",
+    "state": "SA",
+    "party": "CA",
+    "member": "Rebekha Sharkie",
+    "margin": 14.89,
+    "contest": "CA v ALP",
+    "tpp2025_alp": 54.98,
+    "party2025": "CA",
+    "note": null
+   },
+   {
+    "name": "McEwen",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Rob Mitchell",
+    "margin": 4.76,
+    "contest": "ALP",
+    "tpp2025_alp": 54.76,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "McMahon",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Chris Bowen",
+    "margin": 9.02,
+    "contest": "ALP",
+    "tpp2025_alp": 59.02,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "McPherson",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Leon Rebello",
+    "margin": 4.44,
+    "contest": "LNP",
+    "tpp2025_alp": 45.56,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Melbourne",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Sarah Witty",
+    "margin": 3.02,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 73.97,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Menzies",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Gabriel Ng",
+    "margin": 1.08,
+    "contest": "ALP",
+    "tpp2025_alp": 51.08,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Mitchell",
+    "state": "NSW",
+    "party": "LIB",
+    "member": "Alex Hawke",
+    "margin": 3.81,
+    "contest": "LIB",
+    "tpp2025_alp": 46.19,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Monash",
+    "state": "VIC",
+    "party": "LIB",
+    "member": "Mary Aldred",
+    "margin": 4.09,
+    "contest": "LIB",
+    "tpp2025_alp": 45.91,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Moncrieff",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Angie Bell",
+    "margin": 8.8,
+    "contest": "LNP",
+    "tpp2025_alp": 41.2,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Moore",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Tom French",
+    "margin": 2.89,
+    "contest": "ALP",
+    "tpp2025_alp": 52.89,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Moreton",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Julie-Ann Campbell",
+    "margin": 16.09,
+    "contest": "ALP",
+    "tpp2025_alp": 66.09,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "New England",
+    "state": "NSW",
+    "party": "ONP",
+    "member": "Barnaby Joyce",
+    "margin": 17.06,
+    "contest": "NAT",
+    "tpp2025_alp": 32.94,
+    "party2025": "NAT",
+    "note": "Elected as NAT 2025; quit Nationals 27 Nov 2025, joined One Nation 8 Dec 2025"
+   },
+   {
+    "name": "Newcastle",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Sharon Claydon",
+    "margin": 15.8,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 70.79,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Nicholls",
+    "state": "VIC",
+    "party": "NAT",
+    "member": "Sam Birrell",
+    "margin": 14.38,
+    "contest": "NAT",
+    "tpp2025_alp": 35.62,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "O'Connor",
+    "state": "WA",
+    "party": "LIB",
+    "member": "Rick Wilson",
+    "margin": 13.28,
+    "contest": "LIB",
+    "tpp2025_alp": 36.72,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Oxley",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Milton Dick",
+    "margin": 19.19,
+    "contest": "ALP",
+    "tpp2025_alp": 69.19,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Page",
+    "state": "NSW",
+    "party": "NAT",
+    "member": "Kevin Hogan",
+    "margin": 9.29,
+    "contest": "NAT",
+    "tpp2025_alp": 40.71,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "Parkes",
+    "state": "NSW",
+    "party": "NAT",
+    "member": "Jamie Chaffey",
+    "margin": 12.97,
+    "contest": "NAT",
+    "tpp2025_alp": 37.03,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "Parramatta",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Andrew Charlton",
+    "margin": 12.55,
+    "contest": "ALP",
+    "tpp2025_alp": 62.55,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Paterson",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Meryl Swanson",
+    "margin": 6.89,
+    "contest": "ALP",
+    "tpp2025_alp": 56.89,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Pearce",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Tracey Roberts",
+    "margin": 6.44,
+    "contest": "ALP",
+    "tpp2025_alp": 56.44,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Perth",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Patrick Gorman",
+    "margin": 16.51,
+    "contest": "ALP",
+    "tpp2025_alp": 66.51,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Petrie",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Emma Comer",
+    "margin": 1.17,
+    "contest": "ALP",
+    "tpp2025_alp": 51.17,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Rankin",
+    "state": "QLD",
+    "party": "ALP",
+    "member": "Jim Chalmers",
+    "margin": 15.55,
+    "contest": "ALP",
+    "tpp2025_alp": 65.55,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Reid",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Sally Sitou",
+    "margin": 12.01,
+    "contest": "ALP",
+    "tpp2025_alp": 62.01,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Richmond",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Justine Elliot",
+    "margin": 10.0,
+    "contest": "ALP",
+    "tpp2025_alp": 60.0,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Riverina",
+    "state": "NSW",
+    "party": "NAT",
+    "member": "Michael McCormack",
+    "margin": 12.62,
+    "contest": "NAT",
+    "tpp2025_alp": 37.38,
+    "party2025": "NAT",
+    "note": null
+   },
+   {
+    "name": "Robertson",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Gordon Reid",
+    "margin": 9.37,
+    "contest": "ALP",
+    "tpp2025_alp": 59.37,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Ryan",
+    "state": "QLD",
+    "party": "GRN",
+    "member": "Elizabeth Watson-Brown",
+    "margin": 3.27,
+    "contest": "GRN v LNP",
+    "tpp2025_alp": 57.82,
+    "party2025": "GRN",
+    "note": null
+   },
+   {
+    "name": "Scullin",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Andrew Giles",
+    "margin": 14.29,
+    "contest": "ALP",
+    "tpp2025_alp": 64.29,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Shortland",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Pat Conroy",
+    "margin": 11.51,
+    "contest": "ALP",
+    "tpp2025_alp": 61.51,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Solomon",
+    "state": "NT",
+    "party": "ALP",
+    "member": "Luke Gosling",
+    "margin": 1.31,
+    "contest": "ALP",
+    "tpp2025_alp": 51.31,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Spence",
+    "state": "SA",
+    "party": "ALP",
+    "member": "Matt Burnell",
+    "margin": 15.34,
+    "contest": "ALP",
+    "tpp2025_alp": 65.34,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Sturt",
+    "state": "SA",
+    "party": "ALP",
+    "member": "Claire Clutterham",
+    "margin": 6.62,
+    "contest": "ALP",
+    "tpp2025_alp": 56.62,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Swan",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Zaneta Mascarenhas",
+    "margin": 13.99,
+    "contest": "ALP",
+    "tpp2025_alp": 63.99,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Sydney",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Tanya Plibersek",
+    "margin": 20.95,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 78.08,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Tangney",
+    "state": "WA",
+    "party": "ALP",
+    "member": "Sam Lim",
+    "margin": 6.99,
+    "contest": "ALP",
+    "tpp2025_alp": 56.99,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Wannon",
+    "state": "VIC",
+    "party": "LIB",
+    "member": "Dan Tehan",
+    "margin": 3.27,
+    "contest": "LIB v IND",
+    "tpp2025_alp": 39.08,
+    "party2025": "LIB",
+    "note": null
+   },
+   {
+    "name": "Warringah",
+    "state": "NSW",
+    "party": "CSA",
+    "member": "Zali Steggall",
+    "margin": 11.2,
+    "contest": "IND v LIB",
+    "tpp2025_alp": 54.51,
+    "party2025": "IND",
+    "note": "Founded Community Strong Australia 25 Jun 2026 (was IND)"
+   },
+   {
+    "name": "Watson",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Tony Burke",
+    "margin": 16.52,
+    "contest": "ALP v IND",
+    "tpp2025_alp": 72.86,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Wentworth",
+    "state": "NSW",
+    "party": "CSA",
+    "member": "Allegra Spender",
+    "margin": 8.34,
+    "contest": "IND v LIB",
+    "tpp2025_alp": 50.56,
+    "party2025": "IND",
+    "note": "Founded Community Strong Australia 25 Jun 2026 (was IND)"
+   },
+   {
+    "name": "Werriwa",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Anne Stanley",
+    "margin": 6.77,
+    "contest": "ALP",
+    "tpp2025_alp": 56.77,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Whitlam",
+    "state": "NSW",
+    "party": "ALP",
+    "member": "Carol Berry",
+    "margin": 6.25,
+    "contest": "ALP",
+    "tpp2025_alp": 56.25,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Wide Bay",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Llew O'Brien",
+    "margin": 7.63,
+    "contest": "LNP",
+    "tpp2025_alp": 42.37,
+    "party2025": "LNP",
+    "note": null
+   },
+   {
+    "name": "Wills",
+    "state": "VIC",
+    "party": "ALP",
+    "member": "Peter Khalil",
+    "margin": 1.43,
+    "contest": "ALP v GRN",
+    "tpp2025_alp": 80.86,
+    "party2025": "ALP",
+    "note": null
+   },
+   {
+    "name": "Wright",
+    "state": "QLD",
+    "party": "LNP",
+    "member": "Scott Buchholz",
+    "margin": 7.98,
+    "contest": "LNP",
+    "tpp2025_alp": 42.02,
+    "party2025": "LNP",
+    "note": null
+   }
+  ]
+ },
+ "victoria": {
+  "date": "2026-11-28",
+  "seats": 88,
+  "majority": 45,
+  "upperHouse": 40,
+  "pollsClose": "18:00 AEDT (07:00 UTC)",
+  "timeline": {
+   "writsIssued": "2026-11-03",
+   "rollsClose": "2026-11-10 20:00",
+   "nominationsClose": "2026-11-13 12:00",
+   "earlyVoting": "2026-11-18",
+   "writsReturn": "by 2026-12-19"
+  },
+  "composition": {
+   "ALP": 54,
+   "Coalition(LIB+NAT)": 29,
+   "GRN": 2,
+   "IND": 2,
+   "vacant": 1,
+   "note": "IND = Will Fowles, Darren Cheeseman (ex-Labor); vacant = Brunswick"
+  },
+  "leaders": {
+   "premier": {
+    "name": "Ben Carroll",
+    "party": "ALP",
+    "seat": "Niddrie",
+    "since": "2026-07-28"
+   },
+   "opposition": {
+    "name": "Jess Wilson",
+    "party": "LIB",
+    "seat": "Kew",
+    "since": "2025-11-18"
+   },
+   "greens": {
+    "name": "Ellen Sandell",
+    "seat": "Melbourne"
+   },
+   "oneNation": {
+    "name": "Warren Pickering",
+    "seat": "contesting Pakenham",
+    "since": "2026-08-02"
+   },
+   "nationals": {
+    "name": "Danny O'Brien",
+    "note": "unverified - inferred from Polymarket candidate list"
+   }
+  },
+  "districts": [
+   {
+    "name": "Albert Park",
+    "party": "ALP",
+    "member": "Nina Taylor",
+    "margin": 11.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Ashwood",
+    "party": "ALP",
+    "member": "Matt Fregon",
+    "margin": 6.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Bass",
+    "party": "ALP",
+    "member": "Jordan Crugnale",
+    "margin": 0.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Bayswater",
+    "party": "ALP",
+    "member": "Jackson Taylor",
+    "margin": 4.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Bellarine",
+    "party": "ALP",
+    "member": "Alison Marchant",
+    "margin": 8.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Benambra",
+    "party": "LIB",
+    "member": "Bill Tilley",
+    "margin": 0.9,
+    "vs": "IND",
+    "note": null
+   },
+   {
+    "name": "Bendigo East",
+    "party": "ALP",
+    "member": "Jacinta Allan",
+    "margin": 10.8,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Bendigo West",
+    "party": "ALP",
+    "member": "Maree Edwards",
+    "margin": 14.6,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Bentleigh",
+    "party": "ALP",
+    "member": "Nick Staikos",
+    "margin": 8.0,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Berwick",
+    "party": "LIB",
+    "member": "Brad Battin",
+    "margin": 4.7,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Box Hill",
+    "party": "ALP",
+    "member": "Paul Hamer",
+    "margin": 7.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Brighton",
+    "party": "LIB",
+    "member": "James Newbury",
+    "margin": 5.1,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Broadmeadows",
+    "party": "ALP",
+    "member": "Kathleen Matthews-Ward",
+    "margin": 15.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Brunswick",
+    "party": "GRN (vacant)",
+    "member": null,
+    "margin": 13.7,
+    "vs": "ALP",
+    "note": "Tim Read (GRN) died 19 Sep 2026; seat vacant"
+   },
+   {
+    "name": "Bulleen",
+    "party": "LIB",
+    "member": "Matthew Guy",
+    "margin": 5.9,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Bundoora",
+    "party": "ALP",
+    "member": "Colin Brooks",
+    "margin": 12.7,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Carrum",
+    "party": "ALP",
+    "member": "Sonya Kilkenny",
+    "margin": 9.8,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Caulfield",
+    "party": "LIB",
+    "member": "David Southwick",
+    "margin": 2.1,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Clarinda",
+    "party": "ALP",
+    "member": "Meng Heang Tak",
+    "margin": 10.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Cranbourne",
+    "party": "ALP",
+    "member": "Pauline Richards",
+    "margin": 9.0,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Croydon",
+    "party": "LIB",
+    "member": "David Hodgett",
+    "margin": 1.4,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Dandenong",
+    "party": "ALP",
+    "member": "Gabrielle Williams",
+    "margin": 18.3,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Eildon",
+    "party": "LIB",
+    "member": "Cindy McLeish",
+    "margin": 7.0,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Eltham",
+    "party": "ALP",
+    "member": "Vicki Ward",
+    "margin": 9.0,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Essendon",
+    "party": "ALP",
+    "member": "Danny Pearson",
+    "margin": 12.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Eureka",
+    "party": "ALP",
+    "member": "Michaela Settle",
+    "margin": 7.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Euroa",
+    "party": "NAT",
+    "member": "Annabelle Cleeland",
+    "margin": 9.9,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Evelyn",
+    "party": "LIB",
+    "member": "Bridget Vallence",
+    "margin": 5.4,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Footscray",
+    "party": "ALP",
+    "member": "Katie Hall",
+    "margin": 4.2,
+    "vs": "GRN",
+    "note": null
+   },
+   {
+    "name": "Frankston",
+    "party": "ALP",
+    "member": "Paul Edbrooke",
+    "margin": 8.7,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Geelong",
+    "party": "ALP",
+    "member": "Christine Couzens",
+    "margin": 14.7,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Gippsland East",
+    "party": "NAT",
+    "member": "Tim Bull",
+    "margin": 24.6,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Gippsland South",
+    "party": "NAT",
+    "member": "Danny O'Brien",
+    "margin": 15.6,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Glen Waverley",
+    "party": "ALP",
+    "member": "John Mullahy",
+    "margin": 3.3,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Greenvale",
+    "party": "ALP",
+    "member": "Iwan Walters",
+    "margin": 7.1,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Hastings",
+    "party": "ALP",
+    "member": "Paul Mercurio",
+    "margin": 1.4,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Hawthorn",
+    "party": "LIB",
+    "member": "John Pesutto",
+    "margin": 1.7,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Ivanhoe",
+    "party": "ALP",
+    "member": "Anthony Carbines",
+    "margin": 13.0,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Kalkallo",
+    "party": "ALP",
+    "member": "Ros Spence",
+    "margin": 16.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Kew",
+    "party": "LIB",
+    "member": "Jess Wilson",
+    "margin": 4.0,
+    "vs": "ALP",
+    "note": "Opposition leader Jess Wilson"
+   },
+   {
+    "name": "Kororoit",
+    "party": "ALP",
+    "member": "Luba Grigorovitch",
+    "margin": 14.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Lara",
+    "party": "ALP",
+    "member": "Ella George",
+    "margin": 15.9,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Laverton",
+    "party": "ALP",
+    "member": "Sarah Connolly",
+    "margin": 18.4,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Lowan",
+    "party": "NAT",
+    "member": "Emma Kealy",
+    "margin": 21.6,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Macedon",
+    "party": "ALP",
+    "member": "Mary-Anne Thomas",
+    "margin": 9.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Malvern",
+    "party": "LIB",
+    "member": "Michael O'Brien",
+    "margin": 8.1,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Melbourne",
+    "party": "GRN",
+    "member": "Ellen Sandell",
+    "margin": 10.2,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Melton",
+    "party": "ALP",
+    "member": "Steve McGhie",
+    "margin": 4.6,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Mildura",
+    "party": "NAT",
+    "member": "Jade Benham",
+    "margin": 1.2,
+    "vs": "IND",
+    "note": null
+   },
+   {
+    "name": "Mill Park",
+    "party": "ALP",
+    "member": "Lily D'Ambrosio",
+    "margin": 11.6,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Monbulk",
+    "party": "ALP",
+    "member": "Daniela De Martino",
+    "margin": 7.6,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Mordialloc",
+    "party": "ALP",
+    "member": "Tim Richardson",
+    "margin": 8.2,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Mornington",
+    "party": "LIB",
+    "member": "Chris Crewther",
+    "margin": 0.7,
+    "vs": "IND",
+    "note": null
+   },
+   {
+    "name": "Morwell",
+    "party": "NAT",
+    "member": "Martin Cameron",
+    "margin": 4.4,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Mulgrave",
+    "party": "ALP",
+    "member": "Eden Foster",
+    "margin": 10.8,
+    "vs": "IND",
+    "note": null
+   },
+   {
+    "name": "Murray Plains",
+    "party": "NAT",
+    "member": "Peter Walsh",
+    "margin": 23.4,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Narracan",
+    "party": "LIB",
+    "member": "Wayne Farnham",
+    "margin": 13.0,
+    "vs": "IND",
+    "note": null
+   },
+   {
+    "name": "Narre Warren North",
+    "party": "ALP",
+    "member": "Belinda Wilson",
+    "margin": 8.7,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Narre Warren South",
+    "party": "ALP",
+    "member": "Gary Maas",
+    "margin": 8.3,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Nepean",
+    "party": "LIB",
+    "member": "Sam Groth",
+    "margin": 6.4,
+    "vs": "ALP",
+    "note": "By-election May 2026; Wikipedia pendulum still lists Sam Groth - verify current member"
+   },
+   {
+    "name": "Niddrie",
+    "party": "ALP",
+    "member": "Ben Carroll",
+    "margin": 6.7,
+    "vs": "LIB/NAT",
+    "note": "Premier Ben Carroll"
+   },
+   {
+    "name": "Northcote",
+    "party": "ALP",
+    "member": "Kat Theophanous",
+    "margin": 0.2,
+    "vs": "GRN",
+    "note": null
+   },
+   {
+    "name": "Oakleigh",
+    "party": "ALP",
+    "member": "Steve Dimopoulos",
+    "margin": 13.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Ovens Valley",
+    "party": "NAT",
+    "member": "Tim McCurdy",
+    "margin": 17.8,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Pakenham",
+    "party": "ALP",
+    "member": "Emma Vulin",
+    "margin": 0.4,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Pascoe Vale",
+    "party": "ALP",
+    "member": "Anthony Cianflone",
+    "margin": 2.0,
+    "vs": "GRN",
+    "note": null
+   },
+   {
+    "name": "Point Cook",
+    "party": "ALP",
+    "member": "Mathew Hilakari",
+    "margin": 8.3,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Polwarth",
+    "party": "LIB",
+    "member": "Richard Riordan",
+    "margin": 1.8,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Prahran",
+    "party": "LIB",
+    "member": "Rachel Westaway",
+    "margin": null,
+    "vs": null,
+    "note": "LIB gain at Feb 2025 by-election (Rachel Westaway); Wikipedia margin \"12.0% v LIB\" is garbled - TBD"
+   },
+   {
+    "name": "Preston",
+    "party": "ALP",
+    "member": "Nathan Lambert",
+    "margin": 2.1,
+    "vs": "GRN",
+    "note": null
+   },
+   {
+    "name": "Richmond",
+    "party": "GRN",
+    "member": "Gabrielle de Vietri",
+    "margin": 7.3,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Ringwood",
+    "party": "ALP",
+    "member": "Will Fowles (IND)",
+    "margin": 7.5,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Ripon",
+    "party": "ALP",
+    "member": "Martha Haylett",
+    "margin": 3.0,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Rowville",
+    "party": "LIB",
+    "member": "Kim Wells",
+    "margin": 3.7,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Sandringham",
+    "party": "LIB",
+    "member": "Brad Rowswell",
+    "margin": 5.0,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Shepparton",
+    "party": "NAT",
+    "member": "Kim O'Keeffe",
+    "margin": 6.8,
+    "vs": "IND",
+    "note": null
+   },
+   {
+    "name": "South Barwon",
+    "party": "ALP",
+    "member": "Darren Cheeseman",
+    "margin": 9.8,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "South-West Coast",
+    "party": "LIB",
+    "member": "Roma Britnell",
+    "margin": 8.0,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "St Albans",
+    "party": "ALP",
+    "member": "Natalie Suleyman",
+    "margin": 9.6,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Sunbury",
+    "party": "ALP",
+    "member": "Josh Bull",
+    "margin": 6.4,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Sydenham",
+    "party": "ALP",
+    "member": "Natalie Hutchins",
+    "margin": 8.8,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Tarneit",
+    "party": "ALP",
+    "member": "Dylan Wight",
+    "margin": 12.3,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Thomastown",
+    "party": "ALP",
+    "member": "Bronwyn Halfpenny",
+    "margin": 15.8,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Warrandyte",
+    "party": "LIB",
+    "member": "Nicole Werner",
+    "margin": 4.3,
+    "vs": "ALP",
+    "note": null
+   },
+   {
+    "name": "Wendouree",
+    "party": "ALP",
+    "member": "Juliana Addison",
+    "margin": 11.9,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Werribee",
+    "party": "ALP",
+    "member": "John Lister",
+    "margin": 10.9,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Williamstown",
+    "party": "ALP",
+    "member": "Melissa Horne",
+    "margin": 13.4,
+    "vs": "LIB/NAT",
+    "note": null
+   },
+   {
+    "name": "Yan Yean",
+    "party": "ALP",
+    "member": "Lauren Kathage",
+    "margin": 4.3,
+    "vs": "LIB/NAT",
+    "note": null
+   }
+  ]
+ },
+ "otherElections": [
+  {
+   "name": "South Australian state election",
+   "date": "2026-03-21",
+   "status": "held",
+   "result": "Labor (Malinauskas) 34 seats, 37.5% primary; One Nation (Cory Bernardi) 4 seats, 22.9%; Liberal (Ashton Hurn) 5 seats, 18.9%",
+   "seats": 47
+  },
+  {
+   "name": "Farrer federal by-election",
+   "date": "2026-05-09",
+   "status": "held",
+   "result": "One Nation gain from Liberal (David Farley)"
+  },
+  {
+   "name": "Nepean (Vic) state by-election",
+   "date": "2026-05 (TBD exact)",
+   "status": "held",
+   "result": "TBD"
+  },
+  {
+   "name": "New South Wales state election",
+   "date": "2027-03-27",
+   "status": "upcoming",
+   "seats": 93,
+   "note": "Polymarket markets close 2027-03-28"
+  },
+  {
+   "name": "Tasmanian state election",
+   "date": "2025-07-19",
+   "status": "held (snap)",
+   "note": "next due TBD"
+  },
+  {
+   "name": "Queensland state election",
+   "date": "2028-10 (TBD)",
+   "status": "future"
+  },
+  {
+   "name": "ACT election",
+   "date": "2028-10 (TBD)",
+   "status": "future"
+  },
+  {
+   "name": "WA state election",
+   "date": "2029-03 (TBD)",
+   "status": "future"
+  },
+  {
+   "name": "NT election",
+   "date": "2028-08 (TBD)",
+   "status": "future"
+  }
+ ],
+ "polls": {
+  "federal": [
+   {
+    "pollster": "YouGov",
+    "published": "2026-11-04",
+    "field": "2026-10-27/11-03",
+    "n": 1500,
+    "ALP": 25,
+    "LNP": 23,
+    "GRN": 13,
+    "ONP": 27,
+    "OTH": 12,
+    "tpp": {
+     "ALP_v_LNP": "50-50",
+     "ALP_v_ONP": "53-47"
+    }
+   },
+   {
+    "pollster": "Newspoll",
+    "published": "2026-11-01",
+    "n": 1200,
+    "ALP": 27,
+    "LNP": 21,
+    "GRN": 13,
+    "ONP": 28,
+    "OTH": 11,
+    "tpp": null
+   },
+   {
+    "pollster": "DemosAU",
+    "published": "2026-11-01",
+    "n": 1500,
+    "ALP": 26,
+    "LNP": 24,
+    "GRN": 13,
+    "ONP": 26,
+    "OTH": 11,
+    "tpp": null
+   },
+   {
+    "pollster": "Essential",
+    "published": "2026-10-28",
+    "n": 1087,
+    "ALP": 28,
+    "LNP": 23,
+    "GRN": 12,
+    "ONP": 28,
+    "OTH": 9,
+    "tpp": {
+     "note": "2PP+ Coalition 52, ALP 44 (rest undecided)"
+    }
+   },
+   {
+    "pollster": "Roy Morgan",
+    "published": "2026-10-27",
+    "field": "2026-10-12/10-25",
+    "n": 2711,
+    "ALP": 26,
+    "LNP": 23.5,
+    "GRN": 15.5,
+    "ONP": 22.5,
+    "OTH": 12.5,
+    "tpp": {
+     "ALP_v_LNP": "53-47"
+    }
+   },
+   {
+    "pollster": "YouGov",
+    "published": "2026-10-21",
+    "field": "2026-10-13/10-20",
+    "n": 1542,
+    "ALP": 24,
+    "LNP": 23,
+    "GRN": 14,
+    "ONP": 27,
+    "OTH": 12,
+    "tpp": {
+     "ALP_v_LNP": "50-50",
+     "ALP_v_ONP": "53-47"
+    }
+   },
+   {
+    "pollster": "Roy Morgan",
+    "published": "2026-10-13",
+    "field": "2026-09-28/10-11",
+    "n": 2655,
+    "ALP": 26,
+    "LNP": 21.5,
+    "GRN": 15,
+    "ONP": 24,
+    "OTH": 13.5,
+    "tpp": {
+     "ALP_v_LNP": "53-47",
+     "ALP_v_ONP": "54.5-45.5"
+    }
+   },
+   {
+    "pollster": "Newspoll",
+    "published": "2026-10-11",
+    "n": 1241,
+    "ALP": 29,
+    "LNP": 20,
+    "GRN": 14,
+    "ONP": 28,
+    "OTH": 9,
+    "tpp": null
+   },
+   {
+    "pollster": "Resolve",
+    "published": "2026-10-11",
+    "n": 2250,
+    "ALP": 29,
+    "LNP": 23,
+    "GRN": 12,
+    "ONP": 25,
+    "OTH": 11,
+    "tpp": null
+   },
+   {
+    "pollster": "RedBridge/Accent",
+    "published": "2026-10-05",
+    "n": 1000,
+    "ALP": 28,
+    "LNP": 21,
+    "GRN": 11,
+    "ONP": 29,
+    "OTH": 11,
+    "tpp": {
+     "ALP_v_LNP": "50-50 (2025 flows); 46-54 respondent",
+     "ALP_v_ONP": "52-48"
+    }
+   }
+  ],
+  "victoria": [
+   {
+    "pollster": "Roy Morgan",
+    "field": "2026-10-26/10-29",
+    "n": 3610,
+    "ALP": 22.5,
+    "LNP": 29.5,
+    "GRN": 12.5,
+    "ONP": 22,
+    "IND": 7.5,
+    "OTH": 6,
+    "tpp": {
+     "ALP_v_LNP": "44-56",
+     "ALP_v_ONP": "54.5-45.5"
+    }
+   },
+   {
+    "pollster": "Newspoll",
+    "field": "2026-10-15/10-22",
+    "n": 1017,
+    "ALP": 24,
+    "LNP": 33,
+    "GRN": 14,
+    "ONP": 20,
+    "OTH": 9,
+    "tpp": {
+     "ALP_v_LNP": "45-55"
+    }
+   },
+   {
+    "pollster": "Online Research Unit (for Greens)",
+    "field": "2026-10-14/10-26",
+    "n": 1488,
+    "ALP": 25,
+    "LNP": 32,
+    "GRN": 15,
+    "ONP": 14,
+    "OTH": 14,
+    "tpp": {
+     "ALP_v_LNP": "46-54"
+    }
+   },
+   {
+    "pollster": "Roy Morgan",
+    "field": "2026-10-08/10-09",
+    "ALP": 22.5,
+    "LNP": 26,
+    "GRN": 14,
+    "ONP": 25,
+    "IND": 7,
+    "OTH": 5.5,
+    "tpp": {
+     "ALP_v_LNP": "45-55"
+    }
+   },
+   {
+    "pollster": "Resolve",
+    "field": "2026-10-06/10-10",
+    "n": 1000,
+    "ALP": 25,
+    "LNP": 28,
+    "GRN": 15,
+    "ONP": 23,
+    "IND": 4,
+    "OTH": 5,
+    "tpp": null
+   },
+   {
+    "pollster": "RedBridge/Accent",
+    "field": "2026-10-02/10-08",
+    "n": 1008,
+    "ALP": 24,
+    "LNP": 30,
+    "GRN": 16,
+    "ONP": 24,
+    "OTH": 6,
+    "tpp": {
+     "ALP_v_LNP": "44-56",
+     "ALP_v_ONP": "55-45"
+    }
+   },
+   {
+    "pollster": "Freshwater",
+    "field": "2026-09-24/09-28",
+    "n": 1030,
+    "ALP": 24,
+    "LNP": 29,
+    "GRN": 14,
+    "ONP": 22,
+    "OTH": 11,
+    "tpp": {
+     "ALP_v_LNP": "47-53"
+    }
+   },
+   {
+    "pollster": "DemosAU",
+    "field": "2026-09-10/09-20",
+    "n": 1020,
+    "ALP": 25,
+    "LNP": 30,
+    "GRN": 14,
+    "ONP": 20,
+    "OTH": 11,
+    "tpp": {
+     "ALP_v_LNP": "48-52"
+    }
+   }
+  ]
+ },
+ "liveSources": [
+  {
+   "name": "Polymarket Gamma API (AU events)",
+   "url": "https://gamma-api.polymarket.com/events?tag_slug=australia&closed=false",
+   "format": "JSON",
+   "auth": false,
+   "cors": "*",
+   "status": "LIVE - Vic winner: Lib-Nat 0.89 / Labor 0.105; Next Premier: Wilson 0.845 / Carroll 0.059; also NSW 2027, Albanese-out markets"
+  },
+  {
+   "name": "Polymarket event by slug",
+   "url": "https://gamma-api.polymarket.com/events?slug=victoria-parliamentary-election-winner",
+   "format": "JSON",
+   "auth": false,
+   "cors": "*",
+   "status": "LIVE"
+  },
+  {
+   "name": "ABS ASGS2025 ArcGIS (CED/SED geometry)",
+   "url": "https://geo.abs.gov.au/arcgis/rest/services/ASGS2025",
+   "format": "GeoJSON (f=geojson)",
+   "auth": false,
+   "cors": "*",
+   "status": "LIVE"
+  },
+  {
+   "name": "AEC media feed (EML XML)",
+   "url": "ftp://mediafeed.aec.gov.au/",
+   "format": "zipped EML XML over FTP, 90s cadence on election night",
+   "auth": false,
+   "cors": "n/a (FTP)",
+   "status": "unreachable from sandbox (FTP port 21 timed out); needs server-side FTP client; no federal election live now. Docs: https://www.aec.gov.au/media/mediafeed/"
+  },
+  {
+   "name": "AEC results downloads 2025 (CSV)",
+   "url": "https://results.aec.gov.au/31496/Website/Downloads/",
+   "format": "CSV",
+   "auth": false,
+   "cors": "none",
+   "status": "200 OK, static final results (server-side only)"
+  },
+  {
+   "name": "AEC tally room",
+   "url": "https://tallyroom.aec.gov.au/",
+   "format": "HTML",
+   "auth": false,
+   "cors": "none",
+   "status": "404 between elections; results moved to results.aec.gov.au"
+  },
+  {
+   "name": "VEC results pages",
+   "url": "https://www.vec.vic.gov.au/results",
+   "format": "HTML",
+   "auth": false,
+   "cors": "none",
+   "status": "200 OK; no public JSON/XML feed documented. VEC media feed for accredited media only (contact VEC); scrape server-side on 28 Nov"
+  },
+  {
+   "name": "ABC Vic election 2026 hub",
+   "url": "https://www.abc.net.au/news/elections/vic-election-2026",
+   "format": "HTML (Next.js, no results JSON exposed yet)",
+   "auth": false,
+   "cors": "none",
+   "status": "200 OK; no data endpoint found pre-election"
+  },
+  {
+   "name": "Guardian AU results tracker",
+   "url": "https://www.theguardian.com/australia-news/ng-interactive/2025/may/03/australian-federal-election-2025-live-results-tracker-map-vote-count-who-won",
+   "format": "HTML",
+   "auth": false,
+   "cors": "none",
+   "status": "bot challenge (Client Challenge page)"
+  },
+  {
+   "name": "Sportsbet politics",
+   "url": "https://www.sportsbet.com.au/betting/politics/australian-politics",
+   "format": "HTML",
+   "auth": false,
+   "cors": "none",
+   "status": "403 blocked"
+  },
+  {
+   "name": "TAB politics",
+   "url": "https://www.tab.com.au/sports/betting/Politics",
+   "format": "HTML",
+   "auth": false,
+   "cors": "none",
+   "status": "500"
+  },
+  {
+   "name": "NSW Electoral Commission results feed (for Mar 2027)",
+   "url": "https://elections.nsw.gov.au/media/election-results-feed",
+   "format": "XML (registration)",
+   "auth": true,
+   "cors": "none",
+   "status": "docs page 200"
+  }
+ ],
+ "newsFeeds": [
+  {
+   "name": "ABC News Top Stories",
+   "url": "https://www.abc.net.au/news/feed/45910/rss.xml",
+   "lean": "center-left (lean left)",
+   "ok": true,
+   "cors": false
+  },
+  {
+   "name": "ABC News Just In",
+   "url": "https://www.abc.net.au/news/feed/51120/rss.xml",
+   "lean": "center-left",
+   "ok": true,
+   "cors": false
+  },
+  {
+   "name": "The Guardian Australia",
+   "url": "https://www.theguardian.com/australia-news/rss",
+   "lean": "left",
+   "ok": true,
+   "cors": false,
+   "note": "politics sub-feed hit bot challenge"
+  },
+  {
+   "name": "Sydney Morning Herald - Federal Politics",
+   "url": "https://www.smh.com.au/rss/politics/federal.xml",
+   "lean": "center-left",
+   "ok": true,
+   "cors": true
+  },
+  {
+   "name": "The Age - Victoria",
+   "url": "https://www.theage.com.au/rss/national/victoria.xml",
+   "lean": "center-left",
+   "ok": true,
+   "cors": true
+  },
+  {
+   "name": "The Age - All",
+   "url": "https://www.theage.com.au/rss/feed.xml",
+   "lean": "center-left",
+   "ok": true,
+   "cors": true
+  },
+  {
+   "name": "SBS News",
+   "url": "https://www.sbs.com.au/news/feed",
+   "lean": "center",
+   "ok": true,
+   "cors": false
+  },
+  {
+   "name": "The Conversation AU Politics",
+   "url": "https://theconversation.com/au/politics/articles.atom",
+   "lean": "center-left",
+   "ok": true,
+   "cors": false
+  },
+  {
+   "name": "Crikey",
+   "url": "https://www.crikey.com.au/feed/",
+   "lean": "left",
+   "ok": true,
+   "cors": false
+  },
+  {
+   "name": "The Poll Bludger",
+   "url": "https://www.pollbludger.net/feed/",
+   "lean": "center (psephology)",
+   "ok": true,
+   "cors": false
+  },
+  {
+   "name": "news.com.au",
+   "url": "https://www.news.com.au/feed/",
+   "lean": "center-right",
+   "ok": false,
+   "cors": false,
+   "note": "403"
+  },
+  {
+   "name": "Sky News Australia (now redirects to news24.com.au)",
+   "url": "https://www.skynews.com.au/rss",
+   "lean": "right",
+   "ok": false,
+   "cors": false,
+   "note": "301 -> news24.com.au/rss, empty"
+  },
+  {
+   "name": "The Australian",
+   "url": "https://www.theaustralian.com.au/feed/",
+   "lean": "right",
+   "ok": false,
+   "cors": false,
+   "note": "403"
+  },
+  {
+   "name": "Herald Sun",
+   "url": "https://www.heraldsun.com.au/rss",
+   "lean": "right",
+   "ok": false,
+   "cors": false,
+   "note": "200 but empty"
+  }
+ ],
+ "geometry": [
+  {
+   "name": "Federal divisions (ABS CED 2025, approximates AEC 2024/25 boundaries) - simplified",
+   "url": "https://geo.abs.gov.au/arcgis/rest/services/ASGS2025/CED/MapServer/0/query?where=1%3D1&outFields=ced_name_2025,state_name_2021&maxAllowableOffset=0.01&geometryPrecision=3&outSR=4326&f=geojson",
+   "format": "GeoJSON",
+   "size": "~830 KB (169 features: 150 divisions + 'No usual address'/'Migratory' per state - filter)",
+   "cors": "*"
+  },
+  {
+   "name": "Victorian districts (ABS SED 2025)",
+   "url": "https://geo.abs.gov.au/arcgis/rest/services/ASGS2025/SED/MapServer/0/query?where=state_code_2021%3D%272%27&outFields=sed_name_2025&maxAllowableOffset=0.003&geometryPrecision=4&outSR=4326&f=geojson",
+   "format": "GeoJSON",
+   "size": "~205 KB (90 features; names like 'Kew (Southern Metropolitan)' - strip suffix; drop 2 non-spatial)",
+   "cors": "*"
+  },
+  {
+   "name": "australian-spatial-data (TopoJSON CED/SED)",
+   "url": "https://github.com/sherwinzxw/australian-spatial-data",
+   "format": "TopoJSON",
+   "size": "TBD; boundary vintage unverified",
+   "cors": "github raw"
+  },
+  {
+   "name": "Hex layout",
+   "url": "https://github.com/numbats/hexmap",
+   "format": "R package (aec2022 dataset); no ready HexJSON found - generate own",
+   "size": null,
+   "cors": null
+  }
+ ],
+ "pollClosing": {
+  "rule": "18:00 local time at each polling place",
+  "federalExample_Nov": {
+   "NSW/VIC/TAS/ACT": "AEDT UTC+11 -> 07:00 UTC",
+   "QLD": "AEST UTC+10 -> 08:00 UTC",
+   "SA": "ACDT UTC+10:30 -> 07:30 UTC",
+   "NT": "ACST UTC+9:30 -> 08:30 UTC",
+   "WA": "AWST UTC+8 -> 10:00 UTC"
+  },
+  "note": "In May (no DST): east AEST UTC+10 -> 08:00 UTC; SA/NT ACST 08:30 UTC; WA 10:00 UTC. QLD, NT, WA never observe DST.",
+  "victoria2026": "2026-11-28T07:00:00Z"
+ }
+}
