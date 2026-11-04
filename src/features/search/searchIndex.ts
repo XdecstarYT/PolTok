@@ -125,7 +125,7 @@ const best = (t: string, toks: string[], last: boolean) => {
   return b;
 };
 
-const KIND_BOOST: Record<Kind, number> = { Action: 1, Page: 2, State: 3, Race: 2, Candidate: 1.5, 'AU seat': 1, 'AU party': 1, News: -1 };
+const KIND_BOOST: Record<Kind, number> = { Action: 1, Page: 2, State: 4.5, Race: 2, Candidate: 1.5, 'AU seat': 1, 'AU party': 1, News: -1 };
 
 export function search(entries: Entry[], query: string, limit = 400): Hit[] {
   const nq = norm(query.trim());

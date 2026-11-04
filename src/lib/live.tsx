@@ -204,6 +204,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     };
 
     const pollServerClock = () =>
+      !browser &&
       fetch(`/api/health?source=${source}`)
         .then((r) => (r.ok ? r.json() : Promise.reject()))
         .then((d: { clock?: SimClock }) => !cancelled && !browser && d.clock && setState((s) => ({ ...s, clock: d.clock })))
@@ -260,8 +261,8 @@ export function LiveProvider({ children }: { children: ReactNode }) {
       const retry = setInterval(() => {
         fetch('/api/health')
           .then((r) => (r.ok ? r.json() : Promise.reject()))
-          .then((d: { ok?: boolean }) => {
-            if (!d?.ok || cancelled) return;
+          .then((d: { ok?: boolean; stream?: boolean }) => {
+            if (!d?.ok || d.stream === false || cancelled) return;
             browser?.stop();
             browser = null;
             setState((s) => ({ ...initial, news: s.news, source, mode: 'connecting' }));
@@ -280,11 +281,20 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     };
 
     timers.push(setInterval(pollServerClock, 5000));
-    try {
-      connectServer();
-    } catch {
-      startBrowser();
-    }
+    // Capability probe: static/serverless hosts (Netlify) answer /api/health with stream:false
+    // (or not at all) — go straight to the in-browser provider instead of waiting on SSE.
+    fetch(`/api/health?source=${source}`, { signal: AbortSignal.timeout(2500) })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d: { ok?: boolean; stream?: boolean }) => {
+        if (cancelled) return;
+        if (!d?.ok || d.stream === false) return startBrowser();
+        try {
+          connectServer();
+        } catch {
+          startBrowser();
+        }
+      })
+      .catch(() => !cancelled && startBrowser());
 
     return () => {
       cancelled = true;

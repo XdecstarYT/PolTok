@@ -43,6 +43,10 @@ export const AU_PARTIES: Record<string, { name: string; short: string; color: st
   CSA: { name: 'Community Strong Australia', short: 'CSA', color: '#1f9e95' },
   KAP: { name: "Katter's Australian Party", short: 'KAP', color: '#8b1a1a' },
   CA: { name: 'Centre Alliance', short: 'CA', color: '#f2a900' },
+  JLN: { name: 'Jacqui Lambie Network', short: 'JLN', color: '#c8a400' },
+  UAP: { name: 'United Australia', short: 'UAP', color: '#d9b300' },
+  AV: { name: "Australia's Voice", short: 'AV', color: '#7a5bd6' },
+  VS: { name: 'Victorian Socialists', short: 'VS', color: '#b3132b' },
   OTH: { name: 'Other', short: 'OTH', color: '#8b93a7' },
 };
 

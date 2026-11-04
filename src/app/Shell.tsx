@@ -87,6 +87,8 @@ function Clock() {
 
 /** Secondary pages, grouped under the "More" menu so the top bar fits. */
 export const NAV_MORE = [
+  { to: '/house', label: 'House', sub: 'All 435 districts, live' },
+  { to: '/embed', label: 'Embed', sub: 'Live widgets for your site' },
   { to: '/candidates', label: 'Candidates', sub: 'Every nominee, headshots & results' },
   { to: '/flips', label: 'Flips', sub: 'Seats that changed hands' },
   { to: '/measures', label: 'Ballot measures', sub: 'Live statewide measures' },

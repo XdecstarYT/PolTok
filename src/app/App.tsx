@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Shell } from './Shell';
 
 // Each feature owns its folder and default-exports its page component.
@@ -23,13 +23,18 @@ const ComparePage = lazy(() => import('../features/watch/ComparePage'));
 import { WatchAlerts } from '../features/watch/WatchAlerts';
 const FlipsPage = lazy(() => import('../features/flips/FlipsPage'));
 const MeasuresPage = lazy(() => import('../features/measures/MeasuresPage'));
+const HousePage = lazy(() => import('../features/house/HousePage'));
 const GovernorsPage = lazy(() => import('../features/governors/GovernorsPage'));
 const GovStatePage = lazy(() => import('../features/governors/GovStatePage'));
 const SearchPage = lazy(() => import('../features/search/SearchPage'));
 const CandidatesIndex = lazy(() => import('../features/candidates/CandidatesIndex'));
 const CandidatePage = lazy(() => import('../features/candidates/CandidatePage'));
+const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
+const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
 
 export function App() {
+  const { pathname } = useLocation();
+  if (pathname.startsWith('/embed/')) return <Suspense fallback={null}><EmbedRoutes /></Suspense>; // chrome-less iframe widgets (no Shell)
   return (
     <Shell>
       <WatchAlerts />
@@ -53,6 +58,7 @@ export function App() {
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/flips" element={<FlipsPage />} />
           <Route path="/measures" element={<MeasuresPage />} />
+          <Route path="/house" element={<HousePage />} />
           <Route path="/governors" element={<GovernorsPage />} />
           <Route path="/governors/:abbr" element={<GovStatePage />} />
           <Route path="/search" element={<SearchPage />} />
@@ -60,6 +66,7 @@ export function App() {
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/candidates" element={<CandidatesIndex />} />
           <Route path="/candidate/:id" element={<CandidatePage />} />
+          <Route path="/embed" element={<EmbedBuilder />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>

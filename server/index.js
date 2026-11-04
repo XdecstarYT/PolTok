@@ -93,7 +93,7 @@ async function main() {
   /* ------------------------------ helpers ------------------------------ */
   const CORS = {
     'access-control-allow-origin': '*',
-    'access-control-allow-methods': 'GET, HEAD, OPTIONS',
+    'access-control-allow-methods': 'GET, HEAD, POST, OPTIONS',
     'access-control-allow-headers': 'content-type, cache-control, last-event-id',
   };
   function json(res, status, body, extra = {}) {
@@ -149,6 +149,7 @@ async function main() {
         return res.end();
       }
       if (p.startsWith('/api/')) {
+        if (p === '/api/ai') return (await import('./ai.js')).nodeAiHandler(req, res);
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
         if (p.startsWith('/api/au/') && (await au.handle(p, url, json, res))) return;
         switch (p) {
@@ -157,6 +158,7 @@ async function main() {
             const pr = ensure(source);
             return json(res, 200, {
               ok: true,
+              stream: true,
               mode: source,
               defaultSource: DEFAULT_SOURCE,
               uptime: Math.round((Date.now() - started) / 1000),

@@ -1,0 +1,57 @@
+# PolTok on Netlify: static Vite build + Netlify Functions (netlify/functions/*.mjs, each declares
+# its own `config.path` under /api/*). Env vars (Site settings → Environment variables):
+#   GROQ (or GROQ_API_KEY)  Groq API key for /api/ai — functions only, never exposed to the client
+#   GROQ_MODEL              optional, default llama-3.3-70b-versatile
+#   AI_MAX_TOKENS, AI_RATE_PER_MIN, VEC_RESULTS_URL  optional
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Any /api/* path without a function → JSON 404 (functions with config.path take precedence over redirects).
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/notfound"
+  status = 200
+
+# SPA fallback (static files win because force = false).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-Frame-Options = "SAMEORIGIN"
+
+# /embed/* widgets must be iframe-able anywhere.
+[[headers]]
+  for = "/embed/*"
+  [headers.values]
+    X-Frame-Options = ""
+    Content-Security-Policy = "frame-ancestors *"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
