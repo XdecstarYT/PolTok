@@ -377,7 +377,15 @@ function drawRows(ctx: Ctx, rows: CandRow[], imgs: (HTMLImageElement | null)[], 
 
 function drawBalance(ctx: Ctx, b: BalanceOfPower, x: number, y: number, w: number, h: number, story: boolean) {
   const D = PARTY_HEX.D, R = PARTY_HEX.R, I = PARTY_HEX.I;
-  const big = story ? 200 : 120;
+  let big = story ? 200 : 120;
+  // shrink the totals until both numbers plus the centred "N undecided" label fit without colliding
+  ctx.font = f(story ? 34 : 22, 700);
+  const undW = ctx.measureText(`${b.undecided} undecided`).width + (story ? 64 : 48);
+  ctx.font = f(big, 900);
+  while (big > 80 && ctx.measureText(String(b.dem + b.ind)).width + ctx.measureText(String(b.rep)).width + undW > w) {
+    big -= 8;
+    ctx.font = f(big, 900);
+  }
   ctx.textBaseline = 'alphabetic';
   const ny = y + big * 0.9;
   ctx.font = f(big, 900);
