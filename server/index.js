@@ -32,6 +32,7 @@ async function main() {
   const { createNytProvider } = await import('../shared/nyt.js');
   const { createNewsService } = await import('./news.js');
   const { createStatic } = await import('./static.js');
+  const { createAuApi } = await import('./au.js');
 
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const PORT = Number(process.env.PORT) || 8787;
@@ -84,6 +85,8 @@ async function main() {
     onNew: (items) => broadcast({ type: 'news', items }),
   });
   if (process.env.NEWS_DISABLED !== '1') news.start();
+
+  const au = createAuApi({ log });
 
   const statics = createStatic(path.join(__dirname, '..', 'dist'));
 
@@ -147,6 +150,7 @@ async function main() {
       }
       if (p.startsWith('/api/')) {
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
+        if (p.startsWith('/api/au/') && (await au.handle(p, url, json, res))) return;
         switch (p) {
           case '/api/health': {
             const source = pick(url.searchParams.get('source'));
@@ -208,6 +212,7 @@ async function main() {
     log(`[server] ${sig} — shutting down`);
     Object.values(providers).forEach((pr) => pr.stop());
     news.stop();
+    au.stop();
     for (const c of clients) c.end();
     server.close(() => process.exit(0));
     setTimeout(() => process.exit(0), 2000).unref();
