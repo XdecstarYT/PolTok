@@ -30,7 +30,6 @@ export const NAV = [
   { to: '/forecast', label: 'Forecast' },
   { to: '/races', label: 'Races' },
   { to: '/au', label: 'Australia' },
-  { to: '/game', label: 'Game' },
 ];
 
 const TABS = [
@@ -89,7 +88,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const loc = useLocation();
   const reduce = useReducedMotion();
   const immersive =
-    loc.pathname === '/feed' || loc.pathname.startsWith('/feed/') || loc.pathname === '/game';
+    loc.pathname === '/feed' || loc.pathname.startsWith('/feed/');
   const [cmdk, setCmdk] = useState(false);
   const { setPanelOpen: setSettingsOpen } = useSettings();
   const closeCmdk = useCallback(() => setCmdk(false), []);

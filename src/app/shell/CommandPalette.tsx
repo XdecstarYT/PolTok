@@ -24,7 +24,6 @@ const PAGES: { to: string; label: string; sub: string }[] = [
   { to: '/map/governor', label: 'Governor map', sub: 'Map · Governor races' },
   { to: '/map/pres2024', label: '2024 presidential map', sub: 'Map · baseline' },
   { to: '/feed', label: 'PolTok feed', sub: 'Vertical story feed' },
-  { to: '/game', label: 'Campaign HQ game', sub: 'Run a campaign: US or Victoria' },
   { to: '/news', label: 'News', sub: 'Aggregated headlines with bias' },
   { to: '/polls', label: 'Polls', sub: 'Generic ballot, approval & race polls' },
   { to: '/forecast', label: 'Forecast & markets', sub: 'Model & prediction markets' },
