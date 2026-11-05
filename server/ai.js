@@ -301,7 +301,7 @@ async function handleCompose(body, prompt, { env, fetchImpl, loaders }) {
         model: model(env),
         messages: buildComposeMessages({ prompt, designs, live: know.text, refs: know.refs }, new Date(), budget),
         temperature,
-        max_tokens: 500,
+        max_tokens: 1200,
         stream: false,
         ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
       }),
@@ -309,23 +309,29 @@ async function handleCompose(body, prompt, { env, fetchImpl, loaders }) {
     });
   let up;
   try {
-    up = await call();
-    if (up.status === 413) {
-      budget = COMPOSE_SMALL;
+    // Up to 4 attempts, fixing one problem per round: retired model, JSON mode rejected, too large.
+    for (let attempt = 0; attempt < 4; attempt++) {
       up = await call();
-    }
-    if (up.status === 400 || up.status === 404) {
+      if (up.ok) break;
+      if (up.status === 413 && budget !== COMPOSE_SMALL) {
+        budget = COMPOSE_SMALL;
+        continue;
+      }
+      if (up.status !== 400 && up.status !== 404) break;
       const detail = await up.text().catch(() => '');
-      if (/response_format|json/i.test(detail)) {
-        jsonMode = false;
-        up = await call();
-      } else if (up.status === 404 || /model/i.test(detail)) {
+      if (/model/i.test(detail) && /(decommission|not found|does not exist|not exist|unknown)/i.test(detail) || up.status === 404) {
         const m = await discoverModel(env, fetchImpl).catch(() => '');
         if (m && m !== model(env)) {
           discovered = m;
-          up = await call();
+          continue;
         }
       }
+      if (jsonMode) {
+        // json_object rejected or the model's JSON failed validation → plain mode; we parse it ourselves.
+        jsonMode = false;
+        continue;
+      }
+      break;
     }
   } catch {
     return jsonRes(502, { error: 'AI provider unreachable', code: 'upstream' });
