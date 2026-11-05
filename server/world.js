@@ -189,10 +189,24 @@ export async function loadElections(now = new Date()) {
   });
 }
 
+function leadFromWikitext(t) {
+  let s = t.replace(/<ref[^>]*\/>/g, '').replace(/<ref[^>]*>[\s\S]*?<\/ref>/g, '').replace(/<!--[\s\S]*?-->/g, '');
+  for (let i = 0; i < 12 && /\{\{/.test(s); i++) s = s.replace(/\{\{[^{}]*\}\}/g, '');
+  s = s.replace(/\{\|[\s\S]*?\|\}/g, '').split(/\n==/)[0];
+  s = s.replace(/\[\[(?:File|Image):[^\]]*(?:\[\[[^\]]*\]\][^\]]*)*\]\]/gi, '');
+  const paras = s.split(/\n\s*\n/).map((x) => plain(x.replace(/<[^>]+>/g, '').replace(/'''?/g, ''))).filter((x) => x.length > 40 && !/^[|!{}]/.test(x));
+  return paras.join('\n\n').slice(0, 1800);
+}
+
 async function summary(title) {
   return cached(`sum:${title}`, TTL, async () => {
-    const r = await get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g, '_'))}`);
-    const j = await r.json();
+    let j;
+    try {
+      j = await (await get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g, '_'))}`)).json();
+    } catch {
+      // REST endpoint rate-limited: derive the lead section from the raw wikitext instead.
+      j = { title: title.replace(/_/g, ' '), extract: leadFromWikitext(await (await get(rawUrl(title))).text()) };
+    }
     return {
       title: j.title,
       extract: j.extract || '',
