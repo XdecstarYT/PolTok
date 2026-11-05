@@ -79,13 +79,13 @@ export const AU_STATES: AuState[] = [
   {
     code: 'tas', name: 'Tasmania', kind: 'state', parliament: 'Parliament of Tasmania',
     lower: { name: 'House of Assembly', seats: 35, majority: 18, comp: { LIB: 14, ALP: 10, IND: 6, GRN: 4, SFF: 1 }, asOf: '2026-10', note: 'Wikipedia (page last edited 28 Oct 2026). The July 2025 election returned Greens 5, IND 5; one Green-to-independent change is implied (not verified). Hare-Clark: 5 divisions x 7 members.' },
-    upper: { name: 'Legislative Council', seats: 15, majority: 8, comp: { IND: 8, LIB: 3, ALP: 3, GRN: 1 }, asOf: '2025', note: 'Labelled as after the 2025 periodic elections; may not reflect the 2 May 2026 periodic election.' },
+    upper: { name: 'Legislative Council', seats: 15, majority: 8, comp: { IND: 8, LIB: 3, ALP: 3, GRN: 1 }, asOf: '2026-05-12', note: 'Unchanged by the 2 May 2026 periodic election (TEC results, checked 5 Nov 2026): Rosevears retained by Jo Palmer (LIB); Huon won by independent Clare Glade-Wright from independent Dean Harriss.' },
     head: { title: 'Premier', name: 'Jeremy Rockliff', party: 'LIB', seat: 'Braddon', since: '2022-04-08' },
     opposition: { name: 'Josh Willie', party: 'ALP', seat: 'Clark', since: '2025-08-20' },
     lastElection: { date: '2025-07-19', result: 'Snap election after a no-confidence vote: Liberal 14, Labor 10, Greens 5, independents 5, SFF 1; Rockliff continued in minority.' },
     nextElection: { date: '2029', exact: false, note: 'Due by 2029 (four-year maximum term).' },
     facts: ['Third Tasmanian election in a little over four years (2021, 2024, 2025).', 'Legislative Council has 15 single-member divisions with staggered periodic elections each May.'],
-    sources: [W('Parliament_of_Tasmania'), W('2025_Tasmanian_state_election')],
+    sources: [W('Parliament_of_Tasmania'), W('2025_Tasmanian_state_election'), { label: 'TEC: 2026 Legislative Council results (Huon, Rosevears)', url: 'https://www.tec.tas.gov.au/legislative-council/elections-2026/index.html' }],
   },
   {
     code: 'act', name: 'Australian Capital Territory', kind: 'territory', parliament: 'ACT Legislative Assembly (unicameral)',
@@ -95,17 +95,17 @@ export const AU_STATES: AuState[] = [
     lastElection: { date: '2024-10-19', result: 'Labor 10, Liberal 9, Greens 4, independents 2; Barr continued (Labor minority).' },
     nextElection: { date: '2028-10-21', exact: true },
     facts: ['Labor has governed the ACT continuously since 2001.'],
-    sources: [W('Australian_Capital_Territory_Legislative_Assembly'), W('2024_Australian_Capital_Territory_general_election')],
+    sources: [{ label: 'ACT Legislation Register NI2026-364 (signed Andrew Barr, Chief Minister, 29 Jul 2026)', url: 'https://www.legislation.act.gov.au/DownloadFile/ni/2026-364/current/PDF/2026-364.PDF' }, W('Australian_Capital_Territory_Legislative_Assembly'), W('2024_Australian_Capital_Territory_general_election')],
   },
   {
     code: 'nt', name: 'Northern Territory', kind: 'territory', parliament: 'NT Legislative Assembly (unicameral)',
-    lower: { name: 'Legislative Assembly', seats: 25, majority: 13, comp: { CLP: 17, ALP: 6, IND: 2 }, asOf: '2026-09-12', note: 'Infobox "as of 12 Sep 2026". The 2024 election returned CLP 17, ALP 4, GRN 1, IND 3; the changes since are not documented on that page — treat as unverified.' },
+    lower: { name: 'Legislative Assembly', seats: 25, majority: 13, comp: { CLP: 17, ALP: 6, IND: 2 }, asOf: '2026-09-14', note: 'Reconciled 5 Nov 2026: 2024 election CLP 17, ALP 4, GRN 1, IND 3; Nightcliff by-election 7 Mar 2026 (Greens Kat McNamara resigned) won by Labor (Ed Smelt); Mulka by-election 12 Sep 2026 (IND Yingiya Guyula resigned) won by Labor (Yiwarr McGrath). Sources: NTEC by-election pages + news; parliament.nt.gov.au members list returned HTTP 403, so not confirmed against the official members list — unverified.' },
     head: { title: 'Chief Minister', name: 'Lia Finocchiaro', party: 'CLP', seat: 'Spillett', since: '2024-08-28' },
     opposition: { name: 'Selena Uibo', party: 'ALP', seat: 'Arnhem' },
     lastElection: { date: '2024-08-24', result: 'Country Liberals won 17 of 25 seats; Labor reduced to 4 (Chief Minister Eva Lawler lost her seat).' },
     nextElection: { date: '2028-08-26', exact: true, note: 'Fourth Saturday in August (Wikipedia infobox says 22 Aug; body text and the fixed-date rule give 26 Aug).' },
     facts: ['Single-member electorates; 25 seats.'],
-    sources: [W('Northern_Territory_Legislative_Assembly'), W('2024_Northern_Territory_general_election')],
+    sources: [W('Northern_Territory_Legislative_Assembly'), W('2024_Northern_Territory_general_election'), { label: 'NTEC: 2026 Mulka by-election', url: 'https://ntec.nt.gov.au/elections/current-elections/2026-mulka-by-election' }, { label: 'NTEC: 2026 Nightcliff by-election', url: 'https://ntec.nt.gov.au/elections/past-elections/legislative-assembly/2026-nightcliff-by-election/voter-information' }],
   },
 ];
 
