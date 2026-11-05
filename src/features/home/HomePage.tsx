@@ -369,7 +369,7 @@ function TopNews() {
       ) : (
         <div className="hm-news__grid">
           <a href={lead[0].url} target="_blank" rel="noreferrer noopener" className="card card--hover hm-lead">
-            {lead[0].image ? <img src={lead[0].image} alt="" className="hm-lead__img" loading="lazy" /> : <div className="hm-lead__img hm-lead__img--blank" aria-hidden="true" />}
+            {lead[0].image ? <img src={lead[0].image} alt="" className="hm-lead__img" loading="lazy" width={1600} height={900} /> : <div className="hm-lead__img hm-lead__img--blank" aria-hidden="true" />}
             <div className="hm-lead__body">
               <span className="kicker kicker--muted">{lead[0].source} · {timeAgo(lead[0].publishedAt, now)}</span>
               <h3 className="hm-lead__title">{lead[0].title}</h3>

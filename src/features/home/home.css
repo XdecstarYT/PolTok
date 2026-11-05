@@ -225,3 +225,7 @@
 [data-ui='broadcast'] .hm-seatbar { border-radius: 2px; height: 26px; }
 [data-ui='broadcast'] .hm-ch__name, [data-ui='broadcast'] .hm-link__t, [data-ui='broadcast'] .hm-au__title, [data-ui='broadcast'] .hm-flip__label { text-transform: uppercase; }
 [data-ui='broadcast'] .hm-au__cd { color: #ffcc00; }
+
+/* a11y: party-blue legend text fails 4.5:1 on the terminal bg; pink accent fails with white ink on aurora */
+[data-ui='terminal'] .hm-lead__bias .pt-bias__legend > span { color: var(--text) !important; }
+[data-ui='aurora'] .hm-banner .btn--accent { --btn-fg: #000000; }

@@ -212,7 +212,7 @@ const blueprint: Design = {
     ctx.font = font('mono', 22, 400); ctx.fillStyle = c('#cfe3ff');
     y = drawLines(ctx, wrap(ctx, dek(k), tw, 2), 70, y + 8, 30) + 20;
     if (d.kind === 'balance') balanceBlock(k, 70, y, W - 140, tby - y - 20, { fam: 'mono', color: '#ffd166', muted: '#cfe3ff', track: 'rgba(255,255,255,0.1)' });
-    else resultList(k, 70, y, tw, (d.mapState && d.kind !== 'balance' ? H - 80 : tby - 30) - y, { fam: 'mono', valueFam: 'mono', upper: true, track: 'rgba(255,255,255,0.12)', radius: 0, valueColor: '#fff' });
+    else resultList(k, 70, y, tw, (d.mapState ? H - 80 : tby - 30) - y, { fam: 'mono', valueFam: 'mono', upper: true, track: 'rgba(255,255,255,0.12)', radius: 0, valueColor: '#fff' });
   },
 };
 
