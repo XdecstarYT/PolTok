@@ -75,6 +75,7 @@ export async function handleOwner(req, { ip = 'anon', env = process.env } = {}) 
       await new Promise((r) => setTimeout(r, 400));
       return jsonRes(401, { error: 'Invalid credentials' });
     }
+    attempts.delete(ip);
     return jsonRes(200, { ok: true, user, ...signToken(user, env) });
   }
   if (p === '/api/owner/me') {

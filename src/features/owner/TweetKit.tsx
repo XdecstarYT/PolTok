@@ -30,7 +30,7 @@ function TweetCard({ t, designs, idx }: { t: Tweet; designs: Design[]; idx: numb
   const [ai, setAi] = useState(false);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState('');
-  const [design, setDesign] = useState(() => pickDesign(designs, t.hints, idx).id);
+  const [design, setDesign] = useState(() => pickDesign(designs, t.hints, idx, t.subject.kind).id);
   const [showImg, setShowImg] = useState(false);
   useEffect(() => {
     if (!ai) setText(t.text);

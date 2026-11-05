@@ -132,7 +132,7 @@ export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Dat
       group: 'Results',
       text: fit(`🔄 FLIP OF THE NIGHT: ${f.winner!.name} (${f.winner!.party}) takes ${f.label} from the ${PN[f.before ?? 'O'] ?? f.before}. ${pct(f.winner!.pct)} with ${Math.round(f.eevp)}% in. [AP via NYT]`, `#ElectionNight #${f.state}`),
       path: '/flips',
-      subject: raceSubj(raceById.has(`${f.state}-${f.office === 'senate' ? 'SEN' : 'GOV'}`) ? `${f.state}-${f.office === 'senate' ? 'SEN' : 'GOV'}` : RACES.find((r) => r.key)?.id ?? RACES[0].id),
+      subject: { kind: 'flip', id: raceById.has(`${f.state}-${f.office === 'senate' ? 'SEN' : 'GOV'}`) ? `${f.state}-${f.office === 'senate' ? 'SEN' : 'GOV'}` : '' },
       hints: ['flip', 'call', 'winner'],
     });
     const d = flipped.filter((x) => SIDE(x.winner!.party) === 'D').length;

@@ -48,7 +48,7 @@ export default function ParliamentPage() {
         <p className="pa-sub">
           {country === 'us'
             ? 'Bills with the most recent official activity, straight from the Library of Congress Bill Status data, plus House roll calls with party breakdowns.'
-            : 'Federal bills from the Parliament of Australia and Acts that have received Royal Assent, from official parliamentary and legislation registers.'}
+            : 'Federal bills from the Parliament of Australia and Acts that have received Royal Assent, via an open-data mirror of aph.gov.au bill status and the official Federal Register of Legislation.'}
         </p>
         <div className="pa-tabs" role="tablist" aria-label="Legislature">
           {(['us', 'au'] as const).map((c) => (

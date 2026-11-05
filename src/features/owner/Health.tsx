@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
 import { Button } from '../../components';
 import { useLive } from '../../lib/live';
 
@@ -14,7 +14,7 @@ async function get(url: string): Promise<{ status: number; ms: number; body: J }
   }
 }
 
-function Row({ k, v, ok }: { k: string; v: React.ReactNode; ok?: boolean }) {
+function Row({ k, v, ok }: { k: string; v: ReactNode; ok?: boolean }) {
   return (
     <div className="ow-row">
       <span className={`ow-dot ${ok === undefined ? '' : ok ? 'is-ok' : 'is-bad'}`} aria-hidden="true" />
@@ -47,7 +47,7 @@ export function Health() {
   const parl = d?.parl.body;
   const missing: string[] = [];
   JSON.stringify(parl ?? {}, (k, v) => {
-    if (k === 'key' && typeof v === 'string') missing.push(v);
+    if (/key$/i.test(k) && v === false) missing.push(k.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase().replace('_API_KEY', '_API_KEY'));
     return v;
   });
   return (

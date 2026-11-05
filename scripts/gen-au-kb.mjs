@@ -1,0 +1,19 @@
+// Generates shared/data/au-kb.json (a compact, server-readable copy of src/data/au.ts for Ask PolTok).
+// Run: node scripts/gen-au-kb.mjs   (re-run whenever src/data/au.ts changes)
+import { build } from 'esbuild';
+import { writeFileSync } from 'node:fs';
+const out = await build({ entryPoints: ['src/data/au.ts'], bundle: true, format: 'esm', write: false, platform: 'neutral' });
+const mod = await import('data:text/javascript;base64,' + Buffer.from(out.outputFiles[0].text).toString('base64'));
+const { FEDERAL: F, VICTORIA: V, AU_POLLS, OTHER_AU_ELECTIONS, AU_PARTIES } = mod;
+const seat = (s) => [s.id, s.name, s.state, s.party, s.member, s.margin, s.contest || s.vs || '', s.note || ''];
+const kb = {
+  generatedFrom: 'src/data/au.ts',
+  parties: Object.fromEntries(Object.entries(AU_PARTIES).map(([k, v]) => [k, v.name])),
+  federal: { electionDate: F.electionDate, nextElectionDue: F.nextElectionDue, pm: F.pm, opposition: F.opposition, house: F.house, houseAsOf: F.houseAsOf, senate: F.senate, senateAsOf: F.senateAsOf, seats: F.seats.map(seat) },
+  victoria: { date: V.date, totalSeats: V.totalSeats, majority: V.majority, upperHouse: V.upperHouse, timeline: V.timeline, premier: V.premier, opposition: V.opposition, otherLeaders: V.otherLeaders, composition: V.composition, compositionNote: V.compositionNote, seats: V.seats.map(seat) },
+  polls: { federal: AU_POLLS.federal.slice(0, 6), victoria: AU_POLLS.victoria.slice(0, 6) },
+  otherElections: OTHER_AU_ELECTIONS,
+  seatFields: ['id', 'name', 'state', 'party', 'member', 'margin', 'contest', 'note'],
+};
+writeFileSync('shared/data/au-kb.json', JSON.stringify(kb));
+console.log('wrote shared/data/au-kb.json', JSON.stringify(kb).length, 'chars');

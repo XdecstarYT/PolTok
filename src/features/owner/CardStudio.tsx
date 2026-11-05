@@ -5,13 +5,13 @@ import { ImagePanel } from './ImagePanel';
 import { useDesigns } from './TweetKit';
 import type { Subject } from './cards';
 
-const PROMOS = ['map', 'ask', 'feed', 'parliament', 'swingometer', 'live', 'news', 'vic-countdown'];
+const PROMOS = ['default', 'live', 'map', 'au'];
 
 export function CardStudio() {
   const ds = useDesigns();
   const [kind, setKind] = useState<Subject['kind']>('race');
   const options = useMemo(() => {
-    if (kind === 'race') return [...RACES].sort((a, b) => Number(!!b.key) - Number(!!a.key) || a.title.localeCompare(b.title)).map((r) => ({ id: r.id, label: `${r.key ? '★ ' : ''}${r.title}` }));
+    if (kind === 'race' || kind === 'flip') return [...RACES].sort((a, b) => Number(!!b.key) - Number(!!a.key) || a.title.localeCompare(b.title)).map((r) => ({ id: r.id, label: `${r.key ? '★ ' : ''}${r.title}` }));
     if (kind === 'balance') return [{ id: 'senate', label: 'Senate' }, { id: 'house', label: 'House' }];
     if (kind === 'au-seat') return [...VICTORIA.seats, ...FEDERAL.seats].map((s) => ({ id: s.id, label: `${s.name} (${s.chamber === 'vic' ? 'Vic' : s.state} · ${s.party})` }));
     return PROMOS.map((p) => ({ id: p, label: p }));
@@ -26,7 +26,7 @@ export function CardStudio() {
       <div className="ow-studio__ctl">
         <label>Subject type
           <select className="ow-select" value={kind} onChange={(e) => setKind(e.target.value as Subject['kind'])}>
-            <option value="race">Race</option><option value="balance">Balance of power</option><option value="au-seat">AU seat</option><option value="promo">Promo</option>
+            <option value="race">Race</option><option value="balance">Balance of power</option><option value="au-seat">AU seat</option><option value="promo">Promo</option><option value="flip">Flip</option>
           </select>
         </label>
         <label>Subject
