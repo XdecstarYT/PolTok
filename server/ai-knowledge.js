@@ -255,8 +255,10 @@ function pollFacts(ent) {
     const vals = Object.entries(p.values || {}).map(([k, v]) => `${s.keys?.find((x) => x.key === k)?.label || k} ${v}`).join(', ');
     out.push({ score, text: `poll:${s.id} | ${s.title}: latest ${p.pollster} (${p.date}, ${p.population || ''}) ${vals}; ${s.polls.length} polls since Sep [PollCheck]` });
   }
-  if (GENERIC_BALLOT?.average) out.push({ score: ent.topics.has('polls') ? 4 : 1, text: `generic ballot average | ${JSON.stringify(GENERIC_BALLOT.average).slice(0, 120)} [PollCheck]` });
-  if (APPROVAL) out.push({ score: ent.topics.has('polls') && /approv/.test([...ent.words].join(' ')) ? 7 : 0.5, text: `presidential approval | ${JSON.stringify(APPROVAL).slice(0, 160)} [PollCheck]` });
+  const gb = GENERIC_BALLOT?.pollcheck;
+  if (gb) out.push({ score: ent.topics.has('polls') ? 5 : 1.5, text: `poll:generic-ballot avg | Generic ballot average: D ${gb.D}, R ${gb.R} (${gb.polls} polls, as of ${gb.asOf}) [PollCheck]` });
+  const ap = APPROVAL?.pollcheck;
+  if (ap) out.push({ score: /approv|president|trump/.test([...ent.words].join(' ')) ? 8 : 0.5, text: `approval | Presidential approval average: approve ${ap.approve}, disapprove ${ap.disapprove} (as of ${ap.asOf}) [PollCheck]` });
   return out;
 }
 

@@ -10,7 +10,8 @@
     "build": "tsc -b && vite build",
     "start": "NODE_ENV=production node server/index.js",
     "typecheck": "tsc -b --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test tests/"
   },
   "dependencies": {
     "d3-geo": "^3.1.1",

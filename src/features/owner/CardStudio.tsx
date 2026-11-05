@@ -39,7 +39,7 @@ export function CardStudio() {
       <div className="ow-designs" role="listbox" aria-label="Designs">
         {ds.designs.map((d) => (
           <button key={d.id} type="button" role="option" aria-selected={d.id === sel.id} className={`ow-pill ${d.id === sel.id ? 'is-on' : ''}`} onClick={() => setDesign(d.id)}>
-            {d.name}{d.w && d.h ? ` · ${d.w}×${d.h}` : ''}
+            {d.name}{d.w && d.h && !d.name.includes('×') ? ` · ${d.w}×${d.h}` : ''}
           </button>
         ))}
       </div>

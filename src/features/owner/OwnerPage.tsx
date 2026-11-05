@@ -47,7 +47,7 @@ export default function OwnerPage() {
         </div>
         <Button size="sm" variant="ghost" onClick={() => { clearToken(); setAuth('out'); }}>Sign out</Button>
       </header>
-      <Tabs tabs={TABS} value={tab} onChange={setTab} variant="pill" ariaLabel="Owner tools" />
+      <div className="ow-tabs"><Tabs tabs={TABS} value={tab} onChange={setTab} variant="pill" ariaLabel="Owner tools" /></div>
       <div className="ow-body">
         {tab === 'x' && <TweetKit />}
         {tab === 'studio' && <CardStudio />}

@@ -3,13 +3,17 @@
 //   GET  /api/owner/me   (Authorization: Bearer <token>) → { ok, user, exp } | 401
 // Env: OWNER_USER + OWNER_PASS (override built-in credentials), OWNER_SECRET (HMAC key for tokens).
 // The built-in credential is stored ONLY as SHA-256("user:pass"); no plaintext password anywhere.
-// Caveat: without OWNER_SECRET the signing key is derived from that hash, so set OWNER_SECRET in prod.
+// Without OWNER_SECRET the signing key is derived from the deployment's GROQ secret (+ the hash).
 import crypto from 'node:crypto';
 
 const CRED_HASH = '7a93cf433a1bf618a771bb30605a0c7721ac80a20ce5f472b8bf08ade865f69f';
 const TTL_MS = 12 * 3600 * 1000;
 const sha = (s) => crypto.createHash('sha256').update(s).digest();
-const secret = (env) => env.OWNER_SECRET || crypto.createHash('sha256').update('poltok-owner-token|' + CRED_HASH).digest('hex');
+// Signing key: OWNER_SECRET if set; otherwise derived from a deployment secret that never ships in
+// the repo (the GROQ API key on Netlify), so tokens can't be forged from public source code.
+const secret = (env) =>
+  env.OWNER_SECRET ||
+  crypto.createHash('sha256').update('poltok-owner-token|' + (env.GROQ || env.GROQ_API_KEY || '') + '|' + CRED_HASH).digest('hex');
 const eq = (a, b) => a.length === b.length && crypto.timingSafeEqual(a, b);
 const b64u = (s) => Buffer.from(s).toString('base64url');
 
