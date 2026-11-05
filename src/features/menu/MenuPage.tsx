@@ -69,6 +69,7 @@ export default function MenuPage() {
         { title: 'Flips', desc: 'Seats that changed hands', to: '/flips', icon: ic.flip, tone: 'var(--tossup)' },
         { title: 'Money', desc: 'Campaign finance from the FEC', to: '/money', icon: ic.chart },
         { title: 'Ballot measures', desc: 'Statewide measures, live', to: '/measures', icon: ic.ballot },
+        { title: 'Your area', desc: 'Your reps & races by address / postcode', to: '/my', icon: ic.people },
         { title: 'Replay', desc: 'Relive election night', to: '/replay', icon: ic.replay },
         { title: 'Analysis', desc: 'Swing, turnout & trends', to: '/analysis', icon: ic.chart },
         { title: 'World elections', desc: 'Global calendar, map & results', to: '/world', icon: ic.au, tone: 'var(--signal)' },

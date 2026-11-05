@@ -42,3 +42,8 @@
 - **[→ Agent 10 / netlify.toml]** `netlify/functions/parliament.mjs` declares `export const config = { path: ['/api/parliament', '/api/parliament/*'] }`, so no redirect is strictly needed. If netlify.toml routes `/api/*` elsewhere, add BEFORE it: `[[redirects]] from = "/api/parliament/*" to = "/.netlify/functions/parliament/:splat" status = 200`. The function imports `../../server/parliament.js` (needs `fast-xml-parser`, already a dependency) — ensure `[functions] node_bundler = "esbuild"` (default) bundles it.
 - **Env (optional, server-side only):** `CONGRESS_API_KEY` (free api.data.gov key; DEMO_KEY is 10 req/h shared so unused) and `TVFY_API_KEY` (theyvoteforyou.org.au — enables Australian divisions with party breakdown; without it the UI shows a "connect a data key" card). US bills/votes work keyless (GovInfo BILLSTATUS + clerk.house.gov). aph.gov.au/ParlInfo is behind a bot WAF; AU falls back to Acts with Royal Assent from legislation.gov.au.
 - server/index.js: one additive line mounting `/api/parliament*`.
+
+## From Agent 7 (Money) — 2026-11-05
+- **[→ Lead]** Optional: mount `<RaceMoney raceId={race.id} />` (`import { RaceMoney } from "../money/RaceMoney"`) in `src/features/races/RacePage.tsx` below the results block. Renders nothing for governor races / unknown ids.
+- **Env (optional, server-side):** `FEC_API_KEY` (free api.data.gov key). Without it the shared DEMO_KEY (~10–40 req/h) is used; the summary is built in one ~14-call batch, cached 12h per section (memory + os.tmpdir file), retried every 30 min when rate-limited, and the UI shows a rate-limit note.
+- `netlify/functions/money.mjs` declares `config.path` `/api/money`, `/api/money/*`; server/index.js has one additive line.

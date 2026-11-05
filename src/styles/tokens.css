@@ -14,7 +14,7 @@
   --line-3: rgba(160, 180, 255, 0.28);
   --text: #f2f5ff;
   --text-2: #a3adc8;
-  --text-3: #6a7391;
+  --text-3: #8790ad;          /* a11y: ≥4.5:1 on bg + surfaces (was #6a7391) */
   --text-4: #464e69;
 
   /* ── Party / rating (core) ───────────────────────── */

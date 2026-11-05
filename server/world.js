@@ -189,7 +189,7 @@ export async function loadElections(now = new Date()) {
   });
 }
 
-function leadFromWikitext(t) {
+export function leadFromWikitext(t) {
   let s = t.replace(/<ref[^>]*\/>/g, '').replace(/<ref[^>]*>[\s\S]*?<\/ref>/g, '').replace(/<!--[\s\S]*?-->/g, '');
   for (let i = 0; i < 12 && /\{\{/.test(s); i++) s = s.replace(/\{\{[^{}]*\}\}/g, '');
   s = s.replace(/\{\|[\s\S]*?\|\}/g, '').split(/\n==/)[0];

@@ -43,6 +43,7 @@ const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
 const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
 
 const MenuPage = lazy(() => import('../features/menu/MenuPage'));
+const MyAreaPage = lazy(() => import('../features/myarea/MyAreaPage'));
 const AskPage = lazy(() => import('../features/ask/AskPage'));
 const QuizPage = lazy(() => import('../features/quiz/QuizPage'));
 const WorldPage = lazy(() => import('../features/world/WorldPage'));
@@ -93,6 +94,7 @@ export function App() {
           <Route path="/members" element={<MembersPage />} /><Route path="/member/:id" element={<MemberPage />} />
           <Route path="/embed" element={<EmbedBuilder />} />
           <Route path="/menu" element={<MenuPage />} />
+          <Route path="/my" element={<MyAreaPage />} />
           <Route path="/ask" element={<AskPage />} />
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
