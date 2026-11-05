@@ -18,6 +18,8 @@ export interface Bill {
   stage: number; stageLabel: string; stages: string[];
   sponsor?: Sponsor; cosponsors?: number; policyArea?: string; subjects: string[]; committees?: string[]; laws?: string[];
   url: string; textUrl?: string; parlInfo?: string; actionCount?: number;
+  /** where this row came from (AU): 'mirror' = open-data mirror of aph.gov.au, 'frl' = Federal Register of Legislation */
+  source?: 'mirror' | 'frl';
 }
 export interface BillDetail extends Bill { actions: Action[]; texts: TextVersion[]; votes: Vote[]; summary?: string }
 export interface Missing { key: string; what: string; where: string }

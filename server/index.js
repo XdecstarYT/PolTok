@@ -150,6 +150,7 @@ async function main() {
       }
       if (p.startsWith('/api/')) {
         if (p === '/api/ai') return (await import('./ai.js')).nodeAiHandler(req, res);
+        if (p.startsWith('/api/owner')) return (await import('./owner.js')).nodeOwnerHandler(req, res);
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
         if (p.startsWith('/api/au/') && (await au.handle(p, url, json, res))) return;
         if (p.startsWith('/api/parliament')) return (await import('./parliament.js')).nodeParliamentHandler(p, url, json, res);

@@ -8,7 +8,7 @@
  *  - /feed renders "immersive": no ticker, no page padding; the page should fill
  *    `height: calc(100dvh - var(--shell-top) - var(--shell-bottom))`.
  */
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent as RMouseEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLive } from '../lib/live';
@@ -43,9 +43,25 @@ const TABS = [
   { to: '/menu', label: 'Menu', Icon: IconGrid },
 ];
 
+const OwnerLoginModal = lazy(() => import('../features/owner/OwnerLoginModal'));
+
+/** Logo → home. Hidden: 10 taps within ~4s opens the owner sign-in (only the 10th tap is intercepted). */
 function Wordmark() {
+  const taps = useRef<number[]>([]);
+  const [owner, setOwner] = useState(false);
+  const onClick = (e: RMouseEvent) => {
+    const now = Date.now();
+    taps.current = [...taps.current.filter((t) => now - t < 4000), now];
+    if (taps.current.length >= 10) {
+      taps.current = [];
+      e.preventDefault();
+      setOwner(true);
+    }
+  };
   return (
-    <Link to="/" className="sh-logo" aria-label="PolTok home">
+    <>
+    {owner && <Suspense fallback={null}><OwnerLoginModal open={owner} onClose={() => setOwner(false)} /></Suspense>}
+    <Link to="/" className="sh-logo" aria-label="PolTok home" onClick={onClick}>
       <span className="sh-logo__mark" aria-hidden="true">
         <span className="sh-logo__d" />
         <span className="sh-logo__r" />
@@ -55,6 +71,7 @@ function Wordmark() {
       </span>
       <span className="sh-logo__pulse pulse" aria-hidden="true" style={{ '--pulse-c': 'var(--accent)' } as CSSProperties} />
     </Link>
+    </>
   );
 }
 

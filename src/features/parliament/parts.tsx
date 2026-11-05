@@ -54,6 +54,7 @@ export function BillRow({ bill }: { bill: Bill }) {
         {bill.latestAction && (
           <p className="pa-bill__act">
             <time>{fmtDate(bill.latestAction.date)}</time> — {bill.latestAction.text}
+            {bill.source && <span className="pa-muted"> · {bill.source === 'mirror' ? 'via APH open-data mirror' : 'via Federal Register of Legislation'}</span>}
           </p>
         )}
         {bill.subjects.length > 0 && (

@@ -35,6 +35,7 @@ const CandidatesIndex = lazy(() => import('../features/candidates/CandidatesInde
 const CandidatePage = lazy(() => import('../features/candidates/CandidatePage'));
 const ParliamentPage = lazy(() => import('../features/parliament/ParliamentPage'));
 const ParliamentBillPage = lazy(() => import('../features/parliament/BillPage'));
+const OwnerPage = lazy(() => import('../features/owner/OwnerPage'));
 const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
 const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
 
@@ -84,6 +85,7 @@ export function App() {
           <Route path="/embed" element={<EmbedBuilder />} />
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/ask" element={<AskPage />} />
+          <Route path="/owner" element={<OwnerPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>
