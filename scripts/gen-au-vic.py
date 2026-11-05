@@ -47,8 +47,13 @@ def pcode(name):
 
 ROW = re.compile(r"([A-Z][A-Z'’\- ]+), ([A-Z][^0-9]*?) ([\d,]+) ([\d.]+)%")
 
+# Narracan's 2022 poll failed (a candidate died); it was decided at a supplementary election on 28 Jan 2023.
+SPECIAL = {'narracan': ('https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline/narracan-district-supplementary-election-results',
+                        'Supplementary election, 28 January 2023 (the 2022 poll failed after a candidate died).')}
+
 def parse_district(slug, name):
-    t = text(fetch(BASE + slug + '-district-results', slug + '.html'))
+    url, note = SPECIAL.get(slug, (BASE + slug + '-district-results', None))
+    t = text(fetch(url, slug + '.html'))
     m = re.search(r'Total enrolment as at close of rolls: ([\d,]+) Formal votes: ([\d,]+) Informal votes: ([\d,]+).*?Total votes: ([\d,]+)', t)
     num = lambda s: int(s.replace(',', ''))
     def rows(seg):
@@ -74,7 +79,7 @@ def parse_district(slug, name):
         'enrol': num(m.group(1)) if m else None, 'formal': num(m.group(2)) if m else None,
         'informal': num(m.group(3)) if m else None, 'turnout': num(m.group(4)) if m else None,
         'fp': sorted(fp, key=lambda c: -c['v']), 'final': tcp, 'finalKind': kind,
-        'url': BASE + slug + '-district-results',
+        'url': url, **({'note': note} if note else {}),
     }
 
 def main():
