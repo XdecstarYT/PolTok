@@ -9,6 +9,7 @@ import { USMap } from '../map/USMap';
 import { CallBanner, ExpectedMeter, NewsList, Needle, NotFound, PollPanel, PresBar, RaceCard, ResultRows, ShareButton, AnimatedNum } from './parts';
 import { demMargin, fmtCloseET, headlinePair, longTitle, relatedNews, sortRacesForState, totalVotes } from './util';
 import { CountyMap } from './CountyMap';
+import { RaceMoney } from '../money/RaceMoney';
 import { AiRaceSummary } from '../ask/AiRaceSummary';
 import { ShareCardButton } from '../embed/ShareCardButton';
 import './races.css';
@@ -154,6 +155,7 @@ export default function RacePage() {
           </section>
 
           <AiRaceSummary raceId={race.id} />
+          <RaceMoney raceId={race.id} />
 
           {/* ---------- NEEDLE ---------- */}
           <section className="card rx-sec" aria-labelledby="rx-needle-h">
