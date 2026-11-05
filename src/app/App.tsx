@@ -23,6 +23,11 @@ const AUSenatePage = lazy(() => import('../features/au/SenatePage'));
 const AUPartyPage = lazy(() => import('../features/au/PartyPage'));
 const AUNSWPage = lazy(() => import('../features/au/NSWPage'));
 const AUSwingPage = lazy(() => import('../features/au/SwingPage'));
+const AUStatesPage = lazy(() => import('../features/au/StatesPage'));
+const AUStatePage = lazy(() => import('../features/au/StatesPage').then((m) => ({ default: m.StatePage })));
+const AUHistoryPage = lazy(() => import('../features/au/HistoryPage'));
+const AUPollAvgPage = lazy(() => import('../features/au/PollAvgPage'));
+const AUVicDistrictsPage = lazy(() => import('../features/au/VicDistrictsPage'));
 const WatchPage = lazy(() => import('../features/watch/WatchPage'));
 const ComparePage = lazy(() => import('../features/watch/ComparePage'));
 import { WatchAlerts } from '../features/watch/WatchAlerts';
@@ -77,6 +82,11 @@ export function App() {
           <Route path="/au/party/:id" element={<AUPartyPage />} />
           <Route path="/au/nsw" element={<AUNSWPage />} />
           <Route path="/au/swingometer" element={<AUSwingPage />} />
+          <Route path="/au/states" element={<AUStatesPage />} />
+          <Route path="/au/state/:code" element={<AUStatePage />} />
+          <Route path="/au/history" element={<AUHistoryPage />} />
+          <Route path="/au/polls" element={<AUPollAvgPage />} />
+          <Route path="/au/victoria/districts" element={<AUVicDistrictsPage />} />
           <Route path="/watch" element={<WatchPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/flips" element={<FlipsPage />} />

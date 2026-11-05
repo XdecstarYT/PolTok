@@ -12,6 +12,7 @@ import './au.css';
 import { WatchStar } from '../watch/WatchStar';
 import { AuNav } from './AuNav';
 import { VicCandidates } from './Candidates';
+import { SeatCensus, SeatResults } from './SeatData';
 
 export default function SeatPage() {
   const { id = '' } = useParams();
@@ -105,8 +106,13 @@ export default function SeatPage() {
         </div>
       </div>
 
+      <div className="au-grid-2">
+        <SeatResults id={seat.id} isVic={isVic} />
+        <SeatCensus id={seat.id} isVic={isVic} name={seat.name} />
+      </div>
+
       <NewsPanel items={related} error={news.error} title={`News mentioning ${seat.name}`} emptyNote={`No current stories mention ${seat.name}${surname ? ` or ${surname}` : ''}.`} />
-      <p className="au-foot muted">Margin = {isVic ? '2022-based pre-election pendulum' : '2025 two-candidate-preferred'} margin (pp above 50). Source: PolTok research (AEC / Wikipedia).</p>
+      <p className="au-foot muted">Margin = {isVic ? '2022-based pre-election pendulum' : '2025 two-candidate-preferred'} margin (pp above 50). Source: PolTok research (AEC / Wikipedia); results © AEC / VEC; demographics © ABS (CC BY 4.0).</p>
     </div>
   );
 }

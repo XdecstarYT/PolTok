@@ -3,7 +3,11 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 const TABS = [
   { to: '/au', label: 'Overview', end: true },
-  { to: '/au/victoria', label: 'Victoria 2026' },
+  { to: '/au/victoria', label: 'Victoria 2026', end: true },
+  { to: '/au/victoria/districts', label: 'Vic districts' },
+  { to: '/au/states', label: 'States' },
+  { to: '/au/polls', label: 'Polls' },
+  { to: '/au/history', label: 'History' },
   { to: '/au/swingometer', label: 'Swingometer' },
   { to: '/au/senate', label: 'Senate' },
   { to: '/au/nsw', label: 'NSW 2027' },

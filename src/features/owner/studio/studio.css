@@ -1,0 +1,27 @@
+.st { display: grid; gap: 12px; }
+.st-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; position: sticky; top: 0; z-index: 2; background: var(--bg-1, var(--bg)); padding: 6px 0; }
+.st-sep { flex: 0 0 8px; }
+.st-grid { display: grid; grid-template-columns: minmax(240px, 300px) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 860px) { .st-grid { grid-template-columns: 1fr; } }
+.st fieldset { border: 1px solid var(--line-2); border-radius: 10px; padding: 10px; margin: 0 0 10px; display: grid; gap: 8px; min-width: 0; }
+.st legend { font-weight: 700; font-size: var(--fs-sm); padding: 0 4px; display: flex; gap: 10px; align-items: center; }
+.st label { display: grid; gap: 4px; font-size: var(--fs-xs, 12px); color: var(--text-2); min-width: 0; }
+.st textarea.ow-select { resize: vertical; font: inherit; }
+.st-row { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.st-row > .ow-select { flex: 1 1 auto; min-width: 0; }
+.st-val { flex: 0 0 76px !important; width: 76px; }
+.st-rows { display: grid; gap: 6px; }
+.st-x { background: none; border: 1px solid var(--line-2); color: var(--text-2); border-radius: 6px; width: 26px; height: 26px; cursor: pointer; flex: 0 0 auto; }
+.st-link { background: none; border: 0; color: var(--accent-text, var(--signal)); cursor: pointer; font: inherit; font-size: var(--fs-xs, 12px); text-decoration: underline; padding: 0; justify-self: start; }
+.st-controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; align-items: end; border: 1px solid var(--line-2); border-radius: 10px; padding: 10px; }
+.st-swatches { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
+.st-sw input[type=color] { width: 44px; height: 30px; padding: 0; border: 1px solid var(--line-2); border-radius: 6px; background: none; }
+.st-stickers { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: var(--fs-xs, 12px); }
+.st-preview { margin: 12px 0; display: grid; place-items: center; background: repeating-conic-gradient(var(--bg-2) 0 25%, transparent 0 50%) 0 0 / 20px 20px; border-radius: 10px; padding: 12px; min-height: 240px; }
+.st-canvas { max-width: 100%; max-height: 70vh; width: auto; height: auto; box-shadow: 0 8px 30px rgba(0,0,0,.35); }
+.st-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.st-presets { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.st-presets li { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.st-checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 4px; max-height: 180px; overflow: auto; }
+.st-checks label { display: flex; gap: 6px; align-items: center; }
+.st-file { font-size: var(--fs-xs, 12px); }

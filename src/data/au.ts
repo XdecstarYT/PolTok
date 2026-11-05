@@ -47,6 +47,17 @@ export const AU_PARTIES: Record<string, { name: string; short: string; color: st
   UAP: { name: 'United Australia', short: 'UAP', color: '#d9b300' },
   AV: { name: "Australia's Voice", short: 'AV', color: '#7a5bd6' },
   VS: { name: 'Victorian Socialists', short: 'VS', color: '#b3132b' },
+  CLP: { name: 'Country Liberal', short: 'CLP', color: '#e07b1a' },
+  SFF: { name: 'Shooters, Fishers & Farmers', short: 'SFF', color: '#6b5a2e' },
+  AJP: { name: 'Animal Justice', short: 'AJP', color: '#7c4d8f' },
+  LCV: { name: 'Legalise Cannabis', short: 'LCV', color: '#4c9a2a' },
+  LDP: { name: 'Libertarian / Liberal Democrats', short: 'LDP', color: '#e5b400' },
+  FF: { name: 'Family First', short: 'FF', color: '#4a6fa5' },
+  TOP: { name: 'Trumpet of Patriots', short: 'TOP', color: '#b5a000' },
+  PF: { name: 'People First (Rennick)', short: 'PF', color: '#a26d3d' },
+  DLP: { name: 'Democratic Labour', short: 'DLP', color: '#7a2a2a' },
+  FPV: { name: 'Freedom Party of Victoria', short: 'FPV', color: '#5d6b7a' },
+  AUC: { name: 'Australian Christians', short: 'AUC', color: '#5872a8' },
   OTH: { name: 'Other', short: 'OTH', color: '#8b93a7' },
 };
 

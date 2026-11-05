@@ -104,7 +104,7 @@ export async function renderCardCanvas(designId: string, data: CardData, style?:
   if (tW === nW && tH === nH) out = drawDesign(design, d, st, nW, nH, I, now);
   else {
     const ar = (tW / tH) / (nW / nH);
-    const mode = st?.fit && st.fit !== 'auto' ? st.fit : ar > 1.4 || ar < 1 / 1.4 ? 'letterbox' : 'reflow';
+    const mode = st?.fit && st.fit !== 'auto' ? st.fit : design.fluid ? 'reflow' : ar > 1.4 || ar < 1 / 1.4 ? 'letterbox' : 'reflow';
     out = document.createElement('canvas');
     out.width = tW; out.height = tH;
     const o = out.getContext('2d')!;

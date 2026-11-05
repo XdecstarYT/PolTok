@@ -117,3 +117,4 @@
 [data-ui='paper'] .mp-flip, [data-ui='paper'] .fd-flip, [data-ui='paper'] .fd-chip.amber { color: #fff; }
 [data-ui='paper'] .ct { background: rgba(246, 241, 230, 0.97) !important; }
 :root[data-ui='paper'] .pt-simbadge--live { color: #a3122f; border-color: rgba(163, 18, 47, 0.45); background: rgba(163, 18, 47, 0.06); } /* a11y: AA contrast on newsprint */
+[data-ui='paper'] .pt-rating { color: #2a2416 !important; }

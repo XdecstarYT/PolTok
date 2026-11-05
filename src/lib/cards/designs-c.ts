@@ -42,7 +42,8 @@ const ledger: Design = {
   draw(k) {
     const { ctx, W, H, d } = k;
     ctx.fillStyle = '#f7f9f4'; ctx.fillRect(0, 0, W, H);
-    for (let y = 300; y < H - 140; y += 64) { ctx.fillStyle = (y / 64) % 2 < 1 ? '#eaf2e3' : '#f7f9f4'; ctx.fillRect(0, y, W, 64); }
+    const RH = 96;
+    for (let y = 300, i = 0; y < H - 190; y += RH, i++) { ctx.fillStyle = i % 2 ? '#f7f9f4' : '#eaf2e3'; ctx.fillRect(0, y, W, RH); }
     ctx.fillStyle = '#e57373'; ctx.fillRect(130, 0, 2, H); ctx.fillRect(136, 0, 2, H);
     ctx.fillStyle = '#1f3d2b'; ctx.fillRect(0, 0, W, 240);
     wordmark(ctx, 170, 96, 40, { color: '#f7f9f4', accent: '#a7e07d' });
@@ -52,16 +53,16 @@ const ledger: Design = {
     caps(ctx, 'Value', W - 70, 290, font('plex', 20, 700), '#1f3d2b', 0.14, 'right');
     const rows = [...(d.stats ?? []).map((s) => ({ label: s.label, value: s.value, color: s.color ?? '#1f3d2b' }))];
     if (d.kind === 'au-seat' && d.bars) d.bars.forEach((b) => rows.push({ label: `2PP · ${b.label}`, value: `${b.value.toFixed(1)}%`, color: b.color }));
-    rows.slice(0, 9).forEach((r, i) => {
-      const y = 300 + i * 64 + 44;
-      ctx.fillStyle = r.color; ctx.fillRect(150, y - 22, 8, 28);
-      ctx.font = font('text', 30, 400); ctx.fillStyle = '#1b1b1b'; ctx.textAlign = 'left';
+    rows.slice(0, 8).forEach((r, i) => {
+      const y = 300 + i * RH + 62;
+      ctx.fillStyle = r.color; ctx.fillRect(150, y - 32, 10, 40);
+      ctx.font = font('text', 40, 400); ctx.fillStyle = '#1b1b1b'; ctx.textAlign = 'left';
       ctx.fillText(ellipsize(ctx, r.label, W - 500), 170, y);
-      text(ctx, r.value, W - 70, y, font('plex', 34, 700), '#1b1b1b', 'right');
+      text(ctx, r.value, W - 70, y, font('plex', 44, 700), '#1b1b1b', 'right');
     });
-    const ny = 300 + Math.min(rows.length, 9) * 64 + 70;
-    ctx.font = font('text', 28, 400, true); ctx.fillStyle = '#3d5a45'; ctx.textAlign = 'left';
-    drawLines(ctx, wrap(ctx, `Note: ${dek(k)}`, W - 240, 3), 170, ny, 40);
+    const ny = 300 + Math.min(rows.length, 8) * RH + 80;
+    ctx.font = font('text', 34, 400, true); ctx.fillStyle = '#3d5a45'; ctx.textAlign = 'left';
+    drawLines(ctx, wrap(ctx, `Note: ${dek(k)}`, W - 240, 3), 170, ny, 48);
     ctx.strokeStyle = '#1f3d2b'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(170, H - 170); ctx.lineTo(W - 70, H - 170); ctx.stroke(); ctx.beginPath(); ctx.moveTo(170, H - 162); ctx.lineTo(W - 70, H - 162); ctx.stroke();
     footerLine(k, 170, H - 100, W - 240, 20, '#3d5a45', '#1f3d2b', 'plex');
   },

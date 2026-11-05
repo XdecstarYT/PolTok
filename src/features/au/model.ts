@@ -59,7 +59,7 @@ export function counts(x: unknown): [string, number][] {
 }
 
 /** Seat order for hemicycles/legends: left (Labor) → crossbench → Coalition right. */
-const ORDER = ['ALP', 'GRN', 'IND', 'CSA', 'CA', 'JLN', 'AV', 'UAP', 'KAP', 'ONP', 'NAT', 'LNP', 'LIB', 'COALITION', 'VACANT', 'OTH'];
+const ORDER = ['ALP', 'GRN', 'VS', 'AJP', 'LCV', 'DLP', 'IND', 'CSA', 'CA', 'JLN', 'AV', 'UAP', 'KAP', 'SFF', 'LDP', 'FF', 'AUC', 'TOP', 'ONP', 'NAT', 'CLP', 'LNP', 'LIB', 'COALITION', 'VACANT', 'OTH'];
 export const orderIdx = (k: string) => {
   const i = ORDER.indexOf(partyKey(k));
   return i < 0 ? ORDER.length - 2 : i;

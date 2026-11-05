@@ -351,9 +351,9 @@ const hemicycle: Design = {
     const dot = Math.min(((rOut - rIn) / rowsN) * 0.42, 14);
     seats.forEach((s, i) => { ctx.fillStyle = colors[i] ?? '#2a3044'; ctx.beginPath(); ctx.arc(s.x, s.y, dot, 0, Math.PI * 2); ctx.fill(); });
     const st = d.stats ?? [];
-    text(ctx, st[0]?.value ?? '', cx - 30, cy - 30, font('display', 110, 700), st[0]?.color ?? '#3d7bff', 'right');
-    text(ctx, st[1]?.value ?? '', cx + 30, cy - 30, font('display', 110, 700), st[1]?.color ?? '#ff3d55', 'left');
-    text(ctx, '–', cx, cy - 40, font('display', 80, 700), '#556', 'center');
+    text(ctx, st[0]?.value ?? '', cx - 26, cy - 24, font('display', 76, 700), st[0]?.color ?? '#3d7bff', 'right');
+    text(ctx, st[1]?.value ?? '', cx + 26, cy - 24, font('display', 76, 700), st[1]?.color ?? '#ff3d55', 'left');
+    text(ctx, '–', cx, cy - 30, font('display', 60, 700), '#556', 'center');
     caps(ctx, st[3] ? `${st[3].value} for control · ${st[2]?.value ?? 0} undecided` : '', cx, cy + 10, font('sans', 20, 700), 'rgba(255,255,255,0.7)', 0.1, 'center');
     wordmark(ctx, 60, 80, 36);
     caps(ctx, k.kicker, W - 60, 74, font('sans', 20, 800), '#c6ff3d', 0.14, 'right');

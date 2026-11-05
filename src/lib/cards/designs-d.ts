@@ -5,25 +5,27 @@ import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLin
 const num = (s?: string) => { const v = parseFloat(String(s ?? '').replace(/[^0-9.+-]/g, '')); return Number.isFinite(v) ? v : NaN; };
 const sideRows = (k: K) => {
   const d = k.d;
-  const rows = (d.bars ?? []).slice(0, 2).map((b, i) => ({ label: b.label, value: d.kind === 'au-seat' ? `${b.value.toFixed(1)}%` : (d.stats?.[i]?.label === b.label ? d.stats[i].value : `${b.value.toFixed(1)}%`), num: b.value, color: b.color }));
-  if (rows.length < 2) (d.stats ?? []).slice(rows.length, 2).forEach((s) => rows.push({ label: s.label, value: s.value, num: num(s.value) || 0, color: s.color ?? k.accent }));
+  const rows = d.kind === 'balance' ? (d.stats ?? []).slice(0, 2).map((s) => ({ label: s.label.replace(/ \(.*\)/, ''), value: s.value, num: num(s.value) || 0, color: s.color ?? k.accent })) : (d.bars ?? []).slice(0, 2).map((b, i) => ({ label: b.label, value: d.kind === 'au-seat' ? `${b.value.toFixed(1)}%` : (d.stats?.[i]?.label === b.label ? d.stats[i].value : `${b.value.toFixed(1)}%`), num: b.value, color: b.color }));
+  if (rows.length < 2 && d.kind !== 'balance') (d.stats ?? []).slice(rows.length, 2).forEach((s) => rows.push({ label: s.label, value: s.value, num: num(s.value) || 0, color: s.color ?? k.accent }));
   while (rows.length < 2) rows.push({ label: rows.length ? 'Challenger' : nameOf(k), value: '—', num: 0, color: '#5a6275' });
   return rows;
 };
 /** Top bar shared by the new designs: wordmark left, kicker right. */
 function topBar(k: K, y: number, color = '#ffffff', muted = 'rgba(255,255,255,0.6)', accent = k.accent) {
-  const u = k.s, P = 64 * u;
+  const u = U(k), P = 64 * u;
   wordmark(k.ctx, P, y, 38 * u, { color, accent });
   capsFit(k.ctx, k.d.slide ? `${k.kicker} · ${k.d.slide.i}/${k.d.slide.n}` : k.kicker, k.W * 0.5, k.W - P, y - 6 * u, font('sans', 20 * u, 800), muted, 0.16, 'right');
 }
+/** unit scale: 1 at 1080 short side, landscape cards get a little more */
+const U = (k: K) => Math.min(k.W, k.H * 1.5) / 1080;
 const ctaOr = (k: K) => k.d.cta?.trim() || `Follow live at ${k.url}`;
 
 /* 31 ─ Countdown clock */
 const countdown: Design = {
-  id: 'countdown', name: 'Countdown clock', kinds: ['promo', 'stat', 'custom', 'au-seat', 'race'], size: SQ, isNew: true, drawsCta: true,
+  id: 'countdown', name: 'Countdown clock', kinds: ['promo', 'custom', 'stat'], size: SQ, isNew: true, fluid: true, drawsCta: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 64 * u;
+    const u = U(k), P = 64 * u;
     ctx.fillStyle = '#0a0c14'; ctx.fillRect(0, 0, W, H);
     blob(ctx, W * 0.5, H * 0.45, W * 0.75, k.accent, 0.22);
     grain(ctx, W, H, 0.035, 4);
@@ -37,8 +39,9 @@ const countdown: Design = {
     let y = drawLines(ctx, tb.lines, P, H * 0.2 + tb.px * 0.85, tb.lh);
     ctx.font = font('sans', 28 * u, 500); ctx.fillStyle = 'rgba(255,255,255,0.7)';
     y = drawLines(ctx, wrap(ctx, dek(k), W - P * 2, 2), P, y + 10 * u, 38 * u);
-    const gap = 24 * u, tw = (W - P * 2 - gap * 2) / 3, th = Math.min(tw * 1.08, H * 0.36);
-    const ty = Math.max(y + 40 * u, H * 0.5 - th / 2);
+    const gap = 24 * u, tw = (W - P * 2 - gap * 2) / 3;
+    const ty = y + 50 * u;
+    const th = Math.max(80 * u, Math.min(tw * 1.08, H - 150 * u - 140 * u - ty));
     parts.forEach((v, i) => {
       const x = P + i * (tw + gap);
       const g = ctx.createLinearGradient(0, ty, 0, ty + th); g.addColorStop(0, '#1d2233'); g.addColorStop(1, '#121522');
@@ -63,10 +66,10 @@ const countdown: Design = {
 
 /* 32 ─ Head-to-head with photos */
 const h2h: Design = {
-  id: 'h2h', name: 'Head-to-head (photos)', kinds: ['race', 'flip', 'au-seat', 'balance'], size: X, isNew: true,
+  id: 'h2h', name: 'Head-to-head (photos)', kinds: ['race', 'flip', 'au-seat', 'balance'], size: X, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 56 * u;
+    const u = U(k), P = 56 * u;
     const [a, b] = sideRows(k);
     ctx.fillStyle = '#0b0d14'; ctx.fillRect(0, 0, W, H);
     const half = W / 2;
@@ -115,10 +118,10 @@ const h2h: Design = {
 
 /* 33 ─ Seat-change waterfall */
 const waterfall: Design = {
-  id: 'waterfall', name: 'Seat-change waterfall', kinds: ['balance', 'stat', 'custom', 'promo'], size: X, isNew: true,
+  id: 'waterfall', name: 'Seat-change waterfall', kinds: ['balance', 'stat', 'custom', 'promo'], size: X, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 60 * u;
+    const u = U(k), P = 60 * u;
     ctx.fillStyle = '#f6f5f1'; ctx.fillRect(0, 0, W, H);
     wordmark(ctx, P, P + 20 * u, 32 * u, { color: '#111', accent: mix(k.accent, '#000', 0.25) });
     capsFit(ctx, k.kicker, W * 0.4, W - P, P + 14 * u, font('sans', 18 * u, 800), '#666', 0.16, 'right');
@@ -159,10 +162,10 @@ const waterfall: Design = {
 /* 34 ─ Bill progress */
 const DEFAULT_STEPS = ['Introduced', 'Committee', 'Passed House', 'Passed Senate', 'Signed into law'];
 const bill: Design = {
-  id: 'bill', name: 'Bill progress tracker', kinds: ['custom', 'promo', 'stat', 'quote'], size: X, isNew: true,
+  id: 'bill', name: 'Bill progress tracker', kinds: ['custom', 'promo', 'stat', 'quote'], size: X, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 64 * u;
+    const u = U(k), P = 64 * u;
     ctx.fillStyle = '#0f1420'; ctx.fillRect(0, 0, W, H);
     blob(ctx, W * 0.85, 0, W * 0.6, k.accent, 0.18);
     topBar(k, P + 4 * u);
@@ -196,10 +199,10 @@ const bill: Design = {
 
 /* 35 ─ Poll-trend sparkline */
 const trend: Design = {
-  id: 'trend', name: 'Poll trend', kinds: ['stat', 'custom', 'promo', 'au-seat', 'candidate'], size: X, isNew: true,
+  id: 'trend', name: 'Poll trend', kinds: ['stat', 'custom', 'promo', 'au-seat', 'candidate'], size: X, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 60 * u;
+    const u = U(k), P = 60 * u;
     ctx.fillStyle = '#0c1018'; ctx.fillRect(0, 0, W, H);
     topBar(k, P + 4 * u);
     headline(k, d.title, P, P + 78 * u, W - P * 2, 50 * u, 'display', '#fff', 700);
@@ -258,10 +261,10 @@ const trend: Design = {
 
 /* 36 ─ Senate hemicycle (portrait) */
 const senateArc: Design = {
-  id: 'senate-arc', name: 'Chamber arc (portrait)', kinds: ['balance'], size: PT, isNew: true,
+  id: 'senate-arc', name: 'Chamber arc (portrait)', kinds: ['balance'], size: PT, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 70 * u;
+    const u = U(k), P = 70 * u;
     ctx.fillStyle = '#f3f1ec'; ctx.fillRect(0, 0, W, H);
     wordmark(ctx, P, P + 30 * u, 40 * u, { color: '#111', accent: mix(k.accent, '#000', 0.3) });
     capsFit(ctx, k.kicker, W * 0.5, W - P, P + 24 * u, font('sans', 20 * u, 800), '#666', 0.16, 'right');
@@ -307,10 +310,10 @@ const senateArc: Design = {
 
 /* 37 ─ AU 2PP swing */
 const auSwing: Design = {
-  id: 'au-swing', name: 'AU 2PP swing meter', kinds: ['au-seat'], size: X, isNew: true,
+  id: 'au-swing', name: 'AU 2PP swing meter', kinds: ['au-seat'], size: X, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 60 * u;
+    const u = U(k), P = 60 * u;
     ctx.fillStyle = '#0f1a24'; ctx.fillRect(0, 0, W, H);
     blob(ctx, W * 0.2, H, W * 0.5, k.accent, 0.2);
     topBar(k, P + 4 * u, '#fff', 'rgba(255,255,255,0.6)', '#ffb000');
@@ -344,10 +347,10 @@ const auSwing: Design = {
 
 /* 38 ─ Quote with portrait */
 const quotePortrait: Design = {
-  id: 'quote-portrait', name: 'Quote with portrait', kinds: ['quote', 'candidate', 'custom', 'promo'], size: PT, isNew: true,
+  id: 'quote-portrait', name: 'Quote with portrait', kinds: ['quote', 'candidate', 'custom', 'promo'], size: PT, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 80 * u;
+    const u = U(k), P = 80 * u;
     ctx.fillStyle = '#101218'; ctx.fillRect(0, 0, W, H);
     const pr = Math.min(W * 0.36, H * 0.26);
     const g = ctx.createLinearGradient(0, 0, 0, H * 0.5); g.addColorStop(0, mix(k.accent, '#101218', 0.55)); g.addColorStop(1, '#101218');
@@ -373,10 +376,10 @@ const quotePortrait: Design = {
 
 /* 39 ─ Carousel slide (n/N) */
 const carousel: Design = {
-  id: 'carousel', name: 'Carousel slide (1/5…5/5)', kinds: ALL, size: PT, isNew: true, drawsCta: true,
+  id: 'carousel', name: 'Carousel slide (1/5…5/5)', kinds: ALL, size: PT, isNew: true, fluid: true, drawsCta: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 72 * u;
+    const u = U(k), P = 72 * u;
     const sl = d.slide ?? { i: 1, n: 1 };
     const last = sl.i === sl.n && sl.n > 1;
     ctx.fillStyle = '#fbfaf7'; ctx.fillRect(0, 0, W, H);
@@ -422,10 +425,10 @@ const carousel: Design = {
 
 /* 40 ─ Data table */
 const table: Design = {
-  id: 'table', name: 'Data table', kinds: ALL, size: PT, isNew: true,
+  id: 'table', name: 'Data table', kinds: ALL, size: PT, isNew: true, fluid: true,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const u = k.s, P = 70 * u;
+    const u = U(k), P = 70 * u;
     ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = '#0d1321'; ctx.fillRect(0, 0, W, 300 * u);
     wordmark(ctx, P, P + 20 * u, 36 * u, { accent: k.accent });

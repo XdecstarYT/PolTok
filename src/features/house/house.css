@@ -78,7 +78,7 @@
 .hs-pty--r { background: color-mix(in srgb, var(--rep) 72%, #000); }
 .hs-pty--i { background: color-mix(in srgb, var(--ind) 72%, #000); }
 .hs-flip { display: inline-flex; gap: 4px; align-items: center; }
-.hs-fliptag { margin-left: 6px; font: 700 10px var(--font-mono); color: var(--accent-ink); background: var(--accent); padding: 2px 5px; border-radius: 4px; }
+.hs-fliptag { margin-left: 6px; font: 700 10px var(--font-mono); color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 80%, #000); padding: 2px 5px; border-radius: 4px; }
 .hs-ok { color: var(--ok); }
 .hs-pend { color: var(--text-3); }
 

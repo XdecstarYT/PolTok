@@ -6,6 +6,8 @@ export interface Design extends CardDesign {
   draw: (k: K) => void;
   /** design renders d.cta itself (skip the generic CTA overlay) */
   drawsCta?: boolean;
+  /** layout is fully relative: always reflow to other sizes */
+  fluid?: boolean;
 }
 
 export const ALL: CardKind[] = ['race', 'balance', 'au-seat', 'promo', 'stat', 'flip', 'quote', 'candidate', 'custom'];

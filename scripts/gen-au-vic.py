@@ -121,6 +121,13 @@ def main():
     stray = [k for k in dist if k not in ids]
     print('nominations as at', as_at, 'districts with candidates', len(dist), 'regions', len(reg), 'total', sum(map(len, dist.values())) + sum(map(len, reg.values())), 'stray ids', stray)
 
+    # District -> Legislative Council region, from ABS ASGS 2025 SED names ("Kew (Southern Metropolitan)")
+    sed = json.loads(fetch('https://geo.abs.gov.au/arcgis/rest/services/ASGS2025/SED/MapServer/0/query?where=state_code_2021%3D%272%27&outFields=sed_name_2025&returnGeometry=false&f=json', 'sed2025.json'))
+    region = {}
+    for f in sed['features']:
+        m = re.match(r'(.*) \((.*)\)$', f['attributes']['sed_name_2025'])
+        if m: region['vic-' + re.sub(r'[^a-z0-9]+', '-', m.group(1).lower()).strip('-')] = m.group(2)
+    print('regions mapped', len([k for k in region if k in ids]), 'unmatched', [k for k in ids if k not in region])
     out = {
         'results2022': results,
         'nominations': {'asAt': as_at, 'source': CAND_PAGE, 'file': 'https://www.vec.vic.gov.au' + href, 'districts': dist, 'regions': reg},
@@ -131,6 +138,8 @@ def main():
            "export interface VicCand { n: string; p: string; pn: string; v: number; pct: number }\n"
            "export interface VicResult2022 { enrol: number | null; formal: number | null; informal: number | null; turnout: number | null; fp: VicCand[]; final: VicCand[]; finalKind: '2cp' | 'pd' | null; url: string; note?: string }\n")
     body = (f"export const VIC_RESULTS_2022: Record<string, VicResult2022> = {json.dumps(results, ensure_ascii=False)};\n"
+            f"// District -> region: ABS ASGS 2025 SED (CC BY 4.0), geo.abs.gov.au\n"
+            f"export const VIC_REGION_OF: Record<string, string> = {json.dumps({k: v for k, v in region.items() if k in ids})};\n"
             f"export const VIC_NOMINATIONS: {{ asAt: string; source: string; file: string; districts: Record<string, [string, string][]>; regions: Record<string, [string, string][]> }} = {json.dumps(out['nominations'], ensure_ascii=False)};\n")
     open(os.path.join(ROOT, 'src/data/au-vic.ts'), 'w', encoding='utf8').write(hdr + body)
     print('wrote src/data/au-vic.ts')
