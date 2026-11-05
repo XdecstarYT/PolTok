@@ -66,15 +66,15 @@ const newspaper: Design = {
     ctx.fillStyle = '#1b1712'; ctx.fillRect(P, y, W - P * 2, 2);
     // columns: left photo/map, right results
     const cy = y + 34, ch = H - cy - 130, colW = (W - P * 2 - 40) / 2;
+    if (d.kind === 'balance') { balanceBlock(k, P, cy + 20, W - P * 2, ch * 0.7, { fam: 'serif', color: '#1b1712', muted: '#4b4236', track: '#d8ceb8' }); text(ctx, k.attr, P, H - 54, font('text', 22, 600), '#1b1712'); wordmark(ctx, W - P, H - 50, 34, { color: '#1b1712', accent: '#b0241b', fam: 'serif', align: 'right' }); return; }
     ctx.save(); ctx.filter = 'grayscale(1) contrast(1.15)';
-    if (!drawMap(ctx, d.mapState, P, cy, colW, ch * 0.75, { fill: '#2b2620', stroke: '#2b2620' })) portrait(ctx, k.img, nameOf(k), P, cy, colW, ch * 0.75, '#6d6253', { fam: 'serif' });
+    if (!drawMap(ctx, d.mapState, P, cy, colW, ch * 0.75, { fill: '#2b2620', stroke: '#2b2620', base: '#cbbf a6'.replace(' ', '') })) portrait(ctx, k.img, nameOf(k), P, cy, colW, ch * 0.75, '#6d6253', { fam: 'serif' });
     ctx.restore();
     ctx.font = font('text', 20, 400, true); ctx.fillStyle = '#4b4236'; ctx.textAlign = 'left';
     ctx.fillText(ellipsize(ctx, d.mapState ? `Above: ${d.mapState.replace('AU:', '')}` : nameOf(k), colW), P, cy + ch * 0.75 + 32);
     ctx.fillStyle = '#b9ad95'; ctx.fillRect(P + colW + 19, cy, 1, ch);
     const rx = P + colW + 40;
-    if (d.kind === 'balance') balanceBlock(k, rx, cy, colW, ch * 0.6, { fam: 'serif', color: '#1b1712', muted: '#4b4236', track: '#d8ceb8' });
-    else if (d.kind === 'quote') {
+    if (d.kind === 'quote') {
       ctx.font = font('text', 28, 400); ctx.fillStyle = '#2b2620';
       drawLines(ctx, wrap(ctx, `${d.subtitle ?? 'PolTok'} — Live coverage continues on ${k.url}, with every race call, flip and the balance of power updated as the count progresses.`, colW, 9), rx, cy + 30, 40);
     } else resultList(k, rx, cy, colW, Math.min(ch * 0.8, 520), { fam: 'text', valueFam: 'serif', labelColor: '#1b1712', track: '#d8ceb8', radius: 0, bars: true });
@@ -134,10 +134,10 @@ const swiss: Design = {
     for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo((W / 6) * i, 0); ctx.lineTo((W / 6) * i, H); ctx.stroke(); }
     ctx.fillStyle = red; ctx.fillRect(0, 0, W / 6 * 2, 360);
     ctx.save(); ctx.translate(60, 330); ctx.rotate(-Math.PI / 2);
-    caps(ctx, k.kicker, 0, 30, font('sans', 34, 800), '#fff', 0.08); ctx.restore();
+    capsFit(ctx, k.kicker, 290, 0, 30, font('sans', 26, 800), '#fff', 0.08); ctx.restore();
     const h = hero(k);
     if (h.value) { fit(ctx, h.value, W / 6 * 2 - 130, 120, 'sans', 800); ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.fillText(h.value, 120, 320); }
-    text(ctx, ellipsize(ctx, h.label, W / 6 * 2 - 140), 120, 210, font('sans', 22, 600), 'rgba(255,255,255,0.85)');
+    ctx.font = font('sans', 22, 600); text(ctx, ellipsize(ctx, h.label, W / 6 * 2 - 140), 120, 210, font('sans', 22, 600), 'rgba(255,255,255,0.85)');
     wordmark(ctx, W - 60, 90, 40, { color: '#111', accent: red, fam: 'sans', align: 'right' });
     const tb = fitBlock(ctx, d.kind === 'quote' ? `“${d.title}”` : d.title, W - 120, 330, 118, 'sans', 800, 0.98, 4, 40);
     ctx.fillStyle = '#111'; ctx.textAlign = 'left';

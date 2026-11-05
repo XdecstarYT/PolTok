@@ -249,6 +249,7 @@ export function loadImage(src?: string, timeout = 2500): Promise<HTMLImageElemen
 }
 
 export function nameOf(k: K) {
+  if (k.d.kind === 'promo' || k.d.kind === 'stat' || k.d.kind === 'quote' || k.d.kind === 'balance') return 'Pol Tok';
   return k.d.stats?.[0]?.label && (k.d.kind === 'race' || k.d.kind === 'flip') ? k.d.stats[0].label : k.d.title;
 }
 

@@ -31,7 +31,9 @@ function inline(s: string, key: string): ReactNode[] {
 export function Markdown({ text }: { text: string }) {
   const blocks: ReactNode[] = [];
   // Hide a half-streamed token at the end ("[[race:GA-S").
-  const lines = text.replace(/\r/g, '').replace(/\[\[[^\]\n]*\]?$/, '').split('\n');
+  // Models sometimes write 【seat:x】, [seat:x] or [[ seat:x ]] — normalise to [[seat:x]].
+  const norm = text.replace(/[【\[]{1,2}\s*(race|balance|seat|market|bill|poll|state):([A-Za-z0-9:_.-]{1,48})\s*[】\]]{1,2}/g, '[[$1:$2]]');
+  const lines = norm.replace(/\r/g, '').replace(/\[\[[^\]\n]*\]?$/, '').split('\n');
   let cards = 0;
   let list: { ordered: boolean; items: string[] } | null = null;
   let para: string[] = [];
