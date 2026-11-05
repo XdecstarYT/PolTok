@@ -171,7 +171,7 @@ export function colorMapper(designId: string, st: CardStyle | undefined): ((c: s
 export function mappedCtx(ctx: Ctx, map: (c: string) => string): Ctx {
   const patch = <G extends CanvasGradient>(g: G): G => {
     const add = g.addColorStop.bind(g);
-    g.addColorStop = (o: number, c: string) => add(o, map(c));
+    g.addColorStop = (o: number, c: string) => add(o, c[0] === '!' ? c.slice(1) : map(c));
     return g;
   };
   return new Proxy(ctx, {
@@ -183,7 +183,7 @@ export function mappedCtx(ctx: Ctx, map: (c: string) => string): Ctx {
       return typeof v === 'function' ? v.bind(t) : v;
     },
     set(t, prop, v) {
-      if ((prop === 'fillStyle' || prop === 'strokeStyle' || prop === 'shadowColor') && typeof v === 'string') v = map(v);
+      if ((prop === 'fillStyle' || prop === 'strokeStyle' || prop === 'shadowColor') && typeof v === 'string') v = v[0] === '!' ? v.slice(1) : map(v);
       return Reflect.set(t, prop, v, t);
     },
   });

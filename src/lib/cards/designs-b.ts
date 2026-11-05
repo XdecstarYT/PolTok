@@ -1,5 +1,5 @@
 import { ALL, X, SQ, PT, ST, type Design, hero, resultList, balanceBlock, tag, headline, glass } from './common';
-import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, star, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf } from './kit';
+import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, star, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf, inkOn } from './kit';
 
 /* 11 ─ Retro CRT */
 const crt: Design = {
@@ -69,7 +69,7 @@ const cutout: Design = {
     // headline on accent strip — letters on paper chips
     const head = d.kind === 'quote' ? `“${d.title}”` : d.title;
     const tb = fitBlock(ctx, head, W - 160, 270, 110, 'display', 700, 1.05, 3, 34);
-    const fg = ink(k.accent, '#14161c');
+    const fg = inkOn(k, k.accent, '#14161c');
     ctx.fillStyle = fg; ctx.textAlign = 'left';
     drawLines(ctx, tb.lines, 80, 140 + (300 - tb.lines.length * tb.lh) / 2 + tb.px * 0.85, tb.lh);
     // subtitle note card
@@ -131,20 +131,21 @@ const terminal: Design = {
   id: 'terminal', name: 'Terminal window', kinds: ALL, size: X,
   draw(k) {
     const { ctx, W, H, d } = k;
+    const c = (col: string) => inkOn(k, '#1e1e2e', col);
     const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#3a1c71'); g.addColorStop(0.5, '#d76d77'); g.addColorStop(1, '#ffaf7b');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 20;
     rr(ctx, 60, 40, W - 120, H - 80, 16); ctx.fillStyle = '#1e1e2e'; ctx.fill(); ctx.restore();
     ctx.save(); rr(ctx, 60, 40, W - 120, 50, 16); ctx.clip(); ctx.fillStyle = '#313244'; ctx.fillRect(60, 40, W - 120, 50); ctx.restore();
     ['#ff5f57', '#febc2e', '#28c840'].forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(92 + i * 30, 65, 9, 0, Math.PI * 2); ctx.fill(); });
-    text(ctx, `poltok — ${d.kind} — zsh`, W / 2, 72, font('mono', 18, 400), '#a6adc8', 'center');
+    text(ctx, `poltok — ${d.kind} — zsh`, W / 2, 72, font('mono', 22, 400), '#a6adc8', 'center');
     const L = 100; let y = 140;
     const line = (parts: [string, string][], px = 24) => { let x = L; ctx.font = font('mono', px, 400); ctx.textAlign = 'left'; for (const [t, c] of parts) { ctx.fillStyle = c; ctx.fillText(t, x, y); x += ctx.measureText(t).width; } y += px * 1.55; };
-    line([['➜ ', '#a6e3a1'], ['~ ', '#89b4fa'], ['poltok ', '#f5c2e7'], [`${d.kind} ${(d.mapState ?? '').replace('AU:', '')}`, '#cdd6f4']]);
-    ctx.font = font('mono', 40, 700); ctx.fillStyle = '#f9e2af';
+    line([['➜ ', c('#a6e3a1')], ['~ ', c('#89b4fa')], ['poltok ', c('#f5c2e7')], [`${d.kind} ${(d.mapState ?? '').replace('AU:', '')}`, c('#cdd6f4')]]);
+    ctx.font = font('mono', 40, 700); ctx.fillStyle = c('#f9e2af');
     const tl = wrap(ctx, d.kind === 'quote' ? `"${d.title}"` : d.title, W - 2 * L, 2);
     y = drawLines(ctx, tl, L, y + 16, 50) + 6;
-    ctx.font = font('mono', 22, 400); ctx.fillStyle = '#94e2d5';
+    ctx.font = font('mono', 24, 400); ctx.fillStyle = c('#94e2d5');
     ctx.fillText(ellipsize(ctx, `# ${dek(k)}`, W - 2 * L), L, y); y += 46;
     const rows = rowsOf(k, 4);
     const max = Math.max(100, ...rows.map((r) => r.num));
@@ -154,15 +155,15 @@ const terminal: Design = {
       const bw = Math.round((Math.min(r.num, max) / max) * 24);
       ctx.fillStyle = r.color; ctx.font = font('mono', 24, 400);
       ctx.fillText('▇'.repeat(Math.max(0, bw)), L + 370, y);
-      ctx.font = font('mono', 24, 700); ctx.fillStyle = '#cdd6f4'; ctx.textAlign = 'right'; ctx.fillText(r.value, W - L, y);
+      ctx.font = font('mono', 24, 700); ctx.fillStyle = c('#cdd6f4'); ctx.textAlign = 'right'; ctx.fillText(r.value, W - L, y);
       y += 40;
     });
     ctx.textAlign = 'left';
-    y = Math.max(y + 10, H - 150);
-    ctx.font = font('mono', 18, 400); ctx.fillStyle = '#6c7086';
-    ctx.fillText(ellipsize(ctx, `${k.attr} · ${k.stamp}`, W - 2 * L - 300), L, y);
-    line([['➜ ', '#a6e3a1'], ['open ', '#cdd6f4'], [`https://${k.url}`, '#89b4fa'], ['  █', '#cdd6f4']], 22);
-    wordmark(ctx, W - L, y + 4, 30, { align: 'right' });
+    y = Math.max(y + 10, H - 170);
+    ctx.font = font('mono', 22, 400); ctx.fillStyle = c('#9399b2');
+    ctx.fillText(ellipsize(ctx, `${k.attr} · ${k.stamp}`, W - 2 * L - 300), L, y); y += 38;
+    line([['➜ ', c('#a6e3a1')], ['open ', c('#cdd6f4')], [`https://${k.url}`, c('#89b4fa')], ['  █', c('#cdd6f4')]], 24);
+    wordmark(ctx, W - L, y - 34, 30, { align: 'right' });
   },
 };
 
@@ -270,28 +271,28 @@ const minimal: Design = {
     const { ctx, W, H, d } = k;
     ctx.fillStyle = '#fafafa'; ctx.fillRect(0, 0, W, H);
     const P = 72;
-    caps(ctx, k.kicker, P, 100, font('mono', 18, 700), '#777', 0.2);
+    caps(ctx, k.kicker, P, 100, font('mono', 22, 700), '#666', 0.2);
     ctx.fillStyle = k.accent === '#c6ff3d' ? '#111' : k.accent; ctx.beginPath(); ctx.arc(W - P - 8, 94, 8, 0, Math.PI * 2); ctx.fill();
     const tb = fitBlock(ctx, d.kind === 'quote' ? `“${d.title}”` : d.title, W * 0.55, 260, 72, 'sans', 600, 1.08, 3, 30);
     ctx.fillStyle = '#111'; ctx.textAlign = 'left';
     let y = drawLines(ctx, tb.lines, P, 170 + tb.px * 0.8, tb.lh);
-    ctx.font = font('sans', 22, 400); ctx.fillStyle = '#666';
-    y = drawLines(ctx, wrap(ctx, dek(k), W * 0.5, 3), P, y + 16, 32);
+    ctx.font = font('sans', 24, 400); ctx.fillStyle = '#555';
+    y = drawLines(ctx, wrap(ctx, dek(k), W * 0.5, 3), P, y + 16, 34);
     const rx = W * 0.64, rw = W - rx - P;
     ctx.fillStyle = '#e5e5e5'; ctx.fillRect(rx - 40, 80, 1, H - 200);
     const rows = rowsOf(k, 4);
     rows.forEach((r, i) => {
       const ry = 130 + i * 100;
-      capsFit(ctx, r.label, rw, rx, ry, font('mono', 14, 700), '#888', 0.12);
+      capsFit(ctx, r.label, rw, rx, ry, font('mono', 20, 700), '#666', 0.1);
       headline(k, r.value, rx, ry + 54, rw * 0.5, 48, 'sans', '#111', 300);
       ctx.fillStyle = '#eee'; ctx.fillRect(rx + rw * 0.55, ry + 38, rw * 0.45, 4);
       ctx.fillStyle = r.color; ctx.fillRect(rx + rw * 0.55, ry + 38, (rw * 0.45 * Math.min(r.num, 100)) / 100, 4);
     });
-    if (!rows.length) { ctx.font = font('sans', 22, 400); ctx.fillStyle = '#666'; drawLines(ctx, wrap(ctx, `— ${d.subtitle ?? 'PolTok'}`, rw, 4), rx, 160, 32); }
+    if (!rows.length) { ctx.font = font('sans', 24, 400); ctx.fillStyle = '#555'; drawLines(ctx, wrap(ctx, `— ${d.subtitle ?? 'PolTok'}`, rw, 4), rx, 160, 34); }
     ctx.fillStyle = '#111'; ctx.fillRect(P, H - 96, W - 2 * P, 1);
     wordmark(ctx, P, H - 46, 26, { color: '#111', accent: '#111', fam: 'sans' });
-    ctx.font = font('mono', 15, 400); ctx.fillStyle = '#777'; ctx.textAlign = 'right';
-    ctx.fillText(ellipsize(ctx, `${k.attr} · ${k.stamp} · ${k.url}`, W - 2 * P - 200), W - P, H - 52);
+    ctx.font = font('mono', 19, 400); ctx.fillStyle = '#555'; ctx.textAlign = 'right';
+    ctx.fillText(ellipsize(ctx, `${k.attr} · ${k.stamp} · ${k.url}`, W - 2 * P - 180), W - P, H - 50);
   },
 };
 

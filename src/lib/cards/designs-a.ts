@@ -1,5 +1,5 @@
 import { ALL, X, SQ, PT, type Design, hero, resultList, balanceBlock, tag, headline, glass } from './common';
-import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, text, vignette, wordmark, wrap, ellipsize, fit } from './kit';
+import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, text, vignette, wordmark, wrap, ellipsize, fit, inkOn } from './kit';
 
 /* 1 ─ Broadcast lower third */
 const broadcast: Design = {
@@ -158,12 +158,12 @@ const poster: Design = {
   id: 'poster', name: 'Bold poster', kinds: ALL, size: PT,
   draw(k) {
     const { ctx, W, H, d } = k;
-    const bg = k.accent, fg = ink(bg);
+    const bg = k.accent, fg = inkOn(k, bg);
     ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-    halftone(ctx, 0, 0, W, H * 0.6, rgba(fg === '#ffffff' ? '#000000' : '#ffffff', 0.12), 22, 8, 'y');
+    halftone(ctx, 0, 0, W, H * 0.6, rgba(fg.replace('!', '') === '#ffffff' ? '#000000' : '#ffffff', 0.12), 22, 8, 'y');
     ctx.fillStyle = fg; ctx.fillRect(60, 60, W - 120, 10);
     caps(ctx, k.kicker, 60, 130, font('cond', 40, 700), fg, 0.12);
-    wordmark(ctx, W - 60, 130, 44, { color: fg, accent: fg === '#ffffff' ? '#0b0d14' : '#ffffff', fam: 'cond', align: 'right' });
+    wordmark(ctx, W - 60, 130, 44, { color: fg, accent: fg.replace('!', '') === '#ffffff' ? '#0b0d14' : '#ffffff', fam: 'cond', align: 'right' });
     const words = (d.kind === 'quote' ? d.title : d.title).toUpperCase();
     const tb = fitBlock(ctx, words, W - 120, 640, 260, 'cond', 700, 0.92, 5, 50);
     ctx.fillStyle = fg; ctx.textAlign = 'left';

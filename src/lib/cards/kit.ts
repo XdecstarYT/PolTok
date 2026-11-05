@@ -59,6 +59,8 @@ export interface K {
   url: string;
   /** corner radius hint for designs that use one (style.cornerRadius) */
   radius?: number;
+  /** palette colour remapper active for this render (style wrapper), if any */
+  map?: (c: string) => string;
 }
 
 export const KIND_LABEL: Record<CardKind, string> = {
@@ -196,6 +198,33 @@ export function mix(a: string, b: string, t: number) {
 export function lum(c: string) { const [r, g, b] = hexToRgb(c); return (0.299 * r + 0.587 * g + 0.114 * b) / 255; }
 /** readable ink colour on top of `bg` */
 export const ink = (bg: string, dark = '#0b0d14', light = '#ffffff') => (lum(bg) > 0.6 ? dark : light);
+
+/** WCAG 2.x relative luminance; accepts #hex or rgb()/rgba(). */
+export function wcagLum(c: string): number {
+  let rgb: number[];
+  const m = /^rgba?\(([^)]+)\)$/i.exec(c.trim());
+  if (m) rgb = m[1].split(/[\s,/]+/).filter(Boolean).slice(0, 3).map(Number);
+  else rgb = hexToRgb(c.length === 4 && c[0] === '#' ? '#' + [...c.slice(1)].map((x) => x + x).join('') : c);
+  const f = (v: number) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+  return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]);
+}
+export function contrast(a: string, b: string) {
+  const x = wcagLum(a), y = wcagLum(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+/**
+ * Text colour with ≥4.5:1 contrast against every given background, judged on the colours that
+ * actually reach the canvas (after the style palette remap). The result bypasses the remap.
+ */
+export function inkOn(k: K, bgs: string | string[], prefer?: string): string {
+  const map = k.map ?? ((c: string) => c);
+  const list = (Array.isArray(bgs) ? bgs : [bgs]).map(map);
+  const score = (c: string) => Math.min(...list.map((b) => contrast(c, b)));
+  const cands = [...(prefer ? [map(prefer)] : []), '#ffffff', '#0b0d14', '#000000'];
+  let best = cands[0], bs = -1;
+  for (const c of cands) { const s = score(c); if (s >= 4.5) { best = c; break; } if (s > bs) { bs = s; best = c; } }
+  return k.map ? '!' + best : best;
+}
 
 /* ───────── branding ───────── */
 

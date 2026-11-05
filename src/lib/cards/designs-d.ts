@@ -1,6 +1,6 @@
 /** Update 3 designs (31–40). Laid out relative to W/H so they reflow cleanly to any size preset. */
 import { ALL, X, SQ, PT, type Design, hero, headline } from './common';
-import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, ink, mix, nameOf, portrait, rgba, rr, rowsOf, text, wordmark, wrap, ellipsize, fit, type K } from './kit';
+import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, ink, mix, nameOf, portrait, rgba, rr, rowsOf, text, wordmark, wrap, ellipsize, fit, type K, inkOn } from './kit';
 
 const num = (s?: string) => { const v = parseFloat(String(s ?? '').replace(/[^0-9.+-]/g, '')); return Number.isFinite(v) ? v : NaN; };
 const sideRows = (k: K) => {
@@ -59,7 +59,7 @@ const countdown: Design = {
     const cta = ellipsize(ctx, ctaOr(k), W - P * 2 - 60 * u);
     const cw = ctx.measureText(cta).width + 70 * u;
     rr(ctx, (W - cw) / 2, by - 46 * u, cw, 70 * u, 35 * u); ctx.fillStyle = k.accent; ctx.fill();
-    text(ctx, cta, W / 2, by - 1 * u, font('sans', 28 * u, 800), ink(k.accent), 'center');
+    text(ctx, cta, W / 2, by - 1 * u, font('sans', 28 * u, 800), inkOn(k, k.accent), 'center');
     footerLine(k, P, H - 40 * u, W - P * 2, 18 * u, 'rgba(255,255,255,0.45)', 'rgba(255,255,255,0.7)');
   },
 };
@@ -73,10 +73,14 @@ const h2h: Design = {
     const [a, b] = sideRows(k);
     ctx.fillStyle = '#0b0d14'; ctx.fillRect(0, 0, W, H);
     const half = W / 2;
-    const ga = ctx.createLinearGradient(0, 0, half, 0); ga.addColorStop(0, mix(a.color, '#0b0d14', 0.35)); ga.addColorStop(1, mix(a.color, '#0b0d14', 0.8));
+    const a0 = mix(a.color, '#0b0d14', 0.35), a1 = mix(a.color, '#0b0d14', 0.8);
+    const b0 = mix(b.color, '#0b0d14', 0.35), b1 = mix(b.color, '#0b0d14', 0.8);
+    const ga = ctx.createLinearGradient(0, 0, half, 0); ga.addColorStop(0, a0); ga.addColorStop(1, a1);
     ctx.fillStyle = ga; ctx.fillRect(0, 0, half, H);
-    const gb = ctx.createLinearGradient(W, 0, half, 0); gb.addColorStop(0, mix(b.color, '#0b0d14', 0.35)); gb.addColorStop(1, mix(b.color, '#0b0d14', 0.8));
+    const gb = ctx.createLinearGradient(W, 0, half, 0); gb.addColorStop(0, b0); gb.addColorStop(1, b1);
     ctx.fillStyle = gb; ctx.fillRect(half, 0, half, H);
+    // text colours judged against the real (palette-remapped) half backgrounds
+    const inkA = inkOn(k, [a0, a1], '#fff'), inkB = inkOn(k, [b0, b1], '#fff'), inkAB = inkOn(k, [a0, a1, b0, b1], '#fff');
     const ph = Math.min(H * 0.46, W * 0.2);
     const py = H * 0.17;
     const isPeople = d.kind !== 'balance';
@@ -86,15 +90,15 @@ const h2h: Design = {
     }
     const lx = isPeople ? P + ph + 28 * u : P, rx = isPeople ? W - P - ph - 28 * u : W - P;
     const colW = half - (lx) - 40 * u;
-    headline(k, a.label, lx, py + ph * 0.32, colW, 40 * u, 'display', '#fff', 700);
-    headline(k, b.label, rx, py + ph * 0.32, colW, 40 * u, 'display', '#fff', 700, 'right');
-    headline(k, a.value, lx, py + ph * 0.32 + 120 * u, colW, 116 * u, 'display', '#fff', 700);
-    headline(k, b.value, rx, py + ph * 0.32 + 120 * u, colW, 116 * u, 'display', '#fff', 700, 'right');
+    headline(k, a.label, lx, py + ph * 0.32, colW, 40 * u, 'display', inkA, 700);
+    headline(k, b.label, rx, py + ph * 0.32, colW, 40 * u, 'display', inkB, 700, 'right');
+    headline(k, a.value, lx, py + ph * 0.32 + 120 * u, colW, 116 * u, 'display', inkA, 700);
+    headline(k, b.value, rx, py + ph * 0.32 + 120 * u, colW, 116 * u, 'display', inkB, 700, 'right');
     // VS medallion
     ctx.save(); ctx.translate(half, py + ph * 0.5);
     ctx.fillStyle = '#0b0d14'; ctx.beginPath(); ctx.arc(0, 0, 44 * u, 0, Math.PI * 2); ctx.fill();
     ctx.lineWidth = 4 * u; ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.stroke();
-    text(ctx, 'VS', 0, 2 * u, font('cond', 40 * u, 700), '#fff', 'center', 'middle'); ctx.restore();
+    text(ctx, 'VS', 0, 2 * u, font('cond', 40 * u, 700), inkOn(k, '#0b0d14', '#fff'), 'center', 'middle'); ctx.restore();
     // share bar
     const by = H * 0.7, bh = 26 * u, tot = a.num + b.num;
     rr(ctx, P, by, W - P * 2, bh, bh / 2); ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fill();
@@ -107,11 +111,11 @@ const h2h: Design = {
       ctx.restore();
     }
     ctx.fillStyle = '#fff'; ctx.fillRect(half - 1.5 * u, by - 10 * u, 3 * u, bh + 20 * u);
-    headline(k, d.title, P, H - 90 * u, W * 0.6, 40 * u, 'display', '#fff', 700);
-    ctx.font = font('sans', 20 * u, 500); ctx.fillStyle = 'rgba(255,255,255,0.72)'; ctx.textAlign = 'left';
+    headline(k, d.title, P, H - 90 * u, W * 0.6, 40 * u, 'display', inkAB, 700);
+    ctx.font = font('sans', 24 * u, 500); ctx.fillStyle = inkAB; ctx.textAlign = 'left';
     ctx.fillText(ellipsize(ctx, dek(k), W * 0.6), P, H - 56 * u);
-    wordmark(ctx, W - P, H - 76 * u, 30 * u, { align: 'right' });
-    ctx.font = font('sans', 15 * u, 500); ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.textAlign = 'right';
+    wordmark(ctx, W - P, H - 76 * u, 30 * u, { align: 'right', color: inkB });
+    ctx.font = font('sans', 18 * u, 500); ctx.fillStyle = inkB; ctx.textAlign = 'right';
     ctx.fillText(ellipsize(ctx, `${k.attr} · ${k.url}`, W * 0.34), W - P, H - 44 * u);
   },
 };
@@ -417,7 +421,7 @@ const carousel: Design = {
     ctx.font = font('sans', 24 * u, 800);
     const cw = Math.min(W * 0.6, ctx.measureText(cta).width + 48 * u);
     rr(ctx, W - P - cw, dy - 30 * u, cw, 60 * u, 30 * u); ctx.fillStyle = last ? k.accent : '#111'; ctx.fill();
-    text(ctx, ellipsize(ctx, cta, cw - 40 * u), W - P - cw / 2, dy + 9 * u, font('sans', 24 * u, 800), last ? ink(k.accent) : '#fff', 'center');
+    text(ctx, ellipsize(ctx, cta, cw - 40 * u), W - P - cw / 2, dy + 9 * u, font('sans', 24 * u, 800), last ? inkOn(k, k.accent) : '#fff', 'center');
     ctx.font = font('sans', 16 * u, 500); ctx.fillStyle = '#888'; ctx.textAlign = 'left';
     ctx.fillText(ellipsize(ctx, `${k.attr} · ${k.stamp}`, W - P * 2), P, H - 46 * u);
   },

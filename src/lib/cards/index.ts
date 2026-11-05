@@ -71,7 +71,7 @@ function drawDesign(design: Design, data: CardData, st: CardStyle | undefined, W
     stamp: `${fmtDay(now, 'short')} ${fmtTime(now)} ${tzAbbr(now)}`,
     attr: data.footer ?? US_ATTR,
     url: data.url ?? SITE,
-    radius: st?.cornerRadius,
+    radius: st?.cornerRadius, map: map ?? undefined,
   };
   RT.display = st?.fontDisplay || undefined;
   RT.body = st?.fontBody || undefined;

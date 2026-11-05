@@ -1,5 +1,5 @@
 import { ALL, X, SQ, PT, ST, type Design, hero, resultList, balanceBlock, tag, headline, glass } from './common';
-import { blob, caps, capsFit, dek, drawLines, drawMap, drawAuHex, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, stackBar, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf } from './kit';
+import { blob, caps, capsFit, dek, drawLines, drawMap, drawAuHex, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, stackBar, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf, inkOn } from './kit';
 
 /* 21 ─ Swing dial */
 const dial: Design = {
@@ -186,32 +186,33 @@ const blueprint: Design = {
   id: 'blueprint', name: 'Blueprint', kinds: ALL, size: X,
   draw(k) {
     const { ctx, W, H, d } = k;
+    const c = (col: string) => inkOn(k, '#0d3b78', col);
     ctx.fillStyle = '#0d3b78'; ctx.fillRect(0, 0, W, H);
     for (let x = 0; x < W; x += 25) { ctx.fillStyle = x % 125 ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.14)'; ctx.fillRect(x, 0, 1, H); }
     for (let y = 0; y < H; y += 25) { ctx.fillStyle = y % 125 ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.14)'; ctx.fillRect(0, y, W, 1); }
     ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.strokeRect(30, 30, W - 60, H - 60);
     // title block
-    const tbx = W - 430, tby = H - 170;
-    ctx.lineWidth = 2; ctx.strokeRect(tbx, tby, 400, 140); ctx.beginPath(); ctx.moveTo(tbx, tby + 50); ctx.lineTo(tbx + 400, tby + 50); ctx.moveTo(tbx + 200, tby + 50); ctx.lineTo(tbx + 200, tby + 140); ctx.stroke();
+    const tbx = W - 490, tby = H - 190;
+    ctx.lineWidth = 2; ctx.strokeRect(tbx, tby, 460, 160); ctx.beginPath(); ctx.moveTo(tbx, tby + 50); ctx.lineTo(tbx + 460, tby + 50); ctx.moveTo(tbx + 220, tby + 50); ctx.lineTo(tbx + 220, tby + 160); ctx.stroke();
     wordmark(ctx, tbx + 16, tby + 38, 28, { accent: '#ffd166', fam: 'mono' });
-    ctx.font = font('mono', 14, 400); ctx.fillStyle = '#cfe3ff'; ctx.textAlign = 'left';
-    ctx.fillText('DWG: ' + d.kind.toUpperCase(), tbx + 14, tby + 78); ctx.fillText('SCALE 1:1', tbx + 14, tby + 104); ctx.fillText(ellipsize(ctx, k.url, 170), tbx + 14, tby + 128);
-    ctx.fillText(ellipsize(ctx, k.stamp, 180), tbx + 214, tby + 78); drawLines(ctx, wrap(ctx, k.attr, 175, 2), tbx + 214, tby + 104, 22);
+    ctx.font = font('mono', 18, 400); ctx.fillStyle = c('#cfe3ff'); ctx.textAlign = 'left';
+    ctx.fillText(ellipsize(ctx, 'DWG: ' + d.kind.toUpperCase(), 196), tbx + 14, tby + 82); ctx.fillText('SCALE 1:1', tbx + 14, tby + 114); ctx.fillText(ellipsize(ctx, k.url, 196), tbx + 14, tby + 146);
+    ctx.fillText(ellipsize(ctx, k.stamp, 222), tbx + 232, tby + 82); drawLines(ctx, wrap(ctx, k.attr, 216, 2), tbx + 232, tby + 114, 26);
     // drawing
     if (d.mapState && d.kind !== 'balance') {
       ctx.setLineDash([10, 6]); ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.strokeRect(W - 450, 60, 400, 380); ctx.setLineDash([]);
       drawMap(ctx, d.mapState, W - 430, 80, 360, 340, { fill: 'rgba(255,255,255,0.08)', stroke: '#fff', lineWidth: 3, base: 'rgba(255,255,255,0.12)' });
-      caps(ctx, `FIG.1 — ${d.mapState.replace('AU:', '')}`, W - 450, 466, font('mono', 16, 700), '#cfe3ff', 0.1);
+      caps(ctx, `FIG.1 — ${d.mapState.replace('AU:', '')}`, W - 450, 466, font('mono', 20, 700), c('#cfe3ff'), 0.1);
     }
-    caps(ctx, `// ${k.kicker}`, 70, 100, font('mono', 20, 700), '#ffd166', 0.1);
+    caps(ctx, `// ${k.kicker}`, 70, 100, font('mono', 24, 700), c('#ffd166'), 0.1);
     const tw = d.mapState && d.kind !== 'balance' ? W - 600 : W - 140;
     const tb = fitBlock(ctx, d.kind === 'quote' ? `“${d.title}”` : d.title, tw, 170, 72, 'mono', 700, 1.05, 3, 26);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
     let y = drawLines(ctx, tb.lines, 70, 120 + tb.px, tb.lh);
-    ctx.font = font('mono', 18, 400); ctx.fillStyle = '#cfe3ff';
-    y = drawLines(ctx, wrap(ctx, dek(k), tw, 2), 70, y + 6, 26) + 20;
+    ctx.font = font('mono', 22, 400); ctx.fillStyle = c('#cfe3ff');
+    y = drawLines(ctx, wrap(ctx, dek(k), tw, 2), 70, y + 8, 30) + 20;
     if (d.kind === 'balance') balanceBlock(k, 70, y, W - 140, tby - y - 20, { fam: 'mono', color: '#ffd166', muted: '#cfe3ff', track: 'rgba(255,255,255,0.1)' });
-    else resultList(k, 70, y, tw, tby - y - 30, { fam: 'mono', valueFam: 'mono', upper: true, track: 'rgba(255,255,255,0.12)', radius: 0, valueColor: '#fff' });
+    else resultList(k, 70, y, tw, (d.mapState && d.kind !== 'balance' ? H - 80 : tby - 30) - y, { fam: 'mono', valueFam: 'mono', upper: true, track: 'rgba(255,255,255,0.12)', radius: 0, valueColor: '#fff' });
   },
 };
 
@@ -253,7 +254,7 @@ const storyPoster: Design = {
     ctx.fillStyle = '#0b0d14'; ctx.fillRect(0, 0, W, H);
     const acc = k.accent;
     ctx.fillStyle = acc; ctx.fillRect(0, 0, W, 760);
-    const fg = ink(acc);
+    const fg = inkOn(k, acc);
     const big = d.kind === 'quote' ? '“' : (hero(k).value || 'LIVE');
     fit(ctx, big, W - 120, 520, 'cond', 700, 80);
     ctx.fillStyle = fg; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(big, 50, 700);

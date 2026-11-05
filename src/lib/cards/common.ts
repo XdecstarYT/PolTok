@@ -1,6 +1,6 @@
 /** Reusable content blocks shared by several designs. */
 import type { CardDesign, CardKind } from './types';
-import { RT, type Fam, type K, caps, ellipsize, fit, font, rowsOf, rr, text, rgba, stackBar } from './kit';
+import { RT, type Fam, type K, caps, ellipsize, inkOn, fit, font, rowsOf, rr, text, rgba, stackBar } from './kit';
 
 export interface Design extends CardDesign {
   draw: (k: K) => void;
@@ -118,7 +118,9 @@ export function tag(k: K, t: string, x: number, y: number, px: number, bg: strin
   rr(ctx, x, y, w, px * 1.9, radius === 999 ? px : radius);
   ctx.fillStyle = bg;
   ctx.fill();
-  caps(ctx, t, x + px * 0.8, y + px * 1.32, font(fam, px, 800), fg, 0.08);
+  // translucent pills sit on the design background; solid ones get auto-contrast ink
+  const solid = !/rgba\(/.test(bg);
+  caps(ctx, t, x + px * 0.8, y + px * 1.32, font(fam, px, 800), solid ? inkOn(k, bg, fg) : fg, 0.08);
   return w;
 }
 
