@@ -78,6 +78,7 @@ export function Studio() {
   const data = useMemo<CardData>(() => {
     const d: CardData = { ...liveData };
     for (const [k2, v] of Object.entries(edits)) if (v !== undefined && v !== '') (d as unknown as Record<string, unknown>)[k2] = v;
+    if (edits.stats && d.bars?.length) d.bars = edits.stats.map((r) => ({ label: r.label, value: parseFloat(r.value) || 0, color: r.color ?? '#8b93a7' }));
     return d;
   }, [liveData, edits]);
   const designs = useMemo(() => CARD_DESIGNS.filter((d) => d.kinds.includes(kind as CardKind)), [kind]);
