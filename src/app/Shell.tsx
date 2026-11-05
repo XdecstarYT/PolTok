@@ -111,12 +111,16 @@ export const NAV_MORE = [
   { to: '/embed', label: 'Embed', sub: 'Live widgets for your site' },
   { to: '/candidates', label: 'Candidates', sub: 'Every nominee, headshots & results' },
   { to: '/flips', label: 'Flips', sub: 'Seats that changed hands' },
+  { to: '/money', label: 'Money', sub: 'Campaign finance (FEC)' },
   { to: '/measures', label: 'Ballot measures', sub: 'Live statewide measures' },
   { to: '/governors', label: 'Governors', sub: '36 races + state dashboards' },
   { to: '/replay', label: 'Replay', sub: 'Relive election night' },
   { to: '/compare', label: 'Compare', sub: 'Races side by side, polling miss' },
   { to: '/watch', label: 'Watchlist', sub: 'Your starred races' },
   { to: '/parliament', label: 'Parliament', sub: 'Live bills — US Congress & Australia' },
+  { to: '/quiz', label: 'Quiz', sub: 'Issues match & daily trivia' },
+  { to: '/world', label: 'World', sub: 'Global elections calendar & map' },
+  { to: '/members', label: 'Members', sub: 'Every US & Australian lawmaker' },
   { to: '/calendar', label: 'Calendar', sub: 'Elections & key dates — US & AU' },
 ];
 

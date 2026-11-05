@@ -4,7 +4,7 @@
  */
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { fmtDay } from '../../components';
+import { FEDERAL } from '../../data/au';
 import { AU_MEMBERS, US_PARTY, initials, usDir, useJson, type DirMember, type UsListResp } from './data';
 import './members.css';
 
@@ -94,7 +94,7 @@ export default function MembersPage() {
       {country === 'US' && us.error && <p className="mb-muted">Could not load Congress data ({us.error}).</p>}
       {country === 'US' && us.data?.notes.map((n) => <p key={n} className="mb-muted">{n}</p>)}
       {country === 'US' && <Scatter list={list} />}
-      {country === 'AU' && <p className="mb-muted mb-small">Australian members from PolTok’s compiled research data (House as of {/* static */}2026, Senate composition as listed on the Senate page). No official photos are shown because their licence isn’t verified — initials only.</p>}
+      {country === 'AU' && <p className="mb-muted mb-small">Australian members from PolTok’s compiled research data (House as of {FEDERAL.houseAsOf}, Senate as of {FEDERAL.senateAsOf}; margins are 2025 two-candidate-preferred). No official photos are shown because their licence isn’t verified — initials only.</p>}
 
       <div className="mb-cards">
         {list.map((m) => (
@@ -112,7 +112,7 @@ export default function MembersPage() {
 
       <footer className="mb-src">
         {country === 'US'
-          ? <>Sources: {us.data?.sources.map((s, i) => <span key={s.url}>{i ? ' · ' : ''}<a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></span>)}{us.data?.voteview && <> · Voteview roll calls through {fmtDay(Date.parse(us.data.voteview.latest.House))}</>}{us.data && <> · fetched {fmtDay(us.data.at)}</>}</>
+          ? <>Sources: {us.data?.sources.map((s, i) => <span key={s.url}>{i ? ' · ' : ''}<a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></span>)}{us.data?.voteview && <> · Voteview roll calls through {us.data.voteview.latest.House}</>}{us.data && <> · fetched {new Date(us.data.at).toISOString().slice(0, 10)}</>}</>
           : <>Source: PolTok research compilation (src/data/au.ts, compiled 2026-11-04) from AEC/APH public records.</>}
       </footer>
     </main>

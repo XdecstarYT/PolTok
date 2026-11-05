@@ -67,9 +67,11 @@ export default function MenuPage() {
         { title: 'Governors', desc: '36 races + state dashboards', to: '/governors', icon: ic.gov },
         { title: 'Candidates', desc: 'Every nominee & result', to: '/candidates', icon: ic.people },
         { title: 'Flips', desc: 'Seats that changed hands', to: '/flips', icon: ic.flip, tone: 'var(--tossup)' },
+        { title: 'Money', desc: 'Campaign finance from the FEC', to: '/money', icon: ic.chart },
         { title: 'Ballot measures', desc: 'Statewide measures, live', to: '/measures', icon: ic.ballot },
         { title: 'Replay', desc: 'Relive election night', to: '/replay', icon: ic.replay },
         { title: 'Analysis', desc: 'Swing, turnout & trends', to: '/analysis', icon: ic.chart },
+        { title: 'World elections', desc: 'Global calendar, map & results', to: '/world', icon: ic.au, tone: 'var(--signal)' },
         { title: 'Compare', desc: 'Races side by side', to: '/compare', icon: ic.compare },
         { title: 'Forecast', desc: 'Model odds by chamber', to: '/forecast', icon: ic.forecast },
         { title: 'Polls', desc: 'Averages & latest polls', to: '/polls', icon: ic.polls },
@@ -78,7 +80,7 @@ export default function MenuPage() {
     },
     {
       id: 'congress', title: 'US Congress', kicker: 'Legislation', tone: 'var(--dem)',
-      tiles: [{ title: 'Bills & votes', desc: 'Live bills and roll calls', to: '/parliament', icon: ic.bill }],
+      tiles: [{ title: 'Bills & votes', desc: 'Live bills and roll calls', to: '/parliament', icon: ic.bill }, { title: 'Members', desc: 'Every lawmaker, votes & ideology', to: '/members', icon: ic.bill }],
     },
     {
       id: 'au', title: 'Australia', kicker: 'Federal & state', tone: 'var(--ok)',
@@ -98,6 +100,7 @@ export default function MenuPage() {
         { title: 'News', desc: 'Breaking political headlines', to: '/news', icon: ic.news, badge: news.length ? <Count n={news.length} label="stories" /> : undefined },
         { title: 'PolTok feed', desc: 'Swipe the night, short-form', to: '/feed', icon: ic.feed },
         { title: 'Ask PolTok AI', desc: 'Ask anything about the results', to: '/ask', icon: ic.ai, tone: 'var(--signal)' },
+        { title: 'Quiz', desc: 'Issues match, daily trivia & map game', to: '/quiz', icon: ic.ballot },
       ],
     },
     {

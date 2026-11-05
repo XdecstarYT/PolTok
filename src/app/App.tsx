@@ -26,6 +26,7 @@ const WatchPage = lazy(() => import('../features/watch/WatchPage'));
 const ComparePage = lazy(() => import('../features/watch/ComparePage'));
 import { WatchAlerts } from '../features/watch/WatchAlerts';
 const FlipsPage = lazy(() => import('../features/flips/FlipsPage'));
+const MoneyPage = lazy(() => import('../features/money/MoneyPage'));
 const MeasuresPage = lazy(() => import('../features/measures/MeasuresPage'));
 const HousePage = lazy(() => import('../features/house/HousePage'));
 const GovernorsPage = lazy(() => import('../features/governors/GovernorsPage'));
@@ -35,6 +36,7 @@ const CandidatesIndex = lazy(() => import('../features/candidates/CandidatesInde
 const CandidatePage = lazy(() => import('../features/candidates/CandidatePage'));
 const ParliamentPage = lazy(() => import('../features/parliament/ParliamentPage'));
 const ParliamentBillPage = lazy(() => import('../features/parliament/BillPage'));
+const MembersPage = lazy(() => import('../features/members/MembersPage')); const MemberPage = lazy(() => import('../features/members/MemberPage'));
 const OwnerPage = lazy(() => import('../features/owner/OwnerPage'));
 const Pres2028Page = lazy(() => import('../features/2028/Pres2028Page'));
 const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
@@ -42,6 +44,8 @@ const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
 
 const MenuPage = lazy(() => import('../features/menu/MenuPage'));
 const AskPage = lazy(() => import('../features/ask/AskPage'));
+const QuizPage = lazy(() => import('../features/quiz/QuizPage'));
+const WorldPage = lazy(() => import('../features/world/WorldPage'));
 const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'));
 
 export function App() {
@@ -73,6 +77,7 @@ export function App() {
           <Route path="/watch" element={<WatchPage />} />
           <Route path="/compare" element={<ComparePage />} />
           <Route path="/flips" element={<FlipsPage />} />
+          <Route path="/money" element={<MoneyPage />} />
           <Route path="/measures" element={<MeasuresPage />} />
           <Route path="/house" element={<HousePage />} />
           <Route path="/governors" element={<GovernorsPage />} />
@@ -83,10 +88,13 @@ export function App() {
           <Route path="/candidates" element={<CandidatesIndex />} />
           <Route path="/candidate/:id" element={<CandidatePage />} />
           <Route path="/parliament" element={<ParliamentPage />} />
+          <Route path="/world" element={<WorldPage />} />
           <Route path="/parliament/bill/:id" element={<ParliamentBillPage />} />
+          <Route path="/members" element={<MembersPage />} /><Route path="/member/:id" element={<MemberPage />} />
           <Route path="/embed" element={<EmbedBuilder />} />
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/ask" element={<AskPage />} />
+          <Route path="/quiz" element={<QuizPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/owner" element={<OwnerPage />} />
           <Route path="/2028" element={<Pres2028Page />} />
