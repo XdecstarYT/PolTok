@@ -84,7 +84,7 @@ export function VoteCard({ v }: { v: Vote }) {
         {v.billId ? <Link to={`/parliament/bill/${v.billId}`}>{v.measure}</Link> : v.measure && <b>{v.measure}</b>} {v.description && <span>— {v.description}</span>}
       </p>
       <p className="pa-muted pa-small">{v.question}</p>
-      <div className="pa-tally" aria-label={`Yea ${v.totals.yea}, Nay ${v.totals.nay}`}>
+      <div className="pa-tally" role="img" aria-label={`Yea ${v.totals.yea}, Nay ${v.totals.nay}`}>
         <span className="y" style={{ width: `${(v.totals.yea / total) * 100}%` }} />
         <span className="n" style={{ width: `${(v.totals.nay / total) * 100}%` }} />
       </div>
