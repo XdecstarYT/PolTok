@@ -224,7 +224,7 @@ export function PollChart({ series, range, end, height = 320 }: Props) {
               {(() => {
                 const m = hover.v[keys[0].key] - hover.v[keys[1].key];
                 const lead = m >= 0 ? keys[0] : keys[1];
-                return <span style={{ color: lead.color }}>{lead.label} +{Math.abs(m).toFixed(1)}</span>;
+                return <span className="pl-ink" style={{ ["--c" as string]: lead.color }}>{lead.label} +{Math.abs(m).toFixed(1)}</span>;
               })()}
             </div>
           )}

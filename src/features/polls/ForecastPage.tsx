@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import type { Market } from '../../types';
 import { RatingBadge, SimBadge } from '../../components';
 import { useLive } from '../../lib/live';
-import { marginColor, PARTY_HEX } from '../../lib/format';
+import { marginColor, PARTY_COLOR, PARTY_HEX } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import { useDebounced } from './hooks';
 import { buildHouseModel, buildSenateModel } from './model';
@@ -97,7 +97,7 @@ function SenateBlock({ model, snap }: { model: SimModel; snap: SimSnapshot | nul
           <ControlBar pD={sum?.pD ?? 0.5} />
           <div className="fc-stats">
             <Stat label="Most likely outcome" sub={sum ? `${(sum.modeP * 100).toFixed(1)}% of sims` : undefined}>
-              {sum ? <><span style={{ color: PARTY_HEX.D }}>{sum.mode}</span>–<span style={{ color: PARTY_HEX.R }}>{R - sum.mode}</span></> : '—'}
+              {sum ? <><span style={{ color: PARTY_COLOR.D }}>{sum.mode}</span>–<span style={{ color: PARTY_COLOR.R }}>{R - sum.mode}</span></> : '—'}
             </Stat>
             <Stat label="80% range (D seats)" sub={sum ? `median ${sum.p50}` : undefined}>
               {sum ? `${sum.p10}–${sum.p90}` : '—'}
@@ -144,8 +144,8 @@ function SenateBlock({ model, snap }: { model: SimModel; snap: SimSnapshot | nul
                   {list.map(({ s, p }) => (
                     <div key={s.id}>
                       <b>{s.title}</b>
-                      <div className="fc-maptip-row"><span style={{ color: PARTY_HEX.D }}>{s.dName ?? 'D'} ({s.dSide})</span><span className="mono">{fmtP(p)}</span></div>
-                      <div className="fc-maptip-row"><span style={{ color: PARTY_HEX.R }}>{s.rName ?? 'R'}</span><span className="mono">{fmtP(1 - p)}</span></div>
+                      <div className="fc-maptip-row"><span style={{ color: PARTY_COLOR.D }}>{s.dName ?? 'D'} ({s.dSide})</span><span className="mono">{fmtP(p)}</span></div>
+                      <div className="fc-maptip-row"><span style={{ color: PARTY_COLOR.R }}>{s.rName ?? 'R'}</span><span className="mono">{fmtP(1 - p)}</span></div>
                     </div>
                   ))}
                 </div>
@@ -172,9 +172,9 @@ function SenateBlock({ model, snap }: { model: SimModel; snap: SimSnapshot | nul
                   <span className="r" style={{ width: `${(1 - p) * 100}%` }} />
                 </div>
                 <div className="fc-race-sub mono">
-                  <span style={{ color: PARTY_HEX.D }}>{s.dName?.split(' ').at(-1) ?? 'D'} {fmtP(p)}</span>
+                  <span style={{ color: PARTY_COLOR.D }}>{s.dName?.split(' ').at(-1) ?? 'D'} {fmtP(p)}</span>
                   <span className="muted">avg {m >= 0 ? 'D' : 'R'}+{Math.abs(m).toFixed(1)}{s.pollMargin != null ? ` · polls ${s.pollMargin >= 0 ? 'D' : 'R'}+${Math.abs(s.pollMargin).toFixed(1)}` : ''}</span>
-                  <span style={{ color: PARTY_HEX.R }}>{fmtP(1 - p)} {s.rName?.split(' ').at(-1) ?? 'R'}</span>
+                  <span style={{ color: PARTY_COLOR.R }}>{fmtP(1 - p)} {s.rName?.split(' ').at(-1) ?? 'R'}</span>
                 </div>
               </div>
             ))}
@@ -203,7 +203,7 @@ function HouseBlock({ model, snap }: { model: ReturnType<typeof buildHouseModel>
           <ControlBar pD={sum?.pD ?? 0.5} />
           <div className="fc-stats">
             <Stat label="Most likely outcome" sub={sum ? `${(sum.modeP * 100).toFixed(1)}% of sims` : undefined}>
-              {sum ? <><span style={{ color: PARTY_HEX.D }}>{sum.mode}</span>–<span style={{ color: PARTY_HEX.R }}>{model.total - sum.mode}</span></> : '—'}
+              {sum ? <><span style={{ color: PARTY_COLOR.D }}>{sum.mode}</span>–<span style={{ color: PARTY_COLOR.R }}>{model.total - sum.mode}</span></> : '—'}
             </Stat>
             <Stat label="80% range (D seats)" sub={sum ? `mean ${sum.mean.toFixed(1)}` : undefined}>{sum ? `${sum.p10}–${sum.p90}` : '—'}</Stat>
           </div>
@@ -240,8 +240,8 @@ function BuildSenate({ model, shift, corr }: { model: SimModel; shift: number; c
   const pD = snap && snap.n ? snap.dControl / snap.n : null;
 
   let verdict: { text: string; color: string };
-  if (d >= model.dNeeds) verdict = { text: `Democrats win control with ${d} seats`, color: PARTY_HEX.D };
-  else if (r >= model.rNeeds) verdict = { text: `Republicans keep control with ${r} seats${r === 50 ? ' (Vance breaks the tie)' : ''}`, color: PARTY_HEX.R };
+  if (d >= model.dNeeds) verdict = { text: `Democrats win control with ${d} seats`, color: PARTY_COLOR.D };
+  else if (r >= model.rNeeds) verdict = { text: `Republicans keep control with ${r} seats${r === 50 ? ' (Vance breaks the tie)' : ''}`, color: PARTY_COLOR.R };
   else verdict = { text: `Democrats need ${model.dNeeds - d} of the ${open} unassigned seats; Republicans need ${model.rNeeds - r}`, color: 'var(--text)' };
 
   const cycle = (id: string) => setPicks((p) => {
@@ -269,19 +269,19 @@ function BuildSenate({ model, shift, corr }: { model: SimModel; shift: number; c
       </div>
       <div className="card fc-panel">
         <div className="fc-build-tally">
-          <span className="mono" style={{ color: PARTY_HEX.D }}>{d} D</span>
+          <span className="mono" style={{ color: PARTY_COLOR.D }}>{d} D</span>
           <div className="fc-seatbar" role="img" aria-label={`${d} Democratic, ${r} Republican, ${open} unassigned`}>
             <span className="d" style={{ width: `${d}%` }} />
             <span className="o" style={{ width: `${open}%` }} />
             <span className="r" style={{ width: `${r}%` }} />
             <span className="fc-seatbar-mark" style={{ left: `${(model.dNeeds - 0.5) / model.total * 100}%` }}><b className="mono">51</b></span>
           </div>
-          <span className="mono" style={{ color: PARTY_HEX.R }}>{r} R</span>
+          <span className="mono" style={{ color: PARTY_COLOR.R }}>{r} R</span>
         </div>
         <div className="fc-verdict" style={{ color: verdict.color }}>{verdict.text}</div>
         {open > 0 && pD != null && (
           <div className="fc-verdict-sub">
-            Given your picks, simulated control odds: <b className="mono" style={{ color: PARTY_HEX.D }}>D {fmtP(pD)}</b> · <b className="mono" style={{ color: PARTY_HEX.R }}>R {fmtP(1 - pD)}</b>
+            Given your picks, simulated control odds: <b className="mono" style={{ color: PARTY_COLOR.D }}>D {fmtP(pD)}</b> · <b className="mono" style={{ color: PARTY_COLOR.R }}>R {fmtP(1 - pD)}</b>
           </div>
         )}
         <div className="fc-build-grid">
@@ -299,8 +299,8 @@ function BuildSenate({ model, shift, corr }: { model: SimModel; shift: number; c
                   <span className="mono fc-bcard-st">{seatLabel(s)}</span>
                   <span className="fc-bcard-pick mono">{pick ?? '·'}</span>
                 </div>
-                <div className="fc-bcard-c"><span style={{ color: PARTY_HEX.D }}>{s.dName ?? 'TBD'}</span></div>
-                <div className="fc-bcard-c"><span style={{ color: PARTY_HEX.R }}>{s.rName ?? 'TBD'}</span></div>
+                <div className="fc-bcard-c"><span style={{ color: PARTY_COLOR.D }}>{s.dName ?? 'TBD'}</span></div>
+                <div className="fc-bcard-c"><span style={{ color: PARTY_COLOR.R }}>{s.rName ?? 'TBD'}</span></div>
                 <RatingBadge rating={s.rating} />
               </button>
             );
@@ -349,7 +349,7 @@ function MarketsPanel({ senateP, houseP, raceP }: { senateP: number | null; hous
           return (
             <div key={r.source + r.chamber} className="fc-ref-item">
               <span className="pl-stat-label">{r.source} · {r.chamber}</span>
-              <span className="mono" style={{ color: PARTY_HEX.D }}>D {Math.round(r.dem * 100)}%</span>
+              <span className="mono" style={{ color: PARTY_COLOR.D }}>D {Math.round(r.dem * 100)}%</span>
               {mp != null && <span className="mono muted">model {fmtP(mp)}</span>}
             </div>
           );
@@ -370,7 +370,7 @@ function MarketsPanel({ senateP, houseP, raceP }: { senateP: number | null; hous
                   {m.outcomes.slice(0, 2).map((o, i) => (
                     <div key={i} className="fc-mkt-out">
                       <span>{o.label}</span>
-                      <b className="mono" style={{ color: o.color ?? (i ? PARTY_HEX.R : PARTY_HEX.D) }}>{Math.round(o.prob * 100)}¢</b>
+                      <b className="mono" style={{ color: o.color ?? (i ? PARTY_COLOR.R : PARTY_COLOR.D) }}>{Math.round(o.prob * 100)}¢</b>
                     </div>
                   ))}
                 </div>
@@ -380,7 +380,7 @@ function MarketsPanel({ senateP, houseP, raceP }: { senateP: number | null; hous
                 <span className="muted">{m.source}</span>
                 {mp != null && o0 && (
                   <span className="mono">
-                    model {fmtP(mp)} · <span style={{ color: o0.prob - mp > 0 ? PARTY_HEX.D : PARTY_HEX.R }}>{signed((o0.prob - mp) * 100, 0)} pts</span>
+                    model {fmtP(mp)} · <span style={{ color: o0.prob - mp > 0 ? PARTY_COLOR.D : PARTY_COLOR.R }}>{signed((o0.prob - mp) * 100, 0)} pts</span>
                   </span>
                 )}
               </div>
@@ -465,7 +465,7 @@ export default function ForecastPage() {
           max={10}
           step={0.5}
           onChange={setShift}
-          format={(v) => <span style={{ color: v > 0 ? PARTY_HEX.D : v < 0 ? PARTY_HEX.R : 'var(--text-2)' }}>{envLabel(v)}</span>}
+          format={(v) => <span style={{ color: v > 0 ? PARTY_COLOR.D : v < 0 ? PARTY_COLOR.R : 'var(--text-2)' }}>{envLabel(v)}</span>}
           left="← Better for R"
           right="Better for D →"
         />

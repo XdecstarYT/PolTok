@@ -52,3 +52,22 @@
 .ow-make__form textarea:focus { outline: 2px solid var(--signal); outline-offset: 1px; }
 .ow-variants { display: flex; flex-wrap: wrap; gap: 6px; }
 .ow-warn { font-size: var(--fs-xs); color: var(--accent-ink); background: var(--warn, #ffb000); border-radius: 999px; padding: 2px 8px; font-weight: 700; }
+/* AI Studio */
+.ow-studio { display: grid; gap: 14px; min-width: 0; }
+.ow-studio__h { display: grid; gap: 4px; }
+.ow-stack { display: grid; gap: 12px; }
+.ow-card__img { display: grid; gap: 6px; }
+.ow-day { display: grid; gap: 8px; }
+.ow-h3 { margin: 8px 0 0; font-size: var(--fs-md); color: var(--text); }
+.ow-num { width: 4.5em; margin-left: 6px; background: var(--bg-3); color: var(--text); border: 1px solid var(--line-2); border-radius: 6px; padding: 4px 6px; font: inherit; }
+.ow-fact { border: 1px solid var(--danger); border-radius: 10px; padding: 10px; display: grid; gap: 6px; font-size: var(--fs-sm); }
+.ow-fact ul { margin: 0; padding-left: 18px; }
+.ow-fact__t { margin: 0; white-space: pre-wrap; }
+.ow-bad { background: #ffd54a; color: #111; border-radius: 3px; padding: 0 2px; }
+.ow-okb { color: var(--signal, #2a9d55); font-size: var(--fs-sm); font-weight: 600; }
+.ow-settings { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 12px; }
+.ow-field { display: grid; gap: 4px; font-size: var(--fs-sm); color: var(--text-2); }
+.ow-field--wide { grid-column: 1 / -1; }
+.ow-field--check { display: flex; align-items: center; gap: 8px; }
+.ow-field textarea, .ow-make__form input { width: 100%; box-sizing: border-box; background: var(--bg-3); color: var(--text); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; font: inherit; }
+.ow-select--sm { width: auto; padding: 4px 8px; }

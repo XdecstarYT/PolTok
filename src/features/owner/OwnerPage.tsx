@@ -7,11 +7,13 @@ import { MakeWithAi } from './MakeWithAi';
 import { CardStudio } from './CardStudio';
 import { Health } from './Health';
 import { ContentTools } from './ContentTools';
+import { AiStudio } from './AiStudio';
 import './owner.css';
 
-type Tab = 'make' | 'x' | 'studio' | 'health' | 'content';
+type Tab = 'make' | 'ai' | 'x' | 'studio' | 'health' | 'content';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'make', label: 'Make with AI' },
+  { id: 'ai', label: 'AI Studio' },
   { id: 'x', label: 'X / Twitter kit' },
   { id: 'studio', label: 'Card studio' },
   { id: 'health', label: 'Site health' },
@@ -52,6 +54,7 @@ export default function OwnerPage() {
       <div className="ow-tabs"><Tabs tabs={TABS} value={tab} onChange={setTab} variant="pill" ariaLabel="Owner tools" /></div>
       <div className="ow-body">
         {tab === 'make' && <MakeWithAi />}
+        {tab === 'ai' && <AiStudio />}
         {tab === 'x' && <TweetKit />}
         {tab === 'studio' && <CardStudio />}
         {tab === 'health' && <Health />}

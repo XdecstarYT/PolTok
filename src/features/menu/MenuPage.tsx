@@ -99,6 +99,7 @@ export default function MenuPage() {
       id: 'news', title: 'News & Feed', kicker: 'Stay current', tone: 'var(--breaking)',
       tiles: [
         { title: 'News', desc: 'Breaking political headlines', to: '/news', icon: ic.news, badge: news.length ? <Count n={news.length} label="stories" /> : undefined },
+        { title: 'News topics', desc: 'Topic hubs, story coverage & sources', to: '/topic/senate', icon: ic.news },
         { title: 'PolTok feed', desc: 'Swipe the night, short-form', to: '/feed', icon: ic.feed },
         { title: 'Ask PolTok AI', desc: 'Ask anything about the results', to: '/ask', icon: ic.ai, tone: 'var(--signal)' },
         { title: 'Quiz', desc: 'Issues match, daily trivia & map game', to: '/quiz', icon: ic.ballot },

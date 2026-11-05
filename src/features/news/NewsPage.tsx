@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useSeo } from '../../lib/seo';
 import { Link } from 'react-router-dom';
 import type { Lean, NewsItem } from '../../types';
 import { useLive } from '../../lib/live';
@@ -28,6 +29,7 @@ import {
   type TopicKey,
 } from './newsUtils';
 import './news.css';
+import { storyHref, sourceHref } from './news2';
 
 type View = 'cards' | 'list' | 'wall';
 type TopicFilter = 'all' | 'breaking' | 'blindspot' | TopicKey;
@@ -58,6 +60,7 @@ interface SourceRow {
 }
 
 export default function NewsPage() {
+  useSeo({ title: 'News', description: 'Election news from across the spectrum, with source bias ratings and coverage balance.' });
   const live = useLive();
   const now = useNow(30_000);
   const prefs = useMemo(loadPrefs, []);
@@ -457,7 +460,7 @@ function Thumb({ cluster, item }: { cluster: Cluster; item: NewsItem }) {
   if (img && !broken)
     return (
       <div className="nw-thumb">
-        <img src={img} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setBroken(true)} />
+        <img src={img} alt="" width={640} height={360} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setBroken(true)} />
       </div>
     );
   return (
@@ -492,6 +495,7 @@ function DevCard({ cluster, rank, now, onOpen }: { cluster: Cluster; rank: numbe
             </span>
           </div>
           {c.blindspot && <BlindspotBadge side={c.blindspot} />}
+          <Link to={storyHref(c.lead)} className="nw-cov-btn">Story page →</Link>
         </div>
       </div>
     </article>
@@ -537,6 +541,7 @@ function StoryCard({ cluster, item, now, onOpen, active }: { cluster: Cluster; i
             {more > 0 ? `Full coverage · ${cluster.sources.length} outlets` : 'Coverage details'}
             <span aria-hidden="true"> →</span>
           </button>
+          <Link to={storyHref(item)} className="nw-cov-btn">Story page →</Link>
         </div>
       </div>
     </article>
@@ -677,7 +682,7 @@ function ReadingPane({ cluster, now, onClose }: { cluster: Cluster; now: number;
                   <li key={i.id}>
                     <Ext href={i.url}>{cleanText(i.title)}</Ext>
                     <span className="nw-pane-src">
-                      {i.source} · {i.sourceLean} · {timeAgo(i.publishedAt, now)}
+                      <Link to={sourceHref(i.source)}>{i.source}</Link> · {i.sourceLean} · {timeAgo(i.publishedAt, now)}
                     </span>
                   </li>
                 ))}
@@ -686,6 +691,7 @@ function ReadingPane({ cluster, now, onClose }: { cluster: Cluster; now: number;
           ) : null,
         )}
       </div>
+      <Link to={storyHref(lead)} className="nw-read-btn">Open story page: timeline, bias &amp; related</Link>
       <Ext href={lead.url} className="nw-read-btn">
         Read at {lead.source} ↗
       </Ext>

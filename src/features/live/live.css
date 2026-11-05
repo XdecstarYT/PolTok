@@ -111,7 +111,7 @@
 .lv-feed-t { display: block; line-height: 1.35; }
 .lv-feed-t:hover { text-decoration: underline; }
 .lv-alert { display: block; font: 700 9.5px var(--font-mono); letter-spacing: 0.14em; color: var(--breaking, #ff2e63); margin-bottom: 2px; }
-.lv-gain { display: inline-block; margin-left: 6px; font: 800 9.5px var(--font-mono); letter-spacing: 0.08em; padding: 1px 5px; border-radius: 3px; background: var(--pc, var(--accent)); color: #fff; vertical-align: 1px; }
+.lv-gain { display: inline-block; margin-left: 6px; font: 800 9.5px var(--font-mono); letter-spacing: 0.08em; padding: 1px 5px; border-radius: 3px; background: color-mix(in srgb, var(--pc, var(--accent)) 72%, #000); color: #fff; vertical-align: 1px; }
 @keyframes lv-in { from { opacity: 0; transform: translateY(-6px); } }
 
 /* ---------- timeline ---------- */
@@ -205,7 +205,7 @@
 .lv-chip.is-closed { color: var(--text-2); }
 .lv-chip.is-counting { color: var(--accent); border-color: rgba(198, 255, 61, 0.35); }
 .lv-chip.is-close { color: var(--tossup); border-color: rgba(245, 197, 24, 0.5); background: rgba(245, 197, 24, 0.08); }
-.lv-chip.is-called { color: #fff; background: var(--pc); border-color: var(--pc); }
+.lv-chip.is-called { color: #fff; background: color-mix(in srgb, var(--pc) 72%, #000); border-color: var(--pc); }
 .lv-chip.is-called .lv-gain { background: #fff; color: #0b0d14; margin-left: 4px; }
 .lv-pulse { width: 6px; height: 6px; border-radius: 99px; background: var(--accent); animation: lv-pulse 1.6s ease-out infinite; }
 @keyframes lv-pulse { 0% { box-shadow: 0 0 0 0 rgba(198, 255, 61, 0.6); } 100% { box-shadow: 0 0 0 7px rgba(198, 255, 61, 0); } }

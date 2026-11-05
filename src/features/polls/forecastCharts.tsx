@@ -1,7 +1,7 @@
 import { useMemo, useState, type PointerEvent } from 'react';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { motion } from 'framer-motion';
-import { PARTY_HEX } from '../../lib/format';
+import { PARTY_COLOR, PARTY_HEX } from '../../lib/format';
 import { useReducedMotion, useSize } from './hooks';
 
 function domainOf(hist: number[], n: number, minSpan: number, must: number) {
@@ -125,8 +125,8 @@ export function OutcomeDots({ samples, dNeeds, runKey, minSpan = 14 }: { samples
   return (
     <div ref={ref} className="fc-dots">
       <div className="fc-dots-cap">
-        <span><b className="mono" style={{ color: PARTY_HEX.D }}>{dWins}</b> of {s.length} → D control</span>
-        <span><b className="mono" style={{ color: PARTY_HEX.R }}>{s.length - dWins}</b> → R control</span>
+        <span><b className="mono" style={{ color: PARTY_COLOR.D }}>{dWins}</b> of {s.length} → D control</span>
+        <span><b className="mono" style={{ color: PARTY_COLOR.R }}>{s.length - dWins}</b> → R control</span>
       </div>
       {width > 0 && (
         <svg width={w} height={h} role="img" aria-label={`${s.length} simulated outcomes: Democrats win control in ${dWins}.`}>
@@ -162,12 +162,12 @@ export function ControlBar({ pD, dLabel = 'Democrats', rLabel = 'Republicans' }:
     <div className="fc-ctl">
       <div className="fc-ctl-nums">
         <div className={pD >= 0.5 ? 'lead' : ''}>
-          <span className="fc-ctl-lab" style={{ color: PARTY_HEX.D }}>{dLabel}</span>
-          <span className="mono fc-ctl-pct" style={{ color: PARTY_HEX.D }}>{fmtP(pD)}</span>
+          <span className="fc-ctl-lab" style={{ color: PARTY_COLOR.D }}>{dLabel}</span>
+          <span className="mono fc-ctl-pct" style={{ color: PARTY_COLOR.D }}>{fmtP(pD)}</span>
         </div>
         <div className={`right ${pD < 0.5 ? 'lead' : ''}`}>
-          <span className="fc-ctl-lab" style={{ color: PARTY_HEX.R }}>{rLabel}</span>
-          <span className="mono fc-ctl-pct" style={{ color: PARTY_HEX.R }}>{fmtP(1 - pD)}</span>
+          <span className="fc-ctl-lab" style={{ color: PARTY_COLOR.R }}>{rLabel}</span>
+          <span className="mono fc-ctl-pct" style={{ color: PARTY_COLOR.R }}>{fmtP(1 - pD)}</span>
         </div>
       </div>
       <div className="fc-ctl-bar" role="img" aria-label={`Democrats ${d}%, Republicans ${r}% chance of control`}>

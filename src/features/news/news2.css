@@ -1,0 +1,48 @@
+/* News 2.0 (story / topic / source pages). Classes prefixed .n2- */
+.n2 { padding-top: 24px; padding-bottom: 40px; }
+.n2 a:focus-visible, .n2 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.n2-crumb { font-size: 12px; color: var(--text-3); margin-bottom: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.n2-crumb a { color: var(--text-2); }
+.n2 h1 { font-size: clamp(24px, 3.6vw, 38px); line-height: 1.1; letter-spacing: -0.03em; margin: 6px 0 10px; color: var(--text); }
+.n2-sub { color: var(--text-2); font-size: 14px; margin: 0 0 18px; }
+.n2-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .n2-grid { grid-template-columns: minmax(0, 1fr); } }
+.n2-panel { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px; min-width: 0; }
+.n2-h2 { font-size: 17px; margin: 0 0 10px; }
+.n2-h3 { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin: 0 0 8px; font-weight: 600; }
+.n2-sides { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .n2-sides { grid-template-columns: minmax(0, 1fr); } }
+.n2-side h3 { font-size: 13px; margin: 0 0 8px; display: flex; gap: 6px; align-items: center; }
+.n2-side .n2-empty { font-size: 12px; color: var(--text-3); font-style: italic; }
+.n2-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.n2-row { display: flex; gap: 8px; align-items: flex-start; }
+.n2-dot { width: 8px; height: 8px; border-radius: 99px; margin-top: 6px; flex: none; }
+.n2-row-title { color: var(--text); font-weight: 600; font-size: 14px; line-height: 1.3; text-decoration: none; }
+.n2-row-title:hover { text-decoration: underline; }
+.n2-row-meta { font-size: 11.5px; color: var(--text-3); margin-top: 3px; }
+.n2-row-meta a { color: var(--text-2); }
+.n2-blind { border-left: 3px solid var(--breaking); padding: 10px 12px; background: var(--bg-2, var(--bg-1)); border-radius: 6px; font-size: 13px; color: var(--text-2); margin-top: 12px; }
+.n2-blind b { color: var(--text); }
+.n2-timeline { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.n2-timeline li { position: relative; font-size: 12.5px; color: var(--text-2); }
+.n2-timeline li::before { content: ''; position: absolute; left: -19px; top: 5px; width: 8px; height: 8px; border-radius: 99px; background: var(--tl, var(--text-3)); }
+.n2-timeline .mono { color: var(--text-3); margin-right: 6px; }
+.n2-chips { margin-bottom: 12px; }
+.n2-chips > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.n2-chip { font-size: 12px; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--text); text-decoration: none; background: var(--bg-1); }
+.n2-chip:hover, .n2-chip[aria-current='page'] { border-color: var(--accent); }
+.n2-ai { border: 1px dashed var(--line-2, var(--line)); }
+.n2-ai-label { font-size: 11px; color: var(--text-3); margin: 0 0 8px; }
+.n2-ai-text { font-size: 14px; line-height: 1.5; color: var(--text); white-space: pre-wrap; margin: 0; }
+.n2-btn { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-1); color: var(--text); cursor: pointer; }
+.n2-btn:hover { border-color: var(--accent); }
+.n2-spark { margin: 0; }
+.n2-spark figcaption { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-3); margin-top: 4px; }
+.n2-stats { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }
+.n2-stat b { display: block; font-size: 22px; color: var(--text); }
+.n2-stat span { font-size: 11px; color: var(--text-3); }
+.n2-top { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.n2-top li a { color: var(--text); font-weight: 600; text-decoration: none; font-size: 14px; }
+.n2-top li a:hover { text-decoration: underline; }
+.n2-top .n2-row-meta { margin: 4px 0; }
+.n2-muted { color: var(--text-3); font-size: 13px; }

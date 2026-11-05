@@ -157,9 +157,11 @@ async function main() {
         if (p.startsWith('/api/members')) return (await import('./members.js')).nodeMembersHandler(p, url, json, res);
         if (p === '/api/calendar' || p === '/api/calendar.ics') return (await import('./calendar.js')).nodeCalendarHandler(p, url, res);
         if (p.startsWith('/api/world')) return (await import('./world.js')).nodeWorldHandler(p, url, json, res);
+        if (p.startsWith('/api/candidates')) return (await import('./candidates.js')).nodeCandidatesHandler(p, url, json, res);
         if (p.startsWith('/api/money')) return (await import('./money.js')).nodeMoneyHandler(p, url, json, res);
         if (p.startsWith('/api/myarea')) return (await import('./myarea.js')).nodeMyareaHandler(p, url, json, res);
         if (p === '/api/pres2028') return (await import('./pres2028.js')).nodePres2028Handler(json, res);
+        if (p.startsWith('/api/news/')) { const nx = await import('./news.js'); if (!news.ready() && process.env.NEWS_DISABLED !== '1') await Promise.race([news.refresh(), sleep(9000)]); const [st, body] = await nx.newsExtra(p, async () => ({ us: news.recent(1200), au: await nx.auNewsItems() })); return json(res, st, body); }
         switch (p) {
           case '/api/health': {
             const source = pick(url.searchParams.get('source'));

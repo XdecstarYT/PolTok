@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { LiveDot, SimBadge } from '../../components';
 import { useLive } from '../../lib/live';
 import { raceById } from '../../data';
-import { PARTY_HEX } from '../../lib/format';
+import { PARTY_COLOR } from '../../lib/format';
 import type { RaceCallEvent } from '../../types';
 import { buildViews, fmtEtTimeSec, summarizeChamber, type ChamberSummary } from './model';
 import { CallFeed, ChamberControl, LiveMap, Markets, PollTimeline, Swings } from './panels';
@@ -138,7 +138,7 @@ function StickyScore({ senate, house, show, lastCall }: { senate: ChamberSummary
         <MiniChamber s={house} label="House" />
         {lastCall && race && (
           <Link to={`/race/${race.id}`} className="lv-sticky-call mono" tabIndex={show ? 0 : -1}>
-            <span className="muted">LAST CALL</span> <b style={{ color: PARTY_HEX[lastCall.party] }}>{race.state} {race.chamber === 'senate' ? 'SEN' : race.chamber === 'governor' ? 'GOV' : race.id.split('-')[1]}</b> → {lastCall.party}
+            <span className="muted">LAST CALL</span> <b style={{ color: PARTY_COLOR[lastCall.party] }}>{race.state} {race.chamber === 'senate' ? 'SEN' : race.chamber === 'governor' ? 'GOV' : race.id.split('-')[1]}</b> → {lastCall.party}
             {lastCall.flip && <span className="lv-gain">GAIN</span>}
           </Link>
         )}
@@ -153,7 +153,7 @@ function MiniChamber({ s, label }: { s: ChamberSummary; label: string }) {
   return (
     <div className="lv-mini">
       <span className="lv-mini-l">{label}</span>
-      <b className="mono" style={{ color: PARTY_HEX.D }}>
+      <b className="mono" style={{ color: PARTY_COLOR.D }}>
         <AnimNum value={s.dSeats} />
       </b>
       <span className="lv-mini-bar" aria-hidden>
@@ -161,7 +161,7 @@ function MiniChamber({ s, label }: { s: ChamberSummary; label: string }) {
         <i className="r" style={{ width: pc(s.rSeats) }} />
         <em style={{ left: pc(s.majority) }} />
       </span>
-      <b className="mono" style={{ color: PARTY_HEX.R }}>
+      <b className="mono" style={{ color: PARTY_COLOR.R }}>
         <AnimNum value={s.rSeats} />
       </b>
       <span className="lv-mini-p mono muted">{s.ready ? `${Math.round(Math.max(s.probD, 1 - s.probD) * 100)}% ${s.probD >= 0.5 ? 'D' : 'R'}` : ''}</span>
@@ -202,7 +202,7 @@ function CallAlert({ calls }: { calls: RaceCallEvent[] }) {
           <motion.div
             key={cur.raceId + cur.at}
             className="lv-alert-card"
-            style={{ ['--pc' as string]: PARTY_HEX[cur.party] }}
+            style={{ ['--pc' as string]: PARTY_COLOR[cur.party] }}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12 }}

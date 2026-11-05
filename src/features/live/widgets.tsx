@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { arc as d3arc, line as d3line, curveMonotoneX } from 'd3-shape';
 import type { Party } from '../../types';
-import { PARTY_HEX } from '../../lib/format';
+import { PARTY_COLOR, PARTY_HEX } from '../../lib/format';
 import type { RaceView } from './model';
 import { zoneLabel } from './model';
 
@@ -195,11 +195,11 @@ export function ControlNeedle({
       <figcaption>
         {ready ? (
           <>
-            <span className="lv-needle-zone" style={{ color: z.party ? PARTY_HEX[z.party] : 'var(--tossup)' }}>
+            <span className="lv-needle-zone" style={{ color: z.party ? PARTY_COLOR[z.party] : 'var(--tossup)' }}>
               {z.text}
             </span>
             <span className="lv-needle-pct mono">
-              {lead ? <b style={{ color: PARTY_HEX[lead] }}>{lead === 'D' ? 'DEM' : 'GOP'}</b> : <b>EVEN</b>}{' '}
+              {lead ? <b style={{ color: PARTY_COLOR[lead] }}>{lead === 'D' ? 'DEM' : 'GOP'}</b> : <b>EVEN</b>}{' '}
               <AnimNum value={pct} format={(n) => `${Math.round(n)}%`} />
             </span>
           </>
@@ -278,7 +278,7 @@ export function StatusChip({ v }: { v: RaceView }) {
   if (v.winner) {
     const p = v.winner.party;
     return (
-      <span className="lv-chip is-called" style={{ ['--pc' as string]: PARTY_HEX[p] }}>
+      <span className="lv-chip is-called" style={{ ['--pc' as string]: PARTY_COLOR[p] }}>
         <span aria-hidden>✓</span> {p} WIN
         {v.flip && <span className="lv-gain">{(p === 'I' ? 'D' : p)} GAIN</span>}
       </span>

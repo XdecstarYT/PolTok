@@ -30,8 +30,16 @@ export const FONT_LOADS = [
   '400 20px "Source Serif 4"', '600 20px "Source Serif 4"', 'italic 400 20px "Source Serif 4"',
 ];
 
+/** Render-scoped overrides set by the style layer (drawing is synchronous, so module state is safe). */
+export const RT: { display?: string; body?: string; logoOff?: boolean; align?: 'left' | 'center' | 'right' } = {};
+const DISPLAY_FAMS: Fam[] = ['display', 'cond', 'serif'];
+const BODY_FAMS: Fam[] = ['sans', 'rc', 'text'];
+
 export function font(fam: Fam, px: number, weight: number | string = 600, italic = false) {
-  return `${italic ? 'italic ' : ''}${weight} ${Math.max(1, Math.round(px))}px ${FAM[fam]}`;
+  let stack: string = FAM[fam];
+  if (RT.display && DISPLAY_FAMS.includes(fam)) stack = `'${RT.display}', ${stack}`;
+  else if (RT.body && BODY_FAMS.includes(fam)) stack = `'${RT.body}', ${stack}`;
+  return `${italic ? 'italic ' : ''}${weight} ${Math.max(1, Math.round(px))}px ${stack}`;
 }
 
 export interface K {
@@ -42,15 +50,19 @@ export interface K {
   s: number;
   d: CardData;
   img: HTMLImageElement | null;
+  /** second portrait (CardData.photo2) */
+  img2?: HTMLImageElement | null;
   accent: string;
   kicker: string;
   stamp: string;
   attr: string;
   url: string;
+  /** corner radius hint for designs that use one (style.cornerRadius) */
+  radius?: number;
 }
 
 export const KIND_LABEL: Record<CardKind, string> = {
-  race: 'Race result', balance: 'Balance of power', 'au-seat': 'Australian seat', promo: 'Live results', stat: 'By the numbers', flip: 'Seat flip', quote: 'Quote',
+  race: 'Race result', balance: 'Balance of power', 'au-seat': 'Australian seat', promo: 'Live results', stat: 'By the numbers', flip: 'Seat flip', quote: 'Quote', candidate: 'Candidate', custom: 'PolTok',
 };
 
 /* ───────── geometry + text ───────── */
@@ -188,7 +200,8 @@ export const ink = (bg: string, dark = '#0b0d14', light = '#ffffff') => (lum(bg)
 /* ───────── branding ───────── */
 
 /** PolTok wordmark: dot + "Pol" + "Tok". `y` is the baseline. Returns width. */
-export function wordmark(ctx: Ctx, x: number, y: number, size: number, opts: { color?: string; accent?: string; fam?: Fam; align?: 'left' | 'right' | 'center' } = {}) {
+export function wordmark(ctx: Ctx, x: number, y: number, size: number, opts: { color?: string; accent?: string; fam?: Fam; align?: 'left' | 'right' | 'center'; force?: boolean } = {}) {
+  if (RT.logoOff && !opts.force) return 0;
   const color = opts.color ?? '#f2f5ff';
   const accent = opts.accent ?? '#c6ff3d';
   ctx.font = font(opts.fam ?? 'display', size, 700);
@@ -249,7 +262,9 @@ export function loadImage(src?: string, timeout = 2500): Promise<HTMLImageElemen
 }
 
 export function nameOf(k: K) {
-  if (k.d.kind === 'promo' || k.d.kind === 'stat' || k.d.kind === 'quote' || k.d.kind === 'balance') return 'Pol Tok';
+  if (k.d.kind === 'candidate') return k.d.title;
+  if (k.d.kind === 'quote' && k.d.quoteBy) return k.d.quoteBy;
+  if (k.d.kind === 'promo' || k.d.kind === 'stat' || k.d.kind === 'quote' || k.d.kind === 'balance' || k.d.kind === 'custom') return 'Pol Tok';
   return k.d.stats?.[0]?.label && (k.d.kind === 'race' || k.d.kind === 'flip') ? k.d.stats[0].label : k.d.title;
 }
 

@@ -7,6 +7,7 @@ const Home = lazy(() => import('../features/home/HomePage'));
 const MapPage = lazy(() => import('../features/map/MapPage'));
 const LivePage = lazy(() => import('../features/live/LivePage'));
 const NewsPage = lazy(() => import('../features/news/NewsPage'));
+const StoryPage = lazy(() => import('../features/news/StoryPage')); const TopicPage = lazy(() => import('../features/news/TopicPage')); const SourcePage = lazy(() => import('../features/news/SourcePage'));
 const FeedPage = lazy(() => import('../features/feed/FeedPage'));
 const PollsPage = lazy(() => import('../features/polls/PollsPage'));
 const ForecastPage = lazy(() => import('../features/polls/ForecastPage'));
@@ -62,6 +63,7 @@ export function App() {
           <Route path="/map/:mode" element={<MapPage />} />
           <Route path="/live" element={<LivePage />} />
           <Route path="/news" element={<NewsPage />} />
+          <Route path="/story/:id" element={<StoryPage />} /><Route path="/topic/:slug" element={<TopicPage />} /><Route path="/source/:name" element={<SourcePage />} />
           <Route path="/feed" element={<FeedPage />} />
           <Route path="/polls" element={<PollsPage />} />
           <Route path="/forecast" element={<ForecastPage />} />

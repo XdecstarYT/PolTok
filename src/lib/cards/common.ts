@@ -1,12 +1,14 @@
 /** Reusable content blocks shared by several designs. */
 import type { CardDesign, CardKind } from './types';
-import { type Fam, type K, caps, ellipsize, fit, font, rowsOf, rr, text, rgba, stackBar } from './kit';
+import { RT, type Fam, type K, caps, ellipsize, fit, font, rowsOf, rr, text, rgba, stackBar } from './kit';
 
 export interface Design extends CardDesign {
   draw: (k: K) => void;
+  /** design renders d.cta itself (skip the generic CTA overlay) */
+  drawsCta?: boolean;
 }
 
-export const ALL: CardKind[] = ['race', 'balance', 'au-seat', 'promo', 'stat', 'flip', 'quote'];
+export const ALL: CardKind[] = ['race', 'balance', 'au-seat', 'promo', 'stat', 'flip', 'quote', 'candidate', 'custom'];
 export const X = { w: 1200, h: 675 };
 export const SQ = { w: 1080, h: 1080 };
 export const PT = { w: 1080, h: 1350 };
@@ -121,6 +123,7 @@ export function tag(k: K, t: string, x: number, y: number, px: number, bg: strin
 /** Fits a single-line headline. */
 export function headline(k: K, t: string, x: number, y: number, maxW: number, px: number, fam: Fam, color: string, weight: number | string = 800, align: CanvasTextAlign = 'left', italic = false) {
   const { ctx } = k;
+  if (RT.align && align === 'left' && RT.align !== 'left') { x = RT.align === 'center' ? x + maxW / 2 : x + maxW; align = RT.align; }
   fit(ctx, t, maxW, px, fam, weight, 14, italic);
   ctx.fillStyle = color;
   ctx.textAlign = align;

@@ -3,7 +3,7 @@ import { memo, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Chamber } from '../../types';
 import { Avatar } from '../../components';
-import { PARTY_HEX, fmtInt, timeAgo } from '../../lib/format';
+import { PARTY_COLOR, PARTY_HEX, fmtInt, timeAgo } from '../../lib/format';
 import type { FilterKey, RaceView, SortKey } from './model';
 import { filterViews, fmtClock, sortViews } from './model';
 import { AnimNum, StatusChip } from './widgets';
@@ -133,7 +133,7 @@ export const RaceCard = memo(function RaceCard({ v, now }: { v: RaceView; now: n
     <Link
       to={`/race/${r.id}`}
       className={`lv-card ${v.winner ? 'is-called' : ''} ${v.status === 'too-close' ? 'is-tooclose' : ''} ${recent ? 'is-fresh' : ''}`}
-      style={{ ['--pc' as string]: v.winner ? PARTY_HEX[v.winner.party] : 'transparent' }}
+      style={{ ['--pc' as string]: v.winner ? PARTY_COLOR[v.winner.party] : 'transparent' }}
       aria-label={`${r.title}: ${v.winner ? `called for ${v.winner.name}` : v.status}`}
     >
       <div className="lv-card-h">
@@ -182,7 +182,7 @@ export const RaceCard = memo(function RaceCard({ v, now }: { v: RaceView; now: n
           </span>
         </span>
         {!v.winner && fav && fav.prob > 0 && (
-          <span className="lv-prob" style={{ color: PARTY_HEX[fav.c.party] }} title="Model win probability">
+          <span className="lv-prob" style={{ color: PARTY_COLOR[fav.c.party] }} title="Model win probability">
             {fav.c.party} {Math.round(fav.prob * 100)}%
           </span>
         )}

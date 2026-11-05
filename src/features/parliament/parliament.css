@@ -95,3 +95,6 @@
 
 [data-ui='broadcast'] .pa-bill, [data-ui='broadcast'] .pa-vote, [data-ui='broadcast'] .pa-panel { border-radius: 4px; }
 [data-ui='broadcast'] .pa-bill__a { border-radius: 4px; }
+
+/* Links inside running text must be distinguishable without colour (WCAG 1.4.1). */
+.pa-page p a, .pa-page li a:not([class]), .pa-kicker a, .pa-sub a { text-decoration: underline; text-underline-offset: 2px; }

@@ -35,7 +35,7 @@ export function Avatar({ name, party, src, size = 40 }: { name: string; party: P
       className="pt-avatar"
       style={{ width: size, height: size, fontSize: size * 0.36, background: `radial-gradient(circle at 30% 25%, ${c}, #05070d 85%)`, borderColor: c }}
     >
-      {src ? <img src={src} alt={name} loading="lazy" /> : <span aria-hidden="true">{initials(name || '?')}</span>}
+      {src ? <img src={src} alt={name} width={size} height={size} loading="lazy" /> : <span aria-hidden="true">{initials(name || '?')}</span>}
       {!src && <span className="sr-only">{name}</span>}
     </span>
   );

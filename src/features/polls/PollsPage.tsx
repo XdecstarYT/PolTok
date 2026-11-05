@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useSeo } from '../../lib/seo';
 import { Link } from 'react-router-dom';
 import type { PollSeries } from '../../types';
 import { POLL_SERIES, raceById } from '../../data';
@@ -285,11 +286,11 @@ function PollTable() {
                   <td className="mono hide-sm">{r.pop ?? '—'}</td>
                   <td className="mono hide-xs nowrap">
                     {r.result.map((x, i) => (
-                      <span key={i} className="pl-res"><span style={{ color: x.color }}>{x.label}</span> {x.v}</span>
+                      <span key={i} className="pl-res"><span className="pl-ink" style={{ ["--c" as string]: x.color }}>{x.label}</span> {x.v}</span>
                     ))}
                   </td>
                   <td className="mono num">
-                    <span className="pl-margin" style={{ color: r.marginColor, borderColor: r.marginColor }}>{r.marginText}</span>
+                    <span className="pl-margin pl-ink" style={{ ["--c" as string]: r.marginColor, borderColor: r.marginColor }}>{r.marginText}</span>
                   </td>
                 </tr>
               ))}
@@ -306,6 +307,7 @@ function PollTable() {
 
 /* ---------- page ---------- */
 export default function PollsPage() {
+  useSeo({ title: 'Polls', description: 'Latest election polls, polling averages and trend charts.' });
   const generic = POLL_SERIES.find(isGeneric);
   const approval = POLL_SERIES.find(isApproval);
   const raceSeries = POLL_SERIES.filter((s) => s !== generic && s !== approval);

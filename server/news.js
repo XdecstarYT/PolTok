@@ -434,3 +434,162 @@ export function createNewsService({ log = console.log, onNew } = {}) {
     },
   };
 }
+
+/* ------------------------------- News 2.0: story / topic / source ------------------------------- */
+// Additive (agent F). Pure functions over already-fetched real items; nothing is generated here.
+
+/** Topic hubs. `re` is matched against title+summary; `tags` against server tags. region picks the feed(s). */
+export const TOPIC_DEFS = [
+  { slug: 'senate', label: 'Senate', region: 'us', tags: ['senate'], re: /\bsenat(e|or|ors)\b/i },
+  { slug: 'house', label: 'House', region: 'us', tags: ['house'], re: /\b(the house|house (race|seat|majority|control)|congressional district|speaker)\b/i },
+  { slug: 'governors', label: 'Governors', region: 'us', tags: ['governor'], re: /\b(governor|gubernatorial)\b/i },
+  { slug: 'abortion', label: 'Abortion', region: 'both', tags: ['abortion'], re: /\babortion\b/i },
+  { slug: 'economy', label: 'Economy', region: 'both', tags: ['economy'], re: /\b(economy|inflation|tariffs?|jobs report|interest rates?|cost of living|budget)\b/i },
+  { slug: 'immigration', label: 'Immigration', region: 'both', tags: ['immigration'], re: /\b(immigration|immigrants?|border|deportation|migrants?|visa)\b/i },
+  { slug: 'climate', label: 'Climate', region: 'both', tags: [], re: /\b(climate|emissions|net zero|renewables?|clean energy|carbon)\b/i },
+  { slug: 'trump', label: 'Trump', region: 'us', tags: ['trump'], re: /\btrump\b/i },
+  { slug: 'victoria-election', label: 'Victorian election', region: 'au', tags: [], re: /\b(victoria(n)?|vic\b|spring street|allan|battin|wilson|vec)\b/i },
+  { slug: 'one-nation', label: 'One Nation', region: 'au', tags: [], re: /\b(one nation|hanson)\b/i },
+  { slug: 'albanese', label: 'Albanese', region: 'au', tags: [], re: /\balbanese\b/i },
+];
+
+const leanSide = (l) => (/left/i.test(l) ? 'L' : /right/i.test(l) ? 'R' : /center/i.test(l) ? 'C' : 'U');
+function coverage(list) {
+  const c = { L: 0, C: 0, R: 0, U: 0, total: 0 };
+  const seen = new Set();
+  for (const i of list) {
+    if (seen.has(i.source)) continue;
+    seen.add(i.source);
+    c[leanSide(i.sourceLean)]++;
+    c.total++;
+  }
+  return c;
+}
+function blindspot(c) {
+  const rated = c.L + c.C + c.R;
+  if (rated < 3) return null;
+  if (c.L / rated > 0.75) return 'R';
+  if (c.R / rated > 0.75) return 'L';
+  return null;
+}
+function topClusters(list, n = 8) {
+  const m = new Map();
+  for (const i of list) {
+    const k = i.clusterId || i.id;
+    (m.get(k) || m.set(k, []).get(k)).push(i);
+  }
+  return [...m.entries()]
+    .map(([id, arr]) => {
+      const srcs = new Set(arr.map((x) => x.source)).size;
+      const latest = Math.max(...arr.map((x) => x.publishedAt));
+      return { id, lead: arr[0], sources: srcs, latest, coverage: coverage(arr), score: srcs * 3 - (Date.now() - latest) / 3.6e6 };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, n);
+}
+/** Story volume per hour for the last `hours` hours (oldest first). */
+export function hourlyVolume(list, hours = 48, now = Date.now()) {
+  const out = new Array(hours).fill(0);
+  for (const i of list) {
+    const h = Math.floor((now - i.publishedAt) / 3.6e6);
+    if (h >= 0 && h < hours) out[hours - 1 - h]++;
+  }
+  return out;
+}
+
+export function topicMatch(item, def) {
+  if (def.tags.length && item.tags?.some((t) => def.tags.includes(String(t).toLowerCase()))) return true;
+  return def.re.test(`${item.title} ${item.summary || ''}`);
+}
+
+/** @param {{us:any[]; au:any[]}} pools */
+export function storyPayload(pools, clusterId) {
+  for (const [region, list] of Object.entries(pools)) {
+    const items = list.filter((i) => (i.clusterId || i.id) === clusterId || i.id === clusterId);
+    if (!items.length) continue;
+    // If addressed by an item id, widen to its whole cluster.
+    const cid = items[0].clusterId || items[0].id;
+    const all = list.filter((i) => (i.clusterId || i.id) === cid).sort((a, b) => a.publishedAt - b.publishedAt);
+    const c = coverage(all);
+    return { ok: true, id: cid, region, items: all, coverage: c, blindspot: blindspot(c), tags: [...new Set(all.flatMap((i) => i.tags || []))] };
+  }
+  return null;
+}
+
+export function topicPayload(pools, slug, now = Date.now()) {
+  const def = TOPIC_DEFS.find((t) => t.slug === slug);
+  if (!def) return null;
+  const pool = def.region === 'us' ? pools.us : def.region === 'au' ? pools.au : [...pools.us, ...pools.au];
+  const items = pool.filter((i) => topicMatch(i, def)).sort((a, b) => b.publishedAt - a.publishedAt);
+  return {
+    ok: true,
+    slug,
+    label: def.label,
+    region: def.region,
+    items: items.slice(0, 120),
+    total: items.length,
+    coverage: coverage(items),
+    top: topClusters(items, 8),
+    volume48h: hourlyVolume(items, 48, now),
+    topics: TOPIC_DEFS.map((t) => ({ slug: t.slug, label: t.label, region: t.region })),
+  };
+}
+
+export function sourcePayload(pools, name, now = Date.now()) {
+  const nl = String(name).toLowerCase();
+  const all = [...pools.us, ...pools.au];
+  const items = all.filter((i) => i.source.toLowerCase() === nl).sort((a, b) => b.publishedAt - a.publishedAt);
+  if (!items.length) return null;
+  const since = now - 48 * 3.6e6;
+  const recentAll = all.filter((i) => i.publishedAt >= since).length;
+  const recentMine = items.filter((i) => i.publishedAt >= since).length;
+  const topicCounts = TOPIC_DEFS.map((t) => ({ slug: t.slug, label: t.label, n: items.filter((i) => topicMatch(i, t)).length })).filter((t) => t.n).sort((a, b) => b.n - a.n);
+  return {
+    ok: true,
+    name: items[0].source,
+    lean: items[0].sourceLean,
+    region: pools.us.some((i) => i.source.toLowerCase() === nl) ? 'us' : 'au',
+    items: items.slice(0, 60),
+    total: items.length,
+    share48h: recentAll ? recentMine / recentAll : 0,
+    recent48h: recentMine,
+    volume48h: hourlyVolume(items, 48, now),
+    topics: topicCounts,
+  };
+}
+
+const extraCache = new Map();
+/** Route /api/news/story/:id, /api/news/topic/:slug, /api/news/source/:name. getPools() → {us, au}. 60s cache. */
+export async function newsExtra(path, getPools) {
+  const m = /^\/api\/news\/(story|topic|source)\/([^/]+)\/?$/.exec(path);
+  if (!m) return [404, { error: 'not found' }];
+  const key = `${m[1]}|${m[2]}`;
+  const hit = extraCache.get(key);
+  if (hit && Date.now() - hit.at < 60000) return hit.res;
+  let arg;
+  try {
+    arg = decodeURIComponent(m[2]);
+  } catch {
+    return [400, { error: 'bad id' }];
+  }
+  const pools = await getPools();
+  const fn = m[1] === 'story' ? storyPayload : m[1] === 'topic' ? topicPayload : sourcePayload;
+  const body = fn(pools, arg);
+  const res = body ? [200, { ...body, fetchedAt: Date.now() }] : [404, { error: `${m[1]} not found (stories age out after a few days)` }];
+  if (extraCache.size > 300) extraCache.clear();
+  extraCache.set(key, { at: Date.now(), res });
+  return res;
+}
+
+let auSvc = null;
+/** Lazily-started AU news service for the extras endpoints (dynamic import avoids a circular import). */
+export async function auNewsItems() {
+  if (process.env.NEWS_DISABLED === '1') return [];
+  if (!auSvc) {
+    const { createAuNewsService } = await import('./au.js');
+    auSvc = createAuNewsService({ log: () => {} });
+    auSvc.start();
+  }
+  if (!auSvc.ready()) await Promise.race([auSvc.refresh(), new Promise((r) => setTimeout(r, 9000))]);
+  return auSvc.query({ limit: 400 }).items;
+}

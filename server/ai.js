@@ -7,6 +7,8 @@
 //
 // Request:  { question: string, context: object, history?: {role:'user'|'assistant', content}[], mode?: 'chat'|'race'|'brief'|'compose' }
 //           compose: + designs [{id,name,kinds,w,h}], temperature → 200 JSON { ok, result: {subject,designId,tweet,cardOverrides,altText,fixes} }
+//           studio modes (thread|calendar|reply|hashtags|variants|hooks|explain|factcheck|image-alt): + settings, n, context → 200 JSON { ok, mode, result, model }
+//           GET ?models=1 → { ok, configured, model, models[] } (auto-discovered chat models).
 // Response: 200 text/plain stream of the answer (UTF-8 deltas), or JSON { error, code } with 4xx/5xx.
 //           GET → { ok, configured, model } (capability probe; never reveals the key).
 
@@ -25,10 +27,20 @@ let discovered = '';
 const model = (env) => discovered || env.GROQ_MODEL || DEFAULT_MODEL;
 const PREFER = [/gpt-oss-120b/, /llama-4-maverick/, /llama-3\.3-70b/, /kimi-k2/, /qwen3?-.*32b/, /llama-4-scout/, /gpt-oss-20b/, /llama/];
 const NOT_CHAT = /whisper|guard|tts|playai|embed|distil|orpheus|prompt-guard|compound/;
-export async function discoverModel(env, fetchImpl = fetch) {
+let modelList = { at: 0, ids: [] };
+/** Chat-capable model ids this key can use, best first (cached 10 min). */
+export async function listModels(env, fetchImpl = fetch) {
+  if (modelList.ids.length && Date.now() - modelList.at < 600000) return modelList.ids;
   const res = await fetchImpl('https://api.groq.com/openai/v1/models', { headers: { authorization: `Bearer ${key(env)}` }, signal: AbortSignal.timeout(8000) });
-  if (!res.ok) return '';
+  if (!res.ok) return [];
   const ids = ((await res.json())?.data || []).filter((m) => m?.active !== false).map((m) => String(m.id)).filter((id) => !NOT_CHAT.test(id));
+  const rank = (id) => { const i = PREFER.findIndex((re) => re.test(id)); return i < 0 ? 99 : i; };
+  ids.sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+  modelList = { at: Date.now(), ids };
+  return ids;
+}
+export async function discoverModel(env, fetchImpl = fetch) {
+  const ids = await listModels(env, fetchImpl);
   for (const re of PREFER) {
     const hit = ids.find((id) => re.test(id));
     if (hit) return hit;
@@ -139,7 +151,12 @@ const jsonRes = (status, body, extra = {}) =>
 /** Web-standard handler: (Request, {ip, env, fetchImpl}) → Response. */
 export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl = fetch, loaders } = {}) {
   if (req.method === 'GET' || req.method === 'HEAD') {
-    if (key(env) && !discovered && new URL(req.url, 'http://x').searchParams.has('check')) discovered = await discoverModel(env, fetchImpl).catch(() => '');
+    const sp = new URL(req.url, 'http://x').searchParams;
+    if (sp.has('models')) {
+      const models = key(env) ? await listModels(env, fetchImpl).catch(() => []) : [];
+      return jsonRes(200, { ok: true, configured: !!key(env), model: model(env), models });
+    }
+    if (key(env) && !discovered && sp.has('check')) discovered = await discoverModel(env, fetchImpl).catch(() => '');
     return jsonRes(200, { ok: true, configured: !!key(env), model: model(env) });
   }
   if (req.method !== 'POST') return jsonRes(405, { error: 'method not allowed', code: 'method' });
@@ -158,7 +175,9 @@ export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl 
   if (question.length > MAX_QUESTION) return jsonRes(413, { error: `Question too long (max ${MAX_QUESTION} chars)`, code: 'too_large' });
 
   const rl = rateLimit(ip, env);
-  if (!rl.ok) return jsonRes(429, { error: `Slow down — try again in ${rl.retryAfter}s.`, code: 'rate_limited' }, { 'retry-after': String(rl.retryAfter) });
+  if (!rl.ok) return jsonRes(429, { error: `Slow down — try again in ${rl.retryAfter}s.`, code: 'rate_limited', retryAfter: rl.retryAfter }, { 'retry-after': String(rl.retryAfter) });
+
+  if (composeMod.STUDIO_MODES.includes(body.mode)) return handleStudio(body, question, { env, fetchImpl, loaders });
 
   if (body.mode === 'compose') return handleCompose(body, question, { env, fetchImpl, loaders });
   const mode = ['chat', 'race', 'brief'].includes(body.mode) ? body.mode : 'chat';
@@ -353,6 +372,109 @@ async function handleCompose(body, prompt, { env, fetchImpl, loaders }) {
   return jsonRes(200, { ok: true, result, model: model(env) });
 }
 
+/* ------------------------------ AI Studio modes (Owner) ------------------------------ */
+export const STUDIO_BUDGET = { total: 9500, live: 3600, context: 1800 };
+export const STUDIO_SMALL = { total: 6000, live: 1600, context: 1000 };
+
+export function buildStudioMessages({ mode, prompt, context = '', live = '', refs = [], settings, n }, now = new Date(), budget = STUDIO_BUDGET) {
+  const sys = composeMod.studioSystem(mode, settings, n, now);
+  const q = String(prompt).slice(0, MAX_QUESTION);
+  const c = String(context || '').slice(0, budget.context);
+  const r = refs.slice(0, 30).join(' ');
+  let l = String(live || '').slice(0, budget.live);
+  const over = sys.length + q.length + c.length + r.length + l.length + 220 - budget.total;
+  if (over > 0) l = l.slice(0, Math.max(0, l.length - over));
+  const data = [l && `LIVE DATA (fetched ${now.toISOString().slice(0, 16)}Z):\n${l}`, c && `CONTEXT:\n${c}`, r && `KNOWN IDS: ${r}`].filter(Boolean).join('\n\n') || 'LIVE DATA: (none available)';
+  return [
+    { role: 'system', content: sys },
+    { role: 'system', content: data },
+    { role: 'user', content: q },
+  ];
+}
+
+/** Non-streaming JSON call with the shared retry ladder (413 → smaller, retired model → discover, json_object rejected → plain). */
+async function groqJson({ env, fetchImpl, build, temperature, modelId, maxTok = 1200 }) {
+  let small = false;
+  let jsonMode = true;
+  let m = modelId || model(env);
+  const call = () =>
+    fetchImpl(GROQ_URL, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${key(env)}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ model: m, messages: build(small), temperature, max_tokens: maxTok, stream: false, ...(jsonMode ? { response_format: { type: 'json_object' } } : {}) }),
+      signal: AbortSignal.timeout(25000),
+    });
+  let up;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    up = await call();
+    if (up.ok) break;
+    if (up.status === 413 && !small) { small = true; continue; }
+    if (up.status !== 400 && up.status !== 404) break;
+    const detail = await up.text().catch(() => '');
+    if ((/model/i.test(detail) && /(decommission|not found|does not exist|not exist|unknown)/i.test(detail)) || up.status === 404) {
+      const d = await discoverModel(env, fetchImpl).catch(() => '');
+      if (d && d !== m) { discovered = d; m = d; continue; }
+    }
+    if (jsonMode) { jsonMode = false; continue; }
+    break;
+  }
+  return { up, model: m };
+}
+
+async function handleStudio(body, prompt, { env, fetchImpl, loaders }) {
+  const mode = body.mode;
+  const settings = composeMod.sanitizeSettings(body.settings);
+  const n = composeMod.clampN(mode, body.n);
+  const context = typeof body.context === 'string' ? body.context.slice(0, STUDIO_BUDGET.context) : body.context ? JSON.stringify(body.context).slice(0, STUDIO_BUDGET.context) : '';
+  // Model override only if it's a known chat model for this key (or discovery is unavailable → ignore).
+  let modelId = '';
+  if (settings.model) {
+    const ids = await listModels(env, fetchImpl).catch(() => []);
+    if (ids.includes(settings.model)) modelId = settings.model;
+  }
+  let know = { text: '', refs: [] };
+  if (env.AI_RETRIEVAL !== '0' && mode !== 'image-alt') {
+    try {
+      const k = await import('./ai-knowledge.js');
+      const q = mode === 'factcheck' || mode === 'reply' ? `${prompt} ${context}`.slice(0, 900) : prompt;
+      know = await k.gatherKnowledge(q, { loaders: loaders || k.defaultLoaders(fetchImpl), budget: STUDIO_BUDGET.live });
+    } catch {
+      /* best effort */
+    }
+  }
+  let res;
+  try {
+    res = await groqJson({
+      env, fetchImpl, modelId,
+      temperature: mode === 'factcheck' ? 0.1 : settings.temperature,
+      maxTok: mode === 'calendar' || mode === 'thread' ? 1800 : 1000,
+      build: (small) => buildStudioMessages({ mode, prompt, context, live: know.text, refs: know.refs, settings, n }, new Date(), small ? STUDIO_SMALL : STUDIO_BUDGET),
+    });
+  } catch {
+    return jsonRes(502, { error: 'AI provider unreachable', code: 'upstream' });
+  }
+  const { up } = res;
+  if (!up.ok) {
+    if (up.status === 413) return jsonRes(413, { error: 'Prompt too large for the AI plan — try a shorter request.', code: 'too_large' });
+    if (up.status === 429) {
+      const ra = Math.min(120, Math.max(1, Math.ceil(Number(up.headers.get('retry-after')) || 20)));
+      return jsonRes(429, { error: 'AI provider is busy (free-tier limit).', code: 'rate_limited', retryAfter: ra }, { 'retry-after': String(ra) });
+    }
+    return jsonRes(502, { error: `AI provider error (${up.status})`, code: 'upstream' });
+  }
+  let content = '';
+  try {
+    content = (await up.json())?.choices?.[0]?.message?.content ?? '';
+  } catch {
+    /* ignore */
+  }
+  const parsed = composeMod.parseComposeJson(content);
+  const draft = mode === 'factcheck' ? context || prompt : '';
+  const result = parsed && composeMod.validateStudio(mode, parsed, { n, live: know.text, draft, context: mode === 'factcheck' ? '' : context });
+  if (!result) return jsonRes(502, { error: 'The AI did not return usable JSON — try again.', code: 'bad_output' });
+  return jsonRes(200, { ok: true, mode, result, model: res.model, facts: mode === 'factcheck' ? know.text.slice(0, 2000) : undefined });
+}
+
 /** Node http adapter for server/index.js. */
 export async function nodeAiHandler(req, res) {
   const chunks = [];
@@ -364,7 +486,7 @@ export async function nodeAiHandler(req, res) {
       chunks.push(c);
     }
   const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'anon').split(',')[0].trim();
-  const request = new Request('http://localhost/api/ai', {
+  const request = new Request('http://localhost' + (req.url || '/api/ai'), {
     method: req.method,
     headers: { 'content-type': 'application/json' },
     body: req.method === 'POST' ? Buffer.concat(chunks) : undefined,

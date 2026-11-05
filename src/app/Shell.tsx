@@ -123,6 +123,7 @@ export const NAV_MORE = [
   { to: '/world', label: 'World', sub: 'Global elections calendar & map' },
   { to: '/members', label: 'Members', sub: 'Every US & Australian lawmaker' },
   { to: '/calendar', label: 'Calendar', sub: 'Elections & key dates — US & AU' },
+  { to: '/topic/senate', label: 'News topics', sub: 'Topic hubs, full-coverage stories & sources' },
 ];
 
 function MoreMenu() {

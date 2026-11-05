@@ -67,4 +67,16 @@ declare module '*/shared/compose.js' {
   export function cleanTweet(t: unknown): string;
   export function validateCompose(raw: unknown, designs?: { id: string; kinds?: string[] }[], opts?: { validId?: (kind: string, id: string) => boolean }): ComposeResult;
   export function designsForPrompt(designs: unknown[], max?: number): string;
+  export type StudioMode = 'thread' | 'calendar' | 'reply' | 'hashtags' | 'variants' | 'hooks' | 'explain' | 'factcheck' | 'image-alt';
+  export interface StudioSettings { voice: string; custom: string; audience: 'us' | 'au' | 'global'; emoji: 0 | 1 | 2; hashtags: 'none' | 'few' | 'many'; length: 'short' | 'medium' | 'long'; cta: 'none' | 'soft' | 'follow' | 'visit'; banned: string[]; link: boolean; lang: string; model: string; temperature: number }
+  export const STUDIO_MODES: StudioMode[];
+  export const VOICES: Record<string, string>;
+  export const LANGS: Record<string, string>;
+  export const DEFAULT_SETTINGS: StudioSettings;
+  export const STUDIO_N: Record<string, [number, number, number]>;
+  export function sanitizeSettings(raw: unknown): StudioSettings;
+  export function clampN(mode: string, n: unknown): number;
+  export function numbersIn(t: string): string[];
+  export function unsupportedNumbers(text: string, facts: string): string[];
+  export function validateStudio(mode: StudioMode, raw: unknown, ctx?: { n?: number; live?: string; draft?: string; context?: string }): Record<string, unknown> | null;
 }

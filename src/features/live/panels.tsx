@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Market, RaceCallEvent, StateInfo } from '../../types';
 import { raceById, STATES } from '../../data';
-import { PARTY_HEX, marginColor, mixHex, timeAgo } from '../../lib/format';
+import { PARTY_COLOR, PARTY_HEX, marginColor, mixHex, timeAgo } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import type { ChamberSummary, RaceView } from './model';
 import { closeMinutes, etNowMinutes, fmtClock, fmtEtTime, isDSide, mainRaceByState } from './model';
@@ -54,7 +54,7 @@ export function ChamberControl({ s, title }: { s: ChamberSummary; title: string 
               <li><span className="lv-skel lv-skel-line" style={{ width: '70%' }} /></li>
             </>
           ) : decided ? (
-            <li className="lv-path-done" style={{ color: PARTY_HEX[decided] }}>
+            <li className="lv-path-done" style={{ color: PARTY_COLOR[decided] }}>
               ✓ {partyWord[decided]} win control of the {s.chamber === 'senate' ? 'Senate' : 'House'}
             </li>
           ) : (
@@ -70,7 +70,7 @@ export function ChamberControl({ s, title }: { s: ChamberSummary; title: string 
 }
 
 function PathLine({ party, need, leads, others, chamber, undecided, projected, won }: { party: 'D' | 'R'; need: number; leads: RaceView[]; others: RaceView[]; chamber: 'senate' | 'house'; undecided: number; projected: number; won: number }) {
-  const color = PARTY_HEX[party];
+  const color = PARTY_COLOR[party];
   if (need <= 0) return <li style={{ color }}>{partyWord[party]} have clinched control.</li>;
   if (need > undecided) return <li className="muted">{partyWord[party]}: no remaining path to a majority.</li>;
   // Seats the party currently leads/is projected in among the uncalled.
@@ -202,7 +202,7 @@ export function CallFeed({ calls, now }: { calls: RaceCallEvent[]; now: number }
             const race = raceById.get(c.raceId);
             const cand = race?.candidates.find((x) => x.id === c.candidateId);
             const key = race?.key || c.flip;
-            const color = PARTY_HEX[c.party] ?? '#8b93a7';
+            const color = PARTY_COLOR[c.party] ?? '#8b93a7';
             return (
               <li key={c.raceId + c.at} className={`lv-feed-item ${c.flip ? 'is-flip' : ''}`} style={{ ['--pc' as string]: color }}>
                 <time className="mono" dateTime={new Date(c.at).toISOString()} title={timeAgo(c.at, now)}>
@@ -338,7 +338,7 @@ export function Swings({ views }: { views: RaceView[] }) {
       <header className="lv-panel-h">
         <h2 id="lv-sw-h">Biggest swings vs 2024</h2>
         {rows.length > 0 && (
-          <span className="lv-panel-sub mono" style={{ color: avg >= 0 ? PARTY_HEX.D : PARTY_HEX.R }}>
+          <span className="lv-panel-sub mono" style={{ color: avg >= 0 ? PARTY_COLOR.D : PARTY_COLOR.R }}>
             avg {avg >= 0 ? 'D' : 'R'}+{Math.abs(avg).toFixed(1)}
           </span>
         )}
@@ -360,7 +360,7 @@ export function Swings({ views }: { views: RaceView[] }) {
                   <span className="lv-sw-bar" aria-hidden>
                     <i style={{ width: `${w}%`, background: PARTY_HEX[p], [p === 'D' ? 'right' : 'left']: '50%' }} />
                   </span>
-                  <span className="lv-sw-v mono" style={{ color: PARTY_HEX[p] }}>
+                  <span className="lv-sw-v mono" style={{ color: PARTY_COLOR[p] }}>
                     {p}+{Math.abs(swing).toFixed(1)}
                   </span>
                   <span className="lv-sw-d mono muted">
