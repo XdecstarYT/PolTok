@@ -101,7 +101,7 @@ export default function CandidatesIndex() {
   const auList = useMemo(() => {
     const needle = q.toLowerCase();
     return AU_CANDS.filter((c) => {
-      if (office && c.office !== office) return false;
+      if (office && c.office !== (office as string)) return false;
       if (state && c.state !== state) return false;
       if (party && c.party !== party) return false;
       if (status === 'incumbent' && !c.incumbent) return false;
