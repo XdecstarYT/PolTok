@@ -5,7 +5,11 @@
  */
 import type { LiveState } from '../../lib/live';
 
-export type Subject = { kind: 'race' | 'balance' | 'au-seat' | 'promo' | 'flip'; id: string };
+export type SubjectKind = 'race' | 'balance' | 'au-seat' | 'promo' | 'stat' | 'flip' | 'quote';
+export type Subject = { kind: SubjectKind; id: string };
+export type Overrides = { title?: string; subtitle?: string; footer?: string };
+/** Minimal shape of src/lib/cards CardData used by the panel. */
+export interface CardDataLite { kind: string; title: string; subtitle?: string; stats?: { label: string; value: string }[]; party?: string; footer?: string }
 export interface Design { id: string; name: string; w?: number; h?: number; tags?: string[] }
 type LiveLike = Pick<LiveState, 'results' | 'balance' | 'lastUpdate'> & Partial<LiveState>;
 
@@ -59,19 +63,33 @@ export function pickDesign(designs: Design[], hints: string[], salt = 0, kind?: 
   return pool[salt % pool.length];
 }
 
-export async function render(designId: string, subj: Subject, live: LiveLike): Promise<Blob | null> {
+const AU_PROMOS = ['vic-countdown', 'swingometer', 'au-senate', 'nsw', 'au'];
+/** Live CardData for a subject (numbers always from live data). */
+export async function cardData(subj: Subject, live: LiveLike): Promise<CardDataLite | null> {
+  const m = await loadCards();
+  if (!m) return null;
+  const id = subj.kind === 'promo' && AU_PROMOS.includes(subj.id) ? 'au' : subj.id;
+  return (m.cardDataFor(subj.kind, id, live) as CardDataLite) ?? null;
+}
+
+export async function render(designId: string, subj: Subject, live: LiveLike, overrides?: Overrides): Promise<Blob | null> {
   if (designId.startsWith('share:')) {
-    if (subj.kind === 'promo') return null;
+    if (subj.kind !== 'race' && subj.kind !== 'flip' && subj.kind !== 'balance' && subj.kind !== 'au-seat') return null;
     const { renderShareCard } = await import('../../lib/share');
     return renderShareCard(subj.kind === 'flip' ? 'race' : subj.kind, subj.id, designId === 'share:story' ? 'story' : 'landscape', live);
   }
   const m = await loadCards();
   if (!m) return null;
-  const AU_PROMOS = ['vic-countdown', 'swingometer', 'au-senate', 'nsw', 'au'];
-  const id = subj.kind === 'promo' && AU_PROMOS.includes(subj.id) ? 'au' : subj.id;
-  const data = m.cardDataFor(subj.kind, id, live);
+  const data = await cardData(subj, live);
   if (!data) return null;
-  return m.renderCard(designId, data);
+  const ov = Object.fromEntries(Object.entries(overrides ?? {}).filter(([, v]) => typeof v === 'string' && v.trim()));
+  return m.renderCard(designId, { ...data, ...ov });
+}
+
+/** Designs whose kinds include this subject kind (all if none tagged). */
+export function designsForKind(designs: Design[], kind: string): Design[] {
+  const f = designs.filter((d) => d.tags?.includes(kind));
+  return f.length ? f : designs;
 }
 
 /* ---- blob actions ---- */

@@ -45,3 +45,10 @@
 .ow-block { margin-bottom: 10px; }
 .ow-block__h { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: var(--fs-sm); }
 .ow-block__h .ow-count { margin-left: auto; }
+.ow-pair { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 14px; align-items: start; }
+@media (max-width: 860px) { .ow-pair { grid-template-columns: minmax(0, 1fr); } }
+.ow-make__form { display: grid; gap: 10px; background: var(--bg-1); border: 1px solid var(--line-2); border-radius: var(--radius, 12px); padding: 14px; }
+.ow-make__form textarea { width: 100%; box-sizing: border-box; background: var(--bg-3); color: var(--text); border: 1px solid var(--line-2); border-radius: var(--radius-sm, 8px); padding: 10px 12px; font: inherit; font-size: var(--fs-md); resize: vertical; min-height: 70px; }
+.ow-make__form textarea:focus { outline: 2px solid var(--signal); outline-offset: 1px; }
+.ow-variants { display: flex; flex-wrap: wrap; gap: 6px; }
+.ow-warn { font-size: var(--fs-xs); color: var(--accent-ink); background: var(--warn, #ffb000); border-radius: 999px; padding: 2px 8px; font-weight: 700; }

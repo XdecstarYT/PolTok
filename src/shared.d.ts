@@ -51,3 +51,20 @@ declare module '*/shared/nyt.js' {
 declare module '*/server/feeds.js' {
   export const OUTLET_LEAN: Record<string, string>;
 }
+declare module '*/shared/compose.js' {
+  export type ComposeKind = 'race' | 'balance' | 'au-seat' | 'promo' | 'stat' | 'flip' | 'quote';
+  export interface ComposeResult {
+    subject: { kind: ComposeKind; id: string };
+    designId: string;
+    tweet: string;
+    cardOverrides: { title?: string; subtitle?: string; footer?: string };
+    altText: string;
+    fixes: string[];
+  }
+  export const COMPOSE_KINDS: ComposeKind[];
+  export const TWEET_MAX: number;
+  export function parseComposeJson(text: string): Record<string, unknown> | null;
+  export function cleanTweet(t: unknown): string;
+  export function validateCompose(raw: unknown, designs?: { id: string; kinds?: string[] }[], opts?: { validId?: (kind: string, id: string) => boolean }): ComposeResult;
+  export function designsForPrompt(designs: unknown[], max?: number): string;
+}

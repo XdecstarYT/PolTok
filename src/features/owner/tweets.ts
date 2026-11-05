@@ -4,7 +4,7 @@ import type { Candidate, Race, RaceResult } from '../../types';
 import { RACES, raceById, POLL_SERIES } from '../../data';
 import { VICTORIA, FEDERAL } from '../../data/au';
 import type { FlipRace } from '../flips/data';
-import type { Subject } from './cards';
+import type { CardDataLite, Subject, SubjectKind } from './cards';
 
 export const SITE = 'https://poltok.netlify.app';
 export interface Tweet {
@@ -224,4 +224,39 @@ export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Dat
   P(`🇦🇺 Who sits in the Senate? All 76 senators by state and party, plus ${FEDERAL.pm.name}’s government at a glance.`, '#auspol #Senate', '/au/senate', 'au-senate', ['au', 'senate']);
   P('🗳️ NSW goes to the polls in March 2027. Seats, margins and the Minns government’s path to re-election — already live on PolTok.', '#nswpol #auspol', '/au/nsw', 'nsw', ['au', 'nsw']);
   return out;
+}
+
+/* ---- Tweets linked to cards: deterministic copy from the same CardData ---- */
+
+/** Deep link path for a card subject. */
+export function pathFor(s: Subject): string {
+  if ((s.kind === 'race' || s.kind === 'flip') && s.id && raceById.has(s.id)) return `/race/${s.id}`;
+  if (s.kind === 'flip') return '/flips';
+  if (s.kind === 'race') return '/races';
+  if (s.kind === 'balance') return s.id === 'house' ? '/house' : '/live';
+  if (s.kind === 'au-seat') return s.id ? `/au/seat/${s.id}` : '/au';
+  if (s.kind === 'stat') return s.id === 'flips' ? '/flips' : s.id === 'house' ? '/house' : s.id === 'au-marginal' ? '/au/swingometer' : '/live';
+  if (s.kind === 'quote') return '/news';
+  return ({ live: '/live', map: '/map', au: '/au', 'vic-countdown': '/au/victoria', swingometer: '/au/swingometer' } as Record<string, string>)[s.id] ?? '';
+}
+
+const VIBES: [RegExp, string, string][] = [
+  [/comic|cutout|synthwave|trading/i, '💥', 'BOOM.'],
+  [/breaking|broadcast|ticker|newspaper/i, '🚨', 'Latest:'],
+  [/neon|crt|terminal|blueprint/i, '📡', '> live feed:'],
+  [/story|aurora|poster|magazine/i, '📱', 'Swipe-worthy:'],
+  [/swiss|minimal|ledger|ballot/i, '🗳️', ''],
+];
+
+/** Builds a ≤250-char tweet body (no link) from CardData; design name sets the tone. */
+export function tweetForCard(subj: Subject, d: CardDataLite, designName = ''): string {
+  const [, emoji, lead] = VIBES.find(([re]) => re.test(designName)) ?? [null, '📊', ''];
+  const stats = (d.stats ?? []).filter((s) => s.value && s.value !== '—').slice(0, 3).map((s) => `${s.label} ${s.value}`).join(' · ');
+  const tags: Record<SubjectKind, string> = {
+    race: '#Midterms2026 #ElectionNight', flip: '#Flip #Midterms2026', balance: '#Midterms2026 #BalanceOfPower', 'au-seat': '#auspol', promo: '#PolTok', stat: '#ElectionNight', quote: '#PolTok',
+  };
+  const tag = subj.kind === 'promo' && /vic|au/.test(subj.id) ? '#auspol #VicVotes' : subj.kind === 'stat' && subj.id === 'au-marginal' ? '#auspol' : tags[subj.kind];
+  const head = `${emoji} ${lead ? lead + ' ' : ''}${d.title}`;
+  const body = [head, d.subtitle, stats].filter(Boolean).join('\n');
+  return fit(body, tag);
 }

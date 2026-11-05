@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../../components';
 import { useLive } from '../../lib/live';
-import { copyImage, download, render, shareImage, type Subject } from './cards';
+import { copyImage, download, render, shareImage, type Overrides, type Subject } from './cards';
 
 /** Renders a card (design × subject) and offers Download / Copy / Share. */
-export function ImagePanel({ designId, subject, name, text }: { designId: string; subject: Subject; name: string; text?: string }) {
+export function ImagePanel({ designId, subject, name, text, overrides, alt, onBlob, noActions }: { designId: string; subject: Subject; name: string; text?: string; overrides?: Overrides; alt?: string; onBlob?: (b: Blob | null) => void; noActions?: boolean }) {
   const live = useLive();
   const [blob, setBlob] = useState<Blob | null>(null);
   const [url, setUrl] = useState('');
@@ -14,10 +14,11 @@ export function ImagePanel({ designId, subject, name, text }: { designId: string
   useEffect(() => {
     let alive = true;
     setState('loading');
-    render(designId, subject, live)
+    render(designId, subject, live, overrides)
       .then((b) => {
         if (!alive) return;
         setBlob(b);
+        onBlob?.(b);
         setState(b ? 'ok' : 'none');
       })
       .catch(() => alive && setState('error'));
@@ -25,7 +26,7 @@ export function ImagePanel({ designId, subject, name, text }: { designId: string
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [designId, subject.kind, subject.id, stamp]);
+  }, [designId, subject.kind, subject.id, stamp, JSON.stringify(overrides ?? {})]);
   useEffect(() => {
     if (!blob) return setUrl('');
     const u = URL.createObjectURL(blob);
@@ -36,13 +37,13 @@ export function ImagePanel({ designId, subject, name, text }: { designId: string
   return (
     <div className="ow-img">
       <div className="ow-img__frame">
-        {state === 'ok' && url ? <img src={url} alt={`Card preview: ${name}`} /> : <span className="ow-muted">{state === 'loading' ? 'Rendering…' : state === 'none' ? 'No image for this subject/design' : 'Render failed'}</span>}
+        {state === 'ok' && url ? <img src={url} alt={alt || `Card preview: ${name}`} /> : <span className="ow-muted">{state === 'loading' ? 'Rendering…' : state === 'none' ? 'No image for this subject/design' : 'Render failed'}</span>}
       </div>
-      <div className="ow-actions">
+      {!noActions && <div className="ow-actions">
         <Button size="sm" variant="ghost" disabled={!blob} onClick={() => blob && download(blob, file)}>Download PNG</Button>
         <Button size="sm" variant="ghost" disabled={!blob} onClick={async () => blob && setMsg((await copyImage(blob)) ? 'Image copied' : 'Copy unsupported — download instead')}>Copy image</Button>
         <Button size="sm" variant="ghost" disabled={!blob} onClick={async () => { if (!blob) return; const r = await shareImage(blob, file, text); if (r === 'unsupported') setMsg('Share unsupported here'); }}>Share…</Button>
-      </div>
+      </div>}
       {msg && <p className="ow-muted" role="status">{msg}</p>}
     </div>
   );

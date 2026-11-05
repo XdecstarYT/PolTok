@@ -12,7 +12,7 @@ export interface AiMsg {
   role: 'user' | 'assistant';
   content: string;
 }
-export type AiErrorCode = 'not_configured' | 'unavailable' | 'rate_limited' | 'too_large' | 'upstream' | 'bad_request';
+export type AiErrorCode = 'not_configured' | 'unavailable' | 'rate_limited' | 'too_large' | 'upstream' | 'bad_request' | 'bad_output';
 export class AiError extends Error {
   constructor(public code: AiErrorCode, message: string) {
     super(message);
@@ -212,4 +212,34 @@ export function fitContext(ctx: unknown, maxChars = 3500): unknown {
     list[0].splice(Math.ceil(list[0].length / 2));
   }
   return c;
+}
+
+/* ---- Owner "Make with AI": non-streaming JSON compose ---- */
+export interface ComposeDesign { id: string; name: string; kinds: string[]; w?: number; h?: number }
+export async function composeAi(opts: { prompt: string; designs: ComposeDesign[]; temperature?: number; signal?: AbortSignal }): Promise<unknown> {
+  let r: Response;
+  try {
+    r = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ question: opts.prompt.slice(0, 600), mode: 'compose', designs: opts.designs, temperature: opts.temperature ?? 0.4 }),
+      signal: opts.signal,
+    });
+  } catch (e) {
+    if ((e as Error).name === 'AbortError') throw e;
+    throw new AiError('unavailable', 'The AI service could not be reached.');
+  }
+  const ct = r.headers.get('content-type') || '';
+  let d: { ok?: boolean; result?: unknown; error?: string; code?: AiErrorCode } = {};
+  try {
+    d = ct.includes('json') ? await r.json() : {};
+  } catch {
+    /* ignore */
+  }
+  if (!r.ok || !d.ok) {
+    const code: AiErrorCode = d.code ?? (r.status === 413 ? 'too_large' : r.status === 429 ? 'rate_limited' : r.status === 404 || ct.includes('html') ? 'unavailable' : 'upstream');
+    if (code === 'not_configured') statusP = Promise.resolve('not_configured');
+    throw new AiError(code, d.error ?? 'AI is unavailable right now.');
+  }
+  return d.result;
 }

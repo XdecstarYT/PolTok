@@ -4,7 +4,7 @@ import { useLive } from '../../lib/live';
 import { useFlipsData } from '../flips/data';
 import { askAi, buildContext } from '../../lib/ai';
 import { buildTweets, fullText, linkFor, weight, type Tweet } from './tweets';
-import { listDesigns, pickDesign, type Design } from './cards';
+import { designsForKind, listDesigns, pickDesign, type Design } from './cards';
 import { ImagePanel } from './ImagePanel';
 
 export function useDesigns() {
@@ -32,6 +32,7 @@ function TweetCard({ t, designs, idx }: { t: Tweet; designs: Design[]; idx: numb
   const [note, setNote] = useState('');
   const [design, setDesign] = useState(() => pickDesign(designs, t.hints, idx, t.subject.kind).id);
   const [showImg, setShowImg] = useState(false);
+  const fit = useMemo(() => designsForKind(designs, t.subject.kind), [designs, t.subject.kind]);
   useEffect(() => {
     if (!ai) setText(t.text);
   }, [t.text, ai]);
@@ -72,11 +73,13 @@ function TweetCard({ t, designs, idx }: { t: Tweet; designs: Design[]; idx: numb
         <Button size="sm" variant="ghost" onClick={() => setShowImg((v) => !v)}>{showImg ? 'Hide image' : 'Image'}</Button>
       </div>
       {note && <p className="ow-muted" role="status">{note}</p>}
+      <label className="ow-muted">Image card ({t.subject.kind}{t.subject.id ? ` · ${t.subject.id}` : ''})
+        <select className="ow-select" value={design} onChange={(e) => { setDesign(e.target.value); setShowImg(true); }} aria-label="Card design">
+          {fit.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+        </select>
+      </label>
       {showImg && (
         <>
-          <select className="ow-select" value={design} onChange={(e) => setDesign(e.target.value)} aria-label="Card design">
-            {designs.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
-          </select>
           <ImagePanel designId={design} subject={t.subject} name={`poltok-${t.subject.kind}-${t.subject.id}`} text={fullText(cur)} />
         </>
       )}
