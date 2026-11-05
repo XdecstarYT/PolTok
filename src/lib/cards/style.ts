@@ -95,6 +95,8 @@ export const TONES: Record<string, [string, string]> = {
   dial: ['#10131c', '#ffffff'], ledger: ['#f7f9f4', '#1b1b1b'], magazine: ['#000000', '#ffffff'], 'trading-card': ['#14121f', '#ffffff'],
   synthwave: ['#12021f', '#ffffff'], blueprint: ['#0d3b78', '#ffffff'], split: ['#f5f3ee', '#14161c'], 'story-poster': ['#0b0d14', '#ffffff'],
   'au-hex': ['#0e1a14', '#ffffff'], breaking: ['#0a0a12', '#ffffff'],
+  countdown: ['#0a0c14', '#ffffff'], h2h: ['#0b0d14', '#ffffff'], waterfall: ['#f6f5f1', '#111111'], bill: ['#0f1420', '#ffffff'], trend: ['#0c1018', '#ffffff'],
+  'senate-arc': ['#f3f1ec', '#111111'], 'au-swing': ['#0f1a24', '#ffffff'], 'quote-portrait': ['#101218', '#ffffff'], carousel: ['#fbfaf7', '#111111'], table: ['#ffffff', '#0d1321'],
 };
 const DEFAULT_TONE: [string, string] = ['#0b0d14', '#ffffff'];
 export const toneOf = (id: string) => TONES[id] ?? DEFAULT_TONE;

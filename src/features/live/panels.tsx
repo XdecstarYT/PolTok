@@ -407,7 +407,7 @@ export function Markets({ markets }: { markets: Market[] }) {
                 <Sparkline data={hist} color={color} width={92} height={30} />
                 <div className="lv-mk-o mono">
                   {m.outcomes.slice(0, 2).map((x) => (
-                    <span key={x.label} style={{ color: x.color ?? 'var(--text)' }}>
+                    <span key={x.label} className="lv-ink" style={{ ['--c' as string]: x.color ?? 'var(--text)' }}>
                       {x.label} <b><AnimNum value={x.prob * 100} format={(n) => `${Math.round(n)}¢`} /></b>
                     </span>
                   ))}

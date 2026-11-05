@@ -51,23 +51,29 @@ def parse_district(slug, name):
     t = text(fetch(BASE + slug + '-district-results', slug + '.html'))
     m = re.search(r'Total enrolment as at close of rolls: ([\d,]+) Formal votes: ([\d,]+) Informal votes: ([\d,]+).*?Total votes: ([\d,]+)', t)
     num = lambda s: int(s.replace(',', ''))
-    i, j = t.find('First preference votes'), t.find('Preference distribution results')
-    k = t.find('Distributions', j)
     def rows(seg):
         out = []
         for g in ROW.finditer(seg):
             rest = g.group(2).strip()
-            # rest = "Given Party name" — VEC lists party after the given name(s); split on known party starts
-            pm = re.search(r' (Liberal|Australian|National|Victorian|Animal|Family|Freedom|Democratic|Legalise|Shooters|Libertarian|Liberal Democrats|Reason|Sustainable|Health|Angry|New Democrats|Companions|Transport|United|Pauline|Labour|The Greens).*$', ' ' + rest)
+            pm = re.search(r' (Liberal|Australian|National|Victorian|Animal|Family|Freedom|Democratic|Legalise|Shooters|Libertarian|Reason|Sustainable|Health|Angry|New Democrats|Companions|Transport|United|Pauline|Labour|The Greens).*$', ' ' + rest)
             given, party = (rest[:pm.start() - 1].strip(), pm.group(0).strip()) if pm else (rest, '')
             out.append({'n': f"{given} {g.group(1).title()}".strip(), 'p': pcode(party), 'pn': party or 'Independent', 'v': num(g.group(3)), 'pct': float(g.group(4))})
         return out
-    fp = rows(t[i:j]) if i >= 0 else []
-    tcp = rows(t[j:k]) if j >= 0 else []
+    i = t.find('First preference votes')
+    i2 = t.find('Recheck results by voting centre', i)
+    fp = rows(t[i:i2 if i2 > 0 else None]) if i >= 0 else []
+    # Final count: a two-candidate-preferred table when published, else the last count of the preference
+    # distribution (which may stop with >2 candidates once someone has an absolute majority).
+    c = t.find('Two candidate preferred results Candidate')
+    if c >= 0:
+        tcp, kind = rows(t[c:t.find('Two candidate preferred results by', c)]), '2cp'
+    else:
+        j = t.find('Preference distribution results')
+        tcp, kind = (rows(t[j:t.find('Distributions', j)]), 'pd') if j >= 0 else ([], None)
     return {
         'enrol': num(m.group(1)) if m else None, 'formal': num(m.group(2)) if m else None,
         'informal': num(m.group(3)) if m else None, 'turnout': num(m.group(4)) if m else None,
-        'fp': fp, 'tcp': tcp if len(tcp) == 2 else [],
+        'fp': sorted(fp, key=lambda c: -c['v']), 'final': tcp, 'finalKind': kind,
         'url': BASE + slug + '-district-results',
     }
 
@@ -83,7 +89,7 @@ def main():
             bad.append(f'{slug}: {e}'); continue
         tot = sum(c['v'] for c in r['fp'])
         if not r['fp'] or (r['formal'] and abs(tot - r['formal']) > 2): bad.append(f'{slug}: fp sum {tot} vs formal {r["formal"]}')
-        if len(r['tcp']) != 2: bad.append(f'{slug}: tcp rows {len(r["tcp"])}')
+        if len(r['final']) < 2: bad.append(f'{slug}: final rows {len(r["final"])}')
         results['vic-' + slug] = r
     print('districts', len(results), 'issues:', bad)
 
@@ -118,7 +124,7 @@ def main():
            '// results2022: 2022 state election, first preferences + final two-candidate (preference distribution) per district.\n'
            '// nominations: VEC nominations spreadsheet (names, district/region and registered party only).\n'
            "export interface VicCand { n: string; p: string; pn: string; v: number; pct: number }\n"
-           "export interface VicResult2022 { enrol: number | null; formal: number | null; informal: number | null; turnout: number | null; fp: VicCand[]; tcp: VicCand[]; url: string }\n")
+           "export interface VicResult2022 { enrol: number | null; formal: number | null; informal: number | null; turnout: number | null; fp: VicCand[]; final: VicCand[]; finalKind: '2cp' | 'pd' | null; url: string; note?: string }\n")
     body = (f"export const VIC_RESULTS_2022: Record<string, VicResult2022> = {json.dumps(results, ensure_ascii=False)};\n"
             f"export const VIC_NOMINATIONS: {{ asAt: string; source: string; file: string; districts: Record<string, [string, string][]>; regions: Record<string, [string, string][]> }} = {json.dumps(out['nominations'], ensure_ascii=False)};\n")
     open(os.path.join(ROOT, 'src/data/au-vic.ts'), 'w', encoding='utf8').write(hdr + body)

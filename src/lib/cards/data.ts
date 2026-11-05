@@ -4,7 +4,7 @@ import type { LiveState } from '../live';
 import type { CardData, CardKind } from './types';
 import { RACES, raceById } from '../../data';
 import { PARTY_HEX, PARTY_NAME } from '../format';
-import { pColor, party as auParty, seatById, stateName as auStateName, ALL_SEATS } from '../../features/au/model';
+import { pColor, party as auParty, seatById, stateName as auStateName, ALL_SEATS, AU_POLLS, normPolls, VIC_CLOSE } from '../../features/au/model';
 
 export const US_ATTR = 'Results: AP via NYT';
 export const AU_ATTR = 'Margins: Wikipedia pendulum (AEC / VEC)';
@@ -50,6 +50,57 @@ function raceData(kind: 'race' | 'flip', race: Race, r: RaceResult | undefined):
     party: lead?.party,
     color,
     photo: lead?.photo,
+    photo2: rows.map((x) => x.c).find((c) => c.id !== lead?.id)?.photo,
+    footer: US_ATTR,
+    url: SITE,
+    mapState: race.state,
+  };
+}
+
+const AU_POLL_ATTR = 'Polls: pollster releases, compiled by PolTok';
+const POLL_COLORS: Record<string, string> = { ALP: '#e53935', LNP: '#1e5bc6', GRN: '#2e9e44', ONP: '#f57c00', IND: '#8e7cc3', OTH: '#8b93a7' };
+
+/** Primary-vote trend from published AU polls (real data, newest last). */
+function auPollTrend(which: 'federal' | 'victoria'): CardData {
+  const rows = normPolls((AU_POLLS as Record<string, unknown>)[which]).reverse();
+  const parties = ['ALP', 'LNP', 'ONP', 'GRN'];
+  const series = parties.map((p) => ({ label: p === 'LNP' ? 'Coalition' : p === 'ONP' ? 'One Nation' : p === 'GRN' ? 'Greens' : 'Labor', color: POLL_COLORS[p], points: rows.filter((r) => r.primary[p] != null).map((r) => ({ t: r.ts, v: r.primary[p] })) })).filter((s) => s.points.length >= 2);
+  const latest = rows[rows.length - 1];
+  return {
+    kind: 'stat',
+    title: which === 'federal' ? 'Federal primary vote trend' : 'Victorian primary vote trend',
+    subtitle: latest ? `${rows.length} polls · latest ${latest.pollster}, ${latest.date}` : 'No polls loaded',
+    stats: parties.filter((p) => latest?.primary[p] != null).map((p) => ({ label: p, value: `${latest!.primary[p]}%`, color: POLL_COLORS[p] })),
+    series,
+    color: '#ffb000',
+    footer: AU_POLL_ATTR,
+    url: SITE,
+  };
+}
+
+/** Candidate profile card (candidate id = Candidate.id). */
+function candidateData(id: string, live: Live): CardData {
+  const race = RACES.find((r) => r.candidates.some((c) => c.id === id)) ?? RACES.find((r) => r.key) ?? RACES[0];
+  const c = race?.candidates.find((x) => x.id === id) ?? race?.candidates[0];
+  if (!race || !c) return { kind: 'candidate', title: 'Candidate not found', footer: US_ATTR, url: SITE };
+  const r = (live.results ?? {})[race.id];
+  const total = r ? Object.values(r.votes).reduce((a, b) => a + b, 0) : 0;
+  const pct = total > 0 ? ((r!.votes[c.id] ?? 0) / total) * 100 : NaN;
+  const status = r?.calledFor ? (r.calledFor === c.id ? 'Projected winner' : 'Projected to lose') : total > 0 ? `Counting · ~${Math.round(r!.expectedPct)}% in` : 'Awaiting results';
+  return {
+    kind: 'candidate',
+    title: c.name,
+    subtitle: `${PARTY_NAME[c.party] ?? c.party}${c.incumbent ? ' · incumbent' : ''} · ${race.title}`,
+    stats: [
+      { label: 'Vote share', value: Number.isFinite(pct) ? `${pct.toFixed(1)}%` : '—', color: pHex(c.party) },
+      { label: 'Status', value: status },
+      { label: 'Race', value: race.title },
+    ],
+    bars: Number.isFinite(pct) ? [{ label: c.name, value: pct, color: pHex(c.party) }] : undefined,
+    party: c.party,
+    color: pHex(c.party),
+    photo: c.photo,
+    quoteBy: c.name,
     footer: US_ATTR,
     url: SITE,
     mapState: race.state,
@@ -58,6 +109,8 @@ function raceData(kind: 'race' | 'flip', race: Race, r: RaceResult | undefined):
 
 export function cardDataFor(kind: CardKind, id: string, live: Live): CardData {
   const base = { footer: US_ATTR, url: SITE };
+  if (kind === 'candidate') return candidateData(id, live);
+  if (kind === 'custom') return { kind, title: 'Your headline here', subtitle: 'Add a subtitle, stats and a call to action in Card Studio.', stats: [], color: NEUTRAL, ...base, footer: 'PolTok' };
   const calls = live.calls ?? [];
   const results = live.results ?? {};
 
@@ -142,6 +195,8 @@ export function cardDataFor(kind: CardKind, id: string, live: Live): CardData {
       house: { kind, title: 'House seats won', subtitle: house ? `${house.majority} needed for control` : 'Awaiting results', stats: house ? [{ label: 'Dem', value: String(house.dem + house.ind), color: PARTY_HEX.D }, { label: 'Rep', value: String(house.rep), color: PARTY_HEX.R }, { label: 'Undecided', value: String(house.undecided), color: GREY }] : [{ label: 'Seats', value: '435' }], color: NEUTRAL, ...base },
     };
     const auClose = ALL_SEATS.filter((s) => s.chamber === 'federal' && s.margin != null && s.margin < 2).length;
+    variants['au-polls-federal'] = auPollTrend('federal');
+    variants['au-polls-vic'] = auPollTrend('victoria');
     variants['au-marginal'] = { kind, title: 'Federal seats on a knife-edge', subtitle: 'Held by less than 2% (two-party preferred)', stats: [{ label: 'Seats under 2%', value: String(auClose), color: '#ffb000' }, { label: 'Federal seats', value: String(ALL_SEATS.filter((s) => s.chamber === 'federal').length) }], color: '#ffb000', footer: AU_ATTR, url: SITE };
     return variants[id] ?? variants.calls;
   }
@@ -157,6 +212,7 @@ export function cardDataFor(kind: CardKind, id: string, live: Live): CardData {
     default: { kind, title: 'Every race. Every call. Live.', subtitle: 'Senate, House & governor results as they come in — free, fast, no paywall.', stats: [{ label: 'Races tracked', value: String(RACES.length) }, { label: 'Called', value: String(called) }, { label: 'Flips', value: String(flips) }], color: NEUTRAL, ...base },
     live: { kind, title: 'Results are coming in now', subtitle: `${counting} races reporting · ${called} called · follow along live`, stats: [{ label: 'Reporting', value: String(counting) }, { label: 'Called', value: String(called) }], color: '#ff3d55', ...base },
     map: { kind, title: 'Watch the map fill in', subtitle: 'Interactive results map, race calls and flips in real time.', stats: [{ label: 'States', value: '50' }, { label: 'Races', value: String(RACES.length) }], color: NEUTRAL, mapState: 'PA', ...base },
+    'vic-countdown': { kind, title: 'Victoria votes', subtitle: 'Victorian state election · polls close 6pm AEDT', countdownTo: VIC_CLOSE, stats: [{ label: 'Assembly seats', value: '88' }, { label: 'For majority', value: '45' }], color: '#ffb000', footer: 'Date: Victorian Electoral Commission', url: SITE, mapState: 'AU:vic-melbourne' },
     au: { kind, title: 'Australian politics, seat by seat', subtitle: 'Federal & Victorian pendulums, marginal seats and polling.', stats: [{ label: 'Seats', value: String(ALL_SEATS.length) }], color: '#ffb000', footer: AU_ATTR, url: SITE, mapState: 'AU:kooyong' },
   };
   return promos[id] ?? promos.default;

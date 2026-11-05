@@ -291,3 +291,7 @@
   .lv-skel, .lv-pulse, .lv-feed-item { animation: none; }
   .lv-bop-seg, .lv-cand-bar i, .lv-tl-fill, .lv-tl-now, .lv-sticky { transition: none; }
 }
+
+/* Text tinted by a raw hex: as-is on dark themes, ink-mixed on paper for AA contrast. */
+.lv-ink { color: var(--c); }
+[data-ui='paper'] .lv-ink { color: color-mix(in oklab, var(--c) 42%, var(--text)); }
