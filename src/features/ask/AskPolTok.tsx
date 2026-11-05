@@ -1,7 +1,8 @@
 /** Floating "Ask PolTok" button + slide-over chat. Mount once in Shell: <AskPolTok />. */
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Chat } from './Chat';
+// Chat (and its map cards) load on first open so the FAB doesn't pull USMap/us-atlas into the entry chunk.
+const Chat = lazy(() => import('./Chat').then((m) => ({ default: m.Chat })));
 import './ask.css';
 
 export function AskPolTok() {
@@ -29,7 +30,7 @@ export function AskPolTok() {
               <Link to="/ask" className="ask-link" onClick={() => setOpen(false)}>Open page</Link>
               <button type="button" className="ask-x" onClick={() => setOpen(false)} aria-label="Close">×</button>
             </header>
-            <Chat autoFocus />
+            <Suspense fallback={null}><Chat autoFocus /></Suspense>
           </aside>
         </div>
       )}

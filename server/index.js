@@ -154,6 +154,10 @@ async function main() {
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
         if (p.startsWith('/api/au/') && (await au.handle(p, url, json, res))) return;
         if (p.startsWith('/api/parliament')) return (await import('./parliament.js')).nodeParliamentHandler(p, url, json, res);
+        if (p === '/api/calendar' || p === '/api/calendar.ics') return (await import('./calendar.js')).nodeCalendarHandler(p, url, res);
+        if (p.startsWith('/api/world')) return (await import('./world.js')).nodeWorldHandler(p, url, json, res);
+        if (p.startsWith('/api/money')) return (await import('./money.js')).nodeMoneyHandler(p, url, json, res);
+        if (p === '/api/pres2028') return (await import('./pres2028.js')).nodePres2028Handler(json, res);
         switch (p) {
           case '/api/health': {
             const source = pick(url.searchParams.get('source'));

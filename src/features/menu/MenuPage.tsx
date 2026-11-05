@@ -73,6 +73,7 @@ export default function MenuPage() {
         { title: 'Compare', desc: 'Races side by side', to: '/compare', icon: ic.compare },
         { title: 'Forecast', desc: 'Model odds by chamber', to: '/forecast', icon: ic.forecast },
         { title: 'Polls', desc: 'Averages & latest polls', to: '/polls', icon: ic.polls },
+        { title: '2028 race', desc: 'Presidential odds & path to 270', to: '/2028', icon: ic.map },
       ],
     },
     {
@@ -103,6 +104,7 @@ export default function MenuPage() {
       id: 'tools', title: 'Tools', kicker: 'Make it yours', tone: 'var(--signal)',
       tiles: [
         { title: 'Search', desc: 'Races, people, places', to: '/search', icon: ic.search },
+        { title: 'Calendar', desc: 'Elections & key dates, ICS', to: '/calendar', icon: ic.forecast },
         { title: 'Watchlist', desc: 'Your starred races', to: '/watch', icon: ic.star, badge: ids.length ? <Count n={ids.length} label="starred" /> : undefined },
         { title: 'Embed builder', desc: 'Live widgets for your site', to: '/embed', icon: ic.code },
         { title: 'Settings', desc: 'Theme, data source & more', action: 'settings', icon: ic.gear },

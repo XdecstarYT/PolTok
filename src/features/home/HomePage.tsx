@@ -1,4 +1,5 @@
 import { useMemo, type CSSProperties } from 'react';
+import { useSeo } from '../../lib/seo';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLive } from '../../lib/live';
@@ -444,6 +445,7 @@ function SourceFoot() {
 }
 
 export default function HomePage() {
+  useSeo({ description: 'Live US and Australian election results, maps, forecasts and news in one command center.' });
   const { flipsAll, flips, flipsLoading } = useResultsData();
   return (
     <div className="page hm">

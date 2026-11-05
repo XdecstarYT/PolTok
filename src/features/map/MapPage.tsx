@@ -2,6 +2,7 @@
  * /map and /map/:mode — full-bleed interactive electoral map.
  * Modes: pres2024 | senate | governor | house | live | build
  */
+import { useSeo } from '../../lib/seo';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -75,6 +76,7 @@ const LIVE_CHAMBERS: { id: Chamber; label: string }[] = [
 const CHAMBER_ORDER: Record<Chamber, number> = { senate: 0, governor: 1, house: 2 };
 
 export default function MapPage() {
+  useSeo({ title: 'Election map', description: 'Interactive US election map with state and county results.' });
   const params = useParams<{ mode?: string }>();
   const navigate = useNavigate();
   const mode: MapMode = isMode(params.mode) ? params.mode : 'pres2024';

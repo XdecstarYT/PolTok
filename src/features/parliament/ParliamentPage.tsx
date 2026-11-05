@@ -2,6 +2,7 @@
  * /parliament — live bill tracker: US Congress (119th) and the Parliament of Australia.
  * Data: /api/parliament/* (server/parliament.js · netlify/functions/parliament.mjs). Never fabricated.
  */
+import { useSeo } from '../../lib/seo';
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fmtTime, tzAbbr } from '../../components';
@@ -12,6 +13,7 @@ import './parliament.css';
 const BILL_NO = /^\s*(h\.?\s*r\.?|s\.?|h\.?\s*j\.?\s*res\.?|s\.?\s*j\.?\s*res\.?)\s*\d+\s*$/i;
 
 export default function ParliamentPage() {
+  useSeo({ title: 'Parliament', description: 'Australian Parliament bills, votes and divisions.' });
   const [sp, setSp] = useSearchParams();
   const country: Country = sp.get('c') === 'au' || sp.get('tab') === 'au' ? 'au' : 'us';
   const setCountry = (c: Country) => setSp(c === 'us' ? {} : { c }, { replace: true });

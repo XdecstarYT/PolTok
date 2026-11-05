@@ -3,6 +3,7 @@ import { tzAbbr } from '../../components/time';
  * /live — Election-night control room. Owned by the Live agent (src/features/live/**).
  * Results come from useLive(): live AP data (via NYT) or the simulation, per the user toggle.
  */
+import { useSeo } from '../../lib/seo';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,6 +19,7 @@ import { AnimNum, prefersReducedMotion, useNow } from './widgets';
 import './live.css';
 
 export default function LivePage() {
+  useSeo({ title: 'Live results', description: 'Real-time election night results, race calls and balance of power.' });
   const live = useLive();
   const now = useNow(1000);
   const views = useMemo(() => buildViews(live.results), [live.results]);

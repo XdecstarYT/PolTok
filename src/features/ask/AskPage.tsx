@@ -1,10 +1,12 @@
 /** /ask — "Night in 60 seconds" AI brief + full chat. */
+import { useSeo } from '../../lib/seo';
 import { Markdown } from './Markdown';
 import { Chat, Disclaimer, Sources } from './Chat';
 import { useAiOneShot, useAiStatus, errorText } from './useAsk';
 import './ask.css';
 
 export default function AskPage() {
+  useSeo({ title: 'Ask PolTok', description: 'Ask questions about elections, results and polling.' });
   const status = useAiStatus();
   const brief = useAiOneShot('brief', 'Give me the night in 60 seconds.');
   const off = status === 'not_configured' || status === 'unavailable';

@@ -1,6 +1,7 @@
 /**
  * /governors — all 36 governor races, live AP results (NYT), map of all 50 governorships after tonight.
  */
+import { useSeo } from '../../lib/seo';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Avatar, LiveDot, fmtTime, tzAbbr } from '../../components';
@@ -17,6 +18,7 @@ const PNAME = { D: 'Democratic', R: 'Republican', O: 'Independent/other' } as co
 interface Seat { abbr: string; party: 'D' | 'R' | 'O'; prior: 'D' | 'R' | 'O'; up: boolean; called: boolean; c?: Contest }
 
 export default function GovernorsPage() {
+  useSeo({ title: 'Governor races', description: 'Governor races across the states with results and context.' });
   const { races, error, at } = useGovernorRaces();
   const nav = useNavigate();
   const [filter, setFilter] = useState<'all' | 'uncalled' | 'flips' | 'close'>('all');

@@ -36,11 +36,13 @@ const CandidatePage = lazy(() => import('../features/candidates/CandidatePage'))
 const ParliamentPage = lazy(() => import('../features/parliament/ParliamentPage'));
 const ParliamentBillPage = lazy(() => import('../features/parliament/BillPage'));
 const OwnerPage = lazy(() => import('../features/owner/OwnerPage'));
+const Pres2028Page = lazy(() => import('../features/2028/Pres2028Page'));
 const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
 const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
 
 const MenuPage = lazy(() => import('../features/menu/MenuPage'));
 const AskPage = lazy(() => import('../features/ask/AskPage'));
+const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'));
 
 export function App() {
   const { pathname } = useLocation();
@@ -85,7 +87,9 @@ export function App() {
           <Route path="/embed" element={<EmbedBuilder />} />
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/ask" element={<AskPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/owner" element={<OwnerPage />} />
+          <Route path="/2028" element={<Pres2028Page />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>

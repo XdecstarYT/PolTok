@@ -107,6 +107,7 @@ function Clock() {
 /** Secondary pages, grouped under the "More" menu so the top bar fits. */
 export const NAV_MORE = [
   { to: '/house', label: 'House', sub: 'All 435 districts, live' },
+  { to: '/2028', label: '2028', sub: 'Presidential race odds & path to 270' },
   { to: '/embed', label: 'Embed', sub: 'Live widgets for your site' },
   { to: '/candidates', label: 'Candidates', sub: 'Every nominee, headshots & results' },
   { to: '/flips', label: 'Flips', sub: 'Seats that changed hands' },
@@ -116,6 +117,7 @@ export const NAV_MORE = [
   { to: '/compare', label: 'Compare', sub: 'Races side by side, polling miss' },
   { to: '/watch', label: 'Watchlist', sub: 'Your starred races' },
   { to: '/parliament', label: 'Parliament', sub: 'Live bills — US Congress & Australia' },
+  { to: '/calendar', label: 'Calendar', sub: 'Elections & key dates — US & AU' },
 ];
 
 function MoreMenu() {

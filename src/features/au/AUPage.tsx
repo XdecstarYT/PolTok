@@ -1,4 +1,5 @@
 /** /au — Australia hub (AU-UI). Data: src/data/au.ts (static, researched) + /api/au/* (live). */
+import { useSeo } from '../../lib/seo';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Countdown, LiveDot } from '../../components';
@@ -14,6 +15,7 @@ const NSW_DATE = Date.parse('2027-03-13T07:00:00Z');
 
 
 export default function AUPage() {
+  useSeo({ title: 'Australia', description: 'Australian federal and state election results, seats and swing.' });
   const news = useAuNews();
   const markets = useAuMarkets();
   const pm = leader(FEDERAL.pm);

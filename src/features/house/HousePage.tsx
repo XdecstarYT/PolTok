@@ -2,6 +2,7 @@
  * /house — live results for all 435 House races (AP via NYT results-house.json, polled every 90 s).
  * Owned by src/features/house/**.
  */
+import { useSeo } from '../../lib/seo';
 import { useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { LiveDot, Sheet, fmtTime, tzAbbr } from '../../components';
@@ -24,6 +25,7 @@ function Pty({ p }: { p?: P }) {
 }
 
 export default function HousePage() {
+  useSeo({ title: 'House races', description: 'Every US House race: maps, results and the battle for control.' });
   const { data, error, fetchedAt, loading } = useHouseData();
   const [view, setView] = useState<'hex' | 'geo'>('hex');
   const [sel, setSel] = useState<string | null>(null);
