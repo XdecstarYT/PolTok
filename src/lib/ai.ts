@@ -88,17 +88,22 @@ export async function buildContext(live: LiveState, question: string, raceId?: s
   const houseClose = house
     .filter((r) => !live.results[r.id]?.calledFor && (live.results[r.id]?.expectedPct ?? 0) > 0)
     .sort((a, b) => margin(live.results[a.id]) - margin(live.results[b.id]))
-    .slice(0, 15);
-  const houseMentioned = house.filter(mentioned).slice(0, 15);
+    .slice(0, 6);
+  const houseMentioned = house.filter(mentioned).slice(0, 8);
   const houseSet = [...new Map([...houseCalledFlips, ...houseClose, ...houseMentioned].map((r) => [r.id, r])).values()];
 
   const ctx: Record<string, unknown> = {
     ...base,
-    senateAndGovernorRaces: statewide.map((r) => raceLine(r, live.results[r.id])),
+    note2: 'Screen subset only; the server adds full AP results.',
+    senateAndGovernorRaces: statewide
+      .filter((r) => mentioned(r) || !live.results[r.id]?.calledFor)
+      .sort((a, b) => Number(mentioned(b)) - Number(mentioned(a)))
+      .slice(0, 12)
+      .map((r) => raceLine(r, live.results[r.id])),
     houseRaces: { note: 'Subset: called flips, closest uncalled, and districts mentioned in the question.', races: houseSet.map((r) => raceLine(r, live.results[r.id])) },
-    recentCalls: live.calls.slice(0, 20).map((c) => ({ raceId: c.raceId, party: c.party, flip: c.flip, at: new Date(c.at).toISOString() })),
-    markets: live.markets.filter((m) => !m.raceId).slice(0, 8).map((m) => ({ question: m.question, outcomes: m.outcomes, source: m.source })),
-    headlines: live.news.slice(0, 25).map((n) => ({ title: n.title, source: n.source, at: new Date(n.publishedAt).toISOString() })),
+    recentCalls: live.calls.slice(0, 10).map((c) => ({ raceId: c.raceId, party: c.party, flip: c.flip, at: new Date(c.at).toISOString() })),
+    markets: live.markets.filter((m) => !m.raceId).slice(0, 3).map((m) => ({ question: m.question, outcomes: m.outcomes, source: m.source })),
+    headlines: live.news.slice(0, 8).map((n) => ({ title: n.title, source: n.source, at: new Date(n.publishedAt).toISOString() })),
   };
   if (AU_RE.test(question)) ctx.australia = await auContext();
   return ctx;
@@ -184,14 +189,14 @@ export async function askAi(
 
 /** Source names cited as [Name] in an answer. */
 export function citedSources(text: string) {
-  return [...new Set([...text.matchAll(/\[([^\]\n]{2,40})\]/g)].map((m) => m[1].trim()))];
+  return [...new Set([...text.replace(/\[\[[^\]\n]*\]\]/g, '').matchAll(/\[([^\]\n]{2,40})\]/g)].map((m) => m[1].trim()))];
 }
 
 /**
- * Keep the AI context small enough for Groq's free-tier token budget (~9k chars of JSON):
+ * Keep the screen context small (the server adds its own retrieved live facts + guide, ~6k tokens total):
  * repeatedly halve the longest array (headlines, races, calls…) until it fits.
  */
-export function fitContext(ctx: unknown, maxChars = 8500): unknown {
+export function fitContext(ctx: unknown, maxChars = 3500): unknown {
   if (ctx == null) return ctx;
   const c = JSON.parse(JSON.stringify(ctx));
   const arrays = (o: unknown, out: unknown[][] = []): unknown[][] => {

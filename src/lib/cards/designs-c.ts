@@ -1,5 +1,5 @@
 import { ALL, X, SQ, PT, ST, type Design, hero, resultList, balanceBlock, tag, headline, glass } from './common';
-import { blob, caps, dek, drawLines, drawMap, drawAuHex, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, stackBar, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf } from './kit';
+import { blob, caps, capsFit, dek, drawLines, drawMap, drawAuHex, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, stackBar, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf } from './kit';
 
 /* 21 ─ Swing dial */
 const dial: Design = {
@@ -100,7 +100,7 @@ const magazine: Design = {
       ctx.save(); ctx.translate(W - 190, 560); ctx.rotate(0.12);
       ctx.fillStyle = '#ffd400'; ctx.beginPath(); ctx.arc(0, 0, 130, 0, Math.PI * 2); ctx.fill();
       headline(k, h.value, 0, 20, 200, 80, 'cond', '#111', 700, 'center');
-      caps(ctx, ellipsize(ctx, h.label, 200), 0, 62, font('sans', 18, 800), '#111', 0.06, 'center'); ctx.restore();
+      capsFit(ctx, h.label, 200, 0, 62, font('sans', 18, 800), '#111', 0.06, 'center'); ctx.restore();
     }
     footerLine(k, 60, H - 60, W - 120, 20, 'rgba(255,255,255,0.75)', '#ffd400');
     ctx.fillStyle = '#fff'; ctx.fillRect(W - 220, H - 160, 160, 70);
@@ -173,7 +173,7 @@ const synth: Design = {
     if (h.value) {
       ctx.save(); ctx.shadowColor = '#ff2d95'; ctx.shadowBlur = 30;
       headline(k, h.value, W * 0.78, hz - 60, 400, 120, 'display', '#fff', 700, 'center', true); ctx.restore();
-      caps(ctx, ellipsize(ctx, h.label, 380), W * 0.78, hz - 20, font('sans', 18, 800), '#fff', 0.1, 'center');
+      capsFit(ctx, h.label, 380, W * 0.78, hz - 20, font('sans', 18, 800), '#fff', 0.1, 'center');
     }
     ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, H - 60, W, 60);
     footerLine(k, 60, H - 22, W - 120, 18, '#ffd1f0', '#7afcff');
@@ -256,7 +256,7 @@ const storyPoster: Design = {
     const big = d.kind === 'quote' ? '“' : (hero(k).value || 'LIVE');
     fit(ctx, big, W - 120, 520, 'cond', 700, 80);
     ctx.fillStyle = fg; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(big, 50, 700);
-    caps(ctx, ellipsize(ctx, d.kind === 'quote' ? 'Quote' : hero(k).label || k.kicker, W - 140), 70, 120, font('cond', 44, 700), fg, 0.1);
+    capsFit(ctx, d.kind === 'quote' ? 'Quote' : hero(k).label || k.kicker, W - 140, 70, 120, font('cond', 44, 700), fg, 0.1);
     wordmark(ctx, W - 70, 120, 48, { color: fg, accent: fg === '#ffffff' ? '#0b0d14' : '#0b0d14', fam: 'cond', align: 'right' });
     const tb = fitBlock(ctx, d.title.toUpperCase(), W - 140, 520, 150, 'cond', 700, 0.98, 5, 40);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
@@ -293,7 +293,7 @@ const auHex: Design = {
     st.forEach((s, i) => {
       const x = 70 + i * cw;
       rr(ctx, x, 1040, cw - 20, 150, 16); ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fill();
-      caps(ctx, ellipsize(ctx, s.label, cw - 60), x + 24, 1082, font('sans', 18, 800), 'rgba(255,255,255,0.6)', 0.1);
+      capsFit(ctx, s.label, cw - 60, x + 24, 1082, font('sans', 18, 800), 'rgba(255,255,255,0.6)', 0.1);
       headline(k, s.value, x + 24, 1160, cw - 70, 60, 'display', s.color ?? '#fff', 700);
     });
     footerLine(k, 70, H - 60, W - 140, 20, 'rgba(255,255,255,0.55)', '#ffb000');
@@ -314,7 +314,7 @@ const breaking: Design = {
     ctx.fillStyle = '#fff'; ctx.fillRect(-60, 190, W + 120, 70);
     fit(ctx, 'BREAKING', W - 120, 170, 'cond', 700);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillText('BREAKING', W / 2, 160);
-    caps(ctx, ellipsize(ctx, k.kicker, W - 120), W / 2, 240, font('cond', 40, 700), '#e8112d', 0.2, 'center');
+    capsFit(ctx, k.kicker, W - 120, W / 2, 240, font('cond', 40, 700), '#e8112d', 0.2, 'center');
     ctx.restore();
     wordmark(ctx, W / 2, 160, 60, { align: 'center' });
     let y = 620;

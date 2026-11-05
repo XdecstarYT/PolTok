@@ -1,5 +1,5 @@
 import { ALL, X, SQ, PT, type Design, hero, resultList, balanceBlock, tag, headline, glass } from './common';
-import { blob, caps, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, text, vignette, wordmark, wrap, ellipsize, fit } from './kit';
+import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, text, vignette, wordmark, wrap, ellipsize, fit } from './kit';
 
 /* 1 ─ Broadcast lower third */
 const broadcast: Design = {
@@ -235,7 +235,7 @@ const mapHero: Design = {
       ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 30;
       fit(ctx, h.value, 420, 130, 'display', 700); ctx.fillStyle = '#fff'; ctx.textAlign = 'right'; ctx.fillText(h.value, W - 60, 680);
       ctx.restore();
-      caps(ctx, ellipsize(ctx, h.label, 400), W - 60, 716, font('sans', 22, 700), h.color === '#fff' ? '#fff' : mix(h.color, '#ffffff', 0.35), 0.06, 'right');
+      capsFit(ctx, h.label, 400, W - 60, 716, font('sans', 22, 700), h.color === '#fff' ? '#fff' : mix(h.color, '#ffffff', 0.35), 0.06, 'right');
     }
     headline(k, d.title, 60, 820, W - 120, 84, 'display', '#fff', 700);
     ctx.font = font('sans', 28, 500); ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.textAlign = 'left';
@@ -261,7 +261,7 @@ const bigNumber: Design = {
     grad.addColorStop(0, '#ffffff'); grad.addColorStop(1, mix(h.color, '#ffffff', 0.2));
     ctx.fillStyle = grad; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(v, 62, 200 + px * 0.86);
-    caps(ctx, ellipsize(ctx, h.label, W - 140), 70, 260 + px * 0.86, font('sans', 30, 800), mix(h.color, '#ffffff', 0.3), 0.1);
+    capsFit(ctx, h.label, W - 140, 70, 260 + px * 0.86, font('sans', 30, 800), mix(h.color, '#ffffff', 0.3), 0.1);
     const tb = fitBlock(ctx, d.title, W - 140, 220, 80, 'display', 700, 1.05, 2, 34);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
     let y = drawLines(ctx, tb.lines, 70, 340 + px * 0.86 + tb.px, tb.lh);
@@ -274,7 +274,7 @@ const bigNumber: Design = {
         const x = 70 + i * cw;
         ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fillRect(x, H - 230, cw - 20, 2);
         headline(k, s.value, x, H - 160, cw - 30, 56, 'display', s.color ?? '#fff', 700);
-        caps(ctx, ellipsize(ctx, s.label, cw - 30), x, H - 125, font('sans', 18, 700), 'rgba(255,255,255,0.6)', 0.08);
+        capsFit(ctx, s.label, cw - 30, x, H - 125, font('sans', 18, 700), 'rgba(255,255,255,0.6)', 0.08);
       });
     }
     footerLine(k, 70, H - 50, W - 140, 20, 'rgba(255,255,255,0.5)', k.accent);
@@ -347,7 +347,7 @@ const ticker: Design = {
     const rows = (d.stats ?? []).slice(0, 4);
     rows.forEach((s, i) => {
       const ry = 120 + i * ((H - 290) / Math.max(rows.length, 1));
-      caps(ctx, ellipsize(ctx, s.label, bw - 40), bx + 20, ry + 30, font('mono', 18, 700), '#8b949e', 0.04);
+      capsFit(ctx, s.label, bw - 40, bx + 20, ry + 30, font('mono', 18, 700), '#8b949e', 0.04);
       headline(k, s.value, bx + 20, ry + 82, bw - 40, 50, 'mono', s.color ?? '#3fb950', 700);
     });
     if (!rows.length) { ctx.font = font('mono', 24, 400); ctx.fillStyle = '#8b949e'; drawLines(ctx, wrap(ctx, d.subtitle ?? 'PolTok', bw - 40, 6), bx + 20, 160, 34); }

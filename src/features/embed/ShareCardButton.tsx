@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Modal } from '../../components';
 import { useLive } from '../../lib/live';
-import { renderShareCard, SHARE_SIZES, shareFileName, type ShareFormat, type ShareKind } from '../../lib/share';
+import { cardDataFor, cardFileName, designsFor, renderCard, type CardData, type CardKind } from '../../lib/cards';
 import './embed.css';
 
 /**
- * <ShareCardButton kind="race" id="PA-SEN" /> — opens a preview of a PNG share card with
- * Download / Copy image / Share (native share sheet with the file, when supported).
+ * <ShareCardButton kind="race" id="PA-SEN" /> — opens a share-card picker: browse every card design
+ * compatible with the kind (thumbnail strip), then Download / Copy image / Share.
  */
-export function ShareCardButton({ kind, id, label = 'Share card', className }: { kind: ShareKind; id: string; label?: string; className?: string }) {
+export function ShareCardButton({ kind, id, label = 'Share card', className }: { kind: CardKind; id: string; label?: string; className?: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -23,31 +23,43 @@ export function ShareCardButton({ kind, id, label = 'Share card', className }: {
   );
 }
 
-function SharePreview({ kind, id, onClose }: { kind: ShareKind; id: string; onClose: () => void }) {
+function SharePreview({ kind, id, onClose }: { kind: CardKind; id: string; onClose: () => void }) {
   const live = useLive();
-  const [format, setFormat] = useState<ShareFormat>('landscape');
-  const [blob, setBlob] = useState<Blob | null>(null);
-  const [url, setUrl] = useState<string | null>(null);
-  const [state, setState] = useState<'rendering' | 'ready' | 'missing'>('rendering');
+  const designs = useMemo(() => designsFor(kind), [kind]);
+  // Snapshot data when opened (not on every live tick, so previews don't flicker).
+  const data = useMemo<CardData>(() => cardDataFor(kind, id, live), [kind, id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [sel, setSel] = useState(designs[0]?.id ?? '');
+  const [thumbs, setThumbs] = useState<Record<string, string>>({});
+  const blobs = useRef<Record<string, Blob>>({});
   const [msg, setMsg] = useState('');
 
-  // Snapshot data when opened / format changes (not on every live tick, so the preview doesn't flicker).
+  // Render the selected design first, then the rest in order (sequentially to keep the UI responsive).
   useEffect(() => {
     let cancelled = false;
-    setState('rendering');
-    renderShareCard(kind, id, format, live).then((b) => {
-      if (cancelled) return;
-      if (!b) { setState('missing'); return; }
-      setBlob(b);
-      setUrl((old) => { if (old) URL.revokeObjectURL(old); return URL.createObjectURL(b); });
-      setState('ready');
-    });
-    return () => { cancelled = true; };
+    const urls: string[] = [];
+    (async () => {
+      const order = [sel, ...designs.map((d) => d.id).filter((x) => x !== sel)];
+      for (const did of order) {
+        if (cancelled) return;
+        try {
+          const b = await renderCard(did, data);
+          if (cancelled) return;
+          blobs.current[did] = b;
+          const u = URL.createObjectURL(b);
+          urls.push(u);
+          setThumbs((t) => ({ ...t, [did]: u }));
+        } catch { /* skip broken design */ }
+        await new Promise((r) => setTimeout(r, 0));
+      }
+    })();
+    return () => { cancelled = true; urls.forEach((u) => URL.revokeObjectURL(u)); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kind, id, format]);
-  useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
+  }, [data, designs]);
 
-  const name = shareFileName(kind, id, format);
+  const design = designs.find((d) => d.id === sel);
+  const url = thumbs[sel];
+  const blob = url ? blobs.current[sel] : undefined;
+  const name = cardFileName(sel, data);
   const download = useCallback(() => {
     if (!url) return;
     const a = document.createElement('a');
@@ -75,30 +87,30 @@ function SharePreview({ kind, id, onClose }: { kind: ShareKind; id: string; onCl
       if ((e as Error)?.name !== 'AbortError') setMsg('Sharing failed — try Download.');
     }
   }, [file]);
+  const tall = design ? design.size.h > design.size.w : false;
 
   return (
-    <Modal open onClose={onClose} title="Share card" width={720}>
+    <Modal open onClose={onClose} title="Share card" width={760}>
       <div className="sc">
-        <div className="sc__formats" role="radiogroup" aria-label="Card format">
-          {(Object.keys(SHARE_SIZES) as ShareFormat[]).map((k) => (
-            <button key={k} type="button" role="radio" aria-checked={format === k} className={`chip ${format === k ? 'is-active' : ''}`} onClick={() => setFormat(k)}>
-              {SHARE_SIZES[k].label}
+        <div className={`sc__preview ${tall ? 'sc__preview--story' : ''}`} aria-busy={!url}>
+          {url ? <img src={url} alt={`${design?.name ?? 'Share'} card preview`} /> : <p className="sc__empty">Rendering…</p>}
+        </div>
+        <div className="sc__meta">
+          <strong>{design?.name}</strong> <span>{design?.preview}</span> <span>· {designs.length} designs</span>
+        </div>
+        <div className="sc__strip" role="radiogroup" aria-label="Card design">
+          {designs.map((d) => (
+            <button key={d.id} type="button" role="radio" aria-checked={sel === d.id} title={`${d.name} (${d.size.w}×${d.size.h})`}
+              className={`sc__thumb ${sel === d.id ? 'is-active' : ''}`} onClick={() => { setSel(d.id); setMsg(''); }}>
+              {thumbs[d.id] ? <img src={thumbs[d.id]} alt="" loading="lazy" /> : <span className="sc__thumb-ph" style={{ aspectRatio: `${d.size.w} / ${d.size.h}` }} />}
+              <span className="sc__thumb-name">{d.name}</span>
             </button>
           ))}
         </div>
-        <div className={`sc__preview sc__preview--${format}`} aria-busy={state === 'rendering'}>
-          {state === 'missing' ? (
-            <p className="sc__empty">No data for this card yet — try again once results are in.</p>
-          ) : url ? (
-            <img src={url} alt={`Share card preview (${SHARE_SIZES[format].label})`} style={{ opacity: state === 'rendering' ? 0.5 : 1 }} />
-          ) : (
-            <p className="sc__empty">Rendering…</p>
-          )}
-        </div>
         <div className="sc__actions">
-          <button type="button" className="btn btn--accent" onClick={download} disabled={state !== 'ready'} data-autofocus>Download PNG</button>
-          <button type="button" className="btn" onClick={copy} disabled={state !== 'ready' || typeof ClipboardItem === 'undefined'}>Copy image</button>
-          {canShare && <button type="button" className="btn" onClick={share} disabled={state !== 'ready'}>Share…</button>}
+          <button type="button" className="btn btn--accent" onClick={download} disabled={!url} data-autofocus>Download PNG</button>
+          <button type="button" className="btn" onClick={copy} disabled={!url || typeof ClipboardItem === 'undefined'}>Copy image</button>
+          {canShare && <button type="button" className="btn" onClick={share} disabled={!url}>Share…</button>}
         </div>
         <p className="sc__msg" role="status" aria-live="polite">{msg}</p>
       </div>

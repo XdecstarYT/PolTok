@@ -29,7 +29,7 @@ function raceData(kind: 'race' | 'flip', race: Race, r: RaceResult | undefined):
       const v = r?.votes[c.id] ?? 0;
       return { c, v, pct: total > 0 ? (v / total) * 100 : 0 };
     })
-    .sort((a, b) => b.v - a.v || (a.c.party === 'D' ? -1 : a.c.party === 'R' ? 0 : 1))
+    .sort((a, b) => (b.c.id === r?.calledFor ? 1 : 0) - (a.c.id === r?.calledFor ? 1 : 0) || b.v - a.v || (a.c.party === 'D' ? -1 : a.c.party === 'R' ? 0 : 1))
     .slice(0, 4);
   const winner = list.find((c) => c.id === r?.calledFor);
   const lead = winner ?? rows[0]?.c;

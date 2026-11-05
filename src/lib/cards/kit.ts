@@ -157,6 +157,16 @@ export function caps(ctx: Ctx, t: string, x: number, y: number, f: string, color
   return w;
 }
 
+/** caps() that ellipsizes to maxW using the caps font. */
+export function capsFit(ctx: Ctx, t: string, maxW: number, x: number, y: number, f: string, color: string, spacing = 0.12, align: CanvasTextAlign = 'left') {
+  ctx.font = f;
+  const px = parseFloat(/(\d+)px/.exec(f)?.[1] ?? '16');
+  let u = t.toUpperCase();
+  const est = (s: string) => ctx.measureText(s).width + s.length * px * spacing;
+  if (est(u) > maxW) { while (u.length > 1 && est(u + '…') > maxW) u = u.slice(0, -1); u = u.trimEnd() + '…'; }
+  return caps(ctx, u, x, y, f, color, spacing, align);
+}
+
 /* ───────── colour ───────── */
 
 export function hexToRgb(c: string): [number, number, number] {

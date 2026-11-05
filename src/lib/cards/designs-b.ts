@@ -1,5 +1,5 @@
 import { ALL, X, SQ, PT, ST, type Design, hero, resultList, balanceBlock, tag, headline, glass } from './common';
-import { blob, caps, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, star, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf } from './kit';
+import { blob, caps, capsFit, dek, drawLines, drawMap, fitBlock, font, footerLine, grain, halftone, ink, mix, nameOf, portrait, rgba, rr, rng, stackBar, star, text, vignette, wordmark, wrap, ellipsize, fit, rowsOf } from './kit';
 
 /* 11 ─ Retro CRT */
 const crt: Design = {
@@ -192,7 +192,7 @@ const comic: Design = {
     // caption box
     ctx.save(); ctx.translate(60, 40); ctx.rotate(-0.02);
     ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 520, 80); ctx.lineWidth = 6; ctx.strokeStyle = '#000'; ctx.strokeRect(0, 0, 520, 80);
-    caps(ctx, ellipsize(ctx, k.kicker, 470), 24, 54, font('cond', 36, 700), '#000', 0.06); ctx.restore();
+    capsFit(ctx, k.kicker, 470, 24, 54, font('cond', 36, 700), '#000', 0.06); ctx.restore();
     // bottom panel
     const py = H * 0.78;
     ctx.fillStyle = '#fff'; ctx.fillRect(40, py - 30, W - 80, H - py - 10); ctx.lineWidth = 8; ctx.strokeStyle = '#000'; ctx.strokeRect(40, py - 30, W - 80, H - py - 10);
@@ -222,7 +222,7 @@ const quoteCard: Design = {
     const y = drawLines(ctx, tb.lines, 110, top + tb.px, tb.lh);
     ctx.fillStyle = qc; ctx.fillRect(110, y + 20, 80, 6);
     const who = d.kind === 'quote' ? (d.subtitle ?? 'PolTok') : (hero(k).value ? `${hero(k).value} · ${hero(k).label}` : k.kicker);
-    caps(ctx, ellipsize(ctx, who, W - 300), 110, y + 80, font('sans', 26, 800), '#16181d', 0.12);
+    capsFit(ctx, who, W - 300, 110, y + 80, font('sans', 26, 800), '#16181d', 0.12);
     ctx.fillStyle = '#e8e1d5'; ctx.fillRect(110, H - 130, W - 220, 2);
     wordmark(ctx, 110, H - 66, 36, { color: '#16181d', accent: qc, fam: 'serif' });
     ctx.font = font('sans', 18, 500); ctx.fillStyle = '#6b6457'; ctx.textAlign = 'right';
@@ -282,7 +282,7 @@ const minimal: Design = {
     const rows = rowsOf(k, 4);
     rows.forEach((r, i) => {
       const ry = 130 + i * 100;
-      caps(ctx, ellipsize(ctx, r.label, rw), rx, ry, font('mono', 14, 700), '#888', 0.12);
+      capsFit(ctx, r.label, rw, rx, ry, font('mono', 14, 700), '#888', 0.12);
       headline(k, r.value, rx, ry + 54, rw * 0.5, 48, 'sans', '#111', 300);
       ctx.fillStyle = '#eee'; ctx.fillRect(rx + rw * 0.55, ry + 38, rw * 0.45, 4);
       ctx.fillStyle = r.color; ctx.fillRect(rx + rw * 0.55, ry + 38, (rw * 0.45 * Math.min(r.num, 100)) / 100, 4);
@@ -316,7 +316,7 @@ const ballot: Design = {
     const rows = rowsOf(k, 4);
     const winnerIdx = /projected|held/i.test(d.subtitle ?? '') || d.kind === 'au-seat' ? 0 : -1;
     rows.forEach((r, i) => {
-      const y = 420 + i * 140;
+      const y = 420 + i * (rows.length <= 2 ? 220 : 140);
       ctx.strokeStyle = '#111'; ctx.lineWidth = 4; ctx.strokeRect(L, y, 80, 80);
       if (i === winnerIdx) { ctx.strokeStyle = '#1a3fbf'; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(L + 12, y + 12); ctx.lineTo(L + 68, y + 68); ctx.moveTo(L + 68, y + 12); ctx.lineTo(L + 12, y + 68); ctx.stroke(); }
       headline(k, r.label.toUpperCase(), L + 120, y + 44, R - L - 340, 40, 'rc', '#111', 700);

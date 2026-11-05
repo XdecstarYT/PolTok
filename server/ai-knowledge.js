@@ -35,7 +35,10 @@ function cached(key, fn) {
   if (cache.size > 200) cache.delete(cache.keys().next().value);
   return p;
 }
-const withTimeout = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(() => r(null), ms))]);
+const withTimeout = (p, ms) => {
+  let t;
+  return Promise.race([p, new Promise((r) => (t = setTimeout(() => r(null), ms)))]).finally(() => clearTimeout(t));
+};
 
 /* ----------------------------------------- entities ----------------------------------------- */
 const AMBIG = new Set(['IN', 'ME', 'OR', 'OK', 'HI', 'DE', 'ID', 'LA', 'MS', 'AL', 'CO', 'MA', 'PA', 'OH', 'VA', 'SC', 'MD', 'NE', 'AS', 'US', 'DC', 'MO', 'WA', 'MT']);

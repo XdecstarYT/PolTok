@@ -56,19 +56,20 @@ export function useAiChat() {
   const live = useLive();
   const liveRef = useRef(live);
   liveRef.current = live;
-  const [msgs, setMsgs] = useState<(AiMsg & { error?: boolean })[]>([]);
+  const [msgs, setMsgs] = useState<(AiMsg & { error?: boolean; at?: number })[]>([]);
   const [busy, setBusy] = useState(false);
   const ctl = useRef<AbortController | null>(null);
   const ask = useCallback(
     async (q: string) => {
       const question = q.trim().slice(0, 600);
       if (!question || busy) return;
-      const history = msgs.filter((m) => !m.error).slice(-6);
-      setMsgs((m) => [...m, { role: 'user', content: question }, { role: 'assistant', content: '' }]);
+      const history = msgs.filter((m) => !m.error).slice(-6).map(({ role, content }) => ({ role, content }));
+      const now = Date.now();
+      setMsgs((m) => [...m, { role: 'user', content: question, at: now }, { role: 'assistant', content: '', at: now }]);
       setBusy(true);
       const c = (ctl.current = new AbortController());
       const setLast = (content: string, error = false) =>
-        setMsgs((m) => [...m.slice(0, -1), { role: 'assistant', content, error }]);
+        setMsgs((m) => [...m.slice(0, -1), { role: 'assistant', content, error, at: Date.now() }]);
       try {
         const context = await buildContext(liveRef.current, question);
         const full = await askAi({ question, context, history, signal: c.signal }, (t) => setLast(t));
