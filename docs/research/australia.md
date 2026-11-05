@@ -356,3 +356,12 @@ One Nation is level with or ahead of the Coalition on primary vote in most feder
 ## 8. Poll closing
 
 Polls close at 6pm local time. In November (daylight saving): NSW/VIC/TAS/ACT AEDT = 07:00 UTC, SA ACDT = 07:30 UTC, QLD AEST = 08:00 UTC, NT ACST = 08:30 UTC, WA AWST = 10:00 UTC. In May (no DST): east 08:00 UTC, SA/NT 08:30 UTC, WA 10:00 UTC.
+
+## 9. Update 3 data (2026-11-05, agent D)
+
+| File | Generator | Source (licence) |
+|---|---|---|
+| `src/data/au-fed2025.ts` | `node scripts/gen-au-fed2025.mjs` | AEC 2025 final results CSVs, event 31496 — https://results.aec.gov.au/31496/Website/HouseDownloadsMenu-31496-Csv.htm (CC BY 4.0). Validated: 150 divisions = au.ts ids; 2 TCP rows each; national ALP primary 34.6%. |
+| `src/data/au-census.ts` | `node scripts/gen-au-census.mjs` | ABS Census 2021 GCP tables G01/G02/G08/G37/G54 via ABS Data API (`C21_Gxx_CED`, `C21_Gxx_SED`), CC BY 4.0. **ASGS 2021 boundaries, matched by name**: 149/150 federal (Bullwinkel missing), 79/88 Vic (new 2022 districts missing). |
+| `src/data/au-vic.ts` | `python3 -I scripts/gen-au-vic.py <cache>` (needs xlrd) | VEC 2022 district result pages (88; Narracan = Jan 2023 supplementary); VEC 2026 nominations spreadsheet (names/party only; 295 candidates as at 5 Nov 12:19 PM; asserted against report total); ABS ASGS 2025 SED names for district→region. 29 districts' final count is a preference distribution that stopped with >2 candidates (no 2CP published). |
+| `src/data/au-states.ts` | hand-compiled | Wikipedia parliament articles (fetched 5 Nov 2026; as-of notes per chamber), Two-party-preferred vote (1996–2025), List of PMs, 2022 Vic LC results; VEC "100 days" release (~200 EVCs, ~1,700 election-day centres). NT composition (CLP 17/ALP 6/IND 2) conflicts with the 2024 result and is flagged unverified. |

@@ -114,10 +114,13 @@ def main():
         elif a.endswith(' Region'):
             cur, kind = a[:-7], reg
             reg.setdefault(cur, [])
-        elif cur and ', ' in a and a not in ('Candidates',):
+        elif cur and ', ' in a and not a.startswith('(') and a != 'Candidates':
             sur, given = a.split(', ', 1)
             kind[cur].append([f"{given} {sur.upper()}", pcode(str(sh.cell_value(r, 4)))])
     ids = {'vic-' + s for s, _ in vic}
+    declared = next((int(sh.cell_value(r, 1)) for r in range(10) if str(sh.cell_value(r, 0)).startswith('Total Candidates')), None)
+    parsed = sum(map(len, dist.values())) + sum(map(len, reg.values()))
+    assert declared is None or declared == parsed, f'parsed {parsed} candidates but VEC report says {declared}'
     stray = [k for k in dist if k not in ids]
     print('nominations as at', as_at, 'districts with candidates', len(dist), 'regions', len(reg), 'total', sum(map(len, dist.values())) + sum(map(len, reg.values())), 'stray ids', stray)
 
