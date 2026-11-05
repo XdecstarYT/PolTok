@@ -66,7 +66,7 @@ const countdown: Design = {
 
 /* 32 ─ Head-to-head with photos */
 const h2h: Design = {
-  id: 'h2h', name: 'Head-to-head (photos)', kinds: ['race', 'flip', 'au-seat', 'balance'], size: X, isNew: true, fluid: true,
+  id: 'h2h', name: 'Head-to-head (photos)', kinds: ['race', 'flip', 'au-seat', 'balance'], size: X, isNew: true, fluid: true, drawsCta: true,
   draw(k) {
     const { ctx, W, H, d } = k;
     const u = U(k), P = 56 * u;
@@ -113,7 +113,7 @@ const h2h: Design = {
     ctx.fillStyle = '#fff'; ctx.fillRect(half - 1.5 * u, by - 10 * u, 3 * u, bh + 20 * u);
     headline(k, d.title, P, H - 90 * u, W * 0.6, 40 * u, 'display', inkAB, 700);
     ctx.font = font('sans', 24 * u, 500); ctx.fillStyle = inkAB; ctx.textAlign = 'left';
-    ctx.fillText(ellipsize(ctx, dek(k), W * 0.6), P, H - 56 * u);
+    ctx.fillText(ellipsize(ctx, k.d.cta?.trim() || dek(k), W * 0.6), P, H - 56 * u);
     wordmark(ctx, W - P, H - 76 * u, 30 * u, { align: 'right', color: inkB });
     ctx.font = font('sans', 18 * u, 500); ctx.fillStyle = inkB; ctx.textAlign = 'right';
     ctx.fillText(ellipsize(ctx, `${k.attr} · ${k.url}`, W * 0.34), W - P, H - 44 * u);

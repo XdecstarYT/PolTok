@@ -248,7 +248,9 @@ export function wordmark(ctx: Ctx, x: number, y: number, size: number, opts: { c
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = color;
   ctx.fillText('Pol', x0 + dot, y);
-  ctx.fillStyle = accent;
+  // Dark "Pol" text implies a light background, where the lime accent is too faint for text:
+  // use a deep green that keeps the brand hue but stays readable (≥4.5:1 on near-white).
+  ctx.fillStyle = wcagLum(color) < 0.2 && wcagLum(accent) > 0.5 ? '#3f6b00' : accent;
   ctx.fillText('Tok', x0 + dot + wPol, y);
   return total;
 }
