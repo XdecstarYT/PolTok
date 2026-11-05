@@ -21,7 +21,7 @@ export const KB = [
   {
     id: 'rcv',
     kw: /ranked|rcv|instant runoff|alaska|maine|preferen/i,
-    text: `Ranked-choice voting (RCV): Alaska and Maine use RCV for federal general elections. Voters rank candidates; if nobody has a majority of first preferences, the last-placed candidate is eliminated and their ballots transfer to next preferences, repeating until someone passes 50%. Alaska pairs this with a top-4 open primary (Alaska voters repealed nothing in 2024; the system remains). Tabulation of RCV rounds can take days, so AP calls there can be slow.`,
+    text: `Ranked-choice voting (RCV): Alaska and Maine use RCV for federal general elections. Voters rank candidates; if nobody has a majority of first preferences, the last-placed candidate is eliminated and their ballots transfer to next preferences, repeating until someone passes 50%. Alaska pairs this with a top-4 open primary (a 2024 repeal measure narrowly failed). Tabulation of RCV rounds can take days, so AP calls there can be slow.`,
   },
   {
     id: 'au-system',
