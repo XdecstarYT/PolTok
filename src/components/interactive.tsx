@@ -116,10 +116,12 @@ const FOCUSABLE = 'a[href],button:not([disabled]),input,select,textarea,[tabinde
  * Esc / backdrop click → onClose. Focus is trapped and restored. Body scroll is locked while open.
  */
 export function Modal({
-  open, onClose, title, children, variant = 'dialog', width = 560, hideClose, ariaLabel,
+  open, onClose, title, children, variant = 'dialog', width = 560, hideClose, ariaLabel, closeOnlyWithX,
 }: {
   open: boolean; onClose: () => void; title?: ReactNode; children: ReactNode; variant?: 'dialog' | 'sheet';
   width?: number; hideClose?: boolean; ariaLabel?: string;
+  /** ignore backdrop taps and Escape — close only via the X button */
+  closeOnlyWithX?: boolean;
 }) {
   const reduce = useReducedMotion();
   const panel = useRef<HTMLDivElement>(null);
@@ -134,7 +136,7 @@ export function Modal({
       (first ?? panel.current)?.focus();
     }, 20);
     const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && !closeOnlyWithX) {
         e.stopPropagation();
         onClose();
       } else if (e.key === 'Tab' && panel.current) {
@@ -152,14 +154,14 @@ export function Modal({
       document.body.style.overflow = prevOverflow;
       prev?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open, onClose, closeOnlyWithX]);
 
   const sheet = variant === 'sheet';
   return createPortal(
     <AnimatePresence>
       {open && (
         <div className={`pt-modal ${sheet ? 'pt-modal--sheet' : ''}`}>
-          <motion.div className="pt-modal__backdrop" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduce ? 0 : 0.2 }} />
+          <motion.div className="pt-modal__backdrop" onClick={closeOnlyWithX ? undefined : onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduce ? 0 : 0.2 }} />
           <motion.div
             ref={panel}
             role="dialog"
