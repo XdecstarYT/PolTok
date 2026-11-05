@@ -66,7 +66,7 @@ function TweetCard({ t, designs, idx }: { t: Tweet; designs: Design[]; idx: numb
       <a className="ow-link" href={linkFor(t)} target="_blank" rel="noreferrer">{linkFor(t)}</a>
       <div className="ow-actions">
         <Button size="sm" onClick={async () => setNote((await copyText(fullText(cur))) ? 'Copied' : 'Copy failed')}>Copy text</Button>
-        <Button size="sm" variant="ghost" href={intent} target="_blank" rel="noreferrer">Post on X</Button>
+        <Button size="sm" variant="ghost" href={intent}>Post on X</Button>
         <Button size="sm" variant="ghost" disabled={busy} onClick={rewrite}>{busy ? 'Rewriting…' : 'Rewrite with AI'}</Button>
         {ai && <Button size="sm" variant="ghost" onClick={() => { setAi(false); setText(t.text); }}>Reset</Button>}
         <Button size="sm" variant="ghost" onClick={() => setShowImg((v) => !v)}>{showImg ? 'Hide image' : 'Image'}</Button>
