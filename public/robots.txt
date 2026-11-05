@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /owner
+Disallow: /embed/
+
+Sitemap: https://poltok.netlify.app/sitemap.xml

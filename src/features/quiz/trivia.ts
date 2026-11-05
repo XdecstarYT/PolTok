@@ -92,7 +92,7 @@ export function dailyQuestions(day: string, live: LiveState): Q[] {
     const seat = pick(r, FEDERAL.seats.filter((x) => AU_PARTIES[x.party]));
     const name = (p: string) => AU_PARTIES[p]?.name ?? p;
     return { id: `au-seat-${seat.id}`, q: `Which party holds the federal seat of ${seat.name} (${seat.state})?`, ...mc(r, name(seat.party), ['ALP', 'LIB', 'NAT', 'GRN', 'IND', 'LNP', 'ONP'].map(name)),
-      explain: `${seat.member} holds ${seat.name} on a ${seat.margin.toFixed(1)}% margin.`, link: { to: `/au/seat/${seat.id}`, label: `${seat.name} seat page` }, source: 'AEC 2025 results' };
+      explain: `${seat.member} holds ${seat.name} on a ${seat.margin != null ? seat.margin.toFixed(1) + "%" : "n/a"} margin.`, link: { to: `/au/seat/${seat.id}`, label: `${seat.name} seat page` }, source: 'AEC 2025 results' };
   });
   pool.push(() => {
     const st = pick(r, ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS']);
