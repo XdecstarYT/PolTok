@@ -229,3 +229,110 @@
 /* a11y: party-blue legend text fails 4.5:1 on the terminal bg; pink accent fails with white ink on aurora */
 [data-ui='terminal'] .hm-lead__bias .pt-bias__legend > span { color: var(--text) !important; }
 [data-ui='aurora'] .hm-banner .btn--accent { --btn-fg: #000000; }
+
+/* ───── Global home v2 ───── */
+.hm-hero-wrap { display: grid; gap: 12px; min-width: 0; }
+.hm-cswitch { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--bg-1); border: 1px solid var(--line-2); width: max-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.hm-cswitch__b { flex: 0 0 auto; border: 0; background: transparent; color: var(--text-2); font: 600 13.5px/1 var(--font-body); padding: 9px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap; min-height: 36px; }
+.hm-cswitch__b:hover { color: var(--text); background: var(--bg-3); }
+.hm-cswitch__b.is-on { background: var(--accent); color: var(--accent-ink); }
+.hm-cswitch__b:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.hm-hero2 .hm-banner__title { font-size: clamp(34px, 6.4vw, 84px); max-width: 18ch; }
+.hm-banner.is-au { --banner-a: rgba(229,57,64,.32); --banner-b: rgba(28,79,156,.3); }
+.hm-banner.is-nz { --banner-a: rgba(34,211,238,.3); --banner-b: rgba(0,0,0,.0); }
+.hm-banner.is-world { --banner-a: rgba(198,255,61,.22); --banner-b: rgba(34,211,238,.18); }
+
+.hm-tpp { display: grid; gap: 8px; max-width: 640px; }
+.hm-tpp__bar { display: flex; height: 30px; border-radius: 8px; overflow: hidden; background: var(--bg-3); }
+.hm-tpp__bar span { display: flex; align-items: center; padding: 0 10px; color: #fff; font-size: 12.5px; white-space: nowrap; overflow: hidden; }
+.hm-tpp__bar span + span { justify-content: flex-end; }
+.hm-tpp__list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 6px; }
+.hm-tpp__list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; font-size: 12.5px; padding: 6px 10px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--line); }
+.hm-tpp__list b { grid-column: 1 / -1; }
+
+.hm-next5 { list-style: none; display: grid; gap: 6px; max-width: 720px; }
+.hm-next5 li { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 8px 12px; border-radius: 10px; background: var(--bg-2); border: 1px solid var(--line); }
+.hm-next5__d { font-weight: 700; font-size: 18px; color: var(--accent); }
+
+.hm-ph { border-radius: 14px; background: var(--bg-1); opacity: .5; }
+.hm-lazy { min-width: 0; }
+
+.hm-strip__title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hm-pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 0 var(--live); animation: hm-pulse 1.8s infinite; }
+@keyframes hm-pulse { 70% { box-shadow: 0 0 0 8px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .hm-pulse { animation: none; } }
+.hm-world { display: grid; gap: 10px; min-width: 0; }
+.hm-hscroll { list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 240px); gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 2px 10px; scrollbar-width: thin; }
+.hm-hscroll > li { scroll-snap-align: start; display: flex; min-width: 0; }
+.hm-wl { display: grid; gap: 4px; padding: 12px 14px; width: 100%; min-width: 0; }
+.hm-wl__cd { font-size: 13px; color: var(--terminal); }
+
+.hm-mk { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--bg-1); min-width: 0; }
+.hm-mk__tag { flex: 0 0 auto; color: var(--terminal); }
+.hm-mk__list { list-style: none; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+.hm-mk__item { display: flex; align-items: baseline; gap: 6px; padding: 6px 10px; border-radius: 8px; white-space: nowrap; font-size: 13px; border-left: 3px solid var(--c); background: var(--bg-2); }
+.hm-mk__item:hover { background: var(--bg-3); }
+.hm-mk__item .truncate { max-width: 16ch; }
+.hm-mk__p { font-weight: 700; }
+.hm-mk__d { font-size: 11px; } .hm-mk__d.up { color: var(--ok); } .hm-mk__d.down { color: var(--danger); }
+.hm-mk__src { flex: 0 0 auto; font-size: 11px; }
+
+.hm-you { display: grid; gap: 14px; min-width: 0; }
+.hm-you__grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .8fr) minmax(0, 1.1fr); gap: 14px; }
+.hm-you__grid > * { display: flex; flex-direction: column; gap: 8px; padding: 16px; min-width: 0; }
+.hm-you__area { background: linear-gradient(135deg, var(--accent-soft), transparent 70%), var(--bg-1); }
+.hm-you__big { font-family: var(--font-display); font-size: 22px; line-height: 1.15; overflow-wrap: anywhere; }
+.hm-you__big small { font-size: 13px; font-family: var(--font-body); }
+.hm-recent { list-style: none; display: grid; gap: 4px; }
+.hm-recent li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; font-size: 13.5px; }
+.hm-recent a:hover { color: var(--signal); }
+.hm-recent .faint { font-size: 11.5px; }
+
+.hm-tools { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.hm-tool { display: flex; align-items: center; gap: 12px; padding: 14px; min-width: 0; }
+.hm-tool__i { flex: 0 0 auto; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font-size: 18px; font-weight: 700; }
+
+.hm-stories { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hm-stories > li { display: flex; min-width: 0; }
+.hm-stories > li.is-lead { grid-column: 1 / -1; }
+.hm-st { display: flex; flex-direction: column; gap: 8px; padding: 14px; width: 100%; min-width: 0; overflow: hidden; }
+.hm-st__img { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; border-radius: 10px; background: var(--bg-3); }
+.hm-st__title { font-family: var(--font-display); font-weight: 600; font-size: 15.5px; line-height: 1.3; }
+.is-lead .hm-st__title { font-size: clamp(19px, 2.2vw, 26px); }
+.hm-st .pt-biasbar, .hm-st > :last-child { margin-top: auto; }
+
+.hm-row--2 { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.hm-cal { list-style: none; display: grid; gap: 6px; }
+.hm-cal__row { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: center; padding: 8px 10px; border-radius: 10px; background: var(--bg-1); border: 1px solid var(--line); }
+a.hm-cal__row:hover { background: var(--bg-2); }
+.hm-cal__date { display: grid; justify-items: center; line-height: 1; padding: 6px 0; border-radius: 8px; background: var(--bg-3); }
+.hm-cal__date b { font-size: 20px; } .hm-cal__date small { font-size: 11px; color: var(--text-3); text-transform: uppercase; }
+
+.hm-hl { grid-auto-columns: minmax(230px, 1fr); }
+.hm-hlc { display: grid; gap: 4px; padding: 16px; width: 100%; min-width: 0; box-shadow: inset 0 3px 0 var(--p); }
+.hm-hlc__v { font-family: var(--font-display); font-size: 34px; font-weight: 700; color: var(--p); line-height: 1.05; }
+.hm-hlc__t { font-weight: 600; }
+
+.hm-new { display: grid; gap: 10px; padding: 16px; }
+.hm-new__list { list-style: none; display: grid; gap: 10px; font-size: 13.5px; }
+.hm-new__list li { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 8px; }
+
+@media (max-width: 1100px) {
+  .hm-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hm-row--2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 800px) {
+  .hm-you__grid { grid-template-columns: minmax(0, 1fr); }
+  .hm-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hm-mk { flex-wrap: wrap; }
+  .hm-mk__list { flex-basis: 100%; order: 3; }
+}
+@media (max-width: 520px) {
+  .hm-stories { grid-template-columns: minmax(0, 1fr); }
+  .hm-tool { padding: 12px; gap: 10px; }
+  .hm-tool__i { width: 34px; height: 34px; }
+  .hm-next5 li { grid-template-columns: 44px minmax(0, 1fr); }
+  .hm-next5 li > :last-child { display: none; }
+}
+[data-ui='paper'] .hm-cswitch__b.is-on { background: var(--text); color: var(--bg); }
+[data-ui='paper'] .hm-tool__i { background: var(--bg-3); color: var(--text); }

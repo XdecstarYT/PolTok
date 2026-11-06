@@ -1,19 +1,49 @@
-import { useMemo, type CSSProperties } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useSeo } from '../../lib/seo';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { RACES, STATES } from '../../data';
 import { PARTY_HEX, fmtInt, fmtPct, marginColor, timeAgo } from '../../lib/format';
-import type { BalanceOfPower, Candidate, NewsItem, Party, Race, RaceResult } from '../../types';
+import type { BalanceOfPower, Candidate, Party, Race, RaceResult } from '../../types';
 import {
-  Avatar, BiasBar, Button, Card, Chip, Countdown, EmptyState, LiveDot, SectionHeader, SimBadge, Skeleton,
-  fmtTime, leanCounts, useNow, useReducedMotion,
+  Avatar, Button, Card, Chip, Countdown, EmptyState, LiveDot, SectionHeader, SimBadge, Skeleton,
+  fmtTime, useNow, useReducedMotion,
 } from '../../components';
-import { USMap } from '../map/USMap';
 import { useFlipsData, type FlipRace } from '../flips/data';
 import './home.css';
-import { WatchStrip } from '../watch/WatchStrip';
+import { useHomeCountry, type HomeCountry } from './prefs';
+
+const USMap = lazy(() => import('../map/USMap').then((m) => ({ default: m.USMap })));
+const heroes = () => import('./heroes');
+const AUHero = lazy(() => heroes().then((m) => ({ default: m.AUHero })));
+const NZHero = lazy(() => heroes().then((m) => ({ default: m.NZHero })));
+const WorldHero = lazy(() => heroes().then((m) => ({ default: m.WorldHero })));
+const secs = () => import('./sections');
+const S = {
+  WorldLive: lazy(() => secs().then((m) => ({ default: m.WorldLive }))),
+  Markets: lazy(() => secs().then((m) => ({ default: m.Markets }))),
+  ForYou: lazy(() => secs().then((m) => ({ default: m.ForYou }))),
+  Tools: lazy(() => secs().then((m) => ({ default: m.Tools }))),
+  TopStories: lazy(() => secs().then((m) => ({ default: m.TopStories }))),
+  Today: lazy(() => secs().then((m) => ({ default: m.Today }))),
+  Highlights: lazy(() => secs().then((m) => ({ default: m.Highlights }))),
+  WhatsNew: lazy(() => secs().then((m) => ({ default: m.WhatsNew }))),
+};
+
+/** Mounts children only once scrolled near the viewport (or immediately without IntersectionObserver). */
+function LazySection({ children, min = 160, eager }: { children: ReactNode; min?: number; eager?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(!!eager || typeof IntersectionObserver === 'undefined');
+  useEffect(() => {
+    if (on || !ref.current) return;
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { setOn(true); io.disconnect(); } }, { rootMargin: '600px 0px' });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [on]);
+  const ph = <div className="hm-ph" style={{ minHeight: min }} aria-hidden="true" />;
+  return <div ref={ref} className="hm-lazy">{on ? <Suspense fallback={ph}>{children}</Suspense> : ph}</div>;
+}
 
 /* ───────── helpers ───────── */
 
@@ -336,7 +366,7 @@ function ResultsMap() {
   }, [results]);
   return (
     <Card title="Senate results map" live action={<Link to="/map/live" className="link" style={{ fontSize: 13 }}>Full map →</Link>} className="hm-map">
-      <USMap fills={fills} variant="geo" labels={false} onStateClick={(a) => navigate(`/state/${a}`)} title="2026 Senate results by state" />
+      <Suspense fallback={<Skeleton height={260} radius={12} />}><USMap fills={fills} variant="geo" labels={false} onStateClick={(a) => navigate(`/state/${a}`)} title="2026 Senate results by state" /></Suspense>
       <div className="hm-map__legend" aria-hidden="true">
         <span><i style={{ background: 'var(--dem)' }} />Dem win</span>
         <span><i style={{ background: 'var(--rep)' }} />Rep win</span>
@@ -344,52 +374,6 @@ function ResultsMap() {
         <span><i style={{ background: 'var(--bg-3)' }} />No race</span>
       </div>
     </Card>
-  );
-}
-
-/* ───────── news ───────── */
-
-function TopNews() {
-  const { news } = useLive();
-  const now = useNow(60000);
-  const clusters = useMemo(() => {
-    const map = new Map<string, NewsItem[]>();
-    for (const n of news ?? []) {
-      const k = n.clusterId ?? n.id;
-      map.set(k, [...(map.get(k) ?? []), n]);
-    }
-    return [...map.values()].sort((a, b) => b[0].publishedAt - a[0].publishedAt).slice(0, 7);
-  }, [news]);
-  const [lead, ...rest] = clusters;
-  return (
-    <section aria-labelledby="hm-news" className="hm-news">
-      <SectionHeader id="hm-news" kicker="Latest" title="The story this morning" action={<Button variant="ghost" size="sm" to="/news">All news</Button>} />
-      {!lead ? (
-        <div className="card pt-card stack"><Skeleton height={160} radius={12} /><Skeleton width="85%" height={22} /><Skeleton lines={3} /></div>
-      ) : (
-        <div className="hm-news__grid">
-          <a href={lead[0].url} target="_blank" rel="noreferrer noopener" className="card card--hover hm-lead">
-            {lead[0].image ? <img src={lead[0].image} alt="" className="hm-lead__img" loading="lazy" width={1600} height={900} /> : <div className="hm-lead__img hm-lead__img--blank" aria-hidden="true" />}
-            <div className="hm-lead__body">
-              <span className="kicker kicker--muted">{lead[0].source} · {timeAgo(lead[0].publishedAt, now)}</span>
-              <h3 className="hm-lead__title">{lead[0].title}</h3>
-              {lead[0].summary && <p className="muted clamp-2" style={{ fontSize: 14 }}>{lead[0].summary}</p>}
-              <div className="hm-lead__bias"><BiasBar counts={leanCounts(lead)} /></div>
-            </div>
-          </a>
-          <ul className="hm-news__list">
-            {rest.map((c) => (
-              <li key={c[0].id}>
-                <a href={c[0].url} target="_blank" rel="noreferrer noopener" className="hm-story">
-                  <span className="kicker kicker--muted">{c[0].source} · {timeAgo(c[0].publishedAt, now)}</span>
-                  <span className="hm-story__title clamp-2">{c[0].title}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </section>
   );
 }
 
@@ -444,27 +428,59 @@ function SourceFoot() {
   );
 }
 
+const TABS: { id: HomeCountry; flag: string; label: string }[] = [
+  { id: 'us', flag: '🇺🇸', label: 'US' },
+  { id: 'au', flag: '🇦🇺', label: 'Australia' },
+  { id: 'nz', flag: '🇳🇿', label: 'New Zealand' },
+  { id: 'world', flag: '🌐', label: 'World' },
+];
+
+function CountryHero() {
+  const [c, setC] = useHomeCountry();
+  return (
+    <div className="hm-hero-wrap">
+      <div className="hm-cswitch" role="tablist" aria-label="Choose headline country">
+        {TABS.map((t) => (
+          <button key={t.id} role="tab" type="button" aria-selected={c === t.id} className={`hm-cswitch__b ${c === t.id ? 'is-on' : ''}`} onClick={() => setC(t.id)}>
+            <span aria-hidden="true">{t.flag}</span> {t.label}
+          </button>
+        ))}
+      </div>
+      <Suspense fallback={<section className="hm-banner hm-hero2"><Skeleton height={44} width="70%" /><Skeleton lines={3} /></section>}>
+        {c === 'us' ? <Banner /> : c === 'au' ? <AUHero /> : c === 'nz' ? <NZHero /> : <WorldHero />}
+      </Suspense>
+    </div>
+  );
+}
+
 export default function HomePage() {
-  useSeo({ description: 'Live US and Australian election results, maps, forecasts and news in one command center.' });
+  useSeo({ description: 'Live election results, countdowns, markets and news from the US, Australia, New Zealand and around the world.' });
   const { flipsAll, flips, flipsLoading } = useResultsData();
   return (
     <div className="page hm">
-      <Banner />
+      <CountryHero />
+      <LazySection min={110} eager><S.WorldLive /></LazySection>
       <Balance flipsAll={flipsAll} />
+      <LazySection min={56} eager><S.Markets /></LazySection>
       <Numbers flipsAll={flipsAll} flips={flips} />
-      <WatchStrip />
+      <LazySection min={260}><S.ForYou /></LazySection>
+      <LazySection min={90}><S.Tools /></LazySection>
+      <LazySection min={200}><S.Highlights /></LazySection>
       <Flips flips={flips} loading={flipsLoading} />
       <Marquee />
       <div className="hm-row">
-        <TopNews />
+        <LazySection min={480}><S.TopStories /></LazySection>
         <div className="hm-side">
-          <ResultsMap />
+          <LazySection min={300}><ResultsMap /></LazySection>
           <AUPromo />
         </div>
+      </div>
+      <div className="hm-row hm-row--2">
+        <LazySection min={300}><S.Today /></LazySection>
+        <LazySection min={200}><S.WhatsNew /></LazySection>
       </div>
       <QuickLinks />
       <SourceFoot />
     </div>
   );
 }
-

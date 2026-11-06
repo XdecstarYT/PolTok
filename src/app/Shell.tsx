@@ -17,6 +17,7 @@ import { ToastProvider, Kbd, useNow, useReducedMotion, fmtTime, tzAbbr } from '.
 import { Ticker } from './shell/Ticker';
 import { CommandPalette } from './shell/CommandPalette';
 import { RaceCallWatcher } from './shell/RaceCallWatcher';
+import { HistoryRecorder } from '../features/home/prefs';
 import { AskPolTok } from '../features/ask/AskPolTok';
 import { UpdatePrompt } from '../lib/pwa';
 import { IconGrid, IconHome, IconLive, IconMap, IconNews, IconSearch } from './shell/icons';
@@ -263,6 +264,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
       <CommandPalette open={cmdk} onClose={closeCmdk} />
       <RaceCallWatcher />
+      <HistoryRecorder />
       <AskPolTok />
       <UpdatePrompt />
     </ToastProvider>

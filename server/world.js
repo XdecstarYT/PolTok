@@ -2,6 +2,8 @@
 // Netlify function (netlify/functions/world.mjs) — same JSON either way.
 //
 //   GET /api/world/elections          { elections: WorldElection[], source, fetchedAt, asOf, live, notes[] }
+//   GET /api/world/news?country=GB     server/world-news.js (international RSS, country-tagged)
+//   GET /api/world/country?code=GB    server/countries.js (Wikidata + Wikipedia infobox + Polymarket)
 //   GET /api/world/summary?title=...  { title, extract, url, thumbnail?, updated }   (Wikipedia REST summary)
 //
 // Live source (keyless, verified 2026-11-05): English Wikipedia "{year} national electoral calendar"
@@ -232,6 +234,13 @@ export async function worldApi(sub, params) {
           body: { ...fallback, live: false, notes: [`Live Wikipedia fetch failed (${String(e.message || e).slice(0, 120)}); showing bundled snapshot as of ${fallback.asOf}.`] },
         };
       }
+    }
+    if (sub === '/news') return (await import('./world-news.js')).worldNewsApi(params);
+    if (sub === '/countries') return { status: 200, body: { countries: (await import('./countries.js')).countryList() }, maxAge: 86400 };
+    if (sub === '/country') {
+      const code = (params.get('code') || '').toUpperCase().slice(0, 2);
+      const prof = await (await import('./countries.js')).countryProfile(code);
+      return prof ? { status: 200, body: prof, maxAge: 1800 } : { status: 404, body: { error: 'unknown country code' } };
     }
     if (sub === '/summary') {
       const title = (params.get('title') || '').slice(0, 200);
