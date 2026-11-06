@@ -13,6 +13,7 @@
 //           GET → { ok, configured, model } (capability probe; never reveals the key).
 
 import * as composeMod from '../shared/compose.js';
+import * as director from '../shared/director.js';
 
 export const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 export const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
@@ -179,6 +180,7 @@ export async function handleAi(req, { ip = 'anon', env = process.env, fetchImpl 
 
   if (composeMod.STUDIO_MODES.includes(body.mode)) return handleStudio(body, question, { env, fetchImpl, loaders });
 
+  if (body.mode === 'director') return handleDirector(body, question, { env, fetchImpl, loaders });
   if (body.mode === 'compose') return handleCompose(body, question, { env, fetchImpl, loaders });
   const mode = ['chat', 'race', 'brief'].includes(body.mode) ? body.mode : 'chat';
   let upstream;
@@ -477,6 +479,104 @@ async function handleStudio(body, prompt, { env, fetchImpl, loaders }) {
   const result = parsed && composeMod.validateStudio(mode, parsed, { n, live: know.text, draft, context: mode === 'factcheck' ? '' : context });
   if (!result) return jsonRes(502, { error: 'The AI did not return usable JSON — try again.', code: 'bad_output' });
   return jsonRes(200, { ok: true, mode, result, model: res.model, facts: mode === 'factcheck' ? know.text.slice(0, 2000) : undefined });
+}
+
+/* ------------------------- Creative Director (Owner, mode 'director') ------------------------- */
+// Tasks: concepts | critique | campaign | adapt | hooks2. Brand Kit + learned edit preferences are
+// injected compactly into every prompt; whole prompt stays ≤ 10k chars (Groq free tier).
+export const DIRECTOR_BUDGET = { total: 9800, live: 3200, context: 2600, designs: 1800, brand: 900 };
+export const DIRECTOR_SMALL = { total: 6500, live: 1500, context: 1600, designs: 1000, brand: 500 };
+const TZ_RE = /^[A-Za-z_]+(?:\/[A-Za-z0-9_+-]+){0,2}$|^UTC$/;
+
+export function buildDirectorMessages({ task, prompt, context = '', live = '', refs = [], designs = [], brand, prefs, settings, n, tz, tone, platforms }, now = new Date(), budget = DIRECTOR_BUDGET) {
+  let sys = director.directorSystem(task, { n, tz, now, tone, platforms });
+  const voice = settings ? composeMod.settingsPrompt(settings) : '';
+  const b = director.brandPrompt(brand, prefs).slice(0, budget.brand);
+  sys += `\n${b}${voice ? `\nVOICE:\n${voice}` : ''}`;
+  const withDesigns = task === 'concepts' || task === 'campaign';
+  const d = withDesigns ? composeMod.designsForPrompt(designs, budget.designs) : '';
+  const q = String(prompt).slice(0, MAX_QUESTION);
+  const c = String(context || '').slice(0, budget.context);
+  const r = withDesigns ? refs.slice(0, 25).join(' ') : '';
+  let l = String(live || '').slice(0, budget.live);
+  const over = sys.length + d.length + q.length + c.length + r.length + l.length + 240 - budget.total;
+  if (over > 0) l = l.slice(0, Math.max(0, l.length - over));
+  const data = [d && `DESIGNS (id|name|kinds|size):\n${d}`, c && `CONTEXT:\n${c}`, l && `LIVE DATA (fetched ${now.toISOString().slice(0, 16)}Z):\n${l}`, r && `KNOWN IDS: ${r}`].filter(Boolean).join('\n\n') || 'LIVE DATA: (none available)';
+  return [
+    { role: 'system', content: sys },
+    { role: 'system', content: data },
+    { role: 'user', content: q },
+  ];
+}
+
+async function handleDirector(body, prompt, { env, fetchImpl, loaders }) {
+  const task = body.task;
+  if (!director.DIRECTOR_TASKS.includes(task)) return jsonRes(400, { error: `Unknown director task (use ${director.DIRECTOR_TASKS.join(', ')})`, code: 'bad_request' });
+  const designs = (Array.isArray(body.designs) ? body.designs : []).slice(0, 80).filter((d) => d && typeof d.id === 'string');
+  if ((task === 'concepts' || task === 'campaign') && !designs.length) return jsonRes(400, { error: 'designs required', code: 'bad_request' });
+  const brand = director.sanitizeBrand(body.brand);
+  const prefs = Array.isArray(body.prefs) ? body.prefs.slice(-8) : [];
+  const settings = body.settings ? composeMod.sanitizeSettings(body.settings) : null;
+  const n = task === 'concepts' ? Math.min(4, Math.max(2, Math.round(Number(body.n)) || 4)) : task === 'campaign' ? Math.min(14, Math.max(7, Math.round(Number(body.n)) || 10)) : 5;
+  const tz = typeof body.tz === 'string' && TZ_RE.test(body.tz) ? body.tz : 'UTC';
+  const tone = body.tone && typeof body.tone === 'object' ? { playful: Number(body.tone.playful), casual: Number(body.tone.casual) } : undefined;
+  const platforms = (Array.isArray(body.platforms) ? body.platforms.map(String) : director.ADAPT_PLATFORMS).filter((p) => director.ADAPT_PLATFORMS.includes(p));
+  if (task === 'adapt' && !platforms.length) return jsonRes(400, { error: 'platforms required', code: 'bad_request' });
+  const concepts = task === 'critique' ? (Array.isArray(body.concepts) ? body.concepts.slice(0, 4).filter((c) => c && typeof c === 'object') : []) : [];
+  if (task === 'critique' && !concepts.length) return jsonRes(400, { error: 'concepts required', code: 'bad_request' });
+  let know = { text: '', refs: [] };
+  if (env.AI_RETRIEVAL !== '0') {
+    try {
+      const k = await import('./ai-knowledge.js');
+      const extraQ = task === 'critique' ? concepts.map((c) => `${c.tweet ?? ''} ${c.texts?.title ?? ''}`).join(' ') : task === 'hooks2' || task === 'adapt' ? ' latest news headlines' : '';
+      know = await k.gatherKnowledge(`${prompt} ${extraQ}`.slice(0, 900), { loaders: loaders || k.defaultLoaders(fetchImpl), budget: DIRECTOR_BUDGET.live });
+    } catch {
+      /* best effort */
+    }
+  }
+  let context = typeof body.context === 'string' ? body.context : '';
+  if (task === 'critique') {
+    // No images: the model gets measured contrast ratios, text lengths and unsupported numbers.
+    context = JSON.stringify(concepts.map((c, i) => ({ i, angle: String(c.angle ?? '').slice(0, 80), family: c.family, title: c.texts?.title, subtitle: c.texts?.subtitle, cta: c.texts?.cta, tweet: String(c.tweet ?? '').slice(0, 280), palette: c.style?.palette, font: c.style?.fontDisplay, ...director.conceptMetrics(c, know.text) })));
+  }
+  const maxTok = task === 'campaign' ? 6000 : task === 'concepts' ? 4000 : task === 'critique' ? 2400 : 1600;
+  const build = (small) => buildDirectorMessages({ task, prompt, context, live: know.text, refs: know.refs, designs, brand, prefs, settings, n, tz, tone, platforms }, new Date(), small ? DIRECTOR_SMALL : DIRECTOR_BUDGET);
+  const temp = task === 'critique' ? 0.2 : task === 'concepts' ? 0.9 : Math.min(1.2, Math.max(0, Number(body.temperature) || 0.6));
+  let res;
+  try {
+    res = await groqJson({ env, fetchImpl, temperature: temp, maxTok, build });
+  } catch {
+    return jsonRes(502, { error: 'AI provider unreachable', code: 'upstream' });
+  }
+  const ctx = { designs, facts: know.text, n, brand, concepts, platforms, brandTags: brand.hashtags, today: new Date().toISOString().slice(0, 10) };
+  let result = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { up } = res;
+    if (!up.ok) {
+      if (up.status === 413) return jsonRes(413, { error: 'Prompt too large for the AI plan — shorten the brief.', code: 'too_large' });
+      if (up.status === 429) {
+        const ra = Math.min(120, Math.max(1, Math.ceil(Number(up.headers.get('retry-after')) || 20)));
+        return jsonRes(429, { error: 'AI provider is busy (free-tier limit).', code: 'rate_limited', retryAfter: ra }, { 'retry-after': String(ra) });
+      }
+      return jsonRes(502, { error: `AI provider error (${up.status})`, code: 'upstream' });
+    }
+    let content = '';
+    try {
+      content = (await up.json())?.choices?.[0]?.message?.content ?? '';
+    } catch {
+      /* ignore */
+    }
+    result = director.validateDirector(task, composeMod.parseComposeJson(content), ctx);
+    if (result || attempt) break;
+    try {
+      res = await groqJson({ env, fetchImpl, temperature: 0.2, maxTok: Math.min(8000, maxTok * 1.5), build });
+    } catch {
+      break;
+    }
+  }
+  if (!result) return jsonRes(502, { error: 'The AI did not return usable JSON — try again.', code: 'bad_output' });
+  const terms = task === 'hooks2' || task === 'adapt' ? director.newsTerms(know.text, 12) : undefined;
+  return jsonRes(200, { ok: true, mode: 'director', task, result, model: res.model, terms, facts: task === 'critique' ? know.text.slice(0, 2000) : undefined });
 }
 
 /** Node http adapter for server/index.js. */

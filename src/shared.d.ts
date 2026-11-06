@@ -109,8 +109,13 @@ declare module '*/shared/compose.js' {
 }
 declare module '*/shared/social.js' {
   export interface Rect { x: number; y: number; w: number; h: number; label: string }
-  export interface PackAsset { id: string; type: 'avatar' | 'banner' | 'highlight' | 'story' | 'post'; label: string; w: number; h: number; design: string; circle?: boolean; safe?: Rect[]; covers?: Rect[]; platform: string; file: string }
+  export type AssetType = 'avatar' | 'banner' | 'highlight' | 'story' | 'post' | 'thumbnail' | 'splash' | 'og' | 'email';
+  export interface PackAsset { id: string; type: AssetType; label: string; w: number; h: number; design: string; brand?: 'avatar' | 'icon' | 'banner' | 'highlight' | 'splash' | 'email'; icon?: string; circle?: boolean; safe?: Rect[]; covers?: Rect[]; platform: string; file: string }
   export const SOCIAL_PACK: Record<string, { name: string; assets: Omit<PackAsset, 'platform' | 'file'>[] }>;
+  export const EXTRA_ASSETS: PackAsset[];
+  export const HIGHLIGHT_ICONS: string[];
+  export const HIGHLIGHT_LABELS: Record<string, string>;
+  export const SPECS: { platform: string; item: string; size: string; note: string; source: string; checked: string }[];
   export function packAssets(platforms: string[]): PackAsset[];
   export function packReadme(platforms: string[], copy?: { bios?: Record<string, string>; names?: string[]; handles?: string[]; pinned?: string; links?: { label: string; path: string }[] }, limits?: Record<string, { bio: number }>): string;
 }
