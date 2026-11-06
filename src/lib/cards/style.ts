@@ -11,6 +11,7 @@
 import type { CardData } from './types';
 import { type Ctx, grain, halftone, font, rr, rgba, wordmark, ellipsize, star, rng } from './kit';
 import { PARTY_HEX } from '../format';
+import type { Background } from './bg';
 
 export type Texture = 'none' | 'grain' | 'halftone' | 'grid' | 'scanlines' | 'paper';
 export type Corner = 'tl' | 'tr' | 'bl' | 'br';
@@ -40,7 +41,25 @@ export interface CardStyle {
   align?: 'design' | 'left' | 'center' | 'right';
   size?: { w: number; h: number };
   fit?: 'auto' | 'reflow' | 'letterbox';
+  /** procedural, seed-deterministic background (see bg.ts) */
+  background?: Background;
+  /** extra display tracking in em (added to optical tracking), e.g. -0.02 … 0.1 */
+  tracking?: number;
+  /** modular type-scale ratio for premium designs (1.125 … 1.5) */
+  typeRatio?: number;
 }
+
+/** Curated display/body font pairings. */
+export const FONT_PAIRS: { id: string; label: string; display: string; body: string }[] = [
+  { id: 'editorial', label: 'Editorial — Fraunces + Inter Tight', display: 'Fraunces', body: 'Inter Tight' },
+  { id: 'magazine', label: 'Magazine — Instrument Serif + Inter', display: 'Instrument Serif', body: 'Inter' },
+  { id: 'poster', label: 'Poster — Anton + Inter Tight', display: 'Anton', body: 'Inter Tight' },
+  { id: 'grotesk', label: 'Grotesk — Bricolage + IBM Plex Mono', display: 'Bricolage Grotesque', body: 'IBM Plex Mono' },
+  { id: 'impact', label: 'Impact — Archivo Black + Inter', display: 'Archivo Black', body: 'Inter' },
+  { id: 'swiss', label: 'Swiss — Inter Tight + Inter Tight', display: 'Inter Tight', body: 'Inter Tight' },
+  { id: 'classic', label: 'Classic — Playfair + Source Serif', display: 'Playfair Display', body: 'Source Serif 4' },
+  { id: 'wire', label: 'Wire — IBM Plex Mono + Inter', display: 'IBM Plex Mono', body: 'Inter' },
+];
 
 export const SIZE_PRESETS: { id: string; label: string; w: number; h: number }[] = [
   { id: 'x', label: 'X / Twitter post', w: 1200, h: 675 },
@@ -61,7 +80,10 @@ export const EXTRA_FONTS: Record<string, string> = {
   'Bebas Neue': 'Bebas+Neue',
   'DM Serif Display': 'DM+Serif+Display',
   'Archivo Black': 'Archivo+Black',
-  Fraunces: 'Fraunces:wght@400;700;900',
+  Fraunces: 'Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700',
+  'Inter Tight': 'Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700',
+  'Instrument Serif': 'Instrument+Serif:ital@0;1',
+  'Bricolage Grotesque': 'Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800',
   'Barlow Condensed': 'Barlow+Condensed:wght@500;700;800',
 };
 export const FONT_CHOICES = [...PAGE_FONTS, ...Object.keys(EXTRA_FONTS)];
@@ -147,7 +169,7 @@ export function colorMapper(designId: string, st: CardStyle | undefined): ((c: s
   const NB = parseColor(nb)!, NF = parseColor(nf)!;
   const B = p.bg ? parseColor(p.bg) : null, F = p.fg ? parseColor(p.fg) : null;
   const A = p.accent ? parseColor(p.accent) : null, D = p.dem ? parseColor(p.dem) : null, R = p.rep ? parseColor(p.rep) : null;
-  const imgDim = st.bgImage ? Math.max(0, Math.min(1, st.bgImageDim ?? 0.55)) : 1;
+  const imgDim = st.bgImage || st.background ? Math.max(0, Math.min(1, st.bgImageDim ?? (st.bgImage ? 0.55 : 0.12))) : 1;
   const ramp = !!(B || F);
   if (!ramp && !A && !D && !R && imgDim === 1) return null;
   const nb2 = B ?? NB, nf2 = F ?? NF;

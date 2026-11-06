@@ -10,6 +10,7 @@ import { type CandEntry, candidateNews, officeLabel, useCandidates } from './dat
 import { OutcomeTag } from './CandidatesIndex';
 import { fecUrl, usd } from '../money/data';
 import { VIC_CANDIDATES } from '../../data/au';
+import { auPhoto } from '../../data/au-photo';
 import { AU_CANDS, type AuCand, fmtDate, useMoneyIndex, useProfile } from './profile';
 import { Career, HeroPhoto, IdeologyMeter, QuickFacts, SourcesList, WikiBlurb } from './ProfileParts';
 import '../races/races.css';
@@ -55,7 +56,7 @@ function AuCandidatePage({ c }: { c: AuCand }) {
         <Link to="/candidates?country=au">Candidates · Australia</Link> / <span>{c.seat}</span>
       </nav>
       <section className="cd-hero" style={{ ['--pc' as string]: c.color }}>
-        <HeroPhoto name={c.name} color={c.color} profile={p} />
+        <HeroPhoto name={c.name} color={c.color} profile={p} free={auPhoto(c.name)} />
         <div className="cd-hero__info">
           <span className="kicker">{c.officeLabel} · {c.seat}</span>
           <h1>{c.name}</h1>

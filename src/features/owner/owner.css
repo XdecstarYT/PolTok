@@ -71,3 +71,19 @@
 .ow-field--check { display: flex; align-items: center; gap: 8px; }
 .ow-field textarea, .ow-make__form input { width: 100%; box-sizing: border-box; background: var(--bg-3); color: var(--text); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; font: inherit; }
 .ow-select--sm { width: auto; padding: 4px 8px; }
+
+/* ---- Creative director ---- */
+.dir-concepts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; align-items: start; margin-top: 12px; }
+.dir-concept { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+.dir-hook { font-weight: 600; margin: 0; }
+.dir-scores { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+.dir-scores p, .dir-scores ul { flex-basis: 100%; margin: 0; }
+.dir-score { font-size: var(--fs-sm); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+.dir-score.is-low { border-color: var(--rep, #d33); }
+.dir-score.is-total { font-weight: 700; }
+.dir-camp { display: grid; gap: 12px; padding-left: 20px; }
+.dir-camp__h, .dir-camp__when { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.dir-hooks { display: grid; gap: 6px; }
+.dir-brand label { display: grid; gap: 4px; }
+.dir-gate ul { margin: 6px 0; padding-left: 18px; }
+.dir-brand .ow-input { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-2, transparent); color: var(--text); }

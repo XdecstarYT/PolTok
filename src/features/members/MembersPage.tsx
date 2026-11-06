@@ -8,10 +8,10 @@ import { FEDERAL } from '../../data/au';
 import { AU_MEMBERS, US_PARTY, initials, usDir, useJson, type DirMember, type UsListResp } from './data';
 import './members.css';
 
-export function Avatar({ m, size = 56 }: { m: { name: string; photo?: string; color: string }; size?: number }) {
+export function Avatar({ m, size = 56 }: { m: { name: string; photo?: string; color: string; photoCredit?: string }; size?: number }) {
   const [bad, setBad] = useState(false);
   const style = { width: size, height: size * 1.22, borderColor: m.color };
-  if (m.photo && !bad) return <img className="mb-av" src={m.photo} alt="" loading="lazy" width={size} height={Math.round(size * 1.22)} style={style} onError={() => setBad(true)} />;
+  if (m.photo && !bad) return <img className="mb-av" src={m.photo} alt="" loading="lazy" width={size} height={Math.round(size * 1.22)} style={style} title={m.photoCredit} onError={() => setBad(true)} />;
   return <span className="mb-av mb-ini" style={{ ...style, background: m.color, fontSize: size * 0.36 }} aria-hidden="true">{initials(m.name)}</span>;
 }
 
@@ -94,7 +94,7 @@ export default function MembersPage() {
       {country === 'US' && us.error && <p className="mb-muted">Could not load Congress data ({us.error}).</p>}
       {country === 'US' && us.data?.notes.map((n) => <p key={n} className="mb-muted">{n}</p>)}
       {country === 'US' && <Scatter list={list} />}
-      {country === 'AU' && <p className="mb-muted mb-small">Australian members from PolTok’s compiled research data (House as of {FEDERAL.houseAsOf}, Senate as of {FEDERAL.senateAsOf}; margins are 2025 two-candidate-preferred). No official photos are shown because their licence isn’t verified — initials only.</p>}
+      {country === 'AU' && <p className="mb-muted mb-small">Australian members from PolTok’s compiled research data (House as of {FEDERAL.houseAsOf}, Senate as of {FEDERAL.senateAsOf}; margins are 2025 two-candidate-preferred). Photos appear only where a Wikimedia Commons portrait carries a free licence (CC BY / CC BY-SA / CC0 / public domain); hover for credit. Others show initials.</p>}
 
       <div className="mb-cards">
         {list.map((m) => (

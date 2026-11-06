@@ -40,7 +40,8 @@ function AuProfile({ m }: { m: DirMember }) {
       <header className="mb-hero">
         <Avatar m={m} size={96} />
         <div><h1>{m.name}</h1><p className="mb-sub"><b style={{ color: m.color }}>{m.partyLabel}</b> · {m.chamber === 'senate' ? `Senator for ${m.state}` : `Member for ${m.seat} (${m.state})`}</p>
-          {m.note && <p className="mb-muted">{m.note}</p>}</div>
+          {m.note && <p className="mb-muted">{m.note}</p>}
+          {m.photoCredit && <p className="mb-muted mb-small">{m.photoCredit.replace(/ via Wikimedia Commons$/, '')} via <a href={m.photoSource} target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>{m.photoLicenceUrl && <> (<a href={m.photoLicenceUrl} target="_blank" rel="noopener noreferrer">licence</a>)</>}</p>}</div>
       </header>
       <div className="mb-stats">
         {seat && <div>Seat<b>{seat.name}</b><small><Link to={`/au/seat/${seat.id}`}>Seat page</Link></small></div>}
@@ -49,7 +50,7 @@ function AuProfile({ m }: { m: DirMember }) {
         {m.chamber === 'senate' && <div>State<b>{m.state}</b><small><Link to="/au/senate">Senate page</Link></small></div>}
         <div>Party<b>{m.party}</b><small><Link to={`/au/party/${m.party}`}>Party page</Link></small></div>
       </div>
-      <p className="mb-muted mb-small">Voting records, committees and photos are not shown for Australian members: PolTok has no verified keyless source wired up yet (TheyVoteForYou needs a key). Source: PolTok research compilation from AEC/APH records.</p>
+      <p className="mb-muted mb-small">Voting records and committees are not shown for Australian members: PolTok has no verified keyless source wired up yet (TheyVoteForYou needs a key). Source: PolTok research compilation from AEC/APH records.</p>
       <News name={m.name} />
     </main>
   );

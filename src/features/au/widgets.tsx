@@ -6,6 +6,7 @@ import { BiasBar, Card, EmptyState, LiveDot, Skeleton, leanCounts, useReducedMot
 import { fmtDay, fmtTime } from '../../components/time';
 import { LEAN_HEX, timeAgo } from '../../lib/format';
 import { party, partyKey, pColor, sortParties, type AuSeat, type PollRow } from './model';
+import { auPhoto } from '../../data/au-photo';
 
 /* ═════════════ Hemicycle (parliament arc) ═════════════ */
 
@@ -391,15 +392,17 @@ export function NewsPanel({ items, error, title = 'Australian news', limit = 10,
 
 export function LeaderCard({ role, name, partyCode, seat, extra }: { role: string; name: string; partyCode?: string; seat?: string; extra?: ReactNode }) {
   const c = pColor(partyCode);
+  const ph = auPhoto(name);
   const initials = name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join('');
   return (
     <div className="au-leader" style={{ ['--pc' as string]: c }}>
-      <span className="au-leader-av" aria-hidden>{initials}</span>
+      <span className="au-leader-av" aria-hidden title={ph?.credit}>{ph ? <img src={ph.thumbUrl} alt="" width={46} height={46} loading="lazy" /> : initials}</span>
       <div>
         <span className="mono au-leader-role">{role}</span>
         <b>{name}</b>
         <span className="muted au-leader-sub">{partyCode ? party(partyCode).name : ''}{seat ? ` · ${seat}` : ''}</span>
         {extra}
+        {ph && <a className="au-leader-credit" href={ph.sourcePage} target="_blank" rel="noopener noreferrer">{ph.credit}</a>}
       </div>
     </div>
   );

@@ -12,6 +12,8 @@ export interface CardDesign {
   preview?: string;
   /** true for designs added in Update 3 */
   isNew?: boolean;
+  /** premium studio template (Creative v2) */
+  premium?: boolean;
 }
 
 export interface CardSeries { label: string; color: string; points: { t: number; v: number }[] }

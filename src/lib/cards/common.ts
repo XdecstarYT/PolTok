@@ -8,6 +8,10 @@ export interface Design extends CardDesign {
   drawsCta?: boolean;
   /** layout is fully relative: always reflow to other sizes */
   fluid?: boolean;
+  /** Google Fonts this design needs (loaded on demand) */
+  fonts?: string[];
+  /** design paints CardStyle.background itself (not composited under it) */
+  ownBg?: boolean;
 }
 
 export const ALL: CardKind[] = ['race', 'balance', 'au-seat', 'promo', 'stat', 'flip', 'quote', 'candidate', 'custom'];

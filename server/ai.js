@@ -8,6 +8,7 @@
 // Request:  { question: string, context: object, history?: {role:'user'|'assistant', content}[], mode?: 'chat'|'race'|'brief'|'compose' }
 //           compose: + designs [{id,name,kinds,w,h}], temperature → 200 JSON { ok, result: {subject,designId,tweet,cardOverrides,altText,fixes} }
 //           studio modes (thread|calendar|reply|hashtags|variants|hooks|explain|factcheck|image-alt): + settings, n, context → 200 JSON { ok, mode, result, model }
+//           director (tasks concepts|critique|campaign|adapt|hooks2): + task, brand, prefs, designs, concepts, tz, tone, platforms → { ok, task, result, model, terms? }
 //           GET ?models=1 → { ok, configured, model, models[] } (auto-discovered chat models).
 // Response: 200 text/plain stream of the answer (UTF-8 deltas), or JSON { error, code } with 4xx/5xx.
 //           GET → { ok, configured, model } (capability probe; never reveals the key).

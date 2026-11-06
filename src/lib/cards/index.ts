@@ -12,6 +12,9 @@ import { FONT_LOADS, KIND_LABEL, loadImage, RT, rr } from './kit';
 import { type CardStyle, colorMapper, mappedCtx, coverImage, drawOverlays, ensureFont, hasStyle } from './style';
 import { DESIGNS_D } from './designs-d';
 import { DESIGNS_E } from './designs-e';
+import { DESIGNS_F } from './designs-f';
+import { backgroundCanvas } from './bg';
+import { preloadGeo } from './geo';
 import { DESIGNS_A } from './designs-a';
 import { DESIGNS_B } from './designs-b';
 import { DESIGNS_C } from './designs-c';
@@ -23,14 +26,18 @@ import type { useLive } from '../live';
 export type { CardData, CardDesign, CardKind, CardSeries, MessageKind } from './types';
 export { MESSAGE_KINDS } from './types';
 export type { CardStyle, CardPalette, Sticker, StickerPreset, Texture } from './style';
-export { SIZE_PRESETS, TEXTURES, FONT_CHOICES, STICKER_PRESETS, ensureFont, toneOf } from './style';
+export { SIZE_PRESETS, TEXTURES, FONT_CHOICES, FONT_PAIRS, STICKER_PRESETS, ensureFont, toneOf } from './style';
+export type { Background, BgType } from './bg';
+export { BG_TYPES, BG_LABEL, drawBackground, backgroundCanvas } from './bg';
+export { harmonize, shuffleStyle, HARMONIES, type Harmony } from './harmony';
+export { grid, balanceLines, fmtNum } from './type';
 
-const ALL_DESIGNS: Design[] = [...DESIGNS_A, ...DESIGNS_B, ...DESIGNS_C, ...DESIGNS_D, ...DESIGNS_E];
+const ALL_DESIGNS: Design[] = [...DESIGNS_A, ...DESIGNS_B, ...DESIGNS_C, ...DESIGNS_D, ...DESIGNS_E, ...DESIGNS_F];
 const byId = new Map(ALL_DESIGNS.map((d) => [d.id, d]));
 
 const sizeLabel = (w: number, h: number) => (w === 1080 && h === 1920 ? 'Story' : w === h ? 'Square' : h > w ? 'Portrait' : 'Post');
 
-export const CARD_DESIGNS: CardDesign[] = ALL_DESIGNS.map(({ id, name, kinds, size, isNew }) => ({ id, name, kinds, size, isNew, preview: `${sizeLabel(size.w, size.h)} · ${size.w}×${size.h}` }));
+export const CARD_DESIGNS: CardDesign[] = ALL_DESIGNS.map(({ id, name, kinds, size, isNew, premium }) => ({ id, name, kinds, size, isNew, premium, preview: `${sizeLabel(size.w, size.h)} · ${size.w}×${size.h}` }));
 
 export const designsFor = (kind: CardKind) => CARD_DESIGNS.filter((d) => d.kinds.includes(kind));
 
@@ -57,14 +64,15 @@ function sizeFor(design: Design, st?: CardStyle) {
   return w >= 200 && h >= 200 && w <= 4096 && h <= 4096 ? { w, h } : design.size;
 }
 
-function drawDesign(design: Design, data: CardData, st: CardStyle | undefined, W: number, H: number, I: { img: HTMLImageElement | null; img2: HTMLImageElement | null; bg: HTMLImageElement | null }, now: number): HTMLCanvasElement {
+function drawDesign(design: Design, data: CardData, st: CardStyle | undefined, W: number, H: number, I: { img: HTMLImageElement | null; img2: HTMLImageElement | null; bg: CanvasImageSource & { width: number; height: number } | null }, now: number): HTMLCanvasElement {
   const cv = document.createElement('canvas');
   cv.width = W;
   cv.height = H;
   const raw = cv.getContext('2d')!;
   const map = colorMapper(design.id, st);
   const ctx = map ? mappedCtx(raw, map) : raw;
-  if (I.bg) coverImage(raw, I.bg, W, H);
+  if (st?.background && !design.ownBg) coverImage(raw, backgroundCanvas(W, H, st.background), W, H);
+  else if (I.bg) coverImage(raw, I.bg, W, H);
   const accentIn = st?.palette?.accent ?? data.color;
   const k: K = {
     ctx, W, H, s: Math.min(W, H) / 1080, d: data, img: I.img, img2: I.img2,
@@ -73,16 +81,18 @@ function drawDesign(design: Design, data: CardData, st: CardStyle | undefined, W
     stamp: `${fmtDay(now, 'short')} ${fmtTime(now)} ${tzAbbr(now)}`,
     attr: data.footer ?? US_ATTR,
     url: data.url ?? SITE,
-    radius: st?.cornerRadius, map: map ?? undefined,
+    radius: st?.cornerRadius, map: map ?? undefined, raw, st,
   };
   RT.display = st?.fontDisplay || undefined;
   RT.body = st?.fontBody || undefined;
   RT.logoOff = !!st?.logo && st.logo !== 'design';
   RT.align = st?.align && st.align !== 'design' ? st.align : undefined;
+  RT.track = Number.isFinite(st?.tracking) ? Math.max(-0.08, Math.min(0.3, st!.tracking!)) : undefined;
+  RT.ratio = Number.isFinite(st?.typeRatio) ? Math.max(1.067, Math.min(1.618, st!.typeRatio!)) : undefined;
   raw.save();
   try { design.draw(k); } finally {
     raw.restore();
-    RT.display = RT.body = undefined; RT.logoOff = false; RT.align = undefined;
+    RT.display = RT.body = undefined; RT.logoOff = false; RT.align = undefined; RT.track = RT.ratio = undefined;
   }
   return cv;
 }
@@ -93,7 +103,7 @@ export async function renderCardCanvas(designId: string, data: CardData, style?:
   const st = hasStyle(style) ? style : undefined;
   const target = sizeFor(design, st);
   const [, img, img2, bg] = await Promise.all([
-    Promise.all([ensureFonts(), ensureFont(st?.fontDisplay), ensureFont(st?.fontBody)]),
+    Promise.all([ensureFonts(), ensureFont(st?.fontDisplay), ensureFont(st?.fontBody), ...(design.fonts ?? []).map((f) => ensureFont(f)), preloadGeo(data.mapState)]),
     loadImage(data.photo), loadImage(data.photo2), loadImage(st?.bgImage, 6000),
   ]);
   const d = data;

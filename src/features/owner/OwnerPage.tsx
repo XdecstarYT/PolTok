@@ -8,16 +8,20 @@ import { CardStudio } from './CardStudio';
 import { Health } from './Health';
 import { ContentTools } from './ContentTools';
 import { AiStudio } from './AiStudio';
+import { Director } from './director/Director';
 import { SocialPack } from './SocialPack';
+import { MotionStudio } from './motion/MotionStudio';
 import { OPEN_EDITOR } from './editorBus';
 import './owner.css';
 
-type Tab = 'make' | 'ai' | 'x' | 'studio' | 'social' | 'health' | 'content';
+type Tab = 'make' | 'director' | 'ai' | 'x' | 'studio' | 'motion' | 'social' | 'health' | 'content';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'make', label: 'Make with AI' },
+  { id: 'director', label: 'Creative director' },
   { id: 'ai', label: 'AI Studio' },
   { id: 'x', label: 'X / Twitter kit' },
   { id: 'studio', label: 'Card studio' },
+  { id: 'motion', label: 'Motion studio' },
   { id: 'social', label: 'Social pack' },
   { id: 'health', label: 'Site health' },
   { id: 'content', label: 'Content tools' },
@@ -62,9 +66,11 @@ export default function OwnerPage() {
       <div className="ow-tabs"><Tabs tabs={TABS} value={tab} onChange={setTab} variant="pill" ariaLabel="Owner tools" /></div>
       <div className="ow-body">
         {tab === 'make' && <MakeWithAi />}
+        {tab === 'director' && <Director />}
         {tab === 'ai' && <AiStudio />}
         {tab === 'x' && <TweetKit />}
         {tab === 'studio' && <CardStudio />}
+        {tab === 'motion' && <MotionStudio />}
         {tab === 'social' && <SocialPack />}
         {tab === 'health' && <Health />}
         {tab === 'content' && <ContentTools />}

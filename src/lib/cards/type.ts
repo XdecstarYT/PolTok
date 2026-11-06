@@ -38,6 +38,9 @@ export function ff(fam: FFam, px: number, weight: number | string = 400, italic 
 
 /** Optical tracking (em): big display text is tightened, small caps opened up. */
 export function opticalTracking(px: number, caps = false): number {
+  return opt(px, caps) + (caps ? 0 : RT.track ?? 0);
+}
+function opt(px: number, caps: boolean): number {
   if (caps) return px < 24 ? 0.14 : px < 48 ? 0.1 : 0.04;
   if (px >= 160) return -0.035;
   if (px >= 96) return -0.025;
@@ -83,7 +86,7 @@ export function grid(k: Pick<K, 'W' | 'H'>, opts: { ratio?: number; margin?: num
   const m = Math.round(short * (opts.margin ?? (wide ? 0.07 : tall ? 0.075 : 0.074)));
   const bl = Math.max(4, Math.round(short / 135));
   const base = short * (wide ? 0.03 : 0.026);
-  const ratio = opts.ratio ?? 1.25;
+  const ratio = opts.ratio ?? RT.ratio ?? 1.25;
   const cols = opts.cols ?? (wide ? 12 : 6);
   const x = m, y = m, w = W - m * 2, h = H - m * 2;
   const g = Math.round(m * 0.35);

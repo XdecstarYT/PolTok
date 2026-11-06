@@ -1,11 +1,12 @@
 // Shared enriched-profile sections (hero photo, quick facts, career, ideology, sources) for US + AU pages.
 import type { ReactNode } from 'react';
 import { initials } from '../members/data';
+import type { AuPhoto } from '../../data/au-photo';
 import { type OfficeHeld, type Profile, type SourceRef, ageOn, fmtDate } from './profile';
 
-export function HeroPhoto({ name, color, profile, fallback }: { name: string; color: string; profile?: Profile; fallback?: string }) {
+export function HeroPhoto({ name, color, profile, fallback, free }: { name: string; color: string; profile?: Profile; fallback?: string; free?: AuPhoto }) {
   const p = profile?.portrait;
-  const src = p?.src ?? fallback;
+  const src = p?.src ?? free?.thumbUrl ?? fallback;
   return (
     <figure className="cd-photo" style={{ ['--pc' as string]: color }}>
       <div className="cd-photo__frame">
@@ -17,6 +18,12 @@ export function HeroPhoto({ name, color, profile, fallback }: { name: string; co
             Photo: {p.author ?? 'Unknown'} ·{' '}
             {p.licenceUrl ? <a href={p.licenceUrl} target="_blank" rel="noopener noreferrer">{p.licence}</a> : p.licence} ·{' '}
             <a href={p.page} target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
+          </>
+        ) : free ? (
+          <>
+            Photo: {free.author} ·{' '}
+            {free.licenceUrl ? <a href={free.licenceUrl} target="_blank" rel="noopener noreferrer">{free.licence}</a> : free.licence} ·{' '}
+            <a href={free.sourcePage} target="_blank" rel="noopener noreferrer">via Wikimedia Commons</a>
           </>
         ) : fallback ? (
           'Photo: AP via The New York Times'

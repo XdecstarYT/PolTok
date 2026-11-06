@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { AU_PARTIES, FEDERAL, SENATORS, auPartyColor } from '../../data/au';
 import { PARTY_HEX } from '../../lib/format';
+import { auPhoto } from '../../data/au-photo';
 
 export interface UsStats { icpsr: string | null; dim1: number | null; dim2: number | null; votes: number | null; missedPct: number | null; partyUnityPct: number | null; unityVotes: number | null }
 export interface UsMember {
@@ -28,6 +29,7 @@ export interface DirMember {
   party: string; partyLabel: string; color: string;
   state: string; seat: string; // "WA-1", "Kooyong"
   photo?: string;
+  photoCredit?: string; photoLicenceUrl?: string; photoSource?: string;
   dim1?: number | null; dim2?: number | null; unity?: number | null;
   margin?: number | null;
   note?: string;
@@ -50,14 +52,18 @@ export function usDir(m: UsMember): DirMember {
 }
 
 const lastName = (n: string) => n.replace(/\s*\(.*\)$/, '').split(/\s+/).slice(-1)[0];
+function auPhotoFields(name: string): Partial<DirMember> {
+  const p = auPhoto(name);
+  return p ? { photo: p.thumbUrl, photoCredit: p.credit, photoLicenceUrl: p.licenceUrl, photoSource: p.sourcePage } : {};
+}
 export const AU_MEMBERS: DirMember[] = [
   ...FEDERAL.seats.filter((s) => s.chamber === 'federal' && s.member && !s.vacant).map((s): DirMember => ({
     key: `au-h-${s.id}`, country: 'AU', name: s.member, last: lastName(s.member), chamber: 'house', party: s.party,
-    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: s.name, margin: s.margin, note: s.note,
+    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: s.name, margin: s.margin, note: s.note, ...auPhotoFields(s.member),
   })),
   ...SENATORS.map((s): DirMember => ({
     key: `au-s-${slugify(s.name)}`, country: 'AU', name: s.name, last: lastName(s.name), chamber: 'senate', party: s.party,
-    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: `${s.state} · Senate`, note: s.note,
+    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: `${s.state} · Senate`, note: s.note, ...auPhotoFields(s.name),
   })),
 ];
 export const auSeatFor = (key: string) => FEDERAL.seats.find((s) => `au-h-${s.id}` === key);

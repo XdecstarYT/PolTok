@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Avatar, SimBadge } from '../../components';
 import { STATES } from '../../data';
 import { VIC_CANDIDATES } from '../../data/au';
+import { auPhoto } from '../../data/au-photo';
 const VIC_ASAT = VIC_CANDIDATES.asAt;
 import { PARTY_HEX, PARTY_NAME } from '../../lib/format';
 import type { Party } from '../../types';
@@ -168,11 +169,11 @@ export default function CandidatesIndex() {
           </div>
           <p className="cd-muted cd-count" aria-live="polite">{auList.length} people · Victorian nominations as at {VIC_ASAT} (not final)</p>
           <ul className="cd-grid">
-            {auList.slice(0, 300).map((c) => (
+            {auList.slice(0, 300).map((c) => { const ph = auPhoto(c.name); return (
               <li key={c.id}>
                 <Link to={`/candidate/${c.id}`} className="cd-card" style={{ ['--pc' as string]: c.color }}>
-                  <span className="pt-avatar" style={{ width: 56, height: 56, fontSize: 20, borderColor: c.color, background: `radial-gradient(circle at 30% 25%, ${c.color}, #05070d 85%)` }} aria-hidden="true">
-                    {c.name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 1).join('') + (c.name.split(/\s+/).slice(-1)[0]?.[0] ?? '')}
+                  <span className="pt-avatar" style={{ width: 56, height: 56, fontSize: 20, borderColor: c.color, background: `radial-gradient(circle at 30% 25%, ${c.color}, #05070d 85%)` }} aria-hidden="true" title={ph?.credit}>
+                    {ph ? <img src={ph.thumbUrl} alt="" width={56} height={56} loading="lazy" /> : c.name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 1).join('') + (c.name.split(/\s+/).slice(-1)[0]?.[0] ?? '')}
                   </span>
                   <div className="cd-card__body">
                     <b className="cd-card__name">{c.name}</b>
@@ -184,7 +185,7 @@ export default function CandidatesIndex() {
                   </div>
                 </Link>
               </li>
-            ))}
+            ); })}
           </ul>
           {auList.length > 300 && <p className="cd-muted">Showing 300 of {auList.length} — narrow with the filters.</p>}
         </>

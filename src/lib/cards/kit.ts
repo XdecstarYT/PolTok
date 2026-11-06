@@ -31,7 +31,7 @@ export const FONT_LOADS = [
 ];
 
 /** Render-scoped overrides set by the style layer (drawing is synchronous, so module state is safe). */
-export const RT: { display?: string; body?: string; logoOff?: boolean; align?: 'left' | 'center' | 'right' } = {};
+export const RT: { display?: string; body?: string; logoOff?: boolean; align?: 'left' | 'center' | 'right'; track?: number; ratio?: number } = {};
 const DISPLAY_FAMS: Fam[] = ['display', 'cond', 'serif'];
 const BODY_FAMS: Fam[] = ['sans', 'rc', 'text'];
 
@@ -61,6 +61,10 @@ export interface K {
   radius?: number;
   /** palette colour remapper active for this render (style wrapper), if any */
   map?: (c: string) => string;
+  /** un-mapped context (premium designs resolve the palette themselves) */
+  raw?: Ctx;
+  /** the active style, if any */
+  st?: import('./style').CardStyle;
 }
 
 export const KIND_LABEL: Record<CardKind, string> = {
