@@ -18,7 +18,6 @@ const USMap = lazy(() => import('../map/USMap').then((m) => ({ default: m.USMap 
 const heroes = () => import('./heroes');
 const AUHero = lazy(() => heroes().then((m) => ({ default: m.AUHero })));
 const NZHero = lazy(() => heroes().then((m) => ({ default: m.NZHero })));
-const NzBanner = lazy(() => import('../nz').then((m) => ({ default: m.NzBanner })));
 const WorldHero = lazy(() => heroes().then((m) => ({ default: m.WorldHero })));
 const secs = () => import('./sections');
 const S = {
@@ -431,8 +430,8 @@ function SourceFoot() {
 
 const TABS: { id: HomeCountry; flag: string; label: string }[] = [
   { id: 'us', flag: '🇺🇸', label: 'US' },
-  { id: 'au', flag: '🇦🇺', label: 'Australia' },
-  { id: 'nz', flag: '🇳🇿', label: 'New Zealand' },
+  { id: 'au', flag: '🇦🇺', label: 'AU' },
+  { id: 'nz', flag: '🇳🇿', label: 'NZ' },
   { id: 'world', flag: '🌐', label: 'World' },
 ];
 
@@ -448,7 +447,7 @@ function CountryHero() {
         ))}
       </div>
       <Suspense fallback={<section className="hm-banner hm-hero2"><Skeleton height={44} width="70%" /><Skeleton lines={3} /></section>}>
-        {c === 'us' ? <Banner /> : c === 'au' ? <AUHero /> : c === 'nz' ? <NZHero banner={<NzBanner />} /> : <WorldHero />}
+        {c === 'us' ? <Banner /> : c === 'au' ? <AUHero /> : c === 'nz' ? <NZHero /> : <WorldHero />}
       </Suspense>
     </div>
   );
