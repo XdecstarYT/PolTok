@@ -50,6 +50,7 @@ export function shuffleStyle(seed: number, scheme?: Harmony): { palette: { bg: s
   const r = prng(seed + 1);
   let type = SHUFFLE_BG[Math.floor(r() * SHUFFLE_BG.length)];
   if (type === 'paper' && hz.dark) type = 'grain';
-  const intensity = +(0.4 + r() * 0.5).toFixed(2);
+  const loud = type === 'stripes' || type === 'extrude' || type === 'halftone' || type === 'iso';
+  const intensity = +((loud ? 0.2 : 0.35) + r() * (loud ? 0.25 : 0.4)).toFixed(2);
   return { palette: { bg: hz.bg, fg: hz.fg, accent: hz.accent }, background: { type, seed, colors: hz.colors, intensity }, harmony: hz };
 }

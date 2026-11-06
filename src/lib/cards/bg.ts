@@ -276,7 +276,7 @@ export function drawBackground(ctx: Ctx, W: number, H: number, spec: Background)
         for (let x = D / 2; x >= -D / 2; x -= D / 60) ctx.lineTo(x, y0 + bh + Math.sin((x / D) * Math.PI * fr + ph) * amp);
         ctx.closePath();
         const col = C[1 + (i % (C.length - 1))];
-        ctx.fillStyle = i % 2 ? rgba(col, 0.85) : rgba(base, 0.9);
+        ctx.fillStyle = i % 2 ? rgba(col, 0.3 + I * 0.6) : rgba(base, 0.9);
         ctx.fill();
       }
       ctx.setTransform(1, 0, 0, 1, 0, 0);

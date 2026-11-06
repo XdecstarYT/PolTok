@@ -5,7 +5,7 @@
  */
 import type { CardKind } from './types';
 import { MESSAGE_KINDS } from './types';
-import { type Design, X, SQ, PT, ST } from './common';
+import { type Design, X, SQ, PT, ST, resultList } from './common';
 import { type Ctx, type Fam, type K, blob, caps, capsFit, contrast, ellipsize, font, grain, inkOn, mix, rgba, rng, rr, wordmark, RT, fit } from './kit';
 
 const MSG: CardKind[] = [...MESSAGE_KINDS, 'quote', 'custom'];
@@ -133,9 +133,9 @@ const statement: Design = {
     ctx.fillStyle = k.accent; ctx.fillRect(P, P, 90 * s, 12 * s);
     capsFit(ctx, k.kicker, W - P * 2 - 120 * s, P + 120 * s, P + 13 * s, font('sans', 22 * s, 800), 'rgba(255,255,255,0.7)', 0.16);
     const bottom = H - P - 60 * s - (d.cta ? 90 * s : 0) - (d.quoteBy ? 60 * s : 0);
-    const f = richFit(ctx, d.title, W - P * 2, bottom - (P + 80 * s), 150 * s, 34 * s, 'display', 700, 1.06);
+    const f = richFit(ctx, d.title, W - P * 2, bottom - (P + 80 * s) - (d.subtitle ? 80 * s : 0), 150 * s, 34 * s, 'display', 700, 1.06);
     const y = drawRich(k, f, P, P + 70 * s, W - P * 2, '#ffffff', emOn(k, '#0b0d14', '#ffffff'));
-    if (d.subtitle) { ctx.font = font('sans', Math.max(24 * s, f.px * 0.3), 500); ctx.fillStyle = 'rgba(255,255,255,0.72)'; ctx.textAlign = 'left'; ctx.fillText(ellipsize(ctx, plain(d.subtitle), W - P * 2), P, Math.min(bottom + 10 * s, y + f.px * 0.6)); }
+    if (d.subtitle) { ctx.font = font('sans', Math.max(24 * s, f.px * 0.3), 500); ctx.fillStyle = 'rgba(255,255,255,0.72)'; ctx.textAlign = 'left'; ctx.fillText(ellipsize(ctx, plain(d.subtitle), W - P * 2), P, Math.min(bottom + 10 * s, y + Math.max(24 * s, f.px * 0.3) * 1.6)); }
     if (d.quoteBy) caps(ctx, `— ${d.quoteBy}`, P, H - P - 60 * s - (d.cta ? 90 * s : 0), font('sans', 26 * s, 800), k.accent, 0.08);
     if (d.cta) ctaPill(k, W / 2, H - P - 130 * s, d.cta, k.accent, '#0b0d14');
     foot(k, H - P + 10 * s, '#ffffff');
@@ -311,7 +311,11 @@ const threadSlide: Design = {
     const nw = ctx.measureText(String(i)).width;
     ctx.font = font('display', 60 * s, 500); ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.fillText(`/${n}`, P + nw + 6 * s, P + 170 * s);
     const f = richFit(ctx, d.title, W - P * 2, H - P * 2 - 330 * s, 76 * s, 26 * s, 'sans', 600, 1.3);
-    drawRich(k, f, P, P + 230 * s, W - P * 2, '#ffffff', emOn(k, '#11131c', '#ffffff'), 'left', true);
+    const endY = drawRich(k, f, P, P + 230 * s, W - P * 2, '#ffffff', emOn(k, '#11131c', '#ffffff'), 'left', true);
+    if (!(MESSAGE_KINDS as string[]).includes(d.kind) && (d.stats?.length ?? 0) > 0) {
+      const ry = endY + 40 * s, rh = H - 190 * s - ry;
+      if (rh > 120 * s) resultList(k, P, ry, W - P * 2, Math.min(rh, 420 * s), { labelColor: '#ffffff', track: 'rgba(255,255,255,0.1)', maxRows: 4 });
+    }
     const dot = 14 * s, gap = 12 * s, tw = n * dot + (n - 1) * gap;
     for (let j = 0; j < n && n <= 20; j++) { ctx.beginPath(); ctx.arc(W / 2 - tw / 2 + j * (dot + gap) + dot / 2, H - 130 * s, dot / 2, 0, Math.PI * 2); ctx.fillStyle = j + 1 === i ? k.accent : 'rgba(255,255,255,0.25)'; ctx.fill(); }
     foot(k, H - 56 * s, '#ffffff');
@@ -434,7 +438,7 @@ const header: Design = {
     const sx = wide ? W * 0.32 : (W - sw) / 2, sy = (H - sh) / 2;
     const ws = Math.min(sh * 0.32, sw * 0.08);
     wordmark(ctx, sx, sy + ws * 0.9, ws, { color: '#ffffff', accent: k.accent });
-    const f = richFit(ctx, d.title || 'Every race. Every call. Live.', sw, sh * 0.5, sh * 0.3, 10, 'display', 700, 1.05);
+    const f = richFit(ctx, d.title || 'Every race. Every call. Live.', sw, sh * 0.56, sh * 0.4, 10, 'display', 700, 1.05);
     const end = drawRich(k, f, sx, sy + ws * 1.4, sw, '#ffffff', emOn(k, '#0b0d14', '#ffffff'));
     if (d.subtitle) { ctx.font = font('sans', Math.max(10, sh * 0.09), 600); ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.textAlign = 'left'; ctx.fillText(ellipsize(ctx, plain(d.subtitle), sw), sx, Math.min(sy + sh, end + sh * 0.14)); }
   },
@@ -469,7 +473,9 @@ const highlight: Design = {
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = k.accent; ctx.fill();
     const t = plain(d.title) || 'Live';
     const icon = /^\p{Extended_Pictographic}/u.test(t) ? [...t][0] : '';
-    const word = (icon ? t.slice(icon.length) : t).trim().slice(0, 12);
+    const rest = (icon ? t.slice(icon.length) : t).trim();
+    let word = ''; for (const w of rest.split(/\s+/)) { if ((word + ' ' + w).trim().length > 12) break; word = (word + ' ' + w).trim(); }
+    if (!word) word = rest.slice(0, 12);
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (icon) { ctx.font = font('sans', R * 0.7, 400); ctx.fillText(icon, cx, cy - R * 0.12); }
     const px = fit(ctx, word.toUpperCase(), R * 1.5, icon ? R * 0.26 : R * 0.42, 'cond', 700, 10);
@@ -483,7 +489,7 @@ const highlight: Design = {
 const storyMsg: Design = {
   id: 'story-message', name: 'Story template (message)', kinds: [...BRAND], size: ST, isNew: true, fluid: true, drawsCta: true,
   draw(k) {
-    const { ctx, W, H, d } = k; const s = W / 1080, P = 90 * s;
+    const { ctx, W, H, d } = k; const s = Math.min(W / 1080, H / 1920), P = Math.max(90 * s, W * 0.08);
     const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0b0d14'); g.addColorStop(1, '#1a1f33');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     blob(ctx, W * 0.5, H * 0.3, W, k.accent, 0.2);

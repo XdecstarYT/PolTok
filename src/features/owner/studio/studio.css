@@ -25,3 +25,13 @@
 .st-checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 4px; max-height: 180px; overflow: auto; }
 .st-checks label { display: flex; gap: 6px; align-items: center; }
 .st-file { font-size: var(--fs-xs, 12px); }
+.st-group { grid-column: 1 / -1; display: flex !important; flex-wrap: wrap; gap: 10px !important; align-items: end; }
+.st-group > label { min-width: 150px; }
+.st-group input[type=color] { width: 40px; height: 30px; padding: 0; border: 1px solid var(--line-2); border-radius: 6px; background: none; }
+.st-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 460px; overflow: auto; padding: 4px; border: 1px solid var(--line-2); border-radius: 10px; }
+.st-thumb { display: grid; gap: 4px; background: none; border: 2px solid transparent; border-radius: 8px; padding: 4px; cursor: pointer; color: var(--text-2); font: inherit; font-size: var(--fs-xs, 12px); text-align: left; }
+.st-thumb.is-sel { border-color: var(--accent-text, var(--signal)); }
+.st-thumb:focus-visible { outline: 2px solid var(--accent-text, var(--signal)); }
+.st-thumb-img { display: grid; place-items: center; aspect-ratio: 1; background: var(--bg-2); border-radius: 6px; overflow: hidden; }
+.st-thumb-img img { max-width: 100%; max-height: 100%; }
+.st-thumb-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

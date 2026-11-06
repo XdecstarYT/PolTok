@@ -169,7 +169,7 @@ export function colorMapper(designId: string, st: CardStyle | undefined): ((c: s
   const NB = parseColor(nb)!, NF = parseColor(nf)!;
   const B = p.bg ? parseColor(p.bg) : null, F = p.fg ? parseColor(p.fg) : null;
   const A = p.accent ? parseColor(p.accent) : null, D = p.dem ? parseColor(p.dem) : null, R = p.rep ? parseColor(p.rep) : null;
-  const imgDim = st.bgImage || st.background ? Math.max(0, Math.min(1, st.bgImageDim ?? (st.bgImage ? 0.55 : 0.12))) : 1;
+  const imgDim = st.bgImage || st.background ? Math.max(0, Math.min(1, st.bgImageDim ?? (st.bgImage ? 0.55 : 0.3))) : 1;
   const ramp = !!(B || F);
   if (!ramp && !A && !D && !R && imgDim === 1) return null;
   const nb2 = B ?? NB, nf2 = F ?? NF;

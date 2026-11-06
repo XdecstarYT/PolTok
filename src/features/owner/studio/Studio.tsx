@@ -4,8 +4,9 @@ import { useLive } from '../../../lib/live';
 import { RACES } from '../../../data';
 import { VICTORIA, FEDERAL } from '../../../data/au';
 import {
-  CARD_DESIGNS, cardDataFor, renderCardCanvas, renderCard, SIZE_PRESETS, TEXTURES, FONT_CHOICES, STICKER_PRESETS,
-  type CardData, type CardKind, type CardStyle, type StickerPreset, type Texture,
+  CARD_DESIGNS, cardDataFor, renderCardCanvas, renderCard, SIZE_PRESETS, TEXTURES, FONT_CHOICES, FONT_PAIRS, STICKER_PRESETS,
+  BG_TYPES, BG_LABEL, HARMONIES, shuffleStyle,
+  type CardData, type CardKind, type CardStyle, type StickerPreset, type Texture, type BgType, type Harmony,
 } from '../../../lib/cards';
 import { PARTY_NAME } from '../../../lib/format';
 import { copyImage, download } from '../cards';
@@ -16,6 +17,7 @@ import { takePending, OPEN_EDITOR } from '../editorBus';
 import { composeAi, AiError } from '../../../lib/ai';
 import { validateStyle, validateTexts } from '../../../../shared/compose.js';
 import { loadSettings } from '../aiStudioApi';
+import { Gallery } from './Gallery';
 import './studio.css';
 
 type Subject = 'race' | 'flip' | 'balance' | 'au-seat' | 'candidate' | 'promo' | 'stat' | 'quote' | 'custom' | 'message' | 'announcement' | 'thanks' | 'milestone' | 'question' | 'statement' | 'brand';
@@ -70,6 +72,8 @@ export function Studio() {
   const [base, setBase] = useState<CardData | null>(null);
   const [aiQ, setAiQ] = useState('');
   const [aiBusy, setAiBusy] = useState('');
+  const [harmony, setHarmony] = useState<Harmony | ''>('');
+  const [showGallery, setShowGallery] = useState(false);
   // "Open in editor" from the AI tools
   useEffect(() => {
     const take = () => {
@@ -278,7 +282,7 @@ export function Studio() {
           <div className="st-controls" aria-label="Style">
             <label>Design
               <select className="ow-select" value={sel.id} onChange={(e) => h.set((s) => ({ ...s, design: e.target.value }))}>
-                {designs.map((d) => <option key={d.id} value={d.id}>{d.isNew ? '✦ ' : ''}{d.name} · {d.size.w}×{d.size.h}</option>)}
+                {designs.map((d) => <option key={d.id} value={d.id}>{d.premium ? '★ ' : d.isNew ? '✦ ' : ''}{d.name} · {d.size.w}×{d.size.h}</option>)}
               </select>
             </label>
             <label>Size
@@ -300,6 +304,31 @@ export function Studio() {
                 </label>
               ))}
             </div>
+            <fieldset className="st-group" aria-label="Background">
+              <legend>Background</legend>
+              <label>Type<select className="ow-select" value={style.background?.type ?? ''} onChange={(e) => setStyle({ background: e.target.value ? { seed: 1, intensity: 0.6, colors: [pal.bg ?? '#0b0d14', pal.accent ?? '#3d5afe', '#ff3d7f'], ...style.background, type: e.target.value as BgType } : undefined }, false)}>
+                <option value="">Design default</option>{BG_TYPES.map((t) => <option key={t} value={t}>{BG_LABEL[t]}</option>)}</select></label>
+              {style.background && <>
+                <label>Seed<span className="st-row"><input className="ow-select st-val" type="number" min={0} value={style.background.seed ?? 1} onChange={(e) => setStyle({ background: { ...style.background!, seed: +e.target.value || 0 } })} /><button type="button" className="st-x" aria-label="Random seed" onClick={() => setStyle({ background: { ...style.background!, seed: Math.floor(Math.random() * 1e6) } }, false)}>⟳</button></span></label>
+                <label>Intensity<input type="range" min={0} max={1} step={0.05} value={style.background.intensity ?? 0.6} onChange={(e) => setStyle({ background: { ...style.background!, intensity: +e.target.value } })} /></label>
+                <span className="st-row" role="group" aria-label="Background colours">{[0, 1, 2].map((i) => (
+                  <input key={i} type="color" aria-label={`Background colour ${i + 1}`} value={style.background!.colors?.[i] ?? '#888888'} onChange={(e) => { const c = [...(style.background!.colors ?? [])]; while (c.length < 3) c.push('#888888'); c[i] = e.target.value; setStyle({ background: { ...style.background!, colors: c } }); }} />
+                ))}</span>
+              </>}
+            </fieldset>
+            <fieldset className="st-group" aria-label="Typography">
+              <legend>Typography</legend>
+              <label>Font pairing<select className="ow-select" value={FONT_PAIRS.find((p) => p.display === style.fontDisplay && p.body === style.fontBody)?.id ?? ''} onChange={(e) => { const p = FONT_PAIRS.find((x) => x.id === e.target.value); setStyle({ fontDisplay: p?.display, fontBody: p?.body }, false); }}>
+                <option value="">Design default / custom</option>{FONT_PAIRS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}</select></label>
+              <label>Display tracking ({((style.tracking ?? 0) * 100).toFixed(0)}%)<input type="range" min={-0.06} max={0.2} step={0.01} value={style.tracking ?? 0} onChange={(e) => setStyle({ tracking: +e.target.value || undefined })} /></label>
+              <label>Type scale<select className="ow-select" value={style.typeRatio ?? ''} onChange={(e) => setStyle({ typeRatio: e.target.value ? +e.target.value : undefined }, false)}>
+                <option value="">Major third 1.25 (default)</option><option value="1.125">Major second 1.125</option><option value="1.2">Minor third 1.2</option><option value="1.333">Perfect fourth 1.333</option><option value="1.414">Augmented fourth 1.414</option><option value="1.5">Perfect fifth 1.5</option></select></label>
+            </fieldset>
+            <fieldset className="st-group" aria-label="Shuffle">
+              <legend>Shuffle style</legend>
+              <label>Harmony<select className="ow-select" value={harmony} onChange={(e) => setHarmony(e.target.value as Harmony | '')}><option value="">Any</option>{HARMONIES.map((x) => <option key={x}>{x}</option>)}</select></label>
+              <Button size="sm" onClick={() => { const sh = shuffleStyle(Math.floor(Math.random() * 1e9), harmony || undefined); setStyle({ palette: { ...style.palette, ...sh.palette }, background: sh.background }, false); say(`Shuffled: ${sh.harmony.scheme} · ${BG_LABEL[sh.background.type]}`); }}>🎲 Shuffle</Button>
+            </fieldset>
             <label>Texture<select className="ow-select" value={style.texture ?? 'none'} onChange={(e) => setStyle({ texture: e.target.value as Texture }, false)}>{TEXTURES.map((t) => <option key={t}>{t}</option>)}</select></label>
             {style.texture && style.texture !== 'none' && <label>Strength<input type="range" min={0.1} max={1} step={0.05} value={style.textureOpacity ?? 0.5} onChange={(e) => setStyle({ textureOpacity: +e.target.value })} /></label>}
             <label>Corners<input type="range" min={0} max={80} value={style.cornerRadius ?? 0} onChange={(e) => setStyle({ cornerRadius: +e.target.value || undefined })} /></label>
@@ -324,6 +353,8 @@ export function Studio() {
             <button type="button" className="st-link" onClick={() => h.set((s) => ({ ...s, style: {} }))}>Reset style</button>
           </div>
 
+          <div className="st-row"><button type="button" className="st-link" aria-expanded={showGallery} onClick={() => setShowGallery((v) => !v)}>{showGallery ? 'Hide template gallery' : `Template gallery (${designs.length})`}</button></div>
+          {showGallery && <Gallery designs={designs} data={data} style={style} selected={sel.id} onPick={(id) => h.set((s) => ({ ...s, design: id }))} />}
           <div className="st-preview" ref={cvRef} aria-live="polite"><span className="ow-muted">Rendering…</span></div>
 
           <div className="st-panels">

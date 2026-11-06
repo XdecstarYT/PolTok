@@ -127,10 +127,48 @@ export function fitBlock(ctx: Ctx, text: string, maxW: number, maxH: number, max
     ctx.font = font(fam, px, weight, italic);
     const lines = wrapNoEllipsis(ctx, text, maxW);
     const longest = Math.max(...lines.map((l) => ctx.measureText(l).width));
-    if (lines.length <= maxLines && lines.length * px * lh <= maxH && longest <= maxW) return { lines, px, lh: px * lh };
+    if (lines.length <= maxLines && lines.length * px * lh <= maxH && longest <= maxW) {
+      const b = balanceLines(ctx, text, maxW);
+      return { lines: b.length === lines.length ? b : lines, px, lh: px * lh };
+    }
   }
   ctx.font = font(fam, minPx, weight, italic);
   return { lines: wrap(ctx, text, maxW, maxLines), px: minPx, lh: minPx * lh };
+}
+
+/** Balanced wrap: same line count as greedy at the narrowest width that keeps it; avoids one-word last lines. */
+export function balanceLines(ctx: Ctx, text: string, maxW: number): string[] {
+  const words = String(text ?? '').split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  const g = greedyLines(ctx, words, maxW);
+  if (g.length < 2) return g;
+  let lo = maxW * 0.4, hi = maxW, best = g;
+  for (let i = 0; i < 14; i++) {
+    const mid = (lo + hi) / 2;
+    const t = greedyLines(ctx, words, mid);
+    if (t.length <= g.length && Math.max(...t.map((l) => ctx.measureText(l).width)) <= mid + 0.5) { best = t; hi = mid; } else lo = mid;
+  }
+  const last = best[best.length - 1];
+  if (best.length >= 2 && !last.includes(' ')) {
+    const prev = best[best.length - 2].split(' ');
+    if (prev.length > 2) {
+      const moved = prev.pop()!;
+      const nl = moved + ' ' + last;
+      if (ctx.measureText(nl).width <= maxW) best = [...best.slice(0, -2), prev.join(' '), nl];
+    }
+  }
+  return best;
+}
+function greedyLines(ctx: Ctx, words: string[], maxW: number): string[] {
+  const lines: string[] = [];
+  let cur = '';
+  for (const w of words) {
+    const t = cur ? cur + ' ' + w : w;
+    if (!cur || ctx.measureText(t).width <= maxW) cur = t;
+    else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
 }
 
 function wrapNoEllipsis(ctx: Ctx, text: string, maxW: number) {

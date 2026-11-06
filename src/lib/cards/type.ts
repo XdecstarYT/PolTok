@@ -7,7 +7,7 @@
  *   const b = balanced(ctx, text, w, { px, family: 'Fraunces', weight: 700, maxLines: 3 });
  */
 import type { Ctx, K } from './kit';
-import { RT } from './kit';
+import { RT, balanceLines } from './kit';
 
 /** Font stacks for the premium families (loaded on demand through ensureFont). */
 export const FF = {
@@ -101,42 +101,7 @@ export function grid(k: Pick<K, 'W' | 'H'>, opts: { ratio?: number; margin?: num
 
 /* ───────── line breaking ───────── */
 
-function greedy(ctx: Ctx, words: string[], maxW: number): string[] {
-  const lines: string[] = [];
-  let cur = '';
-  for (const w of words) {
-    const t = cur ? cur + ' ' + w : w;
-    if (!cur || ctx.measureText(t).width <= maxW) cur = t;
-    else { lines.push(cur); cur = w; }
-  }
-  if (cur) lines.push(cur);
-  return lines;
-}
-
-/** Balanced wrap: same line count as greedy but the narrowest width that keeps it; never leaves a one-word last line when avoidable. */
-export function balanceLines(ctx: Ctx, text: string, maxW: number): string[] {
-  const words = String(text ?? '').split(/\s+/).filter(Boolean);
-  if (!words.length) return [];
-  const g = greedy(ctx, words, maxW);
-  if (g.length < 2) return g;
-  let lo = maxW * 0.4, hi = maxW, best = g;
-  for (let i = 0; i < 14; i++) {
-    const mid = (lo + hi) / 2;
-    const t = greedy(ctx, words, mid);
-    if (t.length <= g.length && Math.max(...t.map((l) => ctx.measureText(l).width)) <= mid + 0.5) { best = t; hi = mid; } else lo = mid;
-  }
-  // orphan control: pull a word down if the last line is a single short word
-  const last = best[best.length - 1];
-  if (best.length >= 2 && !last.includes(' ')) {
-    const prev = best[best.length - 2].split(' ');
-    if (prev.length > 2) {
-      const moved = prev.pop()!;
-      const nl = moved + ' ' + last;
-      if (ctx.measureText(nl).width <= maxW) { best = [...best.slice(0, -2), prev.join(' '), nl]; }
-    }
-  }
-  return best;
-}
+export { balanceLines };
 
 export interface Block { lines: string[]; px: number; lh: number; font: string; tracking: number; width: number; height: number }
 

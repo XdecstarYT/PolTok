@@ -6,12 +6,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '../../../components';
 import { useLive } from '../../../lib/live';
 import { RACES } from '../../../data';
-import { PARTY_HEX } from '../../../lib/format';
 import { CARD_DESIGNS, cardDataFor, renderCardCanvas, type CardData, type CardKind, type CardStyle } from '../../../lib/cards';
 import {
-  MOTION_PRESETS, MOTION_SIZES, SAFE_ZONES, TRANSITIONS, renderMotionFrame, drawGuides, reelRenderer, reelDuration, presetById,
+  MOTION_PRESETS, MOTION_SIZES, motionLayout, bestDesignFor, SAFE_ZONES, TRANSITIONS, renderMotionFrame, drawGuides, reelRenderer, reelDuration, presetById,
   exportVideo, exportGif, pickVideoMime, videoExt,
-  type FrameFn, type MapFill, type MotionInput, type PresetId, type SafeZoneId, type Transition,
+  type FrameFn, type MotionInput, type PresetId, type SafeZoneId, type Transition,
 } from '../../../lib/motion';
 import { loadPresets } from '../studio/presets';
 import { download } from '../cards';
@@ -67,23 +66,15 @@ export function MotionStudio() {
   }, [kind, live.news]);
   const subjId = options.some((o) => o.id === id) ? id : options[0]?.id ?? '';
   const designs = useMemo(() => CARD_DESIGNS.filter((d) => d.kinds.includes(kind as CardKind)), [kind]);
-  const designId = designs.some((d) => d.id === design) ? design : designs[0]?.id ?? 'broadcast';
+  const cardBox = motionLayout(size.w, size.h).card;
+  const chosen = designs.some((d) => d.id === design) ? design : designs[0]?.id ?? 'broadcast';
+  // vertical/square: switch to the closest-aspect design instead of letterboxing
+  const designId = bestDesignFor(designs, cardBox, chosen)?.id ?? chosen;
+  const swapped = designId !== chosen;
   const stamp = live.lastUpdate ? Math.floor(live.lastUpdate / 60000) : 0;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const data = useMemo<CardData>(() => cardDataFor(kind as CardKind, subjId, live), [kind, subjId, stamp, live.news]);
-  const style = useMemo<CardStyle>(() => ({ ...(presets.find((p) => p.name === presetName)?.style ?? {}), size: { w: size.w, h: size.h } }), [presets, presetName, size.w, size.h]);
-
-  // real called races → map fill order (no invented data)
-  const mapFills = useMemo<MapFill[]>(() => {
-    const out: { abbr: string; color: string; at: number }[] = [];
-    for (const r of RACES) {
-      const res = live.results?.[r.id];
-      const w = res?.calledFor ? r.candidates.find((c) => c.id === res.calledFor) : undefined;
-      if (w && r.chamber === 'senate' && !out.some((o) => o.abbr === r.state)) out.push({ abbr: r.state, color: PARTY_HEX[w.party] ?? '#9aa3b8', at: res?.calledAt ?? 0 });
-    }
-    return out.sort((a, b) => a.at - b.at).map(({ abbr, color }) => ({ abbr, color }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stamp]);
+  const style = useMemo<CardStyle>(() => ({ ...(presets.find((p) => p.name === presetName)?.style ?? {}), size: { w: Math.round(cardBox.w), h: Math.round(cardBox.h) } }), [presets, presetName, cardBox.w, cardBox.h]);
 
   useEffect(() => {
     let off = false;
@@ -91,7 +82,7 @@ export function MotionStudio() {
     return () => { off = true; };
   }, [designId, data, style]);
 
-  const input = useMemo<MotionInput | null>(() => (card ? { card, data, mapFills, caption: caption.trim() || undefined } : null), [card, data, mapFills, caption]);
+  const input = useMemo<MotionInput | null>(() => (card ? { card, data, caption: caption.trim() || undefined } : null), [card, data, caption]);
   const reelOpts = useMemo(() => ({ slides: slides.map((s) => ({ input: s.input, preset: s.preset })), perSlide, transition, preset: anim }), [slides, perSlide, transition, anim]);
   const total = mode === 'reel' && slides.length ? reelDuration(reelOpts) : duration;
   const frame = useMemo<FrameFn | null>(() => {
@@ -149,8 +140,10 @@ export function MotionStudio() {
     cv.toBlob((b) => b && download(b, `${name}-${tRef.current.toFixed(1)}s.png`), 'image/png');
   };
   const addSlide = async () => {
-    const c = await renderCardCanvas(designId, data, { ...style, size: { w: 1080, h: 1920 } });
-    setSlides((s) => [...s, { input: { card: c, data, mapFills, caption: caption.trim() || undefined }, preset: anim, label: `${presetById(anim).label} · ${data.title}`.slice(0, 70) }]);
+    const box = motionLayout(1080, 1920).card;
+    const did = bestDesignFor(designs, box, chosen)?.id ?? designId;
+    const c = await renderCardCanvas(did, data, { ...style, size: { w: Math.round(box.w), h: Math.round(box.h) } });
+    setSlides((s) => [...s, { input: { card: c, data, caption: caption.trim() || undefined }, preset: anim, label: `${presetById(anim).label} · ${data.title}`.slice(0, 70) }]);
     setMsg('Slide added to reel');
   };
   const move = (i: number, d: number) => setSlides((s) => { const n = [...s]; const j = i + d; if (j < 0 || j >= n.length) return s; [n[i], n[j]] = [n[j], n[i]]; return n; });
@@ -163,9 +156,10 @@ export function MotionStudio() {
           <fieldset className="mo-box"><legend>Card</legend>
             <label className="ow-field">Subject<select className="ow-select" value={kind} onChange={(e) => setKind(e.target.value as Kind)}>{KINDS.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}</select></label>
             <label className="ow-field">Item<select className="ow-select" value={subjId} onChange={(e) => setId(e.target.value)}>{options.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}</select></label>
-            <label className="ow-field">Design<select className="ow-select" value={designId} onChange={(e) => setDesign(e.target.value)}>{designs.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}</select></label>
+            <label className="ow-field">Design<select className="ow-select" value={chosen} onChange={(e) => setDesign(e.target.value)}>{designs.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}</select></label>
+            {swapped && <small className="ow-muted">Using “{designs.find((d) => d.id === designId)?.name}” — closest layout for {size.w}×{size.h} (the chosen design would letterbox).</small>}
             <label className="ow-field">Style preset<select className="ow-select" value={presetName} onChange={(e) => setPresetName(e.target.value)}><option value="">Design default</option>{presets.map((p) => <option key={p.name} value={p.name}>{p.name}</option>)}</select></label>
-            <label className="ow-field">Caption (optional)<input className="ow-select" value={caption} maxLength={200} placeholder={data.subtitle ?? data.title} onChange={(e) => setCaption(e.target.value)} /></label>
+            <label className="ow-field">Caption (optional)<input className="ow-select" value={caption} maxLength={200} placeholder="Shown in the caption strip (empty = follow line)" onChange={(e) => setCaption(e.target.value)} /></label>
           </fieldset>
           <fieldset className="mo-box"><legend>Animation</legend>
             <div className="mo-presets" role="radiogroup" aria-label="Animation preset">

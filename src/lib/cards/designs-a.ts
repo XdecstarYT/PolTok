@@ -301,10 +301,10 @@ const versus: Design = {
     text(ctx, 'VS', 0, 4, font('cond', 64, 700), '#fff', 'center', 'middle'); ctx.restore();
     const side = (r: typeof a, left: boolean) => {
       const x = left ? 60 : W - 60, al: CanvasTextAlign = left ? 'left' : 'right';
-      if (d.kind !== 'balance') portrait(ctx, left ? k.img : null, r.label, left ? 60 : W - 220, 110, 160, 160, mix(r.color, '#000', 0.1), { circle: true, ring: 6 });
+      if (d.kind !== 'balance') portrait(ctx, left ? k.img : null, r.label, left ? 60 : W - 210, 70, 150, 150, mix(r.color, '#000', 0.1), { circle: true, ring: 6 });
       ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.4)'; ctx.shadowBlur = 20;
       headline(k, r.value, x, 450, W * 0.36, 150, 'cond', '#fff', 700, al); ctx.restore();
-      headline(k, r.label.toUpperCase(), x, 330, W * 0.34, 48, 'cond', '#fff', 700, al);
+      headline(k, r.label.toUpperCase(), x, 290, W * 0.34, 46, 'cond', '#fff', 700, al);
     };
     side(a, true); side(b, false);
     ctx.fillStyle = 'rgba(0,0,0,0.75)'; ctx.fillRect(0, H - 150, W, 150);

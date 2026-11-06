@@ -1,58 +1,55 @@
 /**
- * Motion timeline — animates any card design with a generic layer approach.
+ * Motion timeline — animates any card design without duplicating its content.
  *
- * Designs draw a single static frame (src/lib/cards public API: renderCardCanvas), so motion
- * composites that frame as a layer (entrance wipe / zoom / slide, Ken Burns, shake) and draws
- * animated primitives on top driven by the card's real CardData: count-up numbers, growing
- * bars, a sweeping needle, US states filling in sequence, typewriter / word-by-word / kinetic
- * captions, confetti bursts, LIVE badge pulse, breaking banner + ticker and a countdown clock.
+ * Designs draw one static frame (public API: renderCardCanvas), so motion animates THAT frame:
+ * staggered band reveals (wipe from the left / slide / fade-rise — bars and text blocks appear
+ * in sequence), punch-in zoom + shake, a card flip, Ken Burns. Nothing that the card already shows
+ * is redrawn: added graphics live only in a reserved caption strip outside the card (caption,
+ * ticker, ticking countdown, follow line) plus decorative confetti for flips/milestones.
  *
- * Every element gets its own progress 0..1 from an AnimCtx: `a.p('bars')` reads the window the
- * preset assigned to that element (fractions of the clip), so the same preset scales to 6–15 s.
+ * Layout: `motionLayout(W, H)` returns the card rect (render the card at that size so the design
+ * reflows instead of letterboxing — `bestDesignFor` picks the closest-aspect design) and the strip.
+ * Per-element progress 0..1 comes from AnimCtx windows (fractions of the clip) so a preset scales to 6–15 s.
  */
 import type { CardData } from '../cards';
-import { getGeometry } from '../../features/map/geometry';
 
 export type PresetId = 'election' | 'breaking' | 'countdown' | 'flip' | 'calm' | 'kinetic';
 export type Ease = (x: number) => number;
 export const EASE = {
   linear: (x: number) => x,
   outCubic: (x: number) => 1 - (1 - x) ** 3,
+  outQuint: (x: number) => 1 - (1 - x) ** 5,
   inOutCubic: (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2),
   outBack: (x: number) => { const c = 1.70158; return 1 + (c + 1) * (x - 1) ** 3 + c * (x - 1) ** 2; },
   outElastic: (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : 2 ** (-10 * x) * Math.sin((x * 10 - 0.75) * (2 * Math.PI / 3)) + 1),
 } satisfies Record<string, Ease>;
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
-
-/** [start, end] as fractions of the clip, optional easing. */
 export type EaseName = keyof typeof EASE;
 export type Track = [number, number, EaseName?];
+export type Element = 'reveal' | 'strip' | 'caption' | 'ticker' | 'countdown' | 'kinetic' | 'undim' | 'shake' | 'flip';
+export type Reveal = 'wipe' | 'slide' | 'rise' | 'punch' | 'flip' | 'fade';
 export interface PresetDef {
   id: PresetId; label: string; blurb: string;
-  enter: 'wipe' | 'zoom' | 'slide' | 'fade';
-  /** Ken Burns zoom amount over the whole clip */
-  kenBurns: number;
+  reveal: Reveal; bands: number; kenBurns: number;
   tracks: Partial<Record<Element, Track>>;
-  /** fraction(s) of the clip at which a confetti burst fires */
   bursts?: number[];
-  caption: 'word' | 'type' | 'kinetic' | 'none';
+  strip: 'caption' | 'type' | 'ticker' | 'countdown' | 'by';
   defaultDuration: number;
 }
-export type Element = 'enter' | 'live' | 'bars' | 'count' | 'needle' | 'map' | 'caption' | 'banner' | 'ticker' | 'sticker' | 'countdown' | 'kinetic' | 'by' | 'shake' | 'panel';
 
 export const MOTION_PRESETS: PresetDef[] = [
-  { id: 'election', label: 'Election night', blurb: 'Wipe-in, LIVE pulse, states fill, bars grow, needle sweeps', enter: 'wipe', kenBurns: 0.05, caption: 'word', defaultDuration: 10,
-    tracks: { enter: [0, 0.1, 'inOutCubic'], live: [0.05, 1], panel: [0.12, 0.2, 'outCubic'], map: [0.15, 0.6], bars: [0.2, 0.55, 'outCubic'], count: [0.2, 0.55, 'outCubic'], needle: [0.3, 0.75, 'outElastic'], caption: [0.6, 0.92] } },
-  { id: 'breaking', label: 'Breaking', blurb: 'Punch-in zoom, shake, red banner, typewriter, ticker', enter: 'zoom', kenBurns: 0.04, caption: 'type', defaultDuration: 8,
-    tracks: { enter: [0, 0.08, 'outBack'], shake: [0.02, 0.14], banner: [0.06, 0.16, 'outCubic'], caption: [0.16, 0.55], ticker: [0.15, 1], panel: [0.45, 0.52, 'outCubic'], count: [0.45, 0.75, 'outCubic'], bars: [0.45, 0.75, 'outCubic'], live: [0.1, 1] } },
-  { id: 'countdown', label: 'Countdown', blurb: 'Live ticking clock with a sweeping ring', enter: 'fade', kenBurns: 0.06, caption: 'word', defaultDuration: 10,
-    tracks: { enter: [0, 0.1, 'outCubic'], countdown: [0.08, 1], caption: [0.55, 0.9] } },
-  { id: 'flip', label: 'Flip celebration', blurb: 'Slide-in, FLIP sticker pop, confetti bursts, bars', enter: 'slide', kenBurns: 0.03, caption: 'word', defaultDuration: 8, bursts: [0.28, 0.62],
-    tracks: { enter: [0, 0.12, 'outCubic'], sticker: [0.25, 0.35, 'outElastic'], panel: [0.12, 0.2, 'outCubic'], bars: [0.15, 0.45, 'outCubic'], count: [0.15, 0.45, 'outCubic'], map: [0.1, 0.4], caption: [0.55, 0.9] } },
-  { id: 'calm', label: 'Calm explainer', blurb: 'Slow fade + Ken Burns, word-by-word caption', enter: 'fade', kenBurns: 0.09, caption: 'word', defaultDuration: 12,
-    tracks: { enter: [0, 0.18, 'inOutCubic'], panel: [0.22, 0.32, 'inOutCubic'], bars: [0.25, 0.6, 'inOutCubic'], count: [0.25, 0.6, 'inOutCubic'], caption: [0.3, 0.92] } },
-  { id: 'kinetic', label: 'Kinetic quote', blurb: 'Big word-by-word type over the dimmed card', enter: 'fade', kenBurns: 0.12, caption: 'kinetic', defaultDuration: 8,
-    tracks: { enter: [0, 0.12, 'outCubic'], kinetic: [0.08, 0.72], by: [0.74, 0.9] } },
+  { id: 'election', label: 'Election night', blurb: 'Card wipes in band by band (bars grow from the left), caption word by word', reveal: 'wipe', bands: 6, kenBurns: 0.035, strip: 'caption', defaultDuration: 10,
+    tracks: { reveal: [0, 0.32], strip: [0.3, 0.38, 'outCubic'], caption: [0.38, 0.8] } },
+  { id: 'breaking', label: 'Breaking', blurb: 'Punch-in, shake, bands slam in, red strip with typewriter + ticker', reveal: 'punch', bands: 1, kenBurns: 0.03, strip: 'ticker', defaultDuration: 8,
+    tracks: { reveal: [0, 0.16], shake: [0.12, 0.24], strip: [0.02, 0.1, 'outCubic'], caption: [0.12, 0.5], ticker: [0.5, 1] } },
+  { id: 'countdown', label: 'Countdown', blurb: 'Card rises in, live ticking clock in the strip', reveal: 'rise', bands: 4, kenBurns: 0.05, strip: 'countdown', defaultDuration: 10,
+    tracks: { reveal: [0, 0.25], strip: [0.2, 0.3, 'outCubic'], countdown: [0.25, 1] } },
+  { id: 'flip', label: 'Flip celebration', blurb: 'Card flips over, confetti bursts, caption pops', reveal: 'flip', bands: 1, kenBurns: 0.03, strip: 'caption', defaultDuration: 8, bursts: [0.2, 0.55],
+    tracks: { flip: [0, 0.18, 'outBack'], strip: [0.2, 0.28, 'outCubic'], caption: [0.28, 0.65] } },
+  { id: 'calm', label: 'Calm explainer', blurb: 'Blocks fade up in sequence, slow Ken Burns, gentle caption', reveal: 'rise', bands: 5, kenBurns: 0.07, strip: 'caption', defaultDuration: 12,
+    tracks: { reveal: [0, 0.4, 'inOutCubic'], strip: [0.35, 0.45, 'inOutCubic'], caption: [0.45, 0.92] } },
+  { id: 'kinetic', label: 'Kinetic quote', blurb: 'Quote builds word by word, then the card resolves behind it', reveal: 'fade', bands: 1, kenBurns: 0.08, strip: 'by', defaultDuration: 8,
+    tracks: { reveal: [0, 0.1], kinetic: [0.04, 0.5], undim: [0.6, 0.75, 'inOutCubic'], strip: [0.62, 0.7, 'outCubic'], caption: [0.7, 0.9] } },
 ];
 export const presetById = (id: string) => MOTION_PRESETS.find((p) => p.id === id) ?? MOTION_PRESETS[0];
 
@@ -70,46 +67,54 @@ export const MOTION_SIZES = [
   { id: 'vertical', label: 'Vertical 1080×1920 (TikTok / Reels / Shorts)', w: 1080, h: 1920 },
 ] as const;
 
-export interface MapFill { abbr: string; color: string }
+export interface Box { x: number; y: number; w: number; h: number }
+/** Card rect + reserved strip for a frame size. Vertical keeps the strip inside the TikTok/Reels safe zone. */
+export function motionLayout(W: number, H: number): { card: Box; strip: Box } {
+  if (H > W * 1.3) {
+    const z = SAFE_ZONES.tiktok, top = Math.round(H * 0.03), ch = Math.round(H * 0.6);
+    const sy = top + ch + H * 0.015, sh = H * (1 - z.bottom) - sy - H * 0.01;
+    return { card: { x: 0, y: top, w: W, h: ch }, strip: { x: W * z.left, y: sy, w: W * (1 - z.left - z.right), h: sh } };
+  }
+  const sh = Math.round(H * (W > H * 1.3 ? 0.15 : 0.14));
+  return { card: { x: 0, y: 0, w: W, h: H - sh }, strip: { x: 0, y: H - sh, w: W, h: sh } };
+}
+/** Closest-aspect design to the card rect; keeps `preferred` when it won't letterbox. */
+export function bestDesignFor<T extends { id: string; size: { w: number; h: number } }>(designs: T[], target: { w: number; h: number }, preferred?: string): T | undefined {
+  const ta = target.w / target.h;
+  const off = (d: T) => { const r = (d.size.w / d.size.h) / ta; return Math.max(r, 1 / r); };
+  const pref = designs.find((d) => d.id === preferred);
+  if (pref && off(pref) <= 1.3) return pref;
+  return [...designs].sort((a, b) => off(a) - off(b))[0] ?? pref;
+}
+
 export interface MotionInput {
-  /** the rendered static card (renderCardCanvas output) */
+  /** the static card, ideally rendered at motionLayout().card size */
   card: HTMLCanvasElement | HTMLImageElement | ImageBitmap | OffscreenCanvas;
   data: CardData;
-  /** states to fill in sequence (election night / flip), e.g. called races */
-  mapFills?: MapFill[];
-  /** caption override; defaults to subtitle/title */
+  /** caption for the strip; when empty the strip shows the CTA / follow line (never repeats the card) */
   caption?: string;
 }
 export interface MotionOptions {
   preset: PresetId;
-  /** clip length in seconds */
   duration: number;
-  /** epoch ms used for countdown (frame time is added) */
   now?: number;
   /** draw safe-zone guides (preview only — never in exports) */
   guides?: SafeZoneId | null;
-  /** zone the overlays keep clear of (defaults to TikTok on vertical frames) */
-  safe?: SafeZoneId | null;
   seed?: number;
 }
 
-/** Per-element progress for one frame. */
 export class AnimCtx {
   constructor(readonly t: number, readonly T: number, readonly def: PresetDef) {}
   get f() { return this.T > 0 ? clamp01(this.t / this.T) : 1; }
   has(el: Element) { return !!this.def.tracks[el]; }
-  /** eased 0..1 progress of element `el` (1 when the preset doesn't animate it). */
-  p(el: Element, ease?: keyof typeof EASE): number {
+  p(el: Element, ease?: EaseName): number {
     const tr = this.def.tracks[el];
     if (!tr) return 1;
     const raw = tr[1] > tr[0] ? clamp01((this.f - tr[0]) / (tr[1] - tr[0])) : this.f >= tr[0] ? 1 : 0;
     return EASE[ease ?? tr[2] ?? 'linear'](raw);
   }
-  /** seconds since element `el` started (can be negative) */
-  since(el: Element) { const tr = this.def.tracks[el]; return tr ? this.t - tr[0] * this.T : this.t; }
 }
 
-// ---------- number formatting ----------
 export interface ParsedNum { pre: string; num: number; dec: number; suf: string; comma: boolean }
 export function parseNum(v: string): ParsedNum | null {
   const m = /^(\D*?)(-?[\d,]*\.?\d+)(.*)$/.exec(v.trim());
@@ -124,7 +129,6 @@ export function fmtNum(p: ParsedNum, k: number): string {
   return `${p.pre}${s}${p.suf}`;
 }
 
-// ---------- drawing helpers ----------
 type C = CanvasRenderingContext2D;
 const SANS = `Inter, 'Segoe UI', system-ui, sans-serif`;
 const DISP = `'Space Grotesk', Inter, system-ui, sans-serif`;
@@ -145,207 +149,7 @@ function wrapWords(c: C, words: string[], maxW: number): string[][] {
 }
 const isHex = (s?: string) => !!s && /^#[0-9a-f]{6}$/i.test(s);
 const accentOf = (d: CardData) => (isHex(d.color) ? d.color! : '#c6ff3d');
-
-interface Box { x: number; y: number; w: number; h: number }
-/** content rect clear of platform UI */
-export function safeRect(W: number, H: number, safe?: SafeZoneId | null): Box {
-  const z = safe ? SAFE_ZONES[safe] : null;
-  const m = Math.min(W, H) * 0.045;
-  if (!z) return { x: m, y: m, w: W - 2 * m, h: H - 2 * m };
-  const x = W * z.left, y = H * z.top;
-  return { x, y, w: W * (1 - z.left - z.right), h: H * (1 - z.top - z.bottom) };
-}
-
-function drawCardLayer(c: C, inp: MotionInput, W: number, H: number, a: AnimCtx, dim = 0) {
-  const card = inp.card as CanvasImageSource & { width: number; height: number };
-  const cw = card.width, ch = card.height;
-  const e = a.p('enter');
-  const kb = 1 + a.def.kenBurns * a.f;
-  // background: blurred cover copy when the aspect differs
-  const cover = Math.max(W / cw, H / ch), contain = Math.min(W / cw, H / ch);
-  const sameAspect = Math.abs(cw / ch - W / H) < 0.02;
-  c.fillStyle = '#05060a'; c.fillRect(0, 0, W, H);
-  if (!sameAspect) {
-    c.save(); c.filter = `blur(${Math.round(Math.min(W, H) / 28)}px) brightness(0.5)`;
-    const s = cover * 1.12 * kb; c.drawImage(card, (W - cw * s) / 2, (H - ch * s) / 2, cw * s, ch * s); c.restore();
-  }
-  let s = (sameAspect ? cover : contain) * kb, ox = 0, oy = 0, alpha = 1;
-  const mode = a.def.enter;
-  if (mode === 'zoom') s *= 1.25 - 0.25 * e;
-  if (mode === 'slide') ox = (1 - e) * W * 0.9;
-  if (mode === 'fade') { alpha = e; s *= 1.04 - 0.04 * e; }
-  if (a.has('shake')) {
-    const sp = a.p('shake');
-    if (sp > 0 && sp < 1) { const amp = (1 - sp) * Math.min(W, H) * 0.012; ox += Math.sin(a.t * 90) * amp; oy += Math.cos(a.t * 70) * amp; }
-  }
-  // slow drift towards the upper-left for Ken Burns
-  const drift = a.def.kenBurns * a.f * 0.25;
-  const dw = cw * s, dh = ch * s, x = (W - dw) / 2 + ox - dw * drift * 0.2, y = (H - dh) / 2 + oy - dh * drift * 0.15;
-  c.save();
-  c.globalAlpha = alpha;
-  if (mode === 'wipe' && e < 1) { c.beginPath(); c.rect(0, 0, W * e, H); c.clip(); }
-  c.drawImage(card, x, y, dw, dh);
-  c.restore();
-  if (mode === 'wipe' && e > 0 && e < 1) { c.fillStyle = accentOf(inp.data); c.fillRect(W * e - W * 0.006, 0, W * 0.012, H); }
-  if (dim > 0) { c.fillStyle = `rgba(4,5,10,${dim})`; c.fillRect(0, 0, W, H); }
-}
-
-function liveBadge(c: C, x: number, y: number, u: number, t: number, label = 'LIVE') {
-  const pulse = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 0.9);
-  c.save();
-  c.font = f(u * 0.42, 800, SANS);
-  const tw = c.measureText(label).width, h = u * 0.78, w = tw + u * 1.25;
-  rrect(c, x, y, w, h, h / 2); c.fillStyle = '#e11d2e'; c.fill();
-  c.beginPath(); c.arc(x + u * 0.42, y + h / 2, u * 0.13, 0, Math.PI * 2); c.fillStyle = '#fff'; c.fill();
-  c.beginPath(); c.arc(x + u * 0.42, y + h / 2, u * (0.13 + 0.22 * pulse), 0, Math.PI * 2); c.strokeStyle = `rgba(255,255,255,${0.8 * (1 - pulse)})`; c.lineWidth = u * 0.05; c.stroke();
-  c.fillStyle = '#fff'; c.textBaseline = 'middle'; c.fillText(label, x + u * 0.72, y + h / 2 + u * 0.02);
-  c.restore();
-  return w;
-}
-
-function glass(c: C, b: Box, p: number, r: number) {
-  c.save();
-  c.globalAlpha = p;
-  rrect(c, b.x, b.y + (1 - p) * b.h * 0.25, b.w, b.h, r);
-  c.fillStyle = 'rgba(8,10,18,0.78)'; c.fill();
-  c.strokeStyle = 'rgba(255,255,255,0.12)'; c.lineWidth = Math.max(1, r * 0.06); c.stroke();
-  c.restore();
-}
-
-function barsEl(c: C, b: Box, d: CardData, p: number, u: number) {
-  const bars = (d.bars ?? []).filter((x) => x.value > 0).slice(0, 4);
-  if (!bars.length) return false;
-  const max = Math.max(...bars.map((x) => x.value), 1);
-  const total = bars.reduce((s, x) => s + x.value, 0);
-  const pct = total > 0 && total <= 101 && bars.length > 1;
-  const rowH = b.h / bars.length;
-  bars.forEach((bar, i) => {
-    const local = clamp01(p * 1.25 - i * 0.08);
-    const y = b.y + i * rowH, bh = Math.min(rowH * 0.42, u * 0.5);
-    c.font = f(u * 0.5, 700); c.fillStyle = '#e8ebf5'; c.textBaseline = 'alphabetic';
-    c.fillText(bar.label.slice(0, 28), b.x, y + rowH * 0.42);
-    const val = bar.value * EASE.outCubic(local);
-    const txt = pct ? `${val.toFixed(1)}%` : Math.round(val).toLocaleString('en-US');
-    c.textAlign = 'right'; c.fillText(txt, b.x + b.w, y + rowH * 0.42); c.textAlign = 'left';
-    const by = y + rowH * 0.52;
-    rrect(c, b.x, by, b.w, bh, bh / 2); c.fillStyle = 'rgba(255,255,255,0.1)'; c.fill();
-    const bw = Math.max(bh, b.w * (bar.value / max) * local);
-    if (local > 0) { rrect(c, b.x, by, bw, bh, bh / 2); c.fillStyle = isHex(bar.color) ? bar.color : '#9aa3b8'; c.fill(); }
-  });
-  return true;
-}
-
-function countEl(c: C, b: Box, d: CardData, p: number, u: number) {
-  const stats = (d.stats ?? []).map((s) => ({ ...s, n: parseNum(s.value) })).filter((s) => s.n).slice(0, 3);
-  if (!stats.length) return false;
-  const cw = b.w / stats.length;
-  stats.forEach((s, i) => {
-    const local = clamp01(p * 1.2 - i * 0.1);
-    const cx = b.x + cw * i + cw / 2;
-    c.textAlign = 'center'; c.textBaseline = 'alphabetic';
-    let px = Math.min(b.h * 0.55, u * 1.3);
-    const txt = fmtNum(s.n!, local);
-    c.font = f(px, 800, DISP);
-    const wFull = c.measureText(fmtNum(s.n!, 1)).width;
-    if (wFull > cw * 0.9) { px *= (cw * 0.9) / wFull; c.font = f(px, 800, DISP); }
-    c.fillStyle = isHex(s.color) ? s.color! : '#ffffff';
-    c.fillText(txt, cx, b.y + b.h * 0.62);
-    c.font = f(Math.min(u * 0.32, b.h * 0.2), 700); c.fillStyle = 'rgba(232,235,245,0.75)';
-    c.fillText(s.label.toUpperCase().slice(0, 24), cx, b.y + b.h * 0.9);
-  });
-  c.textAlign = 'left';
-  return true;
-}
-
-function needleEl(c: C, b: Box, d: CardData, p: number, u: number) {
-  const bars = (d.bars ?? []).filter((x) => x.value > 0);
-  if (bars.length < 2) return false;
-  const [A, B] = bars;
-  const margin = (A.value - B.value) / (A.value + B.value); // -1..1, A on the left
-  const cx = b.x + b.w / 2, cy = b.y + b.h * 0.92, r = Math.min(b.w / 2, b.h * 0.85);
-  const segs = 24;
-  for (let i = 0; i < segs; i++) {
-    const a0 = Math.PI + (i / segs) * Math.PI, a1 = Math.PI + ((i + 1) / segs) * Math.PI - 0.02;
-    c.beginPath(); c.arc(cx, cy, r, a0, a1); c.lineWidth = r * 0.16;
-    c.strokeStyle = i < segs / 2 ? (isHex(A.color) ? A.color : '#3b82f6') : isHex(B.color) ? B.color : '#ef4444';
-    c.globalAlpha = 0.35 + 0.65 * Math.abs(i - segs / 2 + 0.5) / (segs / 2); c.stroke();
-  }
-  c.globalAlpha = 1;
-  // sweep from far side with a little overshoot (outElastic)
-  const target = Math.max(-0.95, Math.min(0.95, -margin * 2.5));
-  const v = -1 + (target + 1) * p;
-  const ang = Math.PI * 1.5 + v * Math.PI / 2;
-  c.save(); c.translate(cx, cy); c.rotate(ang);
-  c.beginPath(); c.moveTo(-r * 0.04, 0); c.lineTo(0, -r * 0.92); c.lineTo(r * 0.04, 0); c.closePath(); c.fillStyle = '#fff'; c.fill();
-  c.restore();
-  c.beginPath(); c.arc(cx, cy, r * 0.08, 0, Math.PI * 2); c.fillStyle = '#fff'; c.fill();
-  c.font = f(u * 0.3, 700); c.fillStyle = 'rgba(232,235,245,0.8)'; c.textAlign = 'left';
-  c.fillText(A.label.slice(0, 14), b.x, cy + u * 0.1); c.textAlign = 'right'; c.fillText(B.label.slice(0, 14), b.x + b.w, cy + u * 0.1); c.textAlign = 'left';
-  return true;
-}
-
-let geoPaths: { abbr: string; p: Path2D }[] | null = null;
-function mapEl(c: C, b: Box, fills: MapFill[], p: number) {
-  if (!fills.length) return false;
-  try {
-    if (!geoPaths) geoPaths = getGeometry().geo.map((g) => ({ abbr: g.abbr, p: new Path2D(g.d) }));
-  } catch { return false; }
-  const s = Math.min(b.w / 975, b.h / 610), ox = b.x + (b.w - 975 * s) / 2, oy = b.y + (b.h - 610 * s) / 2;
-  const order = new Map(fills.map((x, i) => [x.abbr, i]));
-  c.save(); c.translate(ox, oy); c.scale(s, s);
-  for (const g of geoPaths) {
-    const i = order.get(g.abbr);
-    c.fillStyle = 'rgba(255,255,255,0.12)'; c.fill(g.p);
-    if (i !== undefined) {
-      const local = clamp01(p * (fills.length + 2) - i);
-      if (local > 0) { c.globalAlpha = local; c.fillStyle = fills[i].color; c.fill(g.p); c.globalAlpha = 1; }
-    }
-    c.strokeStyle = 'rgba(8,10,18,0.9)'; c.lineWidth = 1 / s; c.stroke(g.p);
-  }
-  c.restore();
-  return true;
-}
-
-/** Word-by-word / typewriter caption in a pill at the bottom of `b`. */
-export function captionEl(c: C, b: Box, text: string, p: number, u: number, mode: 'word' | 'type', accent: string) {
-  if (!text.trim() || p <= 0) return;
-  const px = u * 0.62;
-  c.font = f(px, 800, SANS);
-  const words = text.trim().split(/\s+/).slice(0, 40);
-  const lines = wrapWords(c, words, b.w * 0.86).slice(0, 4);
-  const lh = px * 1.25, padY = px * 0.55;
-  const boxH = lines.length * lh + padY * 2, boxW = Math.min(b.w, Math.max(...lines.map((l) => c.measureText(l.join(' ')).width)) + px * 1.4);
-  const x = b.x + (b.w - boxW) / 2, y = b.y + b.h - boxH;
-  c.save(); c.globalAlpha = clamp01(p * 6);
-  rrect(c, x, y, boxW, boxH, px * 0.45); c.fillStyle = 'rgba(8,10,18,0.82)'; c.fill();
-  c.fillStyle = accent; c.fillRect(x, y + px * 0.4, px * 0.14, boxH - px * 0.8);
-  c.restore();
-  const totalWords = lines.reduce((s, l) => s + l.length, 0);
-  const totalChars = lines.reduce((s, l) => s + l.join(' ').length, 0);
-  let wi = 0, ci = 0;
-  c.textBaseline = 'alphabetic'; c.textAlign = 'left';
-  lines.forEach((l, li) => {
-    const lw = c.measureText(l.join(' ')).width;
-    let cx = x + (boxW - lw) / 2;
-    const cy = y + padY + lh * li + px;
-    for (const w of l) {
-      const ww = c.measureText(w + ' ').width;
-      if (mode === 'word') {
-        const local = clamp01(p * totalWords * 1.15 - wi);
-        if (local > 0) { c.save(); c.globalAlpha = local; c.fillStyle = '#fff'; c.fillText(w, cx, cy + (1 - EASE.outCubic(local)) * px * 0.5); c.restore(); }
-      } else {
-        const shown = Math.floor(p * totalChars * 1.05) - ci;
-        if (shown > 0) { c.fillStyle = '#fff'; c.fillText(w.slice(0, shown), cx, cy); }
-        ci += w.length + 1;
-      }
-      cx += ww; wi++;
-    }
-  });
-  if (mode === 'type' && p < 1 && Math.floor(p * 40) % 2 === 0) {
-    c.fillStyle = accent; c.fillRect(x + boxW - px * 0.7, y + boxH - padY - px, px * 0.08, px);
-  }
-}
-
+void COND; void parseNum;
 function kineticEl(c: C, b: Box, text: string, p: number, u: number, accent: string) {
   const words = text.trim().split(/\s+/).slice(0, 28);
   if (!words.length) return;
@@ -396,26 +200,6 @@ function confetti(c: C, W: number, H: number, dt: number, seed: number, colors: 
   }
 }
 
-function sticker(c: C, x: number, y: number, u: number, p: number, text: string, color: string) {
-  if (p <= 0) return;
-  c.save(); c.translate(x, y); c.rotate(-0.12); c.scale(p, p);
-  c.font = f(u * 1.1, 900, COND);
-  const w = c.measureText(text).width + u * 0.9, h = u * 1.5;
-  rrect(c, -w / 2, -h / 2, w, h, u * 0.25); c.fillStyle = color; c.fill();
-  c.lineWidth = u * 0.1; c.strokeStyle = '#fff'; c.stroke();
-  c.fillStyle = '#0b0d14'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, 0, u * 0.06);
-  c.restore();
-}
-
-function banner(c: C, b: Box, p: number, u: number, label: string) {
-  const h = u * 1.05, y = b.y, w = b.w * EASE.outCubic(p);
-  if (w <= 0) return;
-  c.save(); c.beginPath(); c.rect(b.x, y, w, h); c.clip();
-  c.fillStyle = '#e11d2e'; c.fillRect(b.x, y, b.w, h);
-  c.font = f(u * 0.62, 900, COND); c.fillStyle = '#fff'; c.textBaseline = 'middle';
-  c.fillText(label, b.x + u * 0.4, y + h / 2 + u * 0.03);
-  c.restore();
-}
 
 function ticker(c: C, W: number, y: number, u: number, t: number, text: string) {
   const h = u * 0.62;
@@ -428,106 +212,226 @@ function ticker(c: C, W: number, y: number, u: number, t: number, text: string) 
   while (x < W) { c.fillText(seg, x, y + h / 2 + u * 0.03); x += sw; }
 }
 
-function countdownEl(c: C, b: Box, target: number | undefined, now: number, p: number, u: number, accent: string) {
-  const left = Math.max(0, (target ?? now) - now);
-  const d = Math.floor(left / 864e5), h = Math.floor(left / 36e5) % 24, m = Math.floor(left / 6e4) % 60, s = Math.floor(left / 1e3) % 60;
-  const parts = (d > 0 ? [[d, 'DAYS'], [h, 'HRS'], [m, 'MIN'], [s, 'SEC']] : [[h, 'HRS'], [m, 'MIN'], [s, 'SEC']]) as [number, string][];
-  const cw = b.w / parts.length;
-  const px = Math.min(cw * 0.55, b.h * 0.5);
-  const frac = (left % 1000) / 1000;
-  parts.forEach(([v, lbl], i) => {
-    const cx = b.x + cw * i + cw / 2, cy = b.y + b.h * 0.45, r = Math.min(cw * 0.44, b.h * 0.42);
-    c.globalAlpha = clamp01(p * 4 - i * 0.3);
-    c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.fillStyle = 'rgba(8,10,18,0.78)'; c.fill();
-    c.lineWidth = r * 0.08; c.strokeStyle = 'rgba(255,255,255,0.12)'; c.stroke();
-    if (lbl === 'SEC') { c.beginPath(); c.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * frac); c.strokeStyle = accent; c.stroke(); }
-    c.font = f(px * 0.75, 800, DISP); c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText(String(v).padStart(2, '0'), cx, cy - r * 0.08);
-    c.font = f(px * 0.2, 700); c.fillStyle = 'rgba(232,235,245,0.7)'; c.fillText(lbl, cx, cy + r * 0.48);
+
+
+let scratch: HTMLCanvasElement | OffscreenCanvas | null = null;
+function scratchCtx(w: number, h: number) {
+  if (!scratch) scratch = typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(w, h) : document.createElement('canvas');
+  if (scratch.width !== w || scratch.height !== h) { scratch.width = w; scratch.height = h; }
+  return scratch.getContext('2d') as C;
+}
+
+/** Background for the whole frame: dimmed, blurred cover copy of the card with an accent glow. */
+function backdrop(c: C, card: CanvasImageSource & { width: number; height: number }, W: number, H: number, accent: string, f0: number) {
+  c.fillStyle = '#05060b'; c.fillRect(0, 0, W, H);
+  const s = Math.max(W / card.width, H / card.height) * (1.15 + 0.05 * f0);
+  c.save(); c.filter = `blur(${Math.round(Math.min(W, H) / 22)}px) brightness(0.32) saturate(1.3)`;
+  c.drawImage(card, (W - card.width * s) / 2, (H - card.height * s) / 2, card.width * s, card.height * s);
+  c.restore();
+  const g = c.createRadialGradient(W * 0.5, H, 0, W * 0.5, H, Math.max(W, H) * 0.7);
+  g.addColorStop(0, accent + '33'); g.addColorStop(1, 'rgba(0,0,0,0)');
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+}
+
+/** Draws the card into rect R with the preset's reveal choreography. */
+function cardLayer(c: C, inp: MotionInput, R: { x: number; y: number; w: number; h: number }, a: AnimCtx, accent: string) {
+  const card = inp.card as CanvasImageSource & { width: number; height: number };
+  const def = a.def;
+  // 1) card + Ken Burns into scratch at R size
+  const w = Math.round(R.w), h = Math.round(R.h);
+  const sc = scratchCtx(w, h);
+  const kb = 1 + def.kenBurns * EASE.inOutCubic(a.f);
+  const fit = Math.max(w / card.width, h / card.height) * kb;
+  sc.clearRect(0, 0, w, h);
+  sc.drawImage(card, (w - card.width * fit) / 2, (h - card.height * fit) / 2, card.width * fit, card.height * fit);
+  const src = scratch as CanvasImageSource;
+  let ox = 0, oy = 0;
+  if (a.has('shake')) {
+    const sp = a.p('shake');
+    if (sp > 0 && sp < 1) { const amp = (1 - sp) ** 2 * Math.min(w, h) * 0.014; ox = Math.sin(a.t * 83) * amp; oy = Math.cos(a.t * 67) * amp; }
+  }
+  c.save();
+  c.beginPath(); c.rect(R.x, R.y, R.w, R.h); c.clip();
+  c.translate(R.x + ox, R.y + oy);
+  const rp = a.p('reveal');
+  if (def.reveal === 'flip') {
+    const fp = a.p('flip');
+    const sx = Math.max(0.001, fp);
+    c.globalAlpha = clamp01(fp * 3);
+    c.translate(w / 2, h / 2); c.scale(sx, 1 + 0.08 * (1 - clamp01(fp)));
+    c.drawImage(src, -w / 2, -h / 2);
+    c.restore();
+    return;
+  }
+  if (def.reveal === 'punch') {
+    const z = 1 + 0.35 * (1 - EASE.outQuint(rp));
+    c.globalAlpha = clamp01(rp * 3);
+    c.translate(w / 2, h / 2); c.scale(z, z); c.translate(-w / 2, -h / 2);
+  }
+  const n = def.bands, bh = h / n;
+  for (let i = 0; i < n; i++) {
+    const y0 = Math.floor(i * bh), y1 = Math.ceil((i + 1) * bh), hh = y1 - y0;
+    const stagger = n > 1 ? 0.55 / (n - 1) : 0;
+    const lp = clamp01((rp - i * stagger) / 0.45);
+    if (lp <= 0) continue;
+    const e = EASE.outCubic(lp);
+    c.save();
+    if (def.reveal === 'wipe') {
+      c.beginPath(); c.rect(0, y0, w * e, hh); c.clip();
+      c.drawImage(src, 0, y0, w, hh, 0, y0, w, hh);
+      c.restore();
+      if (lp < 1) { c.fillStyle = accent; c.fillRect(w * e - Math.max(2, w * 0.004), y0, Math.max(3, w * 0.006), hh); }
+      continue;
+    }
+    if (def.reveal === 'rise') { c.globalAlpha = e; c.drawImage(src, 0, y0, w, hh, 0, y0 + (1 - e) * h * 0.04, w, hh); }
+    else if (def.reveal === 'punch') { const ex = EASE.outQuint(lp); c.drawImage(src, 0, y0, w, hh, (i % 2 ? -1 : 1) * (1 - ex) * w * 0.6, y0, w, hh); }
+    else if (def.reveal === 'slide') c.drawImage(src, 0, y0, w, hh, (1 - e) * w, y0, w, hh);
+    else { c.globalAlpha = e; c.drawImage(src, 0, y0, w, hh, 0, y0, w, hh); }
+    c.restore();
+  }
+  c.restore();
+}
+
+/** Strip text: wraps into the strip; word-by-word rise or typewriter. */
+function stripText(c: C, b: Box, text: string, p: number, mode: 'word' | 'type', accent: string, center: boolean) {
+  const words = text.trim().split(/\s+/).filter(Boolean).slice(0, 40);
+  if (!words.length || p <= 0) return;
+  let px = b.h * 0.34, lines: string[][] = [];
+  for (let k = 0; k < 14; k++) {
+    c.font = f(px, 800, SANS);
+    lines = wrapWords(c, words, b.w);
+    if (lines.length * px * 1.2 <= b.h * 0.86 && lines.every((l) => c.measureText(l.join(' ')).width <= b.w)) break;
+    px *= 0.9;
+  }
+  const lh = px * 1.2, y0 = b.y + (b.h - lines.length * lh) / 2 + px * 0.92;
+  const totalW = words.length, totalC = text.length;
+  let wi = 0, ci = 0;
+  c.textBaseline = 'alphabetic'; c.textAlign = 'left';
+  lines.forEach((l, li) => {
+    const lw = c.measureText(l.join(' ')).width;
+    let x = center ? b.x + (b.w - lw) / 2 : b.x;
+    const y = y0 + li * lh;
+    for (const w of l) {
+      const ww = c.measureText(w + ' ').width;
+      if (mode === 'word') {
+        const lp = clamp01(p * totalW * 1.1 - wi);
+        if (lp > 0) { c.save(); c.globalAlpha = lp; c.fillStyle = '#fff'; c.fillText(w, x, y + (1 - EASE.outCubic(lp)) * px * 0.45); c.restore(); }
+      } else {
+        const shown = Math.floor(p * totalC * 1.05) - ci;
+        if (shown > 0) { c.fillStyle = '#fff'; c.fillText(w.slice(0, shown), x, y); if (shown < w.length && Math.floor(p * 60) % 2 === 0) { c.fillStyle = accent; c.fillRect(x + c.measureText(w.slice(0, shown)).width + 2, y - px * 0.8, px * 0.08, px * 0.9); } }
+        ci += w.length + 1;
+      }
+      x += ww; wi++;
+    }
   });
-  c.globalAlpha = 1; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
-  if (!target) { c.font = f(u * 0.3, 600); c.fillStyle = 'rgba(232,235,245,0.6)'; c.textAlign = 'center'; c.fillText('No countdown date on this card', b.x + b.w / 2, b.y + b.h * 0.98); c.textAlign = 'left'; }
-  void u;
+}
+
+function stripBg(c: C, b: Box, p: number, accent: string, vertical: boolean, red: boolean) {
+  const e = EASE.outCubic(p);
+  c.save();
+  if (vertical) { rrect(c, b.x, b.y + (1 - e) * b.h * 0.3, b.w, b.h, b.h * 0.08); c.globalAlpha = e; }
+  else { c.beginPath(); c.rect(b.x, b.y + (1 - e) * b.h, b.w, b.h); }
+  c.fillStyle = red ? '#b3121f' : 'rgba(9,11,20,0.94)'; c.fill();
+  c.restore();
+  if (e > 0) { c.fillStyle = red ? '#ffffff' : accent; c.fillRect(b.x, b.y + (1 - e) * (vertical ? b.h * 0.3 : b.h), b.w * e, Math.max(3, b.h * 0.035)); }
+}
+
+function tag(c: C, x: number, y: number, h: number, label: string, bg: string, fg: string) {
+  c.font = f(h * 0.56, 900, COND);
+  const w = c.measureText(label).width + h * 0.7;
+  c.fillStyle = bg; c.fillRect(x, y, w, h);
+  c.fillStyle = fg; c.textBaseline = 'middle'; c.textAlign = 'left'; c.fillText(label, x + h * 0.35, y + h / 2 + h * 0.03);
+  c.textBaseline = 'alphabetic';
+  return w;
+}
+
+function clock(c: C, b: Box, target: number | undefined, now: number, p: number, accent: string) {
+  if (!target || target <= now) { stripText(c, b, 'Countdown complete — follow live results', p, 'word', accent, true); return; }
+  const left = target - now;
+  const d = Math.floor(left / 864e5), h = Math.floor(left / 36e5) % 24, m = Math.floor(left / 6e4) % 60, s = Math.floor(left / 1e3) % 60;
+  const parts: [string, string][] = [...(d ? [[String(d), 'DAYS'] as [string, string]] : []), [String(h).padStart(2, '0'), 'HRS'], [String(m).padStart(2, '0'), 'MIN'], [String(s).padStart(2, '0'), 'SEC']];
+  const cw = b.w / parts.length, px = Math.min(b.h * 0.52, cw * 0.5);
+  c.save(); c.globalAlpha = clamp01(p * 5);
+  parts.forEach(([v, l], i) => {
+    const cx = b.x + cw * (i + 0.5);
+    c.textAlign = 'center';
+    c.font = f(px, 800, DISP); c.fillStyle = l === 'SEC' ? accent : '#fff';
+    const tick = l === 'SEC' ? 1 + 0.08 * Math.max(0, 1 - ((left % 1000) / 1000) * 4) : 1;
+    c.save(); c.translate(cx, b.y + b.h * 0.58); c.scale(tick, tick); c.fillText(v, 0, 0); c.restore();
+    c.font = f(px * 0.24, 700); c.fillStyle = 'rgba(232,235,245,0.7)'; c.fillText(l, cx, b.y + b.h * 0.86);
+    if (i) { c.fillStyle = 'rgba(255,255,255,0.15)'; c.fillRect(b.x + cw * i, b.y + b.h * 0.2, 2, b.h * 0.6); }
+  });
+  c.restore(); c.textAlign = 'left';
 }
 
 export function drawGuides(c: C, W: number, H: number, z: SafeZoneId) {
   const s = SAFE_ZONES[z];
   c.save();
-  c.fillStyle = 'rgba(255,0,90,0.18)';
+  c.fillStyle = 'rgba(255,0,90,0.16)';
   c.fillRect(0, 0, W, H * s.top); c.fillRect(0, H * (1 - s.bottom), W, H * s.bottom);
   c.fillRect(W * (1 - s.right), H * s.top, W * s.right, H * (1 - s.top - s.bottom));
   c.fillRect(0, H * s.top, W * s.left, H * (1 - s.top - s.bottom));
-  c.setLineDash([12, 8]); c.strokeStyle = 'rgba(255,0,90,0.9)'; c.lineWidth = 3;
+  c.setLineDash([14, 10]); c.strokeStyle = 'rgba(255,0,90,0.9)'; c.lineWidth = 3;
   c.strokeRect(W * s.left, H * s.top, W * (1 - s.left - s.right), H * (1 - s.top - s.bottom));
   c.font = f(Math.min(W, H) * 0.028, 700); c.fillStyle = '#fff'; c.fillText(`${s.label} safe zone`, W * s.left + 10, H * s.top + Math.min(W, H) * 0.04);
   c.restore();
 }
 
-/** Renders frame at time `t` seconds into `c` (canvas W×H). Deterministic in (input, opts, t). */
+/** Renders frame at time `t` seconds into `c`. Deterministic in (input, opts, t). */
 export function renderMotionFrame(c: C, inp: MotionInput, opts: MotionOptions, t: number) {
   const W = c.canvas.width, H = c.canvas.height;
   const def = presetById(opts.preset);
   const a = new AnimCtx(t, Math.max(0.5, opts.duration), def);
   const d = inp.data, accent = accentOf(d);
   const vertical = H > W * 1.3;
-  const safe = opts.safe !== undefined ? opts.safe : vertical ? 'tiktok' : null;
-  const S = safeRect(W, H, safe);
-  const u = Math.min(W, H) / 18;
+  const L = motionLayout(W, H);
+  const card = inp.card as CanvasImageSource & { width: number; height: number };
   c.save();
   c.textAlign = 'left'; c.textBaseline = 'alphabetic';
-  drawCardLayer(c, inp, W, H, a, def.id === 'kinetic' ? 0.62 * a.p('enter') : def.id === 'countdown' ? 0.35 * a.p('enter') : 0);
-  const caption = (inp.caption ?? d.subtitle ?? d.title ?? '').trim();
-
-  // lower data panel (bars / counts / needle / map)
-  const panelH = vertical ? S.h * 0.3 : S.h * 0.36;
-  const P: Box = { x: S.x, y: S.y + S.h - panelH - (def.caption === 'word' || def.caption === 'type' ? u * 2.6 : 0), w: S.w, h: panelH };
-  const hasBars = !!d.bars?.some((x) => x.value > 0), hasCount = !!d.stats?.some((s) => parseNum(s.value));
-  const hasMap = !!inp.mapFills?.length && a.has('map');
-  const wantPanel = a.has('panel') && (hasBars || hasCount || hasMap);
-  if (wantPanel) {
-    const pp = a.p('panel');
-    glass(c, P, pp, u * 0.35);
-    if (pp > 0.3) {
-      const pad = u * 0.45;
-      const inner: Box = { x: P.x + pad, y: P.y + pad, w: P.w - 2 * pad, h: P.h - 2 * pad };
-      const cols: Box[] = [];
-      const parts: ('map' | 'needle' | 'bars' | 'count')[] = [];
-      if (hasMap) parts.push('map');
-      if (a.has('needle') && (d.bars?.filter((x) => x.value > 0).length ?? 0) >= 2) parts.push('needle');
-      if (hasBars && a.has('bars')) parts.push('bars'); else if (hasCount && a.has('count')) parts.push('count');
-      const n = Math.min(parts.length, vertical ? 2 : 3);
-      const use = parts.slice(0, n);
-      const gap = u * 0.5, cw = (inner.w - gap * (n - 1)) / Math.max(1, n);
-      use.forEach((_, i) => cols.push({ x: inner.x + i * (cw + gap), y: inner.y, w: cw, h: inner.h }));
-      c.save(); c.globalAlpha = clamp01((pp - 0.3) / 0.7);
-      use.forEach((k, i) => {
-        if (k === 'map') mapEl(c, cols[i], inp.mapFills!, a.p('map'));
-        if (k === 'needle') needleEl(c, cols[i], d, a.p('needle'), u);
-        if (k === 'bars') barsEl(c, cols[i], d, a.p('bars'), u * (n > 2 ? 0.8 : 1));
-        if (k === 'count') countEl(c, cols[i], d, a.p('count'), u);
-      });
+  backdrop(c, card, W, H, accent, a.f);
+  cardLayer(c, inp, L.card, a, accent);
+  if (def.id === 'kinetic') {
+    const dim = 0.78 * (1 - a.p('undim'));
+    if (dim > 0) {
+      c.fillStyle = `rgba(4,5,10,${dim * clamp01(a.p('reveal') * 2)})`; c.fillRect(L.card.x, L.card.y, L.card.w, L.card.h);
+      const q = (d.title ?? '').trim();
+      c.save(); c.globalAlpha = 1 - a.p('undim');
+      kineticEl(c, { x: L.card.x + L.card.w * 0.07, y: L.card.y, w: L.card.w * 0.86, h: L.card.h }, q, a.p('kinetic'), Math.min(L.card.w, L.card.h) / 14, accent);
       c.restore();
     }
   }
-
-  if (a.has('banner')) banner(c, { x: S.x, y: S.y + u * 1.2, w: S.w * 0.72, h: u }, a.p('banner'), u, 'BREAKING');
-  if (a.has('live') && a.p('live') > 0) liveBadge(c, S.x, S.y, u, t, def.id === 'breaking' ? 'LIVE' : 'LIVE · ELECTION NIGHT');
-  if (a.has('ticker') && a.p('ticker') > 0) {
-    const tk = [d.title, ...(d.stats ?? []).map((s) => `${s.label}: ${s.value}`), d.footer].filter(Boolean).join('   •   ');
-    ticker(c, W, S.y + S.h - u * 0.62, u, t, tk);
-  }
-  if (a.has('countdown')) countdownEl(c, { x: S.x, y: S.y + S.h * 0.32, w: S.w, h: S.h * 0.32 }, d.countdownTo, (opts.now ?? Date.now()) + t * 1000, a.p('countdown'), u, accent);
-  if (a.has('sticker')) sticker(c, S.x + S.w * 0.78, S.y + S.h * 0.14, u, a.p('sticker'), d.kind === 'flip' ? 'FLIP!' : d.kind === 'milestone' ? 'MILESTONE' : 'FLIP!', accent);
   for (const bt of def.bursts ?? []) confetti(c, W, H, t - bt * a.T, (opts.seed ?? 7) + Math.round(bt * 100), [accent, '#ffffff', '#ffd400', '#3b82f6', '#ef4444']);
-  if (def.caption === 'word' || def.caption === 'type') {
-    const cap: Box = { x: S.x, y: S.y, w: S.w, h: S.h - (a.has('ticker') ? u * 0.8 : 0) };
-    captionEl(c, cap, caption, a.p('caption'), u * (vertical ? 1.05 : 1.25), def.caption, accent);
-  }
-  if (def.caption === 'kinetic') {
-    const q = (inp.caption ?? d.title ?? '').trim();
-    kineticEl(c, { x: S.x, y: S.y, w: S.w, h: S.h * 0.8 }, q, a.p('kinetic'), u, accent);
-    const by = (d.quoteBy ?? d.subtitle ?? '').trim();
-    if (by) captionEl(c, S, `— ${by}`, a.p('by'), u * 0.8, 'type', accent);
+
+  // reserved strip — the only place motion adds text
+  const S = L.strip, sp = a.p('strip');
+  if (sp > 0) {
+    const red = def.id === 'breaking';
+    stripBg(c, S, sp, accent, vertical, red);
+    const pad = Math.min(S.h * 0.22, S.w * 0.04);
+    let inner: Box = { x: S.x + pad, y: S.y + pad * 0.6, w: S.w - pad * 2, h: S.h - pad * 1.2 };
+    const follow = (d.cta?.trim() || `Follow live · ${(d.url ?? 'poltok.netlify.app').replace(/^https?:\/\//, '')}`);
+    const cap = inp.caption?.trim() || '';
+    if (red) {
+      const th = Math.min(inner.h * 0.5, S.h * 0.42);
+      const tw = tag(c, inner.x, inner.y + (inner.h - th) / 2, th, 'BREAKING', '#ffffff', '#b3121f');
+      inner = { ...inner, x: inner.x + tw + pad, w: inner.w - tw - pad };
+      const tp = a.p('ticker');
+      if (tp > 0 && cap) {
+        c.save(); c.beginPath(); c.rect(inner.x, S.y, inner.w + pad, S.h); c.clip();
+        c.font = f(inner.h * 0.36, 800); c.fillStyle = '#fff'; c.textBaseline = 'middle';
+        const seg = `${cap}   •   ${follow}   •   `, sw = c.measureText(seg).width || 1;
+        let x = inner.x + inner.w * (1 - clamp01(tp * 8)) - ((tp * a.T * inner.h * 2.2) % sw);
+        while (x < inner.x + inner.w + pad) { c.fillText(seg, x, inner.y + inner.h / 2); x += sw; }
+        c.restore(); c.textBaseline = 'alphabetic';
+      } else stripText(c, inner, cap || follow, a.p('caption'), 'type', '#fff', false);
+    } else if (def.strip === 'countdown') {
+      clock(c, inner, d.countdownTo, (opts.now ?? Date.now()) + t * 1000, a.p('countdown'), accent);
+    } else if (def.strip === 'by') {
+      const by = d.quoteBy?.trim();
+      stripText(c, inner, cap || (by ? `— ${by}` : follow), a.p('caption'), 'type', accent, true);
+    } else {
+      stripText(c, inner, cap || follow, a.p('caption'), 'word', accent, vertical || !cap);
+    }
   }
   if (opts.guides) drawGuides(c, W, H, opts.guides);
   c.restore();

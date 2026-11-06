@@ -37,6 +37,7 @@ function paint(k: K, P: Pal, def: Background) {
   const c = k.raw ?? k.ctx;
   const spec = k.st?.background ?? { ...def, colors: [P.bg, ...(def.colors ?? []).slice(1).map((x, i) => (i === 0 && k.st?.palette?.accent ? P.accent : x))] };
   drawBackground(c, k.W, k.H, spec);
+  if (k.st?.background) { c.fillStyle = rgba(P.bg, 0.22); c.fillRect(0, 0, k.W, k.H); }
 }
 const plain = (s?: string) => String(s ?? '').replace(/\*/g, '').trim();
 const isMsg = (k: K) => (MESSAGE_KINDS as string[]).includes(k.d.kind) || k.d.kind === 'quote' || k.d.kind === 'brand';
@@ -568,18 +569,18 @@ const glass: Design = {
     c.restore();
     rr(c, px, py, pw, ph, rad); c.lineWidth = Math.max(1, g.bl * 0.2); c.strokeStyle = 'rgba(255,255,255,0.45)'; c.stroke();
     // darken text area for contrast on any mesh
-    c.save(); rr(c, px, py, pw, ph, rad); c.clip(); c.fillStyle = rgba(P.bg, 0.35); c.fillRect(px, py, pw, ph); c.restore();
+    c.save(); rr(c, px, py, pw, ph, rad); c.clip(); c.fillStyle = rgba(P.bg, 0.5); c.fillRect(px, py, pw, ph); c.restore();
     const sp = Math.max(11, g.ts(-1.2));
-    label(c, kicker(k), g.x, g.y + sp, 'tight', sp, '#ffffff', { weight: 800 });
+    label(c, kicker(k), g.x, g.y + sp, 'tight', sp, P.fg, { weight: 800 });
     const ix = px + g.m * 0.55, iw = pw - g.m * 1.1;
     let y = py + g.m * 0.5;
     const msg = isMsg(k);
-    const hd = head(k, { ...P, fg: '#ffffff' }, plain(k.d.title), ix, y, iw, ph * (msg ? 0.7 : 0.36), { fam: 'tight', max: g.ts(5.6), weight: 800, lh: 1, maxLines: msg ? 5 : 3, color: '#ffffff' });
+    const hd = head(k, P, plain(k.d.title), ix, y, iw, ph * (msg ? 0.7 : 0.36), { fam: 'tight', max: g.ts(5.6), weight: 800, lh: 1, maxLines: msg ? 5 : 3 });
     y = hd.bottom + g.bl * 1.5;
     const dek = plain(k.d.subtitle ?? k.d.quoteBy ?? '');
-    if (dek) y = head(k, P, dek, ix, y, iw, g.ts(1.1) * 2.8, { fam: 'tight', max: g.ts(1.05), weight: 500, lh: 1.3, maxLines: 2, color: 'rgba(255,255,255,0.82)' }).bottom + g.bl * 2;
-    if (!msg) dataViz(k, { ...P, fg: '#ffffff', muted: 'rgba(255,255,255,0.75)' }, ix, y, iw, py + ph - g.m * 0.4 - y, { fam: 'tight', numFam: 'tight', track: 'rgba(255,255,255,0.15)' });
-    footer(k, g, { ...P, fg: '#ffffff', muted: 'rgba(255,255,255,0.75)' }, { rule: false, y: g.H - g.m * 0.42 });
+    if (dek) y = head(k, P, dek, ix, y, iw, g.ts(1.1) * 2.8, { fam: 'tight', max: g.ts(1.05), weight: 500, lh: 1.3, maxLines: 2, color: P.muted }).bottom + g.bl * 2;
+    if (!msg) dataViz(k, P, ix, y, iw, py + ph - g.m * 0.4 - y, { fam: 'tight', numFam: 'tight', track: rgba(P.fg, 0.15) });
+    footer(k, g, P, { rule: false, y: g.H - g.m * 0.42 });
   },
 };
 
