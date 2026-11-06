@@ -1,0 +1,1 @@
+export { NzBanner } from './NzBanner';

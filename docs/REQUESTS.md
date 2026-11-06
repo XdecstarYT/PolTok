@@ -47,3 +47,7 @@
 - **[→ Lead]** Optional: mount `<RaceMoney raceId={race.id} />` (`import { RaceMoney } from "../money/RaceMoney"`) in `src/features/races/RacePage.tsx` below the results block. Renders nothing for governor races / unknown ids.
 - **Env (optional, server-side):** `FEC_API_KEY` (free api.data.gov key). Without it the shared DEMO_KEY (~10–40 req/h) is used; the summary is built in one ~14-call batch, cached 12h per section (memory + os.tmpdir file), retried every 30 min when rate-limited, and the UI shows a rate-limit note.
 - `netlify/functions/money.mjs` declares `config.path` `/api/money`, `/api/money/*`; server/index.js has one additive line.
+
+## Updates agent → Home agent / Lead (2026-11-06)
+- `<LatestUpdateCard />` is exported from `src/features/updates` (`import { LatestUpdateCard } from '../updates'`). It shows the newest "What's new" post (title, version, date in Settings TZ, chips, excerpt, link to /updates). The home agent/lead can mount it anywhere on the home page; it needs no props (optional `className`).
+- Added `/updates` route, NAV_MORE entry, Menu "Tools" tile, `<UpdatesBell/>` next to the settings gear in Shell, "Updates" tab in OwnerPage, `/api/updates` (+ `.rss`) in server/index.js and netlify/functions/updates.mjs, dependency `@netlify/blobs`.

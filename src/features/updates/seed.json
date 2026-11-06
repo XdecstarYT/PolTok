@@ -1,0 +1,152 @@
+[
+  {
+    "id": "v0-16-whats-new",
+    "version": "v0.16",
+    "date": "2026-11-06T18:00:00Z",
+    "title": "A home for what's new",
+    "categories": ["New"],
+    "body": "You're reading it. PolTok now has an **Updates** page with every release in one place.\n\n- Filter by **New**, **Improved**, **Fixed** or **Data**, or search\n- A small dot next to the settings gear tells you when something new has shipped since your last visit\n- Prefer a reader? Subscribe to the [RSS feed](/api/updates.rss)",
+    "links": [{ "label": "Browse updates", "to": "/updates" }]
+  },
+  {
+    "id": "v0-15-cards-portraits",
+    "version": "v0.15",
+    "date": "2026-11-06T09:00:00Z",
+    "title": "Better-looking share cards and Australian MP portraits",
+    "categories": ["Improved", "Data"],
+    "major": true,
+    "body": "Share cards got a full design overhaul: 20 premium templates, procedurally drawn backgrounds, a proper type system, and map and chart artwork. Some cards can now animate.\n\nAustralian people pages now show **236 freely licensed portraits** from Wikimedia Commons, each with its credit. Where no free photo exists you'll see initials instead.\n\n- Head-to-head cards no longer overlap their call-to-action\n- Text stays readable on light palettes and fills",
+    "links": [{ "label": "Australian members", "to": "/members" }]
+  },
+  {
+    "id": "v0-14-au-deep-dive",
+    "version": "v0.14",
+    "date": "2026-11-05T20:00:00Z",
+    "title": "Australia deep dive: states, history and a polling average",
+    "categories": ["New", "Data"],
+    "body": "The Australia section went much deeper:\n\n- **States & territories** — all 8 parliaments, with sources and as-of dates (we double-checked NT, the Tasmanian Legislative Council and the ACT)\n- **History** — federal elections and prime ministers\n- **Polling average** — weighted two-party-preferred and primaries\n- **Victorian districts** — all 88 seats with 2022 results\n- Seat pages now include census profiles",
+    "links": [{ "label": "AU states", "to": "/au/states" }, { "label": "AU polling average", "to": "/au/polls" }]
+  },
+  {
+    "id": "v0-13-accessibility",
+    "version": "v0.13",
+    "date": "2026-11-05T16:00:00Z",
+    "title": "Accessibility pass across every theme",
+    "categories": ["Fixed", "Improved"],
+    "body": "We went through the site looking for things that made it harder to read or navigate:\n\n- Text contrast fixed across all themes\n- Images sized correctly so pages don't jump\n- Links are underlined where colour alone wasn't enough\n- Every page now has a proper title",
+    "links": []
+  },
+  {
+    "id": "v0-12-candidates",
+    "version": "v0.12",
+    "date": "2026-11-05T14:00:00Z",
+    "title": "Candidate profiles with verified sources",
+    "categories": ["Data", "Improved"],
+    "body": "Candidate pages now pull verified profiles from **Wikipedia and Wikidata**: career history, ideology, and photos — always with credit to the photographer and licence.",
+    "links": [{ "label": "Candidates", "to": "/candidates" }]
+  },
+  {
+    "id": "v0-11-calendar-money-area",
+    "version": "v0.11",
+    "date": "2026-11-05T11:00:00Z",
+    "title": "Calendar, campaign money, your area, members and 2028",
+    "categories": ["New"],
+    "major": true,
+    "body": "A big batch of new pages:\n\n- **Elections calendar** — US and Australian dates, with an ICS feed you can add to your own calendar\n- **Money** — campaign finance from OpenFEC, plus a money box on race pages\n- **Your area** — look up your representatives and races by US address/ZIP or Australian postcode\n- **Members** — a directory and profiles for lawmakers\n- **2028** — presidential race odds and the path to 270",
+    "links": [{ "label": "Calendar", "to": "/calendar" }, { "label": "Your area", "to": "/my" }, { "label": "Money", "to": "/money" }, { "label": "2028", "to": "/2028" }]
+  },
+  {
+    "id": "v0-10-ask-bills",
+    "version": "v0.10",
+    "date": "2026-11-05T05:00:00Z",
+    "title": "Smarter Ask PolTok and Australian bills",
+    "categories": ["Improved", "New"],
+    "body": "**Ask PolTok** now looks up live data on the server and draws on a built-in knowledge base before answering, shows live cards inline, and has a redesigned chat.\n\nThe Parliament tracker now covers **bills before the Australian Parliament**, via a public mirror updated on weekdays plus the Federal Register of Legislation.",
+    "links": [{ "label": "Ask PolTok", "to": "/ask" }, { "label": "Parliament", "to": "/parliament?tab=au" }]
+  },
+  {
+    "id": "v0-9-menu-themes",
+    "version": "v0.9",
+    "date": "2026-11-04T21:00:00Z",
+    "title": "Main menu, three new themes and Senate votes",
+    "categories": ["New", "Fixed", "Data"],
+    "body": "- New **Main Menu** hub that gathers every page in one place\n- Three new looks in Settings: **Paper**, **Terminal** and **Aurora**\n- Senate roll-call votes via Voteview, and House counts are now consistent everywhere\n- Fixed a crash that showed a blank screen in current Chrome\n- Fixed several Ask PolTok errors (\"Request too large\", retired model 404s)",
+    "links": [{ "label": "Open the menu", "to": "/menu" }]
+  },
+  {
+    "id": "v0-8-ai-cards-embeds",
+    "version": "v0.8",
+    "date": "2026-11-04T17:00:00Z",
+    "title": "Ask PolTok, share cards and embeddable widgets",
+    "categories": ["New"],
+    "major": true,
+    "body": "- **Ask PolTok** — ask questions in plain English, answered from PolTok's live data\n- **Share cards** — turn a race or seat into an image for social media, from race and AU seat pages\n- **Embed widgets** — put live PolTok widgets on your own site\n- **Parliament tracker** for live bills\n- Australia grew: Senate, parties, NSW, a swingometer and Victorian candidates",
+    "links": [{ "label": "Ask PolTok", "to": "/ask" }, { "label": "Embed builder", "to": "/embed" }, { "label": "Swingometer", "to": "/au/swingometer" }]
+  },
+  {
+    "id": "v0-7-pwa-search",
+    "version": "v0.7",
+    "date": "2026-11-04T13:00:00Z",
+    "title": "Install PolTok, search everything",
+    "categories": ["New"],
+    "body": "- PolTok is now an **installable app** (PWA) on phone and desktop\n- A post-election home page\n- **Global search** — press `Ctrl+K` or `/` anywhere\n- New **Governors** and **Candidates** pages",
+    "links": [{ "label": "Governors", "to": "/governors" }, { "label": "Candidates", "to": "/candidates" }]
+  },
+  {
+    "id": "v0-6-flips-watchlist",
+    "version": "v0.6",
+    "date": "2026-11-04T10:00:00Z",
+    "title": "Flips, ballot measures, watchlist and replay",
+    "categories": ["New"],
+    "body": "- **Flips** — seats that changed hands\n- **Ballot measures** — statewide measures, live\n- **Watchlist** — star races and get alerts\n- **Compare** — races side by side, including the polling miss\n- **Replay** and **Analysis** — relive election night and dig into the trends\n\nSecondary pages now live under a **More** menu so the top bar stays tidy.",
+    "links": [{ "label": "Flips", "to": "/flips" }, { "label": "Watchlist", "to": "/watch" }, { "label": "Replay", "to": "/replay" }]
+  },
+  {
+    "id": "v0-5-australia",
+    "version": "v0.5",
+    "date": "2026-11-04T06:00:00Z",
+    "title": "Australia arrives",
+    "categories": ["New", "Data"],
+    "major": true,
+    "body": "A whole new Australia section:\n\n- **Electorate maps** for federal seats and Victoria, in geographic or hex view, with metro zoom\n- An **/au** hub, a **Victoria election night** page and individual seat pages\n- Australian news, markets and results data",
+    "links": [{ "label": "Australia hub", "to": "/au" }, { "label": "Victoria", "to": "/au/victoria" }]
+  },
+  {
+    "id": "v0-4-live-first",
+    "version": "v0.4",
+    "date": "2026-11-04T02:00:00Z",
+    "title": "Live-first: real market odds, Settings and county maps",
+    "categories": ["New", "Improved"],
+    "body": "- Real **Polymarket** odds\n- **Settings**: pick your time zone (including Melbourne), race-call alerts and sound\n- A race-call animation and **county-level maps**\n- The forecast now updates as results come in\n- New **Broadcast** cable-news theme",
+    "links": [{ "label": "Forecast", "to": "/forecast" }, { "label": "Map", "to": "/map" }]
+  },
+  {
+    "id": "v0-3-real-results",
+    "version": "v0.3",
+    "date": "2026-11-03T22:00:00Z",
+    "title": "Real AP results, with a Live/Simulated switch",
+    "categories": ["Data", "New"],
+    "major": true,
+    "body": "PolTok can now show **real AP results (via The New York Times)**. A toggle lets you switch between Live and the simulated demo replay, and every simulated surface is clearly labelled.\n\nIf our news server is unreachable, your browser now fetches headlines directly as a fallback.",
+    "links": [{ "label": "Election night", "to": "/live" }]
+  },
+  {
+    "id": "v0-2-polls-races",
+    "version": "v0.2",
+    "date": "2026-11-03T15:00:00Z",
+    "title": "Polls, a forecast lab, race and state pages",
+    "categories": ["New", "Data"],
+    "body": "- 2026 midterm data: states, 140 races and real poll series\n- **Polls** page with weighted averages\n- **Forecast lab** running Monte Carlo simulations\n- A page for every race and every state",
+    "links": [{ "label": "Polls", "to": "/polls" }, { "label": "Races", "to": "/races" }]
+  },
+  {
+    "id": "v0-1-launch",
+    "version": "v0.1",
+    "date": "2026-11-03T08:00:00Z",
+    "title": "PolTok launches",
+    "categories": ["New"],
+    "major": true,
+    "body": "The first version of PolTok: an election-night command center.\n\n- A home dashboard and the dark \"command center\" design\n- **Interactive electoral maps** that morph between geographic and hex views, in 6 modes, plus build-your-own\n- A live election-night control room\n- Aggregated news from real RSS feeds, with bias labels\n- A TikTok-style vertical **feed**",
+    "links": [{ "label": "Map", "to": "/map" }, { "label": "Feed", "to": "/feed" }]
+  }
+]

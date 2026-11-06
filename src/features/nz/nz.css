@@ -1,0 +1,91 @@
+/* NZ 2026 election hub — tokens only; party hues via --pc. */
+.nz { display: grid; gap: var(--sp-4); padding: var(--sp-4) var(--gutter, 16px) var(--sp-12); max-width: var(--maxw, 1400px); margin: 0 auto; min-width: 0; }
+.nz * { min-width: 0; }
+.nz-hero { display: flex; flex-wrap: wrap; gap: var(--sp-4); justify-content: space-between; align-items: flex-end; }
+.nz-hero h1 { font-family: var(--font-display); font-size: var(--fs-hero, 2.4rem); margin: 4px 0; color: var(--text); }
+.nz-sub { color: var(--text-2); max-width: 70ch; margin: 0; }
+.nz-back { color: var(--text-2); font-size: var(--fs-sm); }
+.nz-clock { display: grid; gap: 2px; padding: var(--sp-3) var(--sp-4); border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--bg-2); text-align: right; }
+.nz-clock strong { font-size: var(--fs-2xl, 1.8rem); color: var(--accent); font-variant-numeric: tabular-nums; }
+.nz-clock span:last-child { color: var(--text-3); font-size: var(--fs-xs); }
+.nz-status { padding: 10px 14px; border-radius: var(--radius); background: var(--bg-2); border: 1px solid var(--line); color: var(--text-2); font-size: var(--fs-sm); }
+.nz-status a { color: var(--accent); }
+.nz-status--live { border-color: var(--live); color: var(--text); }
+.nz-status--warn { border-color: var(--warn); }
+.nz-grid { display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.nz-note { color: var(--text-3); font-size: var(--fs-xs); margin: 8px 0 0; }
+.nz-dim { color: var(--text-3); }
+.nz-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.nz-bars li { display: grid; grid-template-columns: minmax(80px, 34%) 1fr auto; gap: 4px 10px; align-items: center; }
+.nz-bars li small { grid-column: 2 / -1; color: var(--text-3); font-size: var(--fs-xs); }
+.nz-bars__name { font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nz-bars__name small { font-weight: 400; color: var(--text-3); }
+.nz-bars__track { position: relative; height: 12px; border-radius: var(--radius-pill); background: var(--bg-3); overflow: hidden; }
+.nz-bars__track > span:first-child { position: absolute; inset: 0 auto 0 0; background: var(--pc); border-radius: inherit; transition: width var(--dur-3, .4s) var(--ease-out, ease); }
+.nz-bars__thr { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--text-3); }
+.nz-bars__val { color: var(--text); font-variant-numeric: tabular-nums; }
+.nz-chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 8px 0 0; }
+.nz-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--radius-pill); border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text); font-size: var(--fs-sm); }
+.nz-chip i, .nz-elist i { width: 10px; height: 10px; border-radius: 50%; background: var(--pc); flex: none; }
+.nz-chip small { color: var(--text-3); }
+.nz-chip--btn { cursor: grab; font: inherit; font-size: var(--fs-sm); }
+.nz-chip--btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.nz-hemi { margin: 0; }
+.nz-hemi svg { width: 100%; height: auto; display: block; }
+.nz-hemi__big { font-size: 0.2px; font-weight: 700; fill: var(--text); font-family: var(--font-display); }
+.nz-hemi__small { font-size: 0.07px; fill: var(--text-3); }
+.nz-coal { display: grid; gap: 10px; }
+.nz-coal__zone { border: 1px dashed var(--line-3); border-radius: var(--radius); padding: 10px; min-height: 64px; }
+.nz-coal__zone--gov { border-color: var(--accent); background: var(--accent-soft); }
+.nz-coal__meter { color: var(--text-2); font-size: var(--fs-sm); }
+.nz-coal__meter b { color: var(--text); font-size: var(--fs-lg); }
+.nz-coal__bar { position: relative; height: 10px; border-radius: var(--radius-pill); background: var(--bg-3); margin-bottom: 6px; }
+.nz-coal__bar span { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: inherit; }
+.nz-coal__bar i { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text); }
+.nz-coal__presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.nz-ok { color: var(--ok); font-weight: 700; }
+.nz-bad { color: var(--danger); font-weight: 700; }
+.nz-elec { display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+.nz-seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: var(--radius-pill); overflow: hidden; }
+.nz-seg button { background: none; border: 0; color: var(--text-2); padding: 4px 10px; font: inherit; font-size: var(--fs-xs); cursor: pointer; }
+.nz-seg button.on { background: var(--accent); color: var(--accent-ink); }
+.nz-map { display: grid; gap: 8px; }
+.nz-map svg { width: 100%; max-height: 70vh; height: auto; }
+.nz-map path { cursor: pointer; transition: fill-opacity var(--dur-2, .2s); }
+.nz-map path:hover, .nz-map path.sel, .nz-map path:focus-visible { stroke: var(--text); stroke-width: 1.4; outline: none; }
+.nz-map__info { min-height: 64px; color: var(--text-2); font-size: var(--fs-sm); }
+.nz-map__info a { color: var(--accent); }
+.nz-hex { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 3px; }
+.nz-hex a { aspect-ratio: 1; display: grid; place-items: center; font-size: 10px; color: #fff; border-radius: 6px; text-decoration: none; }
+.nz-search { background: var(--bg-2); border: 1px solid var(--line-2); color: var(--text); border-radius: var(--radius-sm); padding: 4px 8px; width: 9rem; }
+.nz-elist { list-style: none; padding: 0; margin: 0; max-height: 640px; overflow: auto; display: grid; }
+.nz-elist a { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 2px 10px; align-items: center; padding: 8px 4px; border-bottom: 1px solid var(--line); color: var(--text); text-decoration: none; }
+.nz-elist a:hover { background: var(--bg-2); }
+.nz-elist__n { font-weight: 600; }
+.nz-elist__n small { color: var(--text-3); font-weight: 400; }
+.nz-elist__l { grid-column: 2; font-size: var(--fs-xs); color: var(--text-2); }
+.nz-elist__l em { font-style: normal; padding: 0 6px; border-radius: var(--radius-pill); background: var(--pc); color: #fff; margin-left: 4px; }
+.nz-calls { display: grid; gap: 4px; margin-bottom: 10px; }
+.nz-call { display: block; padding: 6px 10px; border-left: 4px solid var(--pc); background: var(--bg-2); border-radius: var(--radius-sm); font-size: var(--fs-sm); color: var(--text); }
+.nz-polls { width: 100%; height: auto; }
+.nz-ax { font-size: 9px; fill: var(--text-3); }
+.nz-ptable { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); margin-top: 8px; display: block; overflow-x: auto; }
+.nz-ptable th, .nz-ptable td { padding: 3px 6px; text-align: right; border-bottom: 1px solid var(--line); color: var(--text-2); white-space: nowrap; }
+.nz-ptable td:first-child, .nz-ptable th:first-child { text-align: left; }
+.nz-ptable small { color: var(--text-3); }
+.nz-avg td { color: var(--text); font-weight: 700; }
+.nz-mk { list-style: none; padding: 0; margin: 6px 0; display: grid; gap: 4px; }
+.nz-mk li { display: grid; grid-template-columns: minmax(0, 40%) 1fr 3.2em; gap: 8px; align-items: center; font-size: var(--fs-sm); color: var(--text-2); }
+.nz-mk__b { height: 8px; background: var(--bg-3); border-radius: var(--radius-pill); overflow: hidden; }
+.nz-mk__b span { display: block; height: 100%; background: var(--signal, var(--accent)); }
+.nz-mk__t { color: var(--text); font-weight: 600; }
+.nz-news { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; max-height: 520px; overflow: auto; }
+.nz-news a { color: var(--text); text-decoration: none; font-weight: 500; }
+.nz-news a:hover { text-decoration: underline; }
+.nz-news small { display: block; color: var(--text-3); font-size: var(--fs-xs); }
+.nz-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 var(--sp-3); border-radius: var(--radius); border: 1px solid var(--line-2); background: linear-gradient(90deg, var(--bg-2), var(--bg-1)); color: var(--text); text-decoration: none; font-size: var(--fs-sm); }
+.nz-banner:hover { border-color: var(--accent); }
+.nz-banner__flag { font-weight: 800; padding: 2px 8px; border-radius: var(--radius-sm); background: #00247d; color: #fff; }
+.nz-banner__go { margin-left: auto; color: var(--accent); font-weight: 600; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (prefers-reduced-motion: reduce) { .nz-bars__track > span:first-child { transition: none; } }

@@ -231,7 +231,7 @@
 [data-ui='aurora'] .hm-banner .btn--accent { --btn-fg: #000000; }
 
 /* ───── Global home v2 ───── */
-.hm-hero-wrap { display: grid; gap: 12px; min-width: 0; }
+.hm-hero-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
 .hm-cswitch { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--bg-1); border: 1px solid var(--line-2); width: max-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
 .hm-cswitch__b { flex: 0 0 auto; border: 0; background: transparent; color: var(--text-2); font: 600 13.5px/1 var(--font-body); padding: 9px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap; min-height: 36px; }
 .hm-cswitch__b:hover { color: var(--text); background: var(--bg-3); }

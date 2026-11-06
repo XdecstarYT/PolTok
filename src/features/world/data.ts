@@ -130,3 +130,56 @@ export function useSummary(title?: string) {
   }, [title]);
   return s;
 }
+
+/* ------------------------------ country pages (/country/:code) ------------------------------ */
+/** The ~40 democracies with /country/:code profiles (mirrors server/countries.js). Name → ISO2. */
+export const COUNTRY_CODES: Record<string, string> = {
+  'United States': 'US', 'United States of America': 'US', 'United Kingdom': 'GB', Canada: 'CA', Australia: 'AU', 'New Zealand': 'NZ',
+  Ireland: 'IE', France: 'FR', Germany: 'DE', Italy: 'IT', Spain: 'ES', Portugal: 'PT', Netherlands: 'NL', Belgium: 'BE',
+  Austria: 'AT', Switzerland: 'CH', Sweden: 'SE', Norway: 'NO', Denmark: 'DK', Finland: 'FI', Poland: 'PL',
+  'Czech Republic': 'CZ', Czechia: 'CZ', Slovakia: 'SK', Greece: 'GR', Hungary: 'HU', Romania: 'RO', Estonia: 'EE', Ukraine: 'UA',
+  Israel: 'IL', Japan: 'JP', 'South Korea': 'KR', Korea: 'KR', Taiwan: 'TW', India: 'IN', Indonesia: 'ID', Philippines: 'PH',
+  'South Africa': 'ZA', Brazil: 'BR', Argentina: 'AR', Mexico: 'MX', Chile: 'CL', Colombia: 'CO',
+};
+export const codeOf = (name: string) => COUNTRY_CODES[name];
+
+export interface Person { qid: string; name: string }
+export interface Party { name: string; seats: number; color?: string }
+export interface CountryProfile {
+  code: string;
+  name: string;
+  qid?: string;
+  headOfGovernment: { office: string; people: Person[] } | null;
+  headOfState: { office: string; people: Person[] } | null;
+  legislature: { chamber: string; qid?: string; totalSeats: number | null; parties: Party[]; uncertain: boolean; url: string; revid?: number };
+  markets: { title: string; url: string; volume: number; endDate: string | null; markets: { label: string; yes: number }[] }[];
+  marketsOk: boolean;
+  sources: { name: string; url: string }[];
+  notes: string[];
+  fetchedAt: number;
+  stale?: boolean;
+}
+export interface WorldNewsItem { id: string; title: string; url: string; source: string; sourceLean: string; region: string; publishedAt: number; countries: string[]; summary?: string; clusterId?: string }
+export interface WorldNews { items: WorldNewsItem[]; total: number; fetchedAt: number; sources: { name: string; lean: string; region: string; ok: boolean; count: number }[]; note: string }
+
+function useJson<T>(url: string | null) {
+  const [s, setS] = useState<{ data: T | null; err: string | null; loading: boolean }>({ data: null, err: null, loading: !!url });
+  useEffect(() => {
+    if (!url) return;
+    let on = true;
+    setS({ data: null, err: null, loading: true });
+    fetch(url, { headers: { accept: 'application/json' } })
+      .then(async (r) => {
+        if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) throw new Error(`HTTP ${r.status}`);
+        return (await r.json()) as T;
+      })
+      .then((d) => on && setS({ data: d, err: null, loading: false }))
+      .catch((e: Error) => on && setS({ data: null, err: e.message, loading: false }));
+    return () => {
+      on = false;
+    };
+  }, [url]);
+  return s;
+}
+export const useCountryProfile = (code: string) => useJson<CountryProfile>(`/api/world/country?code=${encodeURIComponent(code)}`);
+export const useWorldNews = (code: string) => useJson<WorldNews>(`/api/world/news?country=${encodeURIComponent(code)}&limit=30`);

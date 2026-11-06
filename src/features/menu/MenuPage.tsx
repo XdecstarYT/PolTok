@@ -73,6 +73,8 @@ export default function MenuPage() {
         { title: 'Replay', desc: 'Relive election night', to: '/replay', icon: ic.replay },
         { title: 'Analysis', desc: 'Swing, turnout & trends', to: '/analysis', icon: ic.chart },
         { title: 'World elections', desc: 'Global calendar, map & results', to: '/world', icon: ic.au, tone: 'var(--signal)' },
+        { title: 'NZ election 2026', desc: 'Live results, MMP seats & coalitions', to: '/nz', icon: ic.au, tone: 'var(--accent)' },
+        { title: 'Countries', desc: '40 democracies: leaders, parliaments, news & markets', to: '/country/GB', icon: ic.au, tone: 'var(--signal)' },
         { title: 'Compare', desc: 'Races side by side', to: '/compare', icon: ic.compare },
         { title: 'Forecast', desc: 'Model odds by chamber', to: '/forecast', icon: ic.forecast },
         { title: 'Polls', desc: 'Averages & latest polls', to: '/polls', icon: ic.polls },
@@ -113,6 +115,7 @@ export default function MenuPage() {
       id: 'tools', title: 'Tools', kicker: 'Make it yours', tone: 'var(--signal)',
       tiles: [
         { title: 'Search', desc: 'Races, people, places', to: '/search', icon: ic.search },
+        { title: "What's new", desc: 'Release notes & changelog', to: '/updates', icon: ic.star },
         { title: 'Calendar', desc: 'Elections & key dates, ICS', to: '/calendar', icon: ic.forecast },
         { title: 'Watchlist', desc: 'Your starred races', to: '/watch', icon: ic.star, badge: ids.length ? <Count n={ids.length} label="starred" /> : undefined },
         { title: 'Embed builder', desc: 'Live widgets for your site', to: '/embed', icon: ic.code },

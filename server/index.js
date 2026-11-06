@@ -151,11 +151,13 @@ async function main() {
       if (p.startsWith('/api/')) {
         if (p === '/api/ai') return (await import('./ai.js')).nodeAiHandler(req, res);
         if (p.startsWith('/api/owner')) return (await import('./owner.js')).nodeOwnerHandler(req, res);
+        if (p === '/api/updates' || p === '/api/updates.rss' || p.startsWith('/api/updates/')) return (await import('./updates.js')).nodeUpdatesHandler(req, res);
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
         if (p.startsWith('/api/au/') && (await au.handle(p, url, json, res))) return;
         if (p.startsWith('/api/parliament')) return (await import('./parliament.js')).nodeParliamentHandler(p, url, json, res);
         if (p.startsWith('/api/members')) return (await import('./members.js')).nodeMembersHandler(p, url, json, res);
         if (p === '/api/calendar' || p === '/api/calendar.ics') return (await import('./calendar.js')).nodeCalendarHandler(p, url, res);
+        if (p.startsWith('/api/nz')) return (await import('./nz.js')).nodeNzHandler(p, url, json, res);
         if (p.startsWith('/api/world')) return (await import('./world.js')).nodeWorldHandler(p, url, json, res);
         if (p.startsWith('/api/candidates')) return (await import('./candidates.js')).nodeCandidatesHandler(p, url, json, res);
         if (p.startsWith('/api/money')) return (await import('./money.js')).nodeMoneyHandler(p, url, json, res);

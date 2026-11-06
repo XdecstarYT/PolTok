@@ -12,9 +12,10 @@ import { Director } from './director/Director';
 import { SocialPack } from './SocialPack';
 import { MotionStudio } from './motion/MotionStudio';
 import { OPEN_EDITOR } from './editorBus';
+import { UpdatesAdmin } from './UpdatesAdmin';
 import './owner.css';
 
-type Tab = 'make' | 'director' | 'ai' | 'x' | 'studio' | 'motion' | 'social' | 'health' | 'content';
+type Tab = 'make' | 'director' | 'ai' | 'x' | 'studio' | 'motion' | 'social' | 'health' | 'content' | 'updates';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'make', label: 'Make with AI' },
   { id: 'director', label: 'Creative director' },
@@ -25,6 +26,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'social', label: 'Social pack' },
   { id: 'health', label: 'Site health' },
   { id: 'content', label: 'Content tools' },
+  { id: 'updates', label: 'Updates' },
 ];
 
 export default function OwnerPage() {
@@ -74,6 +76,7 @@ export default function OwnerPage() {
         {tab === 'social' && <SocialPack />}
         {tab === 'health' && <Health />}
         {tab === 'content' && <ContentTools />}
+        {tab === 'updates' && <UpdatesAdmin />}
       </div>
     </div>
   );

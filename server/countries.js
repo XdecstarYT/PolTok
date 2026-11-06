@@ -91,7 +91,7 @@ const sparql = (q) => getJson(`https://query.wikidata.org/sparql?format=json&que
 /** One SPARQL for all countries: heads of government/state, their offices, chamber QID + seat total. */
 async function wikidataAll() {
   return cached('wd:all', TTL, async () => {
-    const q = `SELECT ?t ?c ?hog ?hogL ?hos ?hosL ?hogPosL ?hosPosL ?ct ?ch ?total WHERE {
+    const q = `SELECT ?t ?c ?hog ?hogLabel ?hos ?hosLabel ?hogPosLabel ?hosPosLabel ?ct ?ch ?total WHERE {
   { VALUES ?t { ${COUNTRIES.map((c) => lit(c.wiki)).join(' ')} }
     ?a schema:about ?c ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?t .
     OPTIONAL { ?c wdt:P6 ?hog } OPTIONAL { ?c wdt:P35 ?hos }
@@ -100,7 +100,7 @@ async function wikidataAll() {
   { VALUES ?ct { ${COUNTRIES.map((c) => lit(c.chamber)).join(' ')} }
     ?b schema:about ?ch ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?ct .
     OPTIONAL { ?ch wdt:P1342 ?total } }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". ?hog rdfs:label ?hogL. ?hos rdfs:label ?hosL. ?hogPos rdfs:label ?hogPosL. ?hosPos rdfs:label ?hosPosL. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
 }`;
     const rows = await sparql(q);
     const byWiki = new Map();
@@ -109,11 +109,11 @@ async function wikidataAll() {
     for (const r of rows) {
       if (r.t) {
         const k = r.t.value;
-        const o = byWiki.get(k) || { qid: qid(r.c?.value), hog: [], hos: [], hogOffice: r.hogPosL?.value, hosOffice: r.hosPosL?.value };
-        if (r.hog) add(o.hog, { qid: qid(r.hog.value), name: r.hogL?.value });
-        if (r.hos) add(o.hos, { qid: qid(r.hos.value), name: r.hosL?.value });
-        o.hogOffice ||= r.hogPosL?.value;
-        o.hosOffice ||= r.hosPosL?.value;
+        const o = byWiki.get(k) || { qid: qid(r.c?.value), hog: [], hos: [], hogOffice: r.hogPosLabel?.value, hosOffice: r.hosPosLabel?.value };
+        if (r.hog) add(o.hog, { qid: qid(r.hog.value), name: r.hogLabel?.value });
+        if (r.hos) add(o.hos, { qid: qid(r.hos.value), name: r.hosLabel?.value });
+        o.hogOffice ||= r.hogPosLabel?.value;
+        o.hosOffice ||= r.hosPosLabel?.value;
         byWiki.set(k, o);
       } else if (r.ct) {
         const k = r.ct.value;
@@ -121,6 +121,14 @@ async function wikidataAll() {
         if (r.total) o.totals.push(Number(r.total.value));
         chambers.set(k, o);
       }
+    }
+    // Fill labels the SPARQL label service left as bare QIDs (happens when one item binds twice).
+    const missing = [...new Set([...byWiki.values()].flatMap((o) => [...o.hog, ...o.hos]).filter((p) => !p.name || /^Q\d+$/.test(p.name)).map((p) => p.qid))];
+    if (missing.length) {
+      try {
+        const j = await getJson(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${missing.slice(0, 50).join('|')}&props=labels&languages=en|mul&format=json`);
+        for (const o of byWiki.values()) for (const p of [...o.hog, ...o.hos]) { const lb = j.entities?.[p.qid]?.labels; const v = lb?.en || lb?.mul; if (v) p.name = v.value; }
+      } catch {}
     }
     return { byWiki: Object.fromEntries(byWiki), chambers: Object.fromEntries(chambers), fetchedAt: Date.now() };
   });
@@ -141,22 +149,30 @@ export function parseGroups(html) {
   if (!m) return [];
   const cell = m[1].replace(/<sup[\s\S]*?<\/sup>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
   const raw = [];
-  for (const l of cell.split(/<br\s*\/?>|<\/li>|<\/p>|<\/dd>|<\/dt>|\n/)) {
+  // Track list nesting depth so coalitions / parliamentary groups listed above their member
+  // parties can be dropped in favour of the leaf entries.
+  let depth = 0;
+  for (const l of cell.split(/(?=<dd|<li|<br|<p>|<b>)|\n/)) {
+    const lineDepth = depth;
+    depth += (l.match(/<(?:dl|ul|ol)\b/g) || []).length - (l.match(/<\/(?:dl|ul|ol)>/g) || []).length;
     const color = (l.match(/background(?:-color)?:\s*(#[0-9a-fA-F]{3,8}|[a-z]+)/) || [])[1];
     const tx = decode(l.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
     const mm = tx.match(/^(.*?)\s*[([]\s*(\d{1,4})\s*(?:seats?|members?|MPs)?\s*[)\]]\s*$/i) || tx.match(/^(.*?):\s*(\d{1,4})\s*(?:seats?)?$/i);
-    if (mm && mm[1] && !/^\d+$/.test(mm[1])) raw.push({ name: mm[1].replace(/[:–-]\s*$/, '').trim(), seats: Number(mm[2]), color: color && color !== 'transparent' ? color : undefined, bold: /<b>/.test(l) });
+    if (mm && mm[1] && !/^\d+$/.test(mm[1]))
+      raw.push({ name: mm[1].replace(/[:–-]\s*$/, '').trim(), seats: Number(mm[2]), color: color && color !== 'transparent' ? color : undefined, bold: /<b>/.test(l), depth: Math.max(lineDepth, depth) });
   }
-  // Drop block headers (Government / Opposition: bold, no swatch) and aggregates whose following
-  // entries sum exactly to them (coalitions and parliamentary groups listed with their members).
-  const keep = raw.filter((r) => !(r.bold && !r.color) && !(/^(government|opposition|majority|minority|official opposition|crossbench)\b/i.test(r.name) && !r.color));
   const out = [];
-  for (let i = 0; i < keep.length; i++) {
-    let s = 0;
-    let j = i + 1;
-    while (j < keep.length && s < keep[i].seats) s += keep[j++].seats;
-    if (j > i + 2 && s === keep[i].seats) continue;
-    out.push({ name: keep[i].name, seats: keep[i].seats, color: keep[i].color });
+  for (let i = 0; i < raw.length; i++) {
+    const r = raw[i];
+    if (r.bold && !r.color) continue; // Government / Opposition block headers
+    const next = raw[i + 1];
+    if (next && next.depth > r.depth) {
+      // aggregate when its deeper children add up to it
+      let s = 0;
+      for (let j = i + 1; j < raw.length && raw[j].depth > r.depth; j++) if (raw[j].depth === next.depth) s += raw[j].seats;
+      if (s === r.seats) continue;
+    }
+    out.push({ name: r.name, seats: r.seats, color: r.color });
   }
   return out.filter((p) => p.seats > 0);
 }

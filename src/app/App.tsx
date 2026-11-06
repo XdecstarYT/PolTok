@@ -48,11 +48,15 @@ const Pres2028Page = lazy(() => import('../features/2028/Pres2028Page'));
 const EmbedRoutes = lazy(() => import('../features/embed/EmbedRoutes'));
 const EmbedBuilder = lazy(() => import('../features/embed/EmbedBuilder'));
 
+const UpdatesPage = lazy(() => import('../features/updates/UpdatesPage'));
 const MenuPage = lazy(() => import('../features/menu/MenuPage'));
 const MyAreaPage = lazy(() => import('../features/myarea/MyAreaPage'));
 const AskPage = lazy(() => import('../features/ask/AskPage'));
 const QuizPage = lazy(() => import('../features/quiz/QuizPage'));
 const WorldPage = lazy(() => import('../features/world/WorldPage'));
+const NzPage = lazy(() => import('../features/nz/NzPage'));
+const NzElectoratePage = lazy(() => import('../features/nz/ElectoratePage'));
+const CountryPage = lazy(() => import('../features/world/CountryPage'));
 const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'));
 
 export function App() {
@@ -64,6 +68,7 @@ export function App() {
       <Suspense fallback={<div className="page" style={{ color: 'var(--text-3)' }}>Loading…</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/updates" element={<UpdatesPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/map/:mode" element={<MapPage />} />
           <Route path="/live" element={<LivePage />} />
@@ -102,6 +107,9 @@ export function App() {
           <Route path="/candidate/:id" element={<CandidatePage />} />
           <Route path="/parliament" element={<ParliamentPage />} />
           <Route path="/world" element={<WorldPage />} />
+          <Route path="/nz" element={<NzPage />} />
+          <Route path="/nz/electorate/:id" element={<NzElectoratePage />} />
+          <Route path="/country/:code" element={<CountryPage />} />
           <Route path="/parliament/bill/:id" element={<ParliamentBillPage />} />
           <Route path="/members" element={<MembersPage />} /><Route path="/member/:id" element={<MemberPage />} />
           <Route path="/embed" element={<EmbedBuilder />} />

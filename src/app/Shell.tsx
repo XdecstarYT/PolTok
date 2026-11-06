@@ -13,6 +13,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLive } from '../lib/live';
 import { useSettings } from '../lib/settings';
+import { UpdatesBell } from '../features/updates';
 import { ToastProvider, Kbd, useNow, useReducedMotion, fmtTime, tzAbbr } from '../components';
 import { Ticker } from './shell/Ticker';
 import { CommandPalette } from './shell/CommandPalette';
@@ -122,9 +123,12 @@ export const NAV_MORE = [
   { to: '/parliament', label: 'Parliament', sub: 'Live bills — US Congress & Australia' },
   { to: '/quiz', label: 'Quiz', sub: 'Issues match & daily trivia' },
   { to: '/world', label: 'World', sub: 'Global elections calendar & map' },
+  { to: '/nz', label: 'NZ Election', sub: 'Live results 7 Nov · MMP seats' },
+  { to: '/country/GB', label: 'Countries', sub: '40 democracies: leaders, parliaments, news & markets' },
   { to: '/members', label: 'Members', sub: 'Every US & Australian lawmaker' },
   { to: '/calendar', label: 'Calendar', sub: 'Elections & key dates — US & AU' },
   { to: '/au/states', label: 'AU states', sub: 'All 8 state & territory parliaments' },
+  { to: '/updates', label: "What's new", sub: 'Release notes & changelog' },
   { to: '/topic/senate', label: 'News topics', sub: 'Topic hubs, full-coverage stories & sources' },
 ];
 
@@ -223,6 +227,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="sh-right">
             <Clock />
             <LiveStatus />
+            <UpdatesBell />
             <button type="button" className="sh-gear" onClick={() => setSettingsOpen(true)} aria-label="Settings" title="Settings">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
             </button>

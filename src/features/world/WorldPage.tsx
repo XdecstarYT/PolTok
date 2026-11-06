@@ -9,7 +9,8 @@ import { feature } from 'topojson-client';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { Sheet } from '../../components';
 import { useLive } from '../../lib/live';
-import { TYPE_LABEL, atlasName, daysUntil, fmtDate, newsTerms, relDays, todayUTC, useSummary, useWorldElections, type ElectionType, type WorldElection } from './data';
+import { useNavigate } from 'react-router-dom';
+import { COUNTRY_CODES, TYPE_LABEL, atlasName, daysUntil, fmtDate, newsTerms, relDays, todayUTC, useSummary, useWorldElections, type ElectionType, type WorldElection } from './data';
 import './world.css';
 
 const ATLAS_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json';
@@ -45,6 +46,7 @@ export default function WorldPage() {
   const data = useWorldElections();
   const { features, err } = useAtlas();
   const { news } = useLive();
+  const nav = useNavigate();
   const [region, setRegion] = useState('All');
   const [type, setType] = useState<'all' | ElectionType>('all');
   const [indirect, setIndirect] = useState(false);
@@ -185,16 +187,18 @@ export default function WorldPage() {
           <svg viewBox="0 0 960 500" className="wd-map" role="img" aria-label="World map coloured by days until next national election">
             {paths.map((p) => {
               const hit = byCountry.get(p.name);
+              const prof = COUNTRY_CODES[p.name];
+              const open = () => (prof ? nav(`/country/${prof}`) : hit && setCountry(hit.e.country));
               return (
                 <path
                   key={p.name}
                   d={p.d}
-                  className={`wd-cty ${hit ? `is-${binOf(hit.d)} is-hit` : ''} ${hit && country && atlasName(country) === p.name ? 'is-sel' : ''}`}
+                  className={`wd-cty ${prof ? 'is-prof' : ''} ${hit ? `is-${binOf(hit.d)} is-hit` : ''} ${hit && country && atlasName(country) === p.name ? 'is-sel' : ''}`}
                   onMouseEnter={() => setHover(p.name)}
                   onMouseLeave={() => setHover((h) => (h === p.name ? null : h))}
-                  onClick={() => hit && setCountry(hit.e.country)}
-                  tabIndex={hit ? 0 : -1}
-                  onKeyDown={(ev) => hit && (ev.key === 'Enter' || ev.key === ' ') && setCountry(hit.e.country)}
+                  onClick={open}
+                  tabIndex={hit || prof ? 0 : -1}
+                  onKeyDown={(ev) => (ev.key === 'Enter' || ev.key === ' ') && open()}
                   aria-label={hit ? `${hit.e.country}: ${hit.e.office}, ${fmtDate(hit.e)}` : undefined}
                 >
                   <title>{hit ? `${hit.e.country} — ${hit.e.office} · ${fmtDate(hit.e)} (${relDays(hit.d)})` : p.name}</title>
@@ -295,6 +299,11 @@ function CountryDrawer({ country, all, news }: { country: string; all: WorldElec
             </div>
           )}
         </div>
+      )}
+      {COUNTRY_CODES[country] && (
+        <p>
+          <a href={`/country/${COUNTRY_CODES[country]}`}>Open the {country} country page — leaders, parliament, news &amp; markets →</a>
+        </p>
       )}
       <h3 className="wd-h3">Headlines mentioning {country}</h3>
       {heads.length ? (
