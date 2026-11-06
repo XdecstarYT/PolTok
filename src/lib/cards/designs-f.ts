@@ -66,9 +66,9 @@ function dataViz(k: K, P: Pal, x: number, y: number, w: number, h: number, o: { 
     const R = Math.min(w / 2, h * 0.82);
     const cx = x + w / 2, cy = y + R;
     seatArc(c, cx, cy, R, [{ n: dem, color: P.party(d.stats[0].color ?? '#3d7bff') }, { n: und, color: P.faint }, { n: rep, color: P.party(d.stats[1].color ?? '#ff3d55') }]);
-    const npx = R * 0.34;
-    tabular(c, `${dem}`, cx - R * 0.08, cy - R * 0.02, ff(o.numFam ?? 'tight', npx, 800), P.party(d.stats[0].color ?? '#3d7bff'), 'right');
-    tabular(c, `${rep}`, cx + R * 0.08, cy - R * 0.02, ff(o.numFam ?? 'tight', npx, 800), P.party(d.stats[1].color ?? '#ff3d55'), 'left');
+    const npx = R * 0.2;
+    tabular(c, `${dem}`, cx - R * 0.05, cy - R * 0.06, ff(o.numFam ?? 'tight', npx, 800), P.party(d.stats[0].color ?? '#3d7bff'), 'right');
+    tabular(c, `${rep}`, cx + R * 0.05, cy - R * 0.06, ff(o.numFam ?? 'tight', npx, 800), P.party(d.stats[1].color ?? '#ff3d55'), 'left');
     const maj = d.stats[3]?.value;
     if (maj) label(c, `${maj} for control`, cx, cy + R * 0.16, o.fam ?? 'tight', Math.max(11, R * 0.075), P.muted, { align: 'center' });
     return;
@@ -604,9 +604,9 @@ const duotone: Design = {
       paint(k, P, { type: 'duotone', seed: 13, colors: [P.bg, dark, mix(light, dark, 0.35)], intensity: 0.6 });
       const nm = k.d.quoteBy ?? k.d.title;
       if (k.d.mapState && k.d.kind !== 'candidate' && silhouette(c, k.d.mapState, g.x, g.y + g.h * 0.06, g.w, g.h * 0.5, { fill: rgba(light, 0.9), glow: rgba(light, 0.6), inner: rgba(dark, 0.6) })) { /* map art */ } else {
-      const ip = Math.min(g.W, g.H) * 0.5;
-      c.save(); c.font = ff('archivo', ip, 400); c.textAlign = 'center'; c.fillStyle = rgba(light, 0.85); c.globalCompositeOperation = 'screen';
-      c.fillText(initials(nm || 'PolTok').toUpperCase(), g.W / 2, g.H * 0.48); c.restore();
+      const ip = Math.min(g.W, g.H) * (isMsg(k) ? 0.9 : 0.5);
+      c.save(); c.font = ff(isMsg(k) ? 'instrument' : 'archivo', ip, 400); c.textAlign = 'center'; c.fillStyle = rgba(light, 0.85); c.globalCompositeOperation = 'screen';
+      c.fillText(isMsg(k) ? '\u201C' : initials(nm || 'PolTok').toUpperCase(), g.W / 2, g.H * (isMsg(k) ? 0.62 : 0.48)); c.restore();
       }
     }
     const sg = c.createLinearGradient(0, g.H * 0.4, 0, g.H); sg.addColorStop(0, rgba(dark, 0)); sg.addColorStop(0.6, rgba(dark, 0.88)); sg.addColorStop(1, dark);
@@ -640,7 +640,7 @@ const duotone: Design = {
 
 /* ───────── 14. Waffle ───────── */
 const waffleCard: Design = {
-  id: 'waffle', name: 'Waffle chart', kinds: ['race', 'flip', 'au-seat', 'stat', 'balance', 'candidate'], size: SQ, isNew: true, premium: true, fluid: true, ownBg: true, fonts: ['Inter Tight'],
+  id: 'waffle', name: 'Waffle chart', kinds: ['race', 'flip', 'stat', 'balance', 'candidate'], size: SQ, isNew: true, premium: true, fluid: true, ownBg: true, fonts: ['Inter Tight'],
   draw(k) {
     const g = grid(k), c = k.raw!;
     const P = pal(k, { bg: '#fbfaf7', fg: '#121212', accent: '#2c5cff' });
@@ -677,7 +677,7 @@ const waffleCard: Design = {
 
 /* ───────── 15. Forecast needle ───────── */
 const needleCard: Design = {
-  id: 'needle', name: 'Needle gauge', kinds: ['race', 'flip', 'au-seat', 'candidate'], size: X, isNew: true, premium: true, fluid: true, ownBg: true, fonts: ['Inter Tight', 'Fraunces'],
+  id: 'needle', name: 'Needle gauge', kinds: ['race', 'flip'], size: X, isNew: true, premium: true, fluid: true, ownBg: true, fonts: ['Inter Tight', 'Fraunces'],
   draw(k) {
     const g = grid(k), c = k.raw!;
     const P = pal(k, { bg: '#f7f5f0', fg: '#141414', accent: '#141414' });
@@ -780,7 +780,7 @@ const swing: Design = {
     const r = rows(k, P, 3);
     // margin = lead − second (pp); for AU seats the stat is the 2PP margin itself
     const lead = r[0];
-    const margin = k.d.kind === 'au-seat' ? parseFloat(lead?.value ?? '0') || 0 : (r[0]?.num ?? 0) - (r[1]?.num ?? 0);
+    const margin = k.d.kind === 'au-seat' ? parseFloat(k.d.stats?.[0]?.value ?? '0') || 0 : (r[0]?.num ?? 0) - (r[1]?.num ?? 0);
     const area = g.H - g.m * 1.6 - y;
     const ms = k.d.mapState;
     if (ms) { c.save(); c.globalAlpha = 0.9; silhouette(c, ms, g.x, y + area * 0.1, g.w * 0.6, area * 0.8, { fill: mix(P.bg, P.fg, 0.1), stroke: mix(P.bg, P.fg, 0.35) }); c.restore(); }
@@ -790,8 +790,8 @@ const swing: Design = {
       const vp = g.ts(g.portrait ? 7.5 : 6.5);
       const vx = g.x + g.w;
       tabular(c, `${margin >= 0 ? '+' : '−'}${Math.abs(margin).toFixed(1)}`, vx, y + area * 0.3 + vp * 0.6, ff('tight', vp, 900), lead.color, 'right');
-      label(c, k.d.kind === 'au-seat' ? `${lead.label} margin (2PP), pts` : `${lead.label} lead, pts`, vx, y + area * 0.3 + vp * 0.6 + sp * 1.8, 'tight', sp, P.fg, { align: 'right', weight: 700, maxW: g.w * 0.5 });
-      const rest = r.slice(k.d.kind === 'au-seat' ? 1 : 0);
+      label(c, k.d.kind === 'au-seat' ? `${lead.label} 2PP margin, pts` : `${lead.label} lead, pts`, vx, y + area * 0.3 + vp * 0.6 + sp * 1.8, 'tight', sp, P.fg, { align: 'right', weight: 700, maxW: g.w * 0.5 });
+      const rest = r;
       let ly = y + area * 0.78;
       rest.slice(0, 2).forEach((x) => { label(c, `${x.label}  ${x.value}`, vx, ly, 'tight', sp * 1.05, P.muted, { align: 'right', upper: false, weight: 600, maxW: g.w * 0.5 }); ly += sp * 1.9; });
     }
@@ -857,6 +857,7 @@ const extrude: Design = {
     label(c, kicker(k), g.x, g.y + sp, 'tight', sp, P.fg, { weight: 800 });
     const val = h0.value || (k.d.stats?.[0]?.value ?? '');
     const vy = g.H * (g.tall ? 0.42 : g.wide ? 0.42 : 0.5);
+    let labelY = 0;
     if (val) {
       const vp = fitNum(c, val, g.w * 0.98, g.h * (g.wide ? 0.42 : 0.44), 'bricolage', 800);
       const depth = vp * 0.1;
@@ -868,9 +869,10 @@ const extrude: Design = {
       c.fillStyle = gr; c.fillText(val, cx, by);
       c.lineWidth = Math.max(1, vp * 0.008); c.strokeStyle = P.fg; c.strokeText(val, cx, by);
       c.restore();
-      label(c, h0.label || k.d.stats?.[0]?.label || '', g.W / 2, by + depth + sp * 2.2, 'tight', sp * 1.2, P.fg, { align: 'center', weight: 800, maxW: g.w });
+      labelY = by + depth + sp * 2.2;
+      label(c, h0.label || k.d.stats?.[0]?.label || '', g.W / 2, labelY, 'tight', sp * 1.2, P.fg, { align: 'center', weight: 800, maxW: g.w });
     }
-    const top = vy + g.h * (g.wide ? 0.3 : 0.24);
+    const top = Math.max(vy + g.h * (g.wide ? 0.3 : 0.24), labelY + sp * 1.6);
     const hd = head(k, P, plain(k.d.title), g.x, Math.min(top, g.H - g.m * 1.6 - g.ts(3.5) * 2.2), g.w, g.ts(3.5) * 2.2, { fam: 'bricolage', max: g.ts(3.5), weight: 800, lh: 1, maxLines: 2, align: 'center' });
     void hd;
     footer(k, g, { ...P, line: rgba('#000000', 0.2), muted: mix(P.fg, P.bg, 0.2) });
