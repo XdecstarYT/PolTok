@@ -179,9 +179,22 @@ export function parseGroups(html) {
 
 async function composition(chamber) {
   return cached(`comp:${chamber}`, TTL, async () => {
-    const j = await getJson(`https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(chamber)}&prop=text|revid&section=0&format=json&formatversion=2&redirects=1`);
-    if (!j.parse?.text) throw new Error('no parse');
-    return { parties: parseGroups(j.parse.text), revid: j.parse.revid, title: j.parse.title, fetchedAt: Date.now() };
+    try {
+      const j = await getJson(`https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(chamber)}&prop=text|revid&section=0&format=json&formatversion=2&redirects=1`);
+      if (!j.parse?.text) throw new Error('no parse');
+      return { parties: parseGroups(j.parse.text), revid: j.parse.revid, title: j.parse.title, fetchedAt: Date.now() };
+    } catch {
+      // Action API rate-limits shared IPs; the REST page HTML is served from cache.
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), 15000);
+      try {
+        const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(chamber.replace(/ /g, '_'))}`, { signal: ctl.signal, headers: { 'user-agent': UA, 'api-user-agent': UA } });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return { parties: parseGroups(await r.text()), revid: Number(r.headers.get('etag')?.match(/\d+/)?.[0]) || undefined, title: chamber, fetchedAt: Date.now() };
+      } finally {
+        clearTimeout(t);
+      }
+    }
   });
 }
 
@@ -222,7 +235,7 @@ export async function countryProfile(code) {
   const ch = w?.chambers[c.chamber];
   const total = ch?.totals.length ? Math.max(...ch.totals) : null;
   let parties = comp.status === 'fulfilled' ? comp.value.parties : [];
-  if (comp.status !== 'fulfilled') notes.push('Wikipedia infobox could not be fetched; party composition unavailable.');
+  if (comp.status !== 'fulfilled') notes.push(`Wikipedia infobox could not be fetched (${String(comp.reason?.message || comp.reason).slice(0, 80)}); party composition unavailable.`);
   const sum = parties.reduce((a, p) => a + p.seats, 0);
   let uncertain = !parties.length;
   if (parties.length && total && sum !== total) {
