@@ -222,7 +222,7 @@ function barsEl(c: C, b: Box, d: CardData, p: number, u: number) {
   bars.forEach((bar, i) => {
     const local = clamp01(p * 1.25 - i * 0.08);
     const y = b.y + i * rowH, bh = Math.min(rowH * 0.42, u * 0.5);
-    c.font = f(u * 0.36, 700); c.fillStyle = '#e8ebf5'; c.textBaseline = 'alphabetic';
+    c.font = f(u * 0.5, 700); c.fillStyle = '#e8ebf5'; c.textBaseline = 'alphabetic';
     c.fillText(bar.label.slice(0, 28), b.x, y + rowH * 0.42);
     const val = bar.value * EASE.outCubic(local);
     const txt = pct ? `${val.toFixed(1)}%` : Math.round(val).toLocaleString('en-US');
@@ -503,7 +503,7 @@ export function renderMotionFrame(c: C, inp: MotionInput, opts: MotionOptions, t
       use.forEach((k, i) => {
         if (k === 'map') mapEl(c, cols[i], inp.mapFills!, a.p('map'));
         if (k === 'needle') needleEl(c, cols[i], d, a.p('needle'), u);
-        if (k === 'bars') barsEl(c, cols[i], d, a.p('bars'), u * (n > 1 ? 0.85 : 1));
+        if (k === 'bars') barsEl(c, cols[i], d, a.p('bars'), u * (n > 2 ? 0.8 : 1));
         if (k === 'count') countEl(c, cols[i], d, a.p('count'), u);
       });
       c.restore();
@@ -521,7 +521,7 @@ export function renderMotionFrame(c: C, inp: MotionInput, opts: MotionOptions, t
   for (const bt of def.bursts ?? []) confetti(c, W, H, t - bt * a.T, (opts.seed ?? 7) + Math.round(bt * 100), [accent, '#ffffff', '#ffd400', '#3b82f6', '#ef4444']);
   if (def.caption === 'word' || def.caption === 'type') {
     const cap: Box = { x: S.x, y: S.y, w: S.w, h: S.h - (a.has('ticker') ? u * 0.8 : 0) };
-    captionEl(c, cap, caption, a.p('caption'), u * (vertical ? 1.05 : 0.9), def.caption, accent);
+    captionEl(c, cap, caption, a.p('caption'), u * (vertical ? 1.05 : 1.25), def.caption, accent);
   }
   if (def.caption === 'kinetic') {
     const q = (inp.caption ?? d.title ?? '').trim();

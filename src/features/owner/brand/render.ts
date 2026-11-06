@@ -29,6 +29,8 @@ function contentBox(a: PackAsset) {
     const cx = c.x * W, cw = c.w * W;
     if (cx < x + w * 0.5 && cx + cw > x) { const nx = cx + cw + W * 0.03; w -= nx - x; x = nx; }
   }
+  const stripe = W - Math.min(W, H) * 0.55; // keep clear of the right-edge stripes
+  if (x + w > stripe) w = Math.max(W * 0.3, stripe - x);
   return { x, y, w, h };
 }
 
@@ -40,11 +42,11 @@ function bgArt(ctx: CanvasRenderingContext2D, b: Brand, W: number, H: number) {
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   // signature: two slanted bars (D-blue / R-red) bleeding off the right edge + faint dot grid
   const u = Math.min(W, H);
+  // two slanted stripes confined to the right edge (never under content: see contentBox)
   ctx.save();
-  ctx.globalAlpha = 0.9;
-  ctx.translate(W, H); ctx.rotate(-0.42);
-  ctx.fillStyle = p.dem; ctx.fillRect(-u * 0.9, -u * 0.62, u * 1.4, u * 0.075);
-  ctx.fillStyle = p.rep; ctx.fillRect(-u * 0.75, -u * 0.48, u * 1.4, u * 0.075);
+  ctx.translate(W - u * 0.16, H / 2); ctx.rotate(0.38);
+  ctx.fillStyle = p.dem; ctx.fillRect(-u * 0.13, -H * 1.5, u * 0.07, H * 3);
+  ctx.fillStyle = p.rep; ctx.fillRect(u * 0.0, -H * 1.5, u * 0.07, H * 3);
   ctx.restore();
   ctx.fillStyle = p.muted; ctx.globalAlpha = 0.09;
   const step = Math.max(14, u / 18);
@@ -66,11 +68,11 @@ function drawBanner(ctx: CanvasRenderingContext2D, a: PackAsset, b: Brand, copy:
     const r = drawLogo(ctx, b, 'full', 'dark', { x: W * 0.2, y: H * 0.07, w: W * 0.6, h: lh });
     keys.push({ x: r.x / W, y: r.y / H, w: r.w / W, h: r.h / H, label: 'Logo' });
     const t = plain(b.tagline);
-    const s = fitText(ctx, b, t, W * 0.7, H * 0.06);
-    ctx.fillStyle = b.palette.fg; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(t, W / 2, H * 0.88);
+    const s = fitText(ctx, b, t, W * 0.5, H * 0.075);
+    ctx.fillStyle = b.palette.fg; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(t, W * 0.06, H * 0.9);
     const tw = ctx.measureText(t).width;
-    keys.push({ x: (W - tw) / 2 / W, y: (H * 0.88 - s) / H, w: tw / W, h: s * 1.1 / H, label: 'Tagline' });
+    keys.push({ x: 0.06, y: (H * 0.9 - s) / H, w: tw / W, h: s * 1.1 / H, label: 'Tagline' });
     return keys;
   }
   // logo left, tagline + url right (wide), or stacked lines (tall-ish)

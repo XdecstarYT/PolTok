@@ -78,7 +78,7 @@ function Profile({ p, mode, get, bio, name, handle }: { p: string; mode: 'd' | '
       {bannerEl}
       <div className="mk-pad" style={{ position: 'relative' }}>
         {avatarEl({ position: 'absolute', left: (v.ax as number) * W, top: -avPx * v.overlap, border: '3px solid var(--mk-bg)' })}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: avPx * (1 - v.overlap) }}>{btn}</div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', minHeight: avPx * (1 - v.overlap) }}>{btn}</div>
         {nameEl}<p className="mk-bio">{bio}</p>{stats}<Dots />
       </div>
       {pinned && <div className="mk-pad">{pinned}</div>}

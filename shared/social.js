@@ -43,7 +43,7 @@ export const SOCIAL_PACK = {
   ] },
   linkedin: { name: 'LinkedIn', assets: [
     avatar(400),
-    { id: 'banner', type: 'banner', label: 'Profile background banner', w: 1584, h: 396, brand: 'banner', design: 'x-header', covers: [R(0.02, 0.45, 0.17, 0.55, 'Profile photo')] },
+    { id: 'banner', type: 'banner', label: 'Profile background banner', w: 1584, h: 396, brand: 'banner', design: 'x-header', covers: [R(0.02, 0.3, 0.3, 0.7, 'Profile photo')] },
     { id: 'page-cover', type: 'banner', label: 'Company page cover (upload 1128×191, exported @2x)', w: 2256, h: 382, brand: 'banner', design: 'x-header', covers: [R(0.02, 0.55, 0.12, 0.45, 'Page logo')] },
     { id: 'post', type: 'post', label: 'Post template', w: 1200, h: 627, design: 'announce' },
   ] },
