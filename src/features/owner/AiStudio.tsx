@@ -7,6 +7,8 @@ import { LANGS, STUDIO_N, VOICES, sanitizeSettings, type StudioMode, type Studio
 import { cardData, designsForKind, download, type Subject } from './cards';
 import { useDesigns } from './TweetKit';
 import { ImagePanel } from './ImagePanel';
+import { CardPreview } from './CardPreview';
+import { cardDataFor, type CardData, type CardKind, type CardStyle } from '../../lib/cards';
 import { pathFor } from './tweets';
 import { copyText, intentUrl, xWeight } from './LinkedTweet';
 import { StudioError, draftsCsv, fetchModels, loadDrafts, loadSettings, onUsage, saveDrafts, saveSettings, studioAi, usage, type DraftStatus, type StudioDraft } from './aiStudioApi';
@@ -51,8 +53,9 @@ function Highlight({ text, bad }: { text: string; bad: string[] }) {
 }
 
 /** Editable post card: text, linked card image, fact-check gate, Post on X, save as draft. */
-export function PostCard({ text: initial, subject, source, label }: { text: string; subject?: Subject | null; source: string; label?: string }) {
+export function PostCard({ text: initial, subject, source, label, style, slide }: { text: string; subject?: Subject | null; source: string; label?: string; style?: CardStyle; slide?: { i: number; n: number; title?: string } }) {
   const { run, busy, wait, addDraft, settings } = useStudio();
+  const live = useLive();
   const ds = useDesigns();
   const [text, setText] = useState(initial);
   const [fact, setFact] = useState<Fact | null>(null);
@@ -81,7 +84,19 @@ export function PostCard({ text: initial, subject, source, label }: { text: stri
         {checkedText === text && fact && <span className={fact.verdict === 'ok' ? 'ow-okb' : 'ow-warn'}>{fact.verdict === 'ok' ? 'fact-check passed' : `${fact.issues.length + fact.mismatched.length} issue(s)`}</span>}
         <span className={`ow-count ${w > 280 ? 'is-over' : ''}`}>{w}/280</span>
       </header>
-      {subj && ds && design && (
+      {slide ? (
+        <div className="ow-card__img">
+          <CardPreview designId={slide.i === 1 ? 'thread-cover' : 'thread-slide'} style={style} name={`poltok-thread-${slide.i}of${slide.n}`} text={text}
+            data={{ kind: 'message', title: slide.i === 1 && slide.title ? slide.title : text.replace(/^\s*\d+\s*\/\s*\d*\s*/, ''), slide: { i: slide.i, n: slide.n }, url: 'poltok.netlify.app' } as CardData} />
+        </div>
+      ) : subj && style && Object.keys(style).length ? (
+        <div className="ow-card__img">
+          <CardPreview designId={design || 'broadcast'} style={style} data={cardDataFor(subj.kind as CardKind, subj.id, live)} subject={subj} name={`poltok-${design}-${subj.kind}-${subj.id}`} text={text} />
+          <select className="ow-select" value={design} onChange={(e) => setDesignId(e.target.value)} aria-label="Card design">
+            {list.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+          </select>
+        </div>
+      ) : subj && ds && design && (
         <div className="ow-card__img">
           <ImagePanel designId={design} subject={subj} name={`poltok-${design}-${subj.kind}-${subj.id}`} text={text} />
           <select className="ow-select" value={design} onChange={(e) => setDesignId(e.target.value)} aria-label="Card design">
@@ -153,7 +168,7 @@ function ThreadTool() {
     <>
       <ToolForm mode="thread" placeholder="Thread topic, e.g. How the Senate could flip tonight" nLabel="Posts" ideas={['Where the Senate stands right now', 'Five races still too close to call', 'Victoria election: the seats to watch']} onResult={setR} />
       {tweets.length > 0 && <div className="ow-actions"><Button size="sm" variant="ghost" onClick={() => addDraft(tweets.join('\n\n'), 'thread', subj(r!))}>Save whole thread as draft</Button></div>}
-      <div className="ow-stack">{tweets.map((t, i) => <PostCard key={`${t}-${i}`} text={t} subject={i === 0 ? subj(r!) : null} source="thread" label={`${i + 1}/${tweets.length}`} />)}</div>
+      <div className="ow-stack">{tweets.map((t, i) => <PostCard key={`${t}-${i}`} text={t} subject={null} source="thread" label={`${i + 1}/${tweets.length}`} style={(r?.style as CardStyle) ?? undefined} slide={{ i: i + 1, n: tweets.length, title: i === 0 ? t.replace(/^\s*\d+\s*\/\s*\d*\s*/, '') : undefined }} />)}</div>
     </>
   );
 }
@@ -178,7 +193,7 @@ function ListTool({ mode, field, placeholder, ideas, withContext, contextLabel, 
   return (
     <>
       <ToolForm mode={mode} placeholder={placeholder} ideas={ideas} withContext={withContext} contextLabel={contextLabel} nLabel={nLabel} onResult={setR} />
-      <div className="ow-grid">{items.map((it, i) => <PostCard key={`${it.text}-${i}`} text={it.text} subject={r ? subj(r) : null} source={mode} label={(it as { note?: string }).note || `Option ${i + 1}`} />)}</div>
+      <div className="ow-grid">{items.map((it, i) => <PostCard key={`${it.text}-${i}`} text={it.text} subject={r ? subj(r) : null} style={(r?.style as CardStyle) ?? undefined} source={mode} label={(it as { note?: string }).note || `Option ${i + 1}`} />)}</div>
     </>
   );
 }
@@ -201,7 +216,7 @@ function ExplainTool() {
       <ToolForm mode="explain" placeholder="Race or seat id, e.g. GA-SEN, PA-07 or kooyong" ideas={['GA-SEN', 'TX-SEN', 'kooyong']} onResult={(x) => setR(x)} />
       {r && (
         <div className="ow-pair">
-          <PostCard text={String(r.post)} subject={subj(r)} source="explain" label="Explainer" />
+          <PostCard text={String(r.post)} subject={subj(r)} style={(r.style as CardStyle) ?? undefined} source="explain" label="Explainer" />
           <ul className="ow-tweet">{((r.bullets as string[]) ?? []).map((b, i) => <li key={i}>{b}</li>)}</ul>
         </div>
       )}

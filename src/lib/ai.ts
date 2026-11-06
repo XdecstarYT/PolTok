@@ -216,13 +216,14 @@ export function fitContext(ctx: unknown, maxChars = 3500): unknown {
 
 /* ---- Owner "Make with AI": non-streaming JSON compose ---- */
 export interface ComposeDesign { id: string; name: string; kinds: string[]; w?: number; h?: number }
-export async function composeAi(opts: { prompt: string; designs: ComposeDesign[]; temperature?: number; signal?: AbortSignal }): Promise<unknown> {
+export type ComposeTask = 'post' | 'message' | 'restyle' | 'rewrite' | 'social';
+export async function composeAi(opts: { prompt: string; designs?: ComposeDesign[]; temperature?: number; signal?: AbortSignal; task?: ComposeTask; card?: unknown; settings?: unknown; platforms?: string[] }): Promise<unknown> {
   let r: Response;
   try {
     r = await fetch('/api/ai', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ question: opts.prompt.slice(0, 600), mode: 'compose', designs: opts.designs, temperature: opts.temperature ?? 0.4 }),
+      body: JSON.stringify({ question: opts.prompt.slice(0, 600), mode: 'compose', task: opts.task ?? 'post', designs: opts.designs ?? [], card: opts.card, settings: opts.settings, platforms: opts.platforms, temperature: opts.temperature ?? 0.4 }),
       signal: opts.signal,
     });
   } catch (e) {

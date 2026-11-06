@@ -48,6 +48,8 @@ export const SIZE_PRESETS: { id: string; label: string; w: number; h: number }[]
   { id: 'portrait', label: 'Portrait 4:5', w: 1080, h: 1350 },
   { id: 'story', label: 'Story / Reel 9:16', w: 1080, h: 1920 },
   { id: 'linkedin', label: 'LinkedIn 1.91:1', w: 1200, h: 627 },
+  { id: 'x-header', label: 'X header 3:1', w: 1500, h: 500 },
+  { id: 'avatar', label: 'Profile picture', w: 400, h: 400 },
 ];
 
 export const TEXTURES: Texture[] = ['none', 'grain', 'halftone', 'grid', 'scanlines', 'paper'];
@@ -97,6 +99,10 @@ export const TONES: Record<string, [string, string]> = {
   'au-hex': ['#0e1a14', '#ffffff'], breaking: ['#0a0a12', '#ffffff'],
   countdown: ['#0a0c14', '#ffffff'], h2h: ['#0b0d14', '#ffffff'], waterfall: ['#f6f5f1', '#111111'], bill: ['#0f1420', '#ffffff'], trend: ['#0c1018', '#ffffff'],
   'senate-arc': ['#f3f1ec', '#111111'], 'au-swing': ['#0f1a24', '#ffffff'], 'quote-portrait': ['#101218', '#ffffff'], carousel: ['#fbfaf7', '#111111'], table: ['#ffffff', '#0d1321'],
+  statement: ['#0b0d14', '#ffffff'], notes: ['#fffdf6', '#1c1a14'], memo: ['#fbf8f1', '#1b1712'], 'gradient-quote': ['#2b1055', '#ffffff'], milestone: ['#0e0b1f', '#ffffff'],
+  announce: ['#0d1018', '#ffffff'], ask: ['#f4f1ea', '#14120e'], typographic: ['#fafaf7', '#111111'], 'thread-cover': ['#0b0d14', '#ffffff'], 'thread-slide': ['#11131c', '#ffffff'],
+  poll: ['#0f1420', '#ffffff'], 'reply-frame': ['#0b0d14', '#ffffff'], 'breaking-banner': ['#0a0a12', '#ffffff'], 'did-you-know': ['#fff8e7', '#1a1407'],
+  'x-header': ['#0b0d14', '#ffffff'], 'x-avatar': ['#0b0d14', '#ffffff'], highlight: ['#0b0d14', '#ffffff'], 'story-message': ['#0b0d14', '#ffffff'],
 };
 const DEFAULT_TONE: [string, string] = ['#0b0d14', '#ffffff'];
 export const toneOf = (id: string) => TONES[id] ?? DEFAULT_TONE;

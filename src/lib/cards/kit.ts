@@ -65,6 +65,7 @@ export interface K {
 
 export const KIND_LABEL: Record<CardKind, string> = {
   race: 'Race result', balance: 'Balance of power', 'au-seat': 'Australian seat', promo: 'Live results', stat: 'By the numbers', flip: 'Seat flip', quote: 'Quote', candidate: 'Candidate', custom: 'PolTok',
+  message: 'A note from PolTok', announcement: 'Announcement', thanks: 'Thank you', milestone: 'Milestone', question: 'Question', statement: 'Statement', brand: 'PolTok',
 };
 
 /* ───────── geometry + text ───────── */

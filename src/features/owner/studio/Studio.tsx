@@ -12,18 +12,25 @@ import { copyImage, download } from '../cards';
 import { LinkedTweet } from '../LinkedTweet';
 import { makeZip } from './zip';
 import { exportPreset, loadPresets, parsePreset, savePresets, upsertPreset, type Preset } from './presets';
+import { takePending, OPEN_EDITOR } from '../editorBus';
+import { composeAi, AiError } from '../../../lib/ai';
+import { validateStyle, validateTexts } from '../../../../shared/compose.js';
+import { loadSettings } from '../aiStudioApi';
 import './studio.css';
 
-type Subject = 'race' | 'flip' | 'balance' | 'au-seat' | 'candidate' | 'promo' | 'stat' | 'quote' | 'custom';
+type Subject = 'race' | 'flip' | 'balance' | 'au-seat' | 'candidate' | 'promo' | 'stat' | 'quote' | 'custom' | 'message' | 'announcement' | 'thanks' | 'milestone' | 'question' | 'statement' | 'brand';
+const MSG_SUBJ = ['message', 'announcement', 'thanks', 'milestone', 'question', 'statement', 'brand'];
 const SUBJECTS: { id: Subject; label: string }[] = [
   { id: 'race', label: 'Race' }, { id: 'flip', label: 'Flip' }, { id: 'balance', label: 'Balance of power' }, { id: 'au-seat', label: 'AU seat' },
   { id: 'candidate', label: 'Candidate' }, { id: 'promo', label: 'Promo' }, { id: 'stat', label: 'Stat' }, { id: 'quote', label: 'Quote / headline' }, { id: 'custom', label: 'Custom (blank)' },
+  { id: 'message', label: 'Message' }, { id: 'announcement', label: 'Announcement' }, { id: 'thanks', label: 'Thank you' }, { id: 'milestone', label: 'Milestone' },
+  { id: 'question', label: 'Question / poll' }, { id: 'statement', label: 'Statement' }, { id: 'brand', label: 'Brand (header / avatar)' },
 ];
 const PROMOS = ['default', 'live', 'map', 'au', 'vic-countdown'];
 const STATS = ['calls', 'flips', 'senate', 'house', 'au-marginal', 'au-polls-federal', 'au-polls-vic'];
 
 type Row = { label: string; value: string; color?: string };
-interface Edits { title?: string; subtitle?: string; stats?: Row[]; footer?: string; cta?: string; quoteBy?: string; steps?: { label: string; done: boolean }[]; countdownTo?: number; slide?: { i: number; n: number } }
+interface Edits { options?: string[]; quoted?: { text: string; label?: string }; handle?: string; title?: string; subtitle?: string; stats?: Row[]; footer?: string; cta?: string; quoteBy?: string; steps?: { label: string; done: boolean }[]; countdownTo?: number; slide?: { i: number; n: number } }
 interface Snap { design: string; edits: Edits; style: CardStyle }
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
@@ -60,6 +67,24 @@ export function Studio() {
   const [batchSel, setBatchSel] = useState<string[]>([]);
   const [batchN, setBatchN] = useState(5);
   const cvRef = useRef<HTMLDivElement>(null);
+  const [base, setBase] = useState<CardData | null>(null);
+  const [aiQ, setAiQ] = useState('');
+  const [aiBusy, setAiBusy] = useState('');
+  // "Open in editor" from the AI tools
+  useEffect(() => {
+    const take = () => {
+      const p = takePending();
+      if (!p) return;
+      setKind(p.data.kind as Subject);
+      setId(p.subject?.id ?? '');
+      setBase(p.data);
+      h.set(() => ({ design: p.designId, edits: {}, style: p.style ?? {} }));
+    };
+    take();
+    window.addEventListener(OPEN_EDITOR, take);
+    return () => window.removeEventListener(OPEN_EDITOR, take);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const options = useMemo(() => {
     if (kind === 'race' || kind === 'flip') return [...RACES].sort((a, b) => Number(!!b.key) - Number(!!a.key) || a.title.localeCompare(b.title)).map((r) => ({ id: r.id, label: `${r.key ? '★ ' : ''}${r.title}` }));
@@ -69,12 +94,13 @@ export function Studio() {
     if (kind === 'stat') return STATS.map((p) => ({ id: p, label: p }));
     if (kind === 'promo') return PROMOS.map((p) => ({ id: p, label: p }));
     if (kind === 'quote') return (live.news ?? []).slice(0, 40).map((n) => ({ id: n.id, label: `${n.source}: ${n.title}`.slice(0, 90) })).concat([{ id: 'tagline', label: 'PolTok tagline' }]);
+    if (MSG_SUBJ.includes(kind)) return [{ id: 'blank', label: 'Blank message' }];
     return [{ id: 'blank', label: 'Blank template' }];
   }, [kind, live.news]);
   const subjId = options.some((o) => o.id === id) ? id : options[0]?.id ?? '';
   const stamp = live.lastUpdate ? Math.floor(live.lastUpdate / 60000) : 0;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const liveData = useMemo<CardData>(() => cardDataFor(kind as CardKind, subjId, live), [kind, subjId, stamp, live.news]);
+  const liveData = useMemo<CardData>(() => base ?? cardDataFor(kind as CardKind, subjId, live), [base, kind, subjId, stamp, live.news]);
   const data = useMemo<CardData>(() => {
     const d: CardData = { ...liveData };
     for (const [k2, v] of Object.entries(edits)) if (v !== undefined && v !== '') (d as unknown as Record<string, unknown>)[k2] = v;
@@ -114,9 +140,33 @@ export function Studio() {
   const setEdit = <K extends keyof Edits>(k2: K, v: Edits[K]) => h.set((s) => ({ ...s, edits: { ...s.edits, [k2]: v } }), true);
   const setStyle = (patch: Partial<CardStyle>, coalesce = true) => h.set((s) => ({ ...s, style: { ...s.style, ...patch } }), coalesce);
   const setPal = (k2: keyof NonNullable<CardStyle['palette']>, v?: string) => setStyle({ palette: { ...style.palette, [k2]: v } });
-  const resetEdits = () => h.set((s) => ({ ...s, edits: {} }));
+  const resetEdits = () => { setBase(null); h.set((s) => ({ ...s, edits: {} })); };
   const fname = `poltok-${sel.id}-${slug(data.title) || kind}`;
   const rows: Row[] = edits.stats ?? (liveData.stats ?? []).map((s) => ({ ...s }));
+
+  const aiErr = (e: unknown) => (e instanceof AiError ? e.message : 'AI unavailable');
+  async function aiRestyle() {
+    if (!aiQ.trim() || aiBusy) return;
+    setAiBusy('restyle');
+    try {
+      const raw = (await composeAi({ task: 'restyle', prompt: aiQ, card: { kind, design: sel.id, title: data.title, subtitle: data.subtitle, style: { ...style, bgImage: undefined } } })) as { style?: unknown };
+      const v = validateStyle(raw?.style);
+      h.set((s) => ({ ...s, style: { ...(v.style as CardStyle), bgImage: s.style.bgImage } }));
+      say(v.fixes.length ? `Restyled (auto-corrected ${v.fixes.length})` : 'Restyled');
+    } catch (e) { say(aiErr(e)); } finally { setAiBusy(''); }
+  }
+  async function aiRewrite() {
+    if (aiBusy) return;
+    setAiBusy('rewrite');
+    try {
+      const stats = (data.stats ?? []).map((r) => ({ label: r.label, value: r.value }));
+      const raw = (await composeAi({ task: 'rewrite', prompt: aiQ.trim() || 'Make it punchier', settings: loadSettings(), card: { kind, title: data.title, subtitle: data.subtitle, stats, footer: data.footer, cta: data.cta, quoteBy: data.quoteBy } })) as { texts?: unknown };
+      const v = validateTexts(raw?.texts, { kind, liveStats: (liveData.stats ?? []).map((r) => ({ label: r.label, value: r.value })) });
+      const t = v.texts;
+      h.set((s) => ({ ...s, edits: { ...s.edits, ...Object.fromEntries(Object.entries(t).filter(([k2]) => k2 !== 'stats')), ...(t.stats ? { stats: t.stats.map((r, i) => ({ ...r, color: rows[i]?.color })) } : {}) } }));
+      say(v.flagged.length ? `Rewritten — ${v.flagged.length} number(s) kept from live data` : 'Rewritten');
+    } catch (e) { say(aiErr(e)); } finally { setAiBusy(''); }
+  }
 
   const say = (m: string) => { setMsg(m); setTimeout(() => setMsg((x) => (x === m ? '' : x)), 4000); };
 
@@ -189,7 +239,7 @@ export function Studio() {
           </fieldset>
           <fieldset>
             <legend>Text <button type="button" className="st-link" onClick={resetEdits}>Reset to live data</button></legend>
-            <label>Title<input className="ow-select" value={edits.title ?? liveData.title} onChange={(e) => setEdit('title', e.target.value)} /></label>
+            <label>Title / message (*word* = accent)<textarea className="ow-select" rows={MSG_SUBJ.includes(kind) ? 4 : 1} value={edits.title ?? liveData.title} onChange={(e) => setEdit('title', e.target.value)} /></label>
             <label>Subtitle<textarea className="ow-select" rows={2} value={edits.subtitle ?? liveData.subtitle ?? ''} onChange={(e) => setEdit('subtitle', e.target.value)} /></label>
             <div className="st-rows" role="group" aria-label="Stat rows">
               {rows.map((r, i) => (
@@ -204,16 +254,27 @@ export function Studio() {
             </div>
             <label>Footer / source<input className="ow-select" value={edits.footer ?? liveData.footer ?? ''} onChange={(e) => setEdit('footer', e.target.value)} /></label>
             <label>Call to action<input className="ow-select" placeholder="e.g. Follow live at poltok.netlify.app" value={edits.cta ?? ''} onChange={(e) => setEdit('cta', e.target.value)} /></label>
-            {(kind === 'quote' || kind === 'custom' || kind === 'candidate') && <label>Quote by<input className="ow-select" value={edits.quoteBy ?? liveData.quoteBy ?? ''} onChange={(e) => setEdit('quoteBy', e.target.value)} /></label>}
+            {(['poll', 'ask'].includes(sel.id) || kind === 'question') && <label>Poll options (one per line, 2–4)<textarea className="ow-select" rows={4} value={(data.options ?? []).join('\n')} onChange={(e) => setEdit('options', e.target.value.split('\n').map((x) => x.slice(0, 25)).slice(0, 4))} /></label>}
+            {sel.id === 'reply-frame' && <>
+              <label>Quoted post (your own text only)<textarea className="ow-select" rows={3} value={data.quoted?.text ?? ''} onChange={(e) => setEdit('quoted', { text: e.target.value, label: data.quoted?.label ?? 'Our earlier post' })} /></label>
+              <label>Quoted label (shown on card)<input className="ow-select" value={data.quoted?.label ?? 'Our earlier post'} onChange={(e) => setEdit('quoted', { text: data.quoted?.text ?? '', label: e.target.value })} /></label>
+            </>}
+            {(MSG_SUBJ.includes(kind) || sel.id === 'reply-frame') && <label>Handle<input className="ow-select" placeholder="@PolTok" value={edits.handle ?? liveData.handle ?? ''} onChange={(e) => setEdit('handle', e.target.value)} /></label>}
+            {(kind === 'quote' || kind === 'custom' || kind === 'candidate' || MSG_SUBJ.includes(kind)) && <label>Quote by / signature<input className="ow-select" value={edits.quoteBy ?? liveData.quoteBy ?? ''} onChange={(e) => setEdit('quoteBy', e.target.value)} /></label>}
             {(sel.id === 'countdown' || data.countdownTo) && <label>Count down to<input className="ow-select" type="datetime-local" value={toLocal(data.countdownTo)} onChange={(e) => setEdit('countdownTo', e.target.value ? Date.parse(e.target.value) : undefined)} /></label>}
             {sel.id === 'bill' && <label>Bill steps (one per line, prefix ✓ when done)
               <textarea className="ow-select" rows={5} value={(data.steps ?? []).map((s) => `${s.done ? '✓ ' : ''}${s.label}`).join('\n')} onChange={(e) => setEdit('steps', e.target.value.split('\n').filter((l) => l.trim()).map((l) => ({ done: /^\s*[✓x*]\s*/i.test(l), label: l.replace(/^\s*[✓x*]\s*/i, '').trim() })))} />
             </label>}
-            {sel.id === 'carousel' && <label>Slide<span className="st-row"><input className="ow-select st-val" type="number" min={1} max={20} value={data.slide?.i ?? 1} onChange={(e) => setEdit('slide', { i: +e.target.value || 1, n: data.slide?.n ?? 5 })} /> of <input className="ow-select st-val" type="number" min={1} max={20} value={data.slide?.n ?? 5} onChange={(e) => setEdit('slide', { i: data.slide?.i ?? 1, n: +e.target.value || 1 })} /></span></label>}
+            {(sel.id === 'carousel' || sel.id === 'thread-slide' || sel.id === 'thread-cover') && <label>Slide<span className="st-row"><input className="ow-select st-val" type="number" min={1} max={20} value={data.slide?.i ?? 1} onChange={(e) => setEdit('slide', { i: +e.target.value || 1, n: data.slide?.n ?? 5 })} /> of <input className="ow-select st-val" type="number" min={1} max={20} value={data.slide?.n ?? 5} onChange={(e) => setEdit('slide', { i: data.slide?.i ?? 1, n: +e.target.value || 1 })} /></span></label>}
           </fieldset>
         </aside>
 
         <div className="st-main">
+          <div className="st-row" aria-label="AI">
+            <input className="ow-select" placeholder="AI brief, e.g. moody navy with gold serif / shorter, warmer" value={aiQ} maxLength={300} onChange={(e) => setAiQ(e.target.value)} />
+            <Button size="sm" disabled={!!aiBusy || !aiQ.trim()} onClick={aiRestyle}>{aiBusy === 'restyle' ? 'Restyling…' : 'AI restyle'}</Button>
+            <Button size="sm" variant="ghost" disabled={!!aiBusy} onClick={aiRewrite}>{aiBusy === 'rewrite' ? 'Rewriting…' : 'AI rewrite text'}</Button>
+          </div>
           <div className="st-controls" aria-label="Style">
             <label>Design
               <select className="ow-select" value={sel.id} onChange={(e) => h.set((s) => ({ ...s, design: e.target.value }))}>
@@ -301,7 +362,7 @@ export function Studio() {
               </div>
             </fieldset>
           </div>
-          <LinkedTweet subject={{ kind: (kind === 'candidate' || kind === 'custom' ? 'promo' : kind), id: subjId }} designName={sel.name} blob={blob} name={fname} />
+          <LinkedTweet subject={{ kind: (kind === 'candidate' || kind === 'custom' || MSG_SUBJ.includes(kind) ? 'promo' : kind) as 'promo', id: MSG_SUBJ.includes(kind) ? 'default' : subjId }} designName={sel.name} blob={blob} name={fname} />
         </div>
       </div>
     </section>

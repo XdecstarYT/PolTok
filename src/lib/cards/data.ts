@@ -1,7 +1,8 @@
 /** Builds CardData from live results / balance / calls / AU seat data. */
 import type { Candidate, Party, Race, RaceResult } from '../../types';
 import type { LiveState } from '../live';
-import type { CardData, CardKind } from './types';
+import type { CardData, CardKind, MessageKind } from './types';
+import { MESSAGE_KINDS } from './types';
 import { RACES, raceById } from '../../data';
 import { PARTY_HEX, PARTY_NAME } from '../format';
 import { pColor, party as auParty, seatById, stateName as auStateName, ALL_SEATS, AU_POLLS, normPolls, VIC_CLOSE } from '../../features/au/model';
@@ -205,6 +206,10 @@ export function cardDataFor(kind: CardKind, id: string, live: Live): CardData {
     const n = (live.news ?? []).find((x) => x.id === id) ?? (live.news ?? [])[0];
     if (n) return { kind, title: n.title, subtitle: n.source, color: NEUTRAL, ...base, footer: `${n.source} via PolTok · ${US_ATTR}` };
     return { kind, title: 'Every race, every call, the moment it happens.', subtitle: 'PolTok', color: NEUTRAL, ...base };
+  }
+
+  if (MESSAGE_KINDS.includes(kind as MessageKind) || kind === 'brand') {
+    return { kind, title: kind === 'brand' ? 'Every race. Every call. *Live.*' : 'Write your *message* here', url: SITE, color: NEUTRAL };
   }
 
   // promo

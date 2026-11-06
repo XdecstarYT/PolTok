@@ -11,6 +11,7 @@ import type { K } from './kit';
 import { FONT_LOADS, KIND_LABEL, loadImage, RT, rr } from './kit';
 import { type CardStyle, colorMapper, mappedCtx, coverImage, drawOverlays, ensureFont, hasStyle } from './style';
 import { DESIGNS_D } from './designs-d';
+import { DESIGNS_E } from './designs-e';
 import { DESIGNS_A } from './designs-a';
 import { DESIGNS_B } from './designs-b';
 import { DESIGNS_C } from './designs-c';
@@ -19,11 +20,12 @@ import { cardDataFor as buildData, SITE, US_ATTR } from './data';
 import { fmtDay, fmtTime, tzAbbr } from '../../components/time';
 import type { useLive } from '../live';
 
-export type { CardData, CardDesign, CardKind, CardSeries } from './types';
+export type { CardData, CardDesign, CardKind, CardSeries, MessageKind } from './types';
+export { MESSAGE_KINDS } from './types';
 export type { CardStyle, CardPalette, Sticker, StickerPreset, Texture } from './style';
 export { SIZE_PRESETS, TEXTURES, FONT_CHOICES, STICKER_PRESETS, ensureFont, toneOf } from './style';
 
-const ALL_DESIGNS: Design[] = [...DESIGNS_A, ...DESIGNS_B, ...DESIGNS_C, ...DESIGNS_D];
+const ALL_DESIGNS: Design[] = [...DESIGNS_A, ...DESIGNS_B, ...DESIGNS_C, ...DESIGNS_D, ...DESIGNS_E];
 const byId = new Map(ALL_DESIGNS.map((d) => [d.id, d]));
 
 const sizeLabel = (w: number, h: number) => (w === 1080 && h === 1920 ? 'Story' : w === h ? 'Square' : h > w ? 'Portrait' : 'Post');
@@ -108,7 +110,10 @@ export async function renderCardCanvas(designId: string, data: CardData, style?:
     out = document.createElement('canvas');
     out.width = tW; out.height = tH;
     const o = out.getContext('2d')!;
-    if (mode === 'reflow') {
+    if (mode === 'reflow' && design.fluid) {
+      // fluid layouts are fully relative: draw straight at the target size (sharp at any resolution)
+      out = drawDesign(design, d, st, tW, tH, I, now);
+    } else if (mode === 'reflow') {
       // lay the design out on a virtual canvas of the target aspect, at least as large as native
       const f = Math.min(tW / nW, tH / nH);
       const vW = Math.round(tW / f), vH = Math.round(tH / f);

@@ -52,7 +52,7 @@ declare module '*/server/feeds.js' {
   export const OUTLET_LEAN: Record<string, string>;
 }
 declare module '*/shared/compose.js' {
-  export type ComposeKind = 'race' | 'balance' | 'au-seat' | 'promo' | 'stat' | 'flip' | 'quote';
+  export type ComposeKind = 'race' | 'balance' | 'au-seat' | 'promo' | 'stat' | 'flip' | 'quote' | 'message' | 'announcement' | 'thanks' | 'milestone' | 'question' | 'statement';
   export interface ComposeResult {
     subject: { kind: ComposeKind; id: string };
     designId: string;
@@ -60,12 +60,39 @@ declare module '*/shared/compose.js' {
     cardOverrides: { title?: string; subtitle?: string; footer?: string };
     altText: string;
     fixes: string[];
+    post: 'data' | 'message';
+    style: AiStyle;
+    texts: AiTexts;
+    flagged: string[];
   }
+  export interface AiStyle {
+    palette?: { bg?: string; fg?: string; accent?: string; dem?: string; rep?: string };
+    fontDisplay?: string; fontBody?: string; cornerRadius?: number;
+    texture?: 'none' | 'grain' | 'halftone' | 'grid' | 'scanlines' | 'paper'; textureOpacity?: number;
+    logo?: 'design' | 'off' | 'tl' | 'tr' | 'bl' | 'br'; watermark?: string; border?: { width: number; color: string };
+    stickers?: { preset: 'live' | 'flip' | 'breaking' | 'called' | 'custom'; text?: string; pos: 'tl' | 'tr' | 'bl' | 'br' | 'c' }[];
+    align?: 'design' | 'left' | 'center' | 'right'; size?: { w: number; h: number };
+  }
+  export interface AiTexts { title?: string; subtitle?: string; footer?: string; cta?: string; quoteBy?: string; stats?: { label: string; value: string }[]; options?: string[]; quoted?: { text: string; label: string } }
+  export const MESSAGE_KINDS: string[];
+  export const STYLE_FONTS: string[];
+  export const STYLE_SIZES: Record<string, [number, number]>;
+  export const STYLE_PROMPT: string;
+  export function fixInk(bg: string, fg: string): string;
+  export function contrastRatio(a: string, b: string): number;
+  export function validateStyle(raw: unknown): { style: AiStyle; fixes: string[] };
+  export function validateTexts(raw: unknown, ctx?: { kind?: string; liveStats?: { label: string; value: string }[]; facts?: string }): { texts: AiTexts; fixes: string[]; flagged: string[] };
+  export function validateCard(raw: unknown, ctx?: { kind?: string; liveStats?: { label: string; value: string }[]; facts?: string }): { style: AiStyle; texts: AiTexts; fixes: string[]; flagged: string[] };
+  export type SocialPlatform = 'x' | 'instagram' | 'tiktok' | 'youtube' | 'facebook' | 'linkedin' | 'threads' | 'bluesky' | 'discord';
+  export const SOCIAL_PLATFORMS: SocialPlatform[];
+  export const SOCIAL_LIMITS: Record<SocialPlatform, { bio: number; name: number; handle: number }>;
+  export interface SocialResult { bios: Partial<Record<SocialPlatform, string>>; names: string[]; handles: string[]; pinned: string; links: { label: string; path: string }[]; tagline: string; style: AiStyle; fixes: string[] }
+  export function validateSocial(raw: unknown, platforms?: string[]): SocialResult;
   export const COMPOSE_KINDS: ComposeKind[];
   export const TWEET_MAX: number;
   export function parseComposeJson(text: string): Record<string, unknown> | null;
   export function cleanTweet(t: unknown): string;
-  export function validateCompose(raw: unknown, designs?: { id: string; kinds?: string[] }[], opts?: { validId?: (kind: string, id: string) => boolean }): ComposeResult;
+  export function validateCompose(raw: unknown, designs?: { id: string; kinds?: string[] }[], opts?: { validId?: (kind: string, id: string) => boolean; post?: 'data' | 'message'; liveStats?: (kind: string, id: string) => { label: string; value: string }[] | undefined; facts?: string }): ComposeResult;
   export function designsForPrompt(designs: unknown[], max?: number): string;
   export type StudioMode = 'thread' | 'calendar' | 'reply' | 'hashtags' | 'variants' | 'hooks' | 'explain' | 'factcheck' | 'image-alt';
   export interface StudioSettings { voice: string; custom: string; audience: 'us' | 'au' | 'global'; emoji: 0 | 1 | 2; hashtags: 'none' | 'few' | 'many'; length: 'short' | 'medium' | 'long'; cta: 'none' | 'soft' | 'follow' | 'visit'; banned: string[]; link: boolean; lang: string; model: string; temperature: number }
@@ -79,4 +106,11 @@ declare module '*/shared/compose.js' {
   export function numbersIn(t: string): string[];
   export function unsupportedNumbers(text: string, facts: string): string[];
   export function validateStudio(mode: StudioMode, raw: unknown, ctx?: { n?: number; live?: string; draft?: string; context?: string }): Record<string, unknown> | null;
+}
+declare module '*/shared/social.js' {
+  export interface Rect { x: number; y: number; w: number; h: number; label: string }
+  export interface PackAsset { id: string; type: 'avatar' | 'banner' | 'highlight' | 'story' | 'post'; label: string; w: number; h: number; design: string; circle?: boolean; safe?: Rect[]; covers?: Rect[]; platform: string; file: string }
+  export const SOCIAL_PACK: Record<string, { name: string; assets: Omit<PackAsset, 'platform' | 'file'>[] }>;
+  export function packAssets(platforms: string[]): PackAsset[];
+  export function packReadme(platforms: string[], copy?: { bios?: Record<string, string>; names?: string[]; handles?: string[]; pinned?: string; links?: { label: string; path: string }[] }, limits?: Record<string, { bio: number }>): string;
 }

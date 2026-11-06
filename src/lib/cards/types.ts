@@ -1,4 +1,8 @@
-export type CardKind = 'race' | 'balance' | 'au-seat' | 'promo' | 'stat' | 'flip' | 'quote' | 'candidate' | 'custom';
+export type CardKind = 'race' | 'balance' | 'au-seat' | 'promo' | 'stat' | 'flip' | 'quote' | 'candidate' | 'custom'
+  | MessageKind | 'brand';
+/** Personal / brand-voice posts not tied to live data. */
+export type MessageKind = 'message' | 'announcement' | 'thanks' | 'milestone' | 'question' | 'statement';
+export const MESSAGE_KINDS: MessageKind[] = ['message', 'announcement', 'thanks', 'milestone', 'question', 'statement'];
 
 export interface CardDesign {
   id: string;
@@ -40,4 +44,10 @@ export interface CardData {
   table?: { head: string[]; rows: string[][] };
   /** who said it (quote designs) */
   quoteBy?: string;
+  /** poll companion options */
+  options?: string[];
+  /** reply/quote frame: the owner's own earlier post (or clearly labelled text) */
+  quoted?: { text: string; by?: string; label?: string };
+  /** display handle for X-style frames, e.g. @PolTok */
+  handle?: string;
 }

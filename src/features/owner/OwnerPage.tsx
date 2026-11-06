@@ -8,14 +8,17 @@ import { CardStudio } from './CardStudio';
 import { Health } from './Health';
 import { ContentTools } from './ContentTools';
 import { AiStudio } from './AiStudio';
+import { SocialPack } from './SocialPack';
+import { OPEN_EDITOR } from './editorBus';
 import './owner.css';
 
-type Tab = 'make' | 'ai' | 'x' | 'studio' | 'health' | 'content';
+type Tab = 'make' | 'ai' | 'x' | 'studio' | 'social' | 'health' | 'content';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'make', label: 'Make with AI' },
   { id: 'ai', label: 'AI Studio' },
   { id: 'x', label: 'X / Twitter kit' },
   { id: 'studio', label: 'Card studio' },
+  { id: 'social', label: 'Social pack' },
   { id: 'health', label: 'Site health' },
   { id: 'content', label: 'Content tools' },
 ];
@@ -34,6 +37,11 @@ export default function OwnerPage() {
       /* ignore */
     }
   }, [check]);
+  useEffect(() => {
+    const on = () => setTab('studio');
+    window.addEventListener(OPEN_EDITOR, on);
+    return () => window.removeEventListener(OPEN_EDITOR, on);
+  }, []);
   if (auth === 'checking') return <div className="ow-wrap"><p className="ow-muted">Checking session…</p></div>;
   if (auth === 'out')
     return (
@@ -57,6 +65,7 @@ export default function OwnerPage() {
         {tab === 'ai' && <AiStudio />}
         {tab === 'x' && <TweetKit />}
         {tab === 'studio' && <CardStudio />}
+        {tab === 'social' && <SocialPack />}
         {tab === 'health' && <Health />}
         {tab === 'content' && <ContentTools />}
       </div>

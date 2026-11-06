@@ -22,7 +22,7 @@ const ctaOr = (k: K) => k.d.cta?.trim() || `Follow live at ${k.url}`;
 
 /* 31 ─ Countdown clock */
 const countdown: Design = {
-  id: 'countdown', name: 'Countdown clock', kinds: ['promo', 'custom', 'stat'], size: SQ, isNew: true, fluid: true, drawsCta: true,
+  id: 'countdown', name: 'Countdown clock', kinds: ['promo', 'custom', 'stat', 'announcement', 'milestone', 'message'], size: SQ, isNew: true, fluid: true, drawsCta: true,
   draw(k) {
     const { ctx, W, H, d } = k;
     const u = U(k), P = 64 * u;
