@@ -311,6 +311,8 @@ export const MESSAGE_KINDS = ['message', 'announcement', 'thanks', 'milestone', 
 /** Must match FONT_CHOICES in src/lib/cards/style.ts. */
 export const STYLE_FONTS = ['Inter', 'Space Grotesk', 'Oswald', 'Roboto Condensed', 'Playfair Display', 'Source Serif 4', 'JetBrains Mono', 'IBM Plex Mono', 'Anton', 'Bebas Neue', 'DM Serif Display', 'Archivo Black', 'Fraunces', 'Barlow Condensed'];
 export const STYLE_TEXTURES = ['none', 'grain', 'halftone', 'grid', 'scanlines', 'paper'];
+/** Procedural backgrounds (src/lib/cards/bg.ts BG_TYPES). */
+export const STYLE_BACKGROUNDS = ['mesh', 'grain', 'leak', 'halftone', 'duotone', 'iso', 'topo', 'stripes', 'glass', 'extrude', 'aurora', 'paper'];
 export const STYLE_STICKERS = ['live', 'flip', 'breaking', 'called', 'custom'];
 export const STYLE_POS = ['tl', 'tr', 'bl', 'br', 'c'];
 /** Size presets (must match SIZE_PRESETS ids in style.ts). */
@@ -380,6 +382,17 @@ export function validateStyle(raw) {
   }
   if (o.cornerRadius != null) { const r = clampNum(o.cornerRadius, 0, 80); if (r != null) style.cornerRadius = Math.round(r); if (r !== Number(o.cornerRadius)) fixes.push('style.cornerRadius'); }
   if (o.texture != null) { if (STYLE_TEXTURES.includes(o.texture)) style.texture = o.texture; else fixes.push('style.texture'); }
+  if (o.background != null && typeof o.background === 'object') {
+    const b = o.background;
+    if (STYLE_BACKGROUNDS.includes(b.type)) {
+      const bg = { type: b.type, seed: Math.abs(Math.round(Number(b.seed) || 0)) % 100000 };
+      const cols = (Array.isArray(b.colors) ? b.colors : []).filter((c) => typeof c === 'string' && /^#[0-9a-f]{6}$/i.test(c)).slice(0, 4);
+      if (cols.length) bg.colors = cols;
+      const it = clampNum(b.intensity, 0, 1);
+      if (it != null) bg.intensity = it;
+      style.background = bg;
+    } else fixes.push('style.background');
+  }
   if (o.textureOpacity != null) { const t = clampNum(o.textureOpacity, 0.1, 1); if (t != null) style.textureOpacity = t; }
   const logo = o.logo && typeof o.logo === 'object' ? o.logo.position : o.logo;
   if (logo != null) { if (['design', 'off', 'tl', 'tr', 'bl', 'br'].includes(logo)) style.logo = logo; else fixes.push('style.logo'); }
@@ -409,7 +422,7 @@ export function validateStyle(raw) {
 }
 
 /** Compact allowed-values list for prompts (~650 chars). */
-export const STYLE_PROMPT = `style = {"palette":{"bg":"#rrggbb","fg":"#rrggbb","accent":"#rrggbb","dem":"#rrggbb","rep":"#rrggbb"},"fontDisplay":F,"fontBody":F,"cornerRadius":0-80,"texture":"${STYLE_TEXTURES.join('|')}","logo":"design|off|tl|tr|bl|br","watermark":"≤24 chars or empty","stickers":[{"type":"${STYLE_STICKERS.join('|')}","text":"≤20","position":"${STYLE_POS.join('|')}"}],"alignment":"design|left|center|right","size":"${Object.keys(STYLE_SIZES).join('|')}|WxH(${SIZE_MIN}-${SIZE_MAX})","border":{"width":0-40,"color":"#rrggbb"}}
+export const STYLE_PROMPT = `style = {"palette":{"bg":"#rrggbb","fg":"#rrggbb","accent":"#rrggbb","dem":"#rrggbb","rep":"#rrggbb"},"fontDisplay":F,"fontBody":F,"cornerRadius":0-80,"texture":"${STYLE_TEXTURES.join('|')}","logo":"design|off|tl|tr|bl|br","watermark":"≤24 chars or empty","stickers":[{"type":"${STYLE_STICKERS.join('|')}","text":"≤20","position":"${STYLE_POS.join('|')}"}],"alignment":"design|left|center|right","size":"${Object.keys(STYLE_SIZES).join('|')}|WxH(${SIZE_MIN}-${SIZE_MAX})","border":{"width":0-40,"color":"#rrggbb"},"background":{"type":"${STYLE_BACKGROUNDS.join('|')}","colors":[hex],"intensity":0-1}}
 F = ${STYLE_FONTS.join('|')}. fg must contrast ≥4.5:1 with bg. Omit keys you don't need.`;
 
 const isMsg = (kind) => MESSAGE_KINDS.includes(kind) || kind === 'brand';
