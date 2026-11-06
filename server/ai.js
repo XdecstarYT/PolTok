@@ -330,13 +330,18 @@ async function handleCompose(body, prompt, { env, fetchImpl, loaders }) {
       /* best effort */
     }
   }
+  // Social packs return many bios/assets: give them far more output room. Reasoning models
+  // also spend tokens thinking, so a too-small budget truncates the JSON.
+  const baseTok = task === 'social' ? 3500 : 1600;
+  const run = (temp, maxTok) =>
+    groqJson({ env, fetchImpl, temperature: temp, maxTok, build: (small) => buildComposeMessages({ prompt, designs, live: know.text, refs: know.refs, task, card, settings, platforms }, new Date(), small ? COMPOSE_SMALL : COMPOSE_BUDGET) });
   let res;
   try {
-    res = await groqJson({ env, fetchImpl, temperature, maxTok: 1200, build: (small) => buildComposeMessages({ prompt, designs, live: know.text, refs: know.refs, task, card, settings, platforms }, new Date(), small ? COMPOSE_SMALL : COMPOSE_BUDGET) });
+    res = await run(temperature, baseTok);
   } catch {
     return jsonRes(502, { error: 'AI provider unreachable', code: 'upstream' });
   }
-  const up = res.up;
+  let up = res.up;
   if (!up.ok) {
     if (up.status === 413) return jsonRes(413, { error: 'Prompt too large for the AI plan — try a shorter request.', code: 'too_large' });
     const status = up.status === 429 ? 429 : 502;
@@ -348,7 +353,16 @@ async function handleCompose(body, prompt, { env, fetchImpl, loaders }) {
   } catch {
     /* ignore */
   }
-  const parsed = composeMod.parseComposeJson(content);
+  let parsed = composeMod.parseComposeJson(content);
+  if (!parsed) {
+    // One automatic retry: steadier temperature and more output room.
+    try {
+      const again = await run(0.2, Math.min(6000, baseTok * 2));
+      if (again.up.ok) parsed = composeMod.parseComposeJson((await again.up.json())?.choices?.[0]?.message?.content ?? '');
+    } catch {
+      /* fall through */
+    }
+  }
   if (!parsed) return jsonRes(502, { error: 'The AI did not return valid JSON — try again.', code: 'bad_output' });
   let result;
   if (task === 'post' || task === 'message') result = composeMod.validateCompose(parsed, designs, { post: task === 'message' ? 'message' : 'data', facts: know.text });
