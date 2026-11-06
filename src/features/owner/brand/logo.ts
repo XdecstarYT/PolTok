@@ -93,7 +93,7 @@ export function wordShapes(st: LogoStyle): { shapes: Shape[]; w: number } {
   const jy = 70; // junction height on the stem
   const armX1 = Wk - s * 0.75;
   // separate shapes so overlaps never cancel (opposite windings)
-  for (const part of [diag(s * 0.5, jy + s * 0.4, armX1, xh), diag(s * 1.15, 60, Wk - s * 0.6, 100)]) shapes.push({ role: tokRole, d: translate(part, x, 0) });
+  for (const part of [diag(s * 0.62, jy + s * 0.25, armX1, xh), diag(s * 1.15, 60, Wk - s * 0.6, 100)]) shapes.push({ role: tokRole, d: translate(part, x, 0) });
   glyph(tokRole, rect(0, 0, s, 100), Wk);
   return { shapes, w: x - gap };
 }
