@@ -311,10 +311,10 @@ export function drawBackground(ctx: Ctx, W: number, H: number, spec: Background)
       g.addColorStop(0, mix(base, '#ffffff', dark ? 0.06 : 0)); g.addColorStop(1, mix(base, '#000000', 0.25));
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       const depth = S * (0.03 + I * 0.05);
-      const shapes = 5 + Math.round(I * 4);
+      const shapes = 4 + Math.round(I * 3);
       for (let i = 0; i < shapes; i++) {
         const c = C[1 + (i % (C.length - 1))];
-        const x = r() * W, y = r() * H, sz = S * (0.08 + r() * 0.18), kind = Math.floor(r() * 3), rot = r() * Math.PI;
+        const edge = r() < 0.5; const x = edge ? (r() < 0.5 ? r() * W * 0.18 : W - r() * W * 0.18) : r() * W, y = edge ? r() * H : (r() < 0.5 ? r() * H * 0.15 : H - r() * H * 0.15), sz = S * (0.06 + r() * 0.12), kind = Math.floor(r() * 3), rot = r() * Math.PI;
         const path = (ox: number, oy: number) => {
           ctx.beginPath();
           if (kind === 0) { ctx.arc(x + ox, y + oy, sz, 0, Math.PI * 2); ctx.arc(x + ox, y + oy, sz * 0.55, 0, Math.PI * 2, true); }
@@ -333,13 +333,13 @@ export function drawBackground(ctx: Ctx, W: number, H: number, spec: Background)
     }
     case 'paper': {
       const n = noise2(seed);
-      const s = 200, h2 = Math.round((s * H) / W);
+      const s = 360, h2 = Math.round((s * H) / W);
       const c = document.createElement('canvas'); c.width = s; c.height = h2;
       const x = c.getContext('2d')!;
       const im = x.createImageData(s, h2);
       const A = hexToRgb(base);
       for (let j = 0; j < h2; j++) for (let i = 0; i < s; i++) {
-        const t = (n(i / 12, j / 12, 4) - 0.5) * 30 * (0.4 + I);
+        const t = (n(i / 5, j / 5, 3) - 0.5) * 14 * (0.4 + I) + (n(i / 40, j / 40, 2) - 0.5) * 8 * I;
         const k = (j * s + i) * 4;
         im.data[k] = A[0] + t; im.data[k + 1] = A[1] + t; im.data[k + 2] = A[2] + t * 0.9; im.data[k + 3] = 255;
       }
