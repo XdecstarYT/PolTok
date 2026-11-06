@@ -1,0 +1,323 @@
+<!-- Excerpt of en.wikipedia.org/wiki/2023_New_Zealand_general_election (CC BY-SA 4.0), Results section -->
+== Results ==
+{{multiple image|direction=horizontal|width=280|
+image1=2023 New Zealand general election - List Results.svg|caption1=Map of the plurality party vote in each electorate|
+image2=2023 New Zealand general election - Left-Right Block Results.svg|caption2=Map of party vote by left/right bloc split
+}}
+{{Main|Results of the 2023 New Zealand general election}}
+Preliminary results were gradually released after polling booths closed at 7:00&nbsp;pm on 14 October. The Electoral Commission aimed to have 50% of votes counted by 10:00&nbsp;pm and 95% counted by 11:30&nbsp;pm. The preliminary count only included ordinary votes (approximately 2.2 million); it did not include the 603,257 [[special vote]]s,<ref>{{Cite web |title=Official results for the 2023 General Election |url=https://elections.nz/media-and-news/2023/official-results-for-the-2023-general-election/ |access-date=3 November 2023 |website=Elections |language=en-NZ}}</ref> which can take up to 10 days to be returned to their correct electorate and need to be approved before they are counted. The polling booth rolls will also be compiled into a master roll to ensure nobody has voted more than once. Official results, including special votes and a recount of the ordinary votes, were released by the Electoral Commission on 3 November 2023, 20 days after the election.<ref>{{Cite web |title=How are general election votes counted? |url=https://elections.nz/democracy-in-nz/about-elections/how-are-general-election-votes-counted/ |access-date=6 October 2023 |website=Elections |language=en-NZ |archive-date=13 September 2020 |archive-url=https://web.archive.org/web/20200913073112/https://elections.nz/democracy-in-nz/about-elections/how-are-general-election-votes-counted/ |url-status=live }}</ref>
+
+Compared to the preliminary results, the official results showed the National Party had dropped two seats, meaning that it no longer had a majority with ACT, and must obtain the support of NZ First in order to form a government. The Māori Party took two more electorate seats, one of which was won by a margin of four votes.<ref>{{Cite web |last=Beaumont |first=Adrian |date=3 November 2023 |title=National drops 2 seats on NZ final results, and will need NZ First to form government |url=http://theconversation.com/national-drops-2-seats-on-nz-final-results-and-will-need-nz-first-to-form-government-215995 |access-date=3 November 2023 |website=The Conversation}}</ref>
+
+===Detailed results===
+{{election table
+ | title=Summary of the 14 October 2023 election for the [[New Zealand House of Representatives|House of Representatives]]<ref>{{cite web |url= https://electionresults.govt.nz/electionresults_2023/statistics/overall-results-summary.html|title= 2023 General Election – Summary of Overall Results |website= ElectionResults.govt.nz |publisher= [[Electoral Commission (New Zealand)|Electoral Commission]] |date= 3 November 2023}}</ref>
+}}
+| colspan=12 align=center| [[File:2023 NZ House of Representatives.svg|300px]]
+|- style="text-align:center;"
+! colspan=2 rowspan=2 style="width:213px;" | Party
+! colspan=4 | Party vote
+! colspan=4 | Electorate vote sum
+! rowspan=2 | Total <br />seats
+! rowspan=2 | +/-
+|- style="text-align:center;"
+! Votes
+! Of total <br/>(%)
+! Change <br />([[Percentage points|pp]])
+! Seats
+! Votes
+! Of total <br/>(%)
+! Change <br />([[Percentage points|pp]])
+! Seats
+|-
+| {{party name with colour|New Zealand National Party}}
+| 1,085,851
+| 38.08
+| {{increase}}12.51
+| 5
+| 1,192,251
+| 43.47
+| {{increase}}9.34
+| 43
+| '''48'''
+| {{increase}} 16
+|-
+| {{party name with colour|New Zealand Labour Party}}
+| 767,540
+| 26.92
+| {{decrease}}23.09
+| 17
+| 855,963
+| 31.21
+| {{decrease}}16.86
+| 17
+| '''34'''
+| {{decrease}} 31
+|-
+| {{party name with colour|Green Party of Aotearoa New Zealand}}
+| 330,907
+| 11.61
+| {{increase}}3.75
+| 12
+| 226,575
+| 8.26
+| {{increase}}2.52
+| 3
+| '''15'''
+| {{increase}} 5
+|-
+| {{party name with colour|ACT New Zealand}}
+| 246,473
+| 8.64
+| {{increase}}1.06
+| 9
+| 149,507
+| 5.45
+| {{increase}}1.99
+| 2
+| '''11'''
+| {{increase}} 1
+|-
+| {{party name with colour|New Zealand First}}
+| 173,553
+| 6.09
+| {{increase}}3.49
+| 8
+| 76,676
+| 2.80
+| {{increase}}1.73
+| 0
+| '''8'''
+| {{increase}} 8
+|-
+| {{party name with colour|Te Pāti Māori}}
+| 87,844
+| 3.08
+| {{increase}}1.92
+| 0
+| 106,584
+| 3.89
+| {{increase}}1.73
+| 6
+| '''6'''
+| {{increase}} 4
+|-
+| {{party name with colour|The Opportunities Party}} (TOP)
+| 63,344
+| 2.22
+| {{increase}}0.72
+| 0
+| 27,975
+| 1.02
+| {{increase}}0.13
+| 0
+| 0
+| {{steady}}
+|-
+| {{party name with colour|New Zealand Loyal}} 
+| 34,478
+| 1.21
+| ''new'' 
+| 0
+| 32,240
+| 1.18
+| ''new''
+| 0
+| 0
+| ''new''
+|-
+| {{party name with colour|NewZeal}}{{efn|Formerly known as ONE Party.}}
+| 16,126
+| 0.57
+| {{increase}}0.29
+| 0
+| 3,585
+| 0.13
+| {{decrease}}0.11
+| 0
+| 0
+| {{steady}}
+|-
+| {{party name with colour|Aotearoa Legalise Cannabis Party}}
+| 13,025
+| 0.46
+| {{increase}}0.01
+| 0
+| 12,566
+| 0.46
+| {{increase}}0.17
+| 0
+| 0
+| {{steady}}
+|-
+| {{party name with colour|Freedoms New Zealand}}
+| 9,586
+| 0.34
+| {{increase}}0.09
+| 0
+| 
+| 
+| 
+| 0
+| 0
+| {{steady}}
+|-
+| {{party name with colour|DemocracyNZ}}
+| 6,786
+| 0.24
+| ''new'' 
+| 0
+| 12,060
+| 0.44
+| ''new''
+| 0
+| 0
+| ''new''
+|-
+| {{party name with colour|Animal Justice Party Aotearoa New Zealand}}
+| 5,018
+| 0.18
+| ''new'' 
+| 0
+| 5,829
+| 0.21
+| ''new''
+| 0
+| 0
+| ''new''
+|-
+| {{party name with colour|New Conservative Party (New Zealand)}}
+| 4,532
+| 0.16
+| {{decrease}}1.31
+| 0
+| 3,167
+| 0.12
+| {{decrease}}1.64
+| 0
+| 0
+| {{steady}}
+|-
+| {{party name with colour|Women's Rights Party}} 
+| 2,513
+| 0.09
+| ''new'' 
+| 0
+| 0
+| 0.00
+| ''new''
+| 0
+| 0
+| ''new'' 
+|-
+| {{party name with colour|Leighton Baker Party}} 
+| 2,105
+| 0.07
+| ''new'' 
+| 0
+| 2,623
+| 0.10
+| ''new''
+| 0
+| 0
+| ''new''
+|-
+| {{party name with colour|New Nation Party}}
+| 1,530
+| 0.05
+| ''new'' 
+| 0
+| 433
+| 0.02
+| ''new''
+| 0
+| 0
+| ''new''
+|-
+| style="background-color:#ffffff" |
+| style="text-align:left;" | Unregistered parties
+| 
+| 
+| 
+| 
+| 
+|  
+|  
+|  
+|
+|
+|-
+| {{party name with colour|Independent (politician)}}
+| 
+| 
+| 
+| 
+| 34,277
+| 1.25
+| {{increase}}0.87
+|  
+|  
+|  
+|-
+! colspan=2 style="text-align:left;" | Valid votes
+! 2,851,211
+!
+!
+! 
+! 2,742,677
+!
+!
+! colspan=3 |
+|-
+| colspan=2 style="text-align:left;" | [[Spoilt vote|Informal votes]]
+| 16,267
+|
+|
+!
+| 40,353
+|
+|
+| colspan=3 |
+|-
+| colspan=2 style="text-align:left;" | Disallowed votes<ref>{{cite web |url= https://electionresults.govt.nz/electionresults_2023/statistics/party-votes-and-turnout-by-electorate.html |title= Party Votes and Turnout by Electorate |publisher=Electoral Commission}}</ref>
+| 16,633
+| 
+| 
+!
+| 59,043
+| 
+| 
+| colspan=3 |
+|-
+| colspan=2 style="text-align:left;" | Below [[electoral threshold]]
+| 
+| 
+| 
+!
+| 
+| 
+| 
+| colspan=3 |
+|-
+! colspan=2 style="text-align:left;" | Total
+! 2,884,111
+! 100.00
+!
+! 51
+! 2,842,073
+! 100.00
+! 
+! 71
+! 122
+!
+|-
+| colspan=2 style="text-align:left;" | Eligible voters and [[voter turnout|turnout]]
+| 3,688,292
+| 78.20
+| {{decrease}}4.04
+!
+| 3,688,292
+| 77.06
+| {{decrease}}5.18
+| colspan=3 |
+|}

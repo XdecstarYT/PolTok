@@ -102,10 +102,22 @@ export default function CountryPage() {
               <div className="cp-card" key={i}>
                 <div className="cp-card__k">{i === 0 ? 'Head of government' : 'Head of state'}</div>
                 <div className="cp-card__office">{h.office}</div>
+                {h.check === 'disagree' && (
+                  <div className="cp-card__flag" title={h.note}>
+                    Unverified — sources disagree
+                  </div>
+                )}
                 {h.people.length ? (
                   h.people.map((x) => (
-                    <a key={x.qid} className="cp-card__name" href={`https://www.wikidata.org/wiki/${x.qid}`} target="_blank" rel="noreferrer">
+                    <a
+                      key={x.qid || x.name}
+                      className="cp-card__name"
+                      href={x.qid ? `https://www.wikidata.org/wiki/${x.qid}` : x.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       {x.name}
+                      {h.check === 'disagree' && <span className="wd-muted"> ({x.source === 'wikipedia' ? 'per Wikipedia infobox' : 'per Wikidata'})</span>}
                     </a>
                   ))
                 ) : (

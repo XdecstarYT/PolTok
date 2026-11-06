@@ -83,7 +83,7 @@ export function incumbentElectorates(): Record<string, number> {
 /* --------------------------------------------- live data --------------------------------------------- */
 export interface LiveParty { party: string; name?: string; votes: number; pct: number; electorateSeats: number; listSeats: number; totalSeats: number }
 export interface LiveElectorate { id: string; name: string; type: 'general' | 'maori'; leader: string | null; leadingParty: string | null; second?: string | null; secondParty?: string | null; margin: number; countedPct: number | null; candidates: { name: string; party: string; votes: number }[] }
-export interface NzResults { status: 'pre' | 'counting' | 'final'; updatedAt: number; votesCountedPct: number | null; party: LiveParty[]; electorates: LiveElectorate[]; source: string; error?: string; heading?: string }
+export interface NzResults { status: 'pre' | 'counting' | 'final'; updatedAt: number; votesCountedPct: number | null; party: LiveParty[]; electorates: LiveElectorate[]; source: string; error?: string; heading?: string; sourceKind?: 'ec' | 'wikipedia' | 'none'; sourceLabel?: string }
 export interface NzDetail { status: string; updatedAt: number; source: string; error?: string; electorate: null | { name: string; countedPct: number | null; votesCounted: number | null; leader: string | null; leadingParty: string | null; margin: number | null; candidates: { name: string; party: string; partyName: string; votes: number }[]; partyVotes: { party: string; name: string; votes: number }[] } }
 
 const NZ_POLLS_CLOSE_ISO = '2026-11-07T06:00:00Z';
@@ -96,14 +96,14 @@ export function useNzResults(intervalMs = 60_000) {
     // If our server is blocked by the Electoral Commission's CDN after polls close, try the
     // official pages straight from the visitor's browser (works only if their site allows it).
     const direct = async (d: NzResults): Promise<NzResults> => {
-      if (d.status !== 'pre' || !/403/.test(d.error || '') || Date.now() < Date.parse(NZ_POLLS_CLOSE_ISO)) return d;
+      if ((d.status !== 'pre' && d.sourceKind !== 'wikipedia') || !/403/.test(d.error || '') || Date.now() < Date.parse(NZ_POLLS_CLOSE_ISO)) return d;
       try {
-        const base = d.source || 'https://www.electionresults.govt.nz/electionresults_2026/';
+        const base = d.sourceKind === 'wikipedia' || !d.source ? 'https://www.electionresults.govt.nz/electionresults_2026/' : d.source;
         const get = (u: string) => fetch(u, { mode: 'cors', signal: AbortSignal.timeout(8000) }).then((r) => (r.ok ? r.text() : Promise.reject()));
         const [idx, sts] = await Promise.all([get(base + 'index.html'), get(base + 'electorate-status.html').catch(() => '')]);
         const { combineNzResults } = await import('../../../shared/nz-parse.js');
         const r = combineNzResults(idx, sts, base, NZ_POLLS_CLOSE_ISO) as NzResults | null;
-        return r ? { ...r, heading: `${r.heading ?? ''} (loaded directly from the Electoral Commission)` } : d;
+        return r ? { ...r, sourceKind: 'ec' as const, error: undefined, heading: `${r.heading ?? ''} (loaded directly from the Electoral Commission)` } : d;
       } catch {
         return d; // CORS or network refusal — keep the honest 'pre' state with the official link
       }

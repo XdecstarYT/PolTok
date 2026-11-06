@@ -172,3 +172,43 @@ export function combineNzResults(idxHtml, statusHtml, base, pollsClose) {
     pollsClose,
   };
 }
+
+/* ------------------------------------------------ Wikipedia backup ------------------------------------------------ */
+// Backup ONLY (community-edited, unofficial): the English Wikipedia election article's "Results"
+// wikitext table, as used for 2023 ({{election table}} / wikitable rows that start with
+// {{party name with colour|…}}; columns: party votes, %, ±, list seats, electorate votes, %, ±,
+// electorate seats, '''total''', ±). Returns null unless at least one party has votes.
+const wtCell = (c) =>
+  String(c || '')
+    .replace(/<ref[^>]*\/>|<ref[\s\S]*?<\/ref>/gi, '')
+    .replace(/\{\{(?:increase|decrease|steady|nochange)\}\}/gi, '')
+    .replace(/'''?/g, '')
+    .replace(/^[^|[{]*\|(?![|])/, (m) => (/=/.test(m) ? '' : m)) // drop "style=…|" attribute prefix
+    .trim();
+export function parseWikipediaResults(wikitext) {
+  const t = String(wikitext || '');
+  const at = t.search(/^==\s*Results\s*==/m);
+  if (at < 0) return null;
+  const next = t.slice(at + 5).search(/^==[^=]/m);
+  const sec = next < 0 ? t.slice(at) : t.slice(at, at + 5 + next);
+  const party = [];
+  for (const row of sec.split(/\n\|-[^\n]*/)) {
+    const m = row.match(/\{\{\s*party name with colou?r\s*\|\s*([^}|]+)/i);
+    if (!m) continue;
+    const name = m[1].trim();
+    const cells = row
+      .slice(row.indexOf(m[0]) + m[0].length)
+      .replace(/^[^\n]*/, '')
+      .split(/\n\||\|\|/)
+      .map(wtCell)
+      .slice(1);
+    const n = cells.map((c) => num(c.replace(/^\s*[+−–-]?\s*$/, '')));
+    const votes = n[0], pct = n[1];
+    if (!votes) continue;
+    const list = n[3] || 0, elec = n[7] || 0, total = n[8] || elec + list;
+    party.push({ party: partyCode(name.replace(/^New Zealand (?=National|Labour)/, '')), name, votes, pct, electorateSeats: elec, listSeats: list, totalSeats: total });
+  }
+  if (!party.length || party.every((p) => !p.votes)) return null;
+  party.sort((a, b) => b.votes - a.votes);
+  return { party };
+}

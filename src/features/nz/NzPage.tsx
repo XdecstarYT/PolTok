@@ -138,6 +138,14 @@ function StatusBar({ data, err }: { data: NzResults | null; err: string | null }
         <b>No results yet.</b> Preliminary results stream from 7:00pm NZDT as voting places report (EC targets 50% by 10pm, 95% by 11:30pm; special votes counted later, official result 27 Nov). Checked {fmtTime(data.updatedAt)} · <a href={data.source} target="_blank" rel="noreferrer">source</a>
       </div>
     );
+  if (data.sourceKind === 'wikipedia')
+    return (
+      <div className="nz-status nz-status--warn">
+        <b>UNOFFICIAL — community-edited Wikipedia figures.</b> The Electoral Commission results site is blocking our server, so these numbers come from{' '}
+        <a href={data.source} target="_blank" rel="noreferrer">Wikipedia</a> and may be wrong or out of date. Always check{' '}
+        <a href={EC_RESULTS_URL} target="_blank" rel="noreferrer">electionresults.govt.nz</a> · updated {fmtTime(data.updatedAt)}
+      </div>
+    );
   return (
     <div className={`nz-status nz-status--live`}>
       <span className="pulse" aria-hidden="true" /> <b>{data.status === 'final' ? 'OFFICIAL RESULT' : 'PRELIMINARY COUNT'}</b>

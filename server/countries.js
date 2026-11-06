@@ -60,9 +60,14 @@ const BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c]));
 
 /* ------------------------------ fetch & cache ------------------------------ */
 const cache = new Map();
-async function cached(key, ttl, fn) {
+const inflight = new Map();
+function cached(key, ttl, fn) {
   const hit = cache.get(key);
-  if (hit && Date.now() - hit.at < ttl) return hit.value;
+  if (hit && Date.now() - hit.at < ttl) return Promise.resolve(hit.value);
+  if (!inflight.has(key)) inflight.set(key, cachedRun(key, hit, fn).finally(() => inflight.delete(key)));
+  return inflight.get(key);
+}
+async function cachedRun(key, hit, fn) {
   try {
     const value = await fn();
     cache.set(key, { at: Date.now(), value });
@@ -86,16 +91,36 @@ async function getJson(url, timeout = 15000) {
 const wikiUrl = (t) => `https://en.wikipedia.org/wiki/${encodeURIComponent(t.replace(/ /g, '_'))}`;
 const qid = (u) => (u ? String(u).replace('http://www.wikidata.org/entity/', '') : undefined);
 const lit = (s) => `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"@en`;
-const sparql = (q) => getJson(`https://query.wikidata.org/sparql?format=json&query=${encodeURIComponent(q)}`, 25000).then((j) => j.results.bindings);
+const sparql = (q) => getJson(`https://query.wikidata.org/sparql?format=json&query=${encodeURIComponent(q)}`, 55000).then((j) => j.results.bindings);
 
-/** One SPARQL for all countries: heads of government/state, their offices, chamber QID + seat total. */
+/** Pick current office-holders from full P6/P35 statements: drop any with a P582 end time, drop
+ *  deprecated rank, prefer preferred rank, then keep only the latest P580 start (ties all kept). */
+export function pickCurrent(stmts) {
+  const live = stmts.filter((s) => !s.end && s.rank !== 'deprecated');
+  if (!live.length) return [];
+  const pref = live.filter((s) => s.rank === 'preferred');
+  const pool = pref.length ? pref : live;
+  const latest = Math.max(...pool.map((s) => (s.start ? Date.parse(s.start) : -Infinity)));
+  const out = [];
+  for (const s of pool.filter((x) => (x.start ? Date.parse(x.start) : -Infinity) === latest))
+    if (!out.some((o) => o.qid === s.qid)) out.push({ qid: s.qid, name: s.name, article: s.article, start: s.start });
+  return out;
+}
+
+/** One SPARQL for all countries: P6/P35 statements (with rank + P580/P582 qualifiers), offices
+ *  (P1313/P1906) with their enwiki titles, chamber QID + seat total. */
 async function wikidataAll() {
   return cached('wd:all', TTL, async () => {
-    const q = `SELECT ?t ?c ?hog ?hogLabel ?hos ?hosLabel ?hogPosLabel ?hosPosLabel ?ct ?ch ?total WHERE {
+    const q = `SELECT ?t ?c ?role ?p ?pLabel ?rank ?start ?end ?pArt ?hogPosLabel ?hosPosLabel ?hogPosArt ?hosPosArt ?ct ?ch ?total WHERE {
   { VALUES ?t { ${COUNTRIES.map((c) => lit(c.wiki)).join(' ')} }
     ?a schema:about ?c ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?t .
-    OPTIONAL { ?c wdt:P6 ?hog } OPTIONAL { ?c wdt:P35 ?hos }
-    OPTIONAL { ?c wdt:P1313 ?hogPos } OPTIONAL { ?c wdt:P1906 ?hosPos } }
+    { VALUES (?role ?prop ?ps) { ("hog" p:P6 ps:P6) ("hos" p:P35 ps:P35) }
+      ?c ?prop ?st . ?st ?ps ?p ; wikibase:rank ?rank .
+      OPTIONAL { ?st pq:P580 ?start } OPTIONAL { ?st pq:P582 ?end }
+      OPTIONAL { ?pa schema:about ?p ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?pArt } }
+    UNION
+    { OPTIONAL { ?c wdt:P1313 ?hogPos . OPTIONAL { ?ha schema:about ?hogPos ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?hogPosArt } }
+      OPTIONAL { ?c wdt:P1906 ?hosPos . OPTIONAL { ?sa schema:about ?hosPos ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?hosPosArt } } } }
   UNION
   { VALUES ?ct { ${COUNTRIES.map((c) => lit(c.chamber)).join(' ')} }
     ?b schema:about ?ch ; schema:isPartOf <https://en.wikipedia.org/> ; schema:name ?ct .
@@ -105,15 +130,17 @@ async function wikidataAll() {
     const rows = await sparql(q);
     const byWiki = new Map();
     const chambers = new Map();
-    const add = (arr, v) => v && !arr.some((x) => x.qid === v.qid) && arr.push(v);
+    const RANK = { PreferredRank: 'preferred', NormalRank: 'normal', DeprecatedRank: 'deprecated' };
     for (const r of rows) {
       if (r.t) {
         const k = r.t.value;
-        const o = byWiki.get(k) || { qid: qid(r.c?.value), hog: [], hos: [], hogOffice: r.hogPosLabel?.value, hosOffice: r.hosPosLabel?.value };
-        if (r.hog) add(o.hog, { qid: qid(r.hog.value), name: r.hogLabel?.value });
-        if (r.hos) add(o.hos, { qid: qid(r.hos.value), name: r.hosLabel?.value });
+        const o = byWiki.get(k) || { qid: qid(r.c?.value), st: { hog: [], hos: [] } };
         o.hogOffice ||= r.hogPosLabel?.value;
         o.hosOffice ||= r.hosPosLabel?.value;
+        o.hogOfficeArticle ||= r.hogPosArt?.value;
+        o.hosOfficeArticle ||= r.hosPosArt?.value;
+        if (r.role && r.p)
+          o.st[r.role.value].push({ qid: qid(r.p.value), name: r.pLabel?.value, article: r.pArt?.value, rank: RANK[r.rank?.value.split('#')[1]] || 'normal', start: r.start?.value, end: r.end?.value });
         byWiki.set(k, o);
       } else if (r.ct) {
         const k = r.ct.value;
@@ -122,7 +149,12 @@ async function wikidataAll() {
         chambers.set(k, o);
       }
     }
-    // Fill labels the SPARQL label service left as bare QIDs (happens when one item binds twice).
+    for (const o of byWiki.values()) {
+      o.hog = pickCurrent(o.st.hog);
+      o.hos = pickCurrent(o.st.hos);
+      delete o.st;
+    }
+    // Fill labels the SPARQL label service left as bare QIDs.
     const missing = [...new Set([...byWiki.values()].flatMap((o) => [...o.hog, ...o.hos]).filter((p) => !p.name || /^Q\d+$/.test(p.name)).map((p) => p.qid))];
     if (missing.length) {
       try {
@@ -132,6 +164,63 @@ async function wikidataAll() {
     }
     return { byWiki: Object.fromEntries(byWiki), chambers: Object.fromEntries(chambers), fetchedAt: Date.now() };
   });
+}
+
+/* ------------------------------ office infobox cross-check ------------------------------ */
+/** Incumbent(s) from an office article's wikitext infobox: `| incumbent = [[Name]]`. */
+export function parseIncumbent(wikitext) {
+  const m = String(wikitext || '').match(/\|\s*incumbent\s*=\s*([^\n]*)/i);
+  if (!m) return [];
+  const links = [...m[1].matchAll(/\[\[([^\]|#]+)(?:\|[^\]]*)?\]\]/g)].map((x) => x[1].trim().replace(/_/g, ' '));
+  return [...new Set(links)].filter((t) => !/^(File|Image):/i.test(t));
+}
+
+/** Fetch with polite backoff on 429/503 (honours Retry-After, max ~3 tries). */
+async function getTextBackoff(url, tries = 3) {
+  for (let i = 0; ; i++) {
+    const r = await fetch(url, { signal: AbortSignal.timeout(12000), headers: { 'user-agent': UA, 'api-user-agent': UA } });
+    if (r.ok) return r.text();
+    if ((r.status === 429 || r.status === 503) && i < tries - 1) {
+      const ra = Number(r.headers.get('retry-after'));
+      await new Promise((res) => setTimeout(res, Math.min(15, Number.isFinite(ra) && ra > 0 ? ra : 2 ** (i + 1)) * 1000));
+      continue;
+    }
+    throw new Error(`HTTP ${r.status}`);
+  }
+}
+
+/** Office article -> incumbent article titles (via index.php?action=raw, redirects resolved by title lookup). */
+async function officeIncumbents(article) {
+  return cached(`inc:${article}`, TTL, async () => {
+    const txt = await getTextBackoff(`https://en.wikipedia.org/w/index.php?title=${encodeURIComponent(article.replace(/ /g, '_'))}&action=raw`);
+    const redirect = txt.match(/^#REDIRECT\s*\[\[([^\]|#]+)/i);
+    if (redirect) return { titles: parseIncumbent(await getTextBackoff(`https://en.wikipedia.org/w/index.php?title=${encodeURIComponent(redirect[1].replace(/ /g, '_'))}&action=raw`)), article: redirect[1] };
+    return { titles: parseIncumbent(txt), article };
+  });
+}
+
+/** Compare Wikidata current holders with the office's Wikipedia infobox. */
+async function crossCheck(people, officeArticle) {
+  if (!officeArticle) return { people, check: 'unchecked', note: 'No English Wikipedia article for this office on Wikidata.' };
+  let inc;
+  try {
+    inc = await officeIncumbents(officeArticle);
+  } catch (e) {
+    return { people, check: 'unchecked', note: `Wikipedia infobox of ${officeArticle} unavailable (${e.message}).` };
+  }
+  const norm = (t) => String(t || '').toLowerCase().replace(/_/g, ' ').replace(/\s*\(.*?\)\s*/g, ' ').trim();
+  if (!inc.titles.length) return { people, check: 'unchecked', note: `No incumbent field in the ${officeArticle} infobox.` };
+  const wdSet = new Set(people.flatMap((p) => [norm(p.article), norm(p.name)]));
+  const agree = inc.titles.some((t) => wdSet.has(norm(t)));
+  if (agree && people.length) return { people, check: 'agree', infobox: inc.titles, officeUrl: wikiUrl(inc.article) };
+  const extra = inc.titles.filter((t) => !wdSet.has(norm(t))).map((t) => ({ name: t, source: 'wikipedia', url: wikiUrl(t) }));
+  return {
+    people: [...people.map((p) => ({ ...p, source: 'wikidata' })), ...extra],
+    check: 'disagree',
+    infobox: inc.titles,
+    officeUrl: wikiUrl(inc.article),
+    note: `Unverified — sources disagree: Wikidata says ${people.map((p) => p.name).join(', ') || 'nobody'}, Wikipedia's ${inc.article} infobox says ${inc.titles.join(', ')}.`,
+  };
 }
 
 /* ------------------------------ infobox composition ------------------------------ */
@@ -232,6 +321,8 @@ export async function countryProfile(code) {
   const w = wd.status === 'fulfilled' ? wd.value : null;
   if (!w) notes.push(`Wikidata query failed (${String(wd.reason?.message || wd.reason).slice(0, 80)}).`);
   const info = w?.byWiki[c.wiki];
+  const [hogX, hosX] = info ? await Promise.all([crossCheck(info.hog, info.hogOfficeArticle), crossCheck(info.hos, info.hosOfficeArticle)]) : [null, null];
+  for (const x of [hogX, hosX]) if (x?.check === 'disagree' && x.note) notes.push(x.note);
   const ch = w?.chambers[c.chamber];
   const total = ch?.totals.length ? Math.max(...ch.totals) : null;
   let parties = comp.status === 'fulfilled' ? comp.value.parties : [];
@@ -243,13 +334,14 @@ export async function countryProfile(code) {
     notes.push(`Parsed party seats sum to ${sum}, Wikidata lists ${total} seats — composition may be incomplete or include vacancies; verify on Wikipedia.`);
   }
   if (parties.length && !total) uncertain = true;
-  if (info && (info.hog.length > 1 || info.hos.length > 1)) notes.push('Wikidata lists more than one current office-holder; showing all.');
+  if (info && (info.hog.length > 1 || info.hos.length > 1)) notes.push('Wikidata lists more than one current office-holder (same latest start date); showing all.');
+  const office = (x, label, art, fallback) => ({ office: label || fallback, people: x.people, check: x.check, verified: x.check === 'agree', note: x.note, officeUrl: x.officeUrl || (art ? wikiUrl(art) : undefined) });
   return {
     code: c.code,
     name: c.name,
     qid: info?.qid,
-    headOfGovernment: info ? { office: info.hogOffice || 'Head of government', people: info.hog } : null,
-    headOfState: info ? { office: info.hosOffice || 'Head of state', people: info.hos } : null,
+    headOfGovernment: info ? office(hogX, info.hogOffice, info.hogOfficeArticle, 'Head of government') : null,
+    headOfState: info ? office(hosX, info.hosOffice, info.hosOfficeArticle, 'Head of state') : null,
     legislature: {
       chamber: c.chamber,
       qid: ch?.qid,
@@ -262,6 +354,7 @@ export async function countryProfile(code) {
     markets: pm.status === 'fulfilled' ? pm.value : [],
     marketsOk: pm.status === 'fulfilled',
     sources: [
+      ...(info?.hogOfficeArticle ? [{ name: `Wikipedia (CC BY-SA) — ${info.hogOfficeArticle} infobox (cross-check)`, url: wikiUrl(info.hogOfficeArticle) }] : []),
       { name: 'Wikidata (CC0) — office holders & seat totals', url: info?.qid ? `https://www.wikidata.org/wiki/${info.qid}` : 'https://query.wikidata.org/' },
       { name: `Wikipedia (CC BY-SA) — ${c.chamber} infobox`, url: wikiUrl(c.chamber) },
       { name: 'Polymarket gamma API', url: `https://polymarket.com/search?q=${encodeURIComponent(c.name)}` },

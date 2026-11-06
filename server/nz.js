@@ -18,8 +18,49 @@ export const NZ_POLLS_CLOSE = '2026-11-07T06:00:00Z'; // 7:00pm NZDT, Sat 7 Nov 
 const UA = 'PolTok/1.0 (+https://poltok.netlify.app)';
 const TTL = 60_000;
 
-import { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage, combineNzResults, MAORI, ent, num } from '../shared/nz-parse.js';
-export { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage };
+import { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage, parseWikipediaResults, combineNzResults, MAORI, ent, num } from '../shared/nz-parse.js';
+export { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage, parseWikipediaResults };
+
+// Backup source, used ONLY when the Electoral Commission site cannot be fetched (it sits behind a
+// Cloudflare bot challenge that returns 403 to server-side fetches). Checked 6 Nov 2026: elections.nz
+// (Incapsula) and catalogue.data.govt.nz (bot interstitial) are also blocked; no EC JSON/CSV feed exists
+// on another reachable host; RNZ/Stuff/Herald/1News 2023 results pages are gone (404/410) and exposed no
+// public JSON feed. Wikipedia's raw wikitext endpoint is reachable and is labelled community-edited/unofficial.
+// Priority: official EC pages > Wikipedia (unofficial) > 'pre' with no numbers.
+export const NZ_WIKI_TITLE = '2026_New_Zealand_general_election';
+const WIKI_RAW = `https://en.wikipedia.org/w/index.php?title=${NZ_WIKI_TITLE}&action=raw`;
+const WIKI_PAGE = `https://en.wikipedia.org/wiki/${NZ_WIKI_TITLE}`;
+async function getWikiRaw(fetchImpl = fetch) {
+  for (let i = 0; ; i++) {
+    const r = await fetchImpl(WIKI_RAW, { headers: { 'user-agent': UA, 'api-user-agent': UA }, signal: AbortSignal.timeout(8000) });
+    if (r.ok) return r.text();
+    if (r.status === 429 && i < 2) {
+      const ra = Number(r.headers.get('retry-after'));
+      await new Promise((res) => setTimeout(res, Math.min(10, ra > 0 ? ra : 2 ** (i + 1)) * 1000));
+      continue;
+    }
+    throw new Error(`HTTP ${r.status} from en.wikipedia.org`);
+  }
+}
+/** Wikipedia fallback -> results object labelled unofficial, or null. Never before polls close. */
+export async function fetchWikipediaResults({ fetchImpl = fetch, now = Date.now() } = {}) {
+  if (now < Date.parse(NZ_POLLS_CLOSE)) return null;
+  const w = parseWikipediaResults(await getWikiRaw(fetchImpl));
+  if (!w) return null;
+  return {
+    status: 'counting', // a community edit cannot confirm preliminary vs official
+    heading: 'Unofficial — community-edited (Wikipedia)',
+    updatedAt: Date.now(),
+    votesCountedPct: null,
+    totalVotes: w.party.reduce((a, x) => a + x.votes, 0),
+    party: w.party,
+    electorates: [],
+    source: WIKI_PAGE,
+    sourceKind: 'wikipedia',
+    sourceLabel: 'Wikipedia — community-edited, unofficial',
+    pollsClose: NZ_POLLS_CLOSE,
+  };
+}
 
 /* ------------------------------------------------ fetcher ------------------------------------------------ */
 async function getText(url, fetchImpl = fetch) {
@@ -35,20 +76,26 @@ const pre = (error) => ({
   party: [],
   electorates: [],
   source: NZ_RESULTS_BASE,
+  sourceKind: 'none',
   pollsClose: NZ_POLLS_CLOSE,
   error,
 });
 
 /** Fetch + combine index.html and electorate-status.html. */
-export async function fetchNzResults({ base = NZ_RESULTS_BASE, fetchImpl = fetch } = {}) {
+export async function fetchNzResults({ base = NZ_RESULTS_BASE, fetchImpl = fetch, now = Date.now() } = {}) {
   let idx, sts;
   try {
     [idx, sts] = await Promise.all([getText(base + 'index.html', fetchImpl), getText(base + 'electorate-status.html', fetchImpl).catch(() => '')]);
   } catch (e) {
-    return pre(`No results published yet (${e.message}). Results stream from 7:00pm NZDT.`);
+    const ecErr = e.message;
+    try {
+      const w = await fetchWikipediaResults({ fetchImpl, now });
+      if (w) return { ...w, error: `Electoral Commission unreachable (${ecErr}); showing unofficial Wikipedia figures.` };
+    } catch {}
+    return pre(`No results published yet (${ecErr}). Results stream from 7:00pm NZDT.`);
   }
   const r = combineNzResults(idx, sts, base, NZ_POLLS_CLOSE);
-  return r || pre('Results page reachable but no votes reported yet.');
+  return r ? { ...r, sourceKind: 'ec', sourceLabel: 'Electoral Commission (official)' } : pre('Results page reachable but no votes reported yet.');
 }
 
 let resCache = null, resAt = 0, resInflight = null;
@@ -160,7 +207,8 @@ export async function nzLoader() {
   const lines = [];
   if (!r || r.status === 'pre') lines.push(`NZ 2026 general election (Sat 7 Nov 2026; polls close 7:00pm NZDT = 06:00 UTC). No results published yet by the Electoral Commission (${NZ_RESULTS_BASE}).`);
   else {
-    lines.push(`NZ 2026 election — Electoral Commission ${r.status === 'final' ? 'official' : 'preliminary'} results${r.votesCountedPct != null ? `, ${r.votesCountedPct}% counted` : ''} (source ${r.source}):`);
+    if (r.sourceKind === 'wikipedia') lines.push('WARNING: Electoral Commission site unreachable; figures below are UNOFFICIAL community-edited Wikipedia numbers.');
+    lines.push(`NZ 2026 election — ${r.sourceKind === 'wikipedia' ? 'Wikipedia (unofficial, community-edited)' : 'Electoral Commission'} ${r.status === 'final' ? 'official' : 'preliminary'} results${r.votesCountedPct != null ? `, ${r.votesCountedPct}% counted` : ''} (source ${r.source}):`);
     for (const p of r.party.filter((x) => x.pct >= 0.5).slice(0, 9)) lines.push(`- ${p.name}: ${p.pct}% party vote, ${p.totalSeats} seats (${p.electorateSeats} electorate + ${p.listSeats} list)`);
     const close = r.electorates.filter((e) => e.margin > 0).sort((a, b) => a.margin - b.margin).slice(0, 6);
     if (close.length) lines.push(`Closest electorates: ${close.map((e) => `${e.name} (${e.leader}, ${e.leadingParty}, by ${e.margin})`).join('; ')}`);

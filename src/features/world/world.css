@@ -81,6 +81,7 @@
 .cp-card { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: var(--radius-sm); color: var(--text); text-decoration: none; }
 .cp-card__k { font-family: var(--font-mono); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .1em; color: var(--signal); }
 .cp-card__office { color: var(--text-2); font-size: var(--fs-sm); }
+.cp-card__flag { color: var(--warn, #b45309); font-size: var(--fs-sm); font-weight: 600; }
 .cp-card__name { font-family: var(--font-display); font-size: var(--fs-lg); color: var(--text); text-decoration: none; }
 .cp-leg__body { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin: 8px 0; }
 .cp-hemi { width: min(520px, 100%); height: auto; }

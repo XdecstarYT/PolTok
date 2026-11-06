@@ -53,3 +53,21 @@ test('fetchNzResults end-to-end with 2023 pages', async () => {
   assert.equal(r.electorates.filter((e) => e.type === 'maori').length, 7);
   assert.equal(r.votesCountedPct, 100);
 });
+
+test('Wikipedia backup parser (2023 article Results table)', async () => {
+  const { parseWikipediaResults, fetchWikipediaResults } = await import('../server/nz.js');
+  const r = parseWikipediaResults(fx('wikipedia-results.wikitext'));
+  const nat = r.party.find((p) => p.party === 'NAT');
+  assert.deepEqual([nat.votes, nat.pct, nat.electorateSeats, nat.listSeats, nat.totalSeats], [1085851, 38.08, 43, 5, 48]);
+  const tpm = r.party.find((p) => p.party === 'TPM');
+  assert.deepEqual([tpm.electorateSeats, tpm.listSeats, tpm.totalSeats], [6, 0, 6]);
+  assert.equal(r.party.reduce((a, p) => a + p.totalSeats, 0), 122);
+  // Pre-election article (no results table) -> null, so we stay 'pre' with no numbers.
+  assert.equal(parseWikipediaResults('== Results ==\nA preliminary count will take place on election day.\n== Notes =='), null);
+  // Fallback labelled unofficial; never used before polls close.
+  const fake = async () => new Response(fx('wikipedia-results.wikitext'));
+  assert.equal(await fetchWikipediaResults({ fetchImpl: fake, now: Date.parse('2026-11-07T05:00:00Z') }), null);
+  const w = await fetchWikipediaResults({ fetchImpl: fake, now: Date.parse('2026-11-07T07:00:00Z') });
+  assert.equal(w.sourceKind, 'wikipedia');
+  assert.match(w.sourceLabel, /community-edited, unofficial/);
+});

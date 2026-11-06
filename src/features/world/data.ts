@@ -143,14 +143,15 @@ export const COUNTRY_CODES: Record<string, string> = {
 };
 export const codeOf = (name: string) => COUNTRY_CODES[name];
 
-export interface Person { qid: string; name: string }
+export interface Person { qid?: string; name: string; article?: string; start?: string; source?: 'wikidata' | 'wikipedia'; url?: string }
+export interface Office { office: string; people: Person[]; check?: 'agree' | 'disagree' | 'unchecked'; verified?: boolean; note?: string; officeUrl?: string }
 export interface Party { name: string; seats: number; color?: string }
 export interface CountryProfile {
   code: string;
   name: string;
   qid?: string;
-  headOfGovernment: { office: string; people: Person[] } | null;
-  headOfState: { office: string; people: Person[] } | null;
+  headOfGovernment: Office | null;
+  headOfState: Office | null;
   legislature: { chamber: string; qid?: string; totalSeats: number | null; parties: Party[]; uncertain: boolean; url: string; revid?: number };
   markets: { title: string; url: string; volume: number; endDate: string | null; markets: { label: string; yes: number }[] }[];
   marketsOk: boolean;
