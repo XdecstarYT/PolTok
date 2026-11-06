@@ -119,3 +119,6 @@ declare module '*/shared/social.js' {
   export function packAssets(platforms: string[]): PackAsset[];
   export function packReadme(platforms: string[], copy?: { bios?: Record<string, string>; names?: string[]; handles?: string[]; pinned?: string; links?: { label: string; path: string }[] }, limits?: Record<string, { bio: number }>): string;
 }
+declare module '*/shared/nz-parse.js' {
+  export function combineNzResults(idxHtml: string, statusHtml: string, base: string, pollsClose: string): unknown | null;
+}
