@@ -28,11 +28,13 @@ export { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage, p
 // public JSON feed. Wikipedia's raw wikitext endpoint is reachable and is labelled community-edited/unofficial.
 // Priority: official EC pages > Wikipedia (unofficial) > 'pre' with no numbers.
 export const NZ_WIKI_TITLE = '2026_New_Zealand_general_election';
-const WIKI_RAW = `https://en.wikipedia.org/w/index.php?title=${NZ_WIKI_TITLE}&action=raw`;
-const WIKI_PAGE = `https://en.wikipedia.org/wiki/${NZ_WIKI_TITLE}`;
-async function getWikiRaw(fetchImpl = fetch) {
+// Results usually go in a dedicated article on election night; fall back to the main article.
+const WIKI_TITLES = ['Results_of_the_2026_New_Zealand_general_election', NZ_WIKI_TITLE];
+const wikiRaw = (t) => `https://en.wikipedia.org/w/index.php?title=${t}&action=raw`;
+let WIKI_PAGE = `https://en.wikipedia.org/wiki/${NZ_WIKI_TITLE}`;
+async function getWikiRaw(fetchImpl = fetch, title = NZ_WIKI_TITLE) {
   for (let i = 0; ; i++) {
-    const r = await fetchImpl(WIKI_RAW, { headers: { 'user-agent': UA, 'api-user-agent': UA }, signal: AbortSignal.timeout(8000) });
+    const r = await fetchImpl(wikiRaw(title), { headers: { 'user-agent': UA, 'api-user-agent': UA }, signal: AbortSignal.timeout(8000) });
     if (r.ok) return r.text();
     if (r.status === 429 && i < 2) {
       const ra = Number(r.headers.get('retry-after'));
@@ -45,7 +47,18 @@ async function getWikiRaw(fetchImpl = fetch) {
 /** Wikipedia fallback -> results object labelled unofficial, or null. Never before polls close. */
 export async function fetchWikipediaResults({ fetchImpl = fetch, now = Date.now() } = {}) {
   if (now < Date.parse(NZ_POLLS_CLOSE)) return null;
-  const w = parseWikipediaResults(await getWikiRaw(fetchImpl));
+  let w = null;
+  for (const t of WIKI_TITLES) {
+    try {
+      w = parseWikipediaResults(await getWikiRaw(fetchImpl, t));
+    } catch {
+      w = null;
+    }
+    if (w) {
+      WIKI_PAGE = `https://en.wikipedia.org/wiki/${t}`;
+      break;
+    }
+  }
   if (!w) return null;
   return {
     status: 'counting', // a community edit cannot confirm preliminary vs official
