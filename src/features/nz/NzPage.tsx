@@ -132,6 +132,17 @@ function Clock({ data }: { data: NzResults | null }) {
 function StatusBar({ data, err }: { data: NzResults | null; err: string | null }) {
   if (err) return <div className="nz-status nz-status--warn">Results feed unreachable ({err}). Official results: <a href={EC_RESULTS_URL} target="_blank" rel="noreferrer">electionresults.govt.nz</a></div>;
   if (!data) return <div className="nz-status">Connecting to results feed…</div>;
+  if (data.status === 'pre' && Date.now() >= POLLS_CLOSE && /403/.test(data.error || ''))
+    return (
+      <div className="nz-status nz-status--warn">
+        <b>Counting is underway — but PolTok can’t show live numbers.</b> The Electoral Commission’s results site blocks automated access, so we can’t
+        read its count, and no other reliable source has published figures yet. We won’t guess or show made-up numbers.{' '}
+        <a className="nz-official-btn" href={EC_RESULTS_URL} target="_blank" rel="noreferrer">
+          Follow the official count at electionresults.govt.nz →
+        </a>{' '}
+        Live headlines are below. Checked {fmtTime(data.updatedAt)}
+      </div>
+    );
   if (data.status === 'pre')
     return (
       <div className="nz-status">
