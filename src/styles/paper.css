@@ -94,7 +94,7 @@
 [data-ui='paper'] .sh-chrome { background: #f8f4ea; }
 [data-ui='paper'] .sh-tabbar { background: rgba(248, 244, 234, 0.97); border-top: 1px solid #141210; }
 [data-ui='paper'] .sh-pill.is-live { color: #a3302a; background: #fbf8f1; border-color: #a3302a; box-shadow: none; }
-[data-ui='paper'] .hm-hero__title, [data-ui='paper'] .mp-title h1, [data-ui='paper'] .rx-404-code {
+[data-ui='paper'] .hm-hero__title, [data-ui='paper'] .mp-title h1, [data-ui='paper'] .rx-404-code, [data-ui='paper'] .nw-head h1 {
   background: none; -webkit-text-fill-color: currentColor; color: var(--text);
 }
 [data-ui='paper'] .hm-banner { --banner-a: transparent; --banner-b: transparent; background: var(--bg-2); border: 1px solid #141210; border-top: 6px double #141210; box-shadow: none; }

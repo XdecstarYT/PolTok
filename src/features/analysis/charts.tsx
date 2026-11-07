@@ -122,12 +122,12 @@ export function Scatter({ pts, xLabel, yLabel, onPick, tip }: { pts: ScatterPt[]
         <text transform={`translate(11 ${(T + H - B) / 2}) rotate(-90)`} textAnchor="middle" className="an-ax an-ax--t">{yLabel}</text>
         {pts.map((p) => {
           const props = {
-            key: p.id, fill: p.color, stroke: 'var(--bg-1)', strokeWidth: 2, tabIndex: 0, role: 'button' as const,
+            fill: p.color, stroke: 'var(--bg-1)', strokeWidth: 2, tabIndex: 0, role: 'button' as const,
             'aria-label': `${p.label}: 2024 ${fmtSigned(p.x)}, 2026 ${fmtSigned(p.y)}`,
             onPointerEnter: () => setHov(p), onFocus: () => setHov(p), onClick: () => onPick?.(p.id),
             style: { cursor: onPick ? 'pointer' : undefined },
           };
-          return p.shape === 'square' ? <rect {...props} x={x(p.x) - 5} y={y(p.y) - 5} width={10} height={10} rx={2} /> : <circle {...props} cx={x(p.x)} cy={y(p.y)} r={6} />;
+          return p.shape === 'square' ? <rect key={p.id} {...props} x={x(p.x) - 5} y={y(p.y) - 5} width={10} height={10} rx={2} /> : <circle key={p.id} {...props} cx={x(p.x)} cy={y(p.y)} r={6} />;
         })}
       </svg>
       {hov && (

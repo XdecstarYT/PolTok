@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { POLL_SERIES, RACES, raceById, racesByState, stateByAbbr } from '../../data';
+import { RACES, raceById, racesByState, stateByAbbr } from '../../data';
+import { POLL_SERIES } from '../../data/polls';
 import { useLive } from '../../lib/live';
 import { AnimatedNumber, Avatar, RatingBadge, SimBadge } from '../../components';
 import { PARTY_HEX, PARTY_NAME, RATING_HEX } from '../../lib/format';

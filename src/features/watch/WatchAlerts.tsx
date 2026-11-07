@@ -5,7 +5,7 @@ import { useSettings } from '../../lib/settings';
 import { useWatchlist, isAuWatchId } from '../../lib/watchlist';
 import { useToast } from '../../components';
 import { raceById } from '../../data';
-import { candidatesOf, leaderOf } from './model';
+import { candidatesOf, leaderOf } from './shares';
 
 export function notifyBrowser(title: string, body: string) {
   try {

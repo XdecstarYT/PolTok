@@ -30,7 +30,7 @@ function Scatter({ list }: { list: DirMember[] }) {
         <text x={pad} y={H - 6} className="mb-ax">← Liberal</text>
         <text x={W - pad} y={H - 6} textAnchor="end" className="mb-ax">Conservative →</text>
         {pts.map((m) => (
-          <Link key={m.key} to={`/member/${m.key}`}>
+          <Link key={m.key} to={`/member/${m.key}`} aria-label={`${m.name} (${m.party}-${m.seat})`}>
             <circle cx={x(m.dim1!)} cy={y(m.dim2!)} r={m.chamber === 'senate' ? 4.5 : 3} fill={m.color} fillOpacity={0.75} stroke={m.chamber === 'senate' ? 'var(--text)' : 'none'} strokeWidth={0.8}>
               <title>{`${m.name} (${m.party}-${m.seat}) · dim1 ${m.dim1!.toFixed(3)}`}</title>
             </circle>

@@ -39,7 +39,8 @@
 .sh-logo__pulse { position: absolute; top: 3px; right: -11px; width: 6px; height: 6px; }
 
 /* Nav */
-.sh-nav { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; overflow: visible; }
+.sh-nav { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; overflow: visible; position: relative; }
+.sh-nav__a.is-overflow { position: absolute; visibility: hidden; pointer-events: none; }
 .sh-nav::-webkit-scrollbar { display: none; }
 .sh-nav__a {
   position: relative; padding: 8px 12px; border-radius: 99px; font-size: 14px; font-weight: 600; color: var(--text-2);

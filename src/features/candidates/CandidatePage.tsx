@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Avatar, RatingBadge, SimBadge } from '../../components';
-import { pollSeriesById, stateByAbbr } from '../../data';
+import { stateByAbbr } from '../../data';
+import { pollSeriesById } from '../../data/polls';
 import { useLive } from '../../lib/live';
 import { fmtInt, PARTY_HEX, PARTY_NAME, timeAgo } from '../../lib/format';
 import { NewsList, PollPanel, PresBar } from '../races/parts';

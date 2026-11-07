@@ -1,7 +1,8 @@
 /** Ready-to-post X/Twitter copy generated from live app data. Every tweet ≤ 280 chars incl. link. */
 import type { LiveState } from '../../lib/live';
 import type { Candidate, Race, RaceResult } from '../../types';
-import { RACES, raceById, POLL_SERIES } from '../../data';
+import { RACES, raceById } from '../../data';
+import { POLL_SERIES } from '../../data/polls';
 import { VICTORIA, FEDERAL } from '../../data/au';
 import type { FlipRace } from '../flips/data';
 import type { CardDataLite, Subject, SubjectKind } from './cards';

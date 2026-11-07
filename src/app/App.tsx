@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Shell } from './Shell';
+import { RouteMeta } from './RouteMeta';
+import { PageSkeleton } from './PageSkeleton';
 
 // Each feature owns its folder and default-exports its page component.
 const Home = lazy(() => import('../features/home/HomePage'));
@@ -55,6 +57,7 @@ const AskPage = lazy(() => import('../features/ask/AskPage'));
 const QuizPage = lazy(() => import('../features/quiz/QuizPage'));
 const WorldPage = lazy(() => import('../features/world/WorldPage'));
 const NzPage = lazy(() => import('../features/nz/NzPage'));
+const NotFound = lazy(() => import('./NotFound'));
 const NzElectoratePage = lazy(() => import('../features/nz/ElectoratePage'));
 const CountryPage = lazy(() => import('../features/world/CountryPage'));
 const CalendarPage = lazy(() => import('../features/calendar/CalendarPage'));
@@ -64,8 +67,9 @@ export function App() {
   if (pathname.startsWith('/embed/')) return <Suspense fallback={null}><EmbedRoutes /></Suspense>; // chrome-less iframe widgets (no Shell)
   return (
     <Shell>
+      <RouteMeta />
       <WatchAlerts />
-      <Suspense fallback={<div className="page" style={{ color: 'var(--text-3)' }}>Loading…</div>}>
+      <Suspense fallback={<PageSkeleton />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/updates" element={<UpdatesPage />} />
@@ -120,7 +124,7 @@ export function App() {
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/owner" element={<OwnerPage />} />
           <Route path="/2028" element={<Pres2028Page />} />
-          <Route path="*" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </Shell>

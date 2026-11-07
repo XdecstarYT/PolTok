@@ -228,6 +228,7 @@ export default function FeedPage() {
 
   return (
     <div className={`fd-root ${focus ? 'is-focus' : ''}`} style={ambient}>
+      <h1 className="sr-only">PolTok feed</h1>
       <div className="fd-ambient" aria-hidden="true">
         {meta?.image ? <img src={meta.image} alt="" referrerPolicy="no-referrer" /> : null}
       </div>

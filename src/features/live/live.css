@@ -176,7 +176,7 @@
 .lv-seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; }
 .lv-seg-b { border: 0; background: transparent; padding: 5px 11px; font-size: 12px; color: var(--text-2); }
 .lv-seg-b + .lv-seg-b { border-left: 1px solid var(--line-2); }
-.lv-seg-b.is-on { background: var(--accent); color: #0b0d14; font-weight: 700; }
+.lv-seg-b.is-on { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
 .lv-select { display: inline-flex; align-items: center; gap: 6px; font: 600 10px var(--font-mono); letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; }
 .lv-select select, .lv-search { background: var(--bg-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 8px; padding: 6px 8px; font: 500 12px var(--font-body); }
 .lv-search { flex: 1; min-width: 160px; max-width: 280px; margin-left: auto; }

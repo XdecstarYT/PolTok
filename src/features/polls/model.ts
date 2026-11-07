@@ -1,4 +1,4 @@
-import { POLL_SERIES } from '../../data';
+import { POLL_SERIES } from '../../data/polls';
 import type { Rating } from '../../types';
 import { COOK_HOUSE, HOUSE_SEATS, racesFor, senateBase } from './forecastData';
 import { RATING_MEAN, RATING_SIGMA, seatFromRace, type SimModel, type SimSeat } from './sim';

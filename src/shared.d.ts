@@ -122,3 +122,27 @@ declare module '*/shared/social.js' {
 declare module '*/shared/nz-parse.js' {
   export function combineNzResults(idxHtml: string, statusHtml: string, base: string, pollsClose: string): unknown | null;
 }
+
+declare module '*/shared/data/states.js' {
+  export const STATES: unknown[];
+  export const POLL_CLOSE_FIRST: unknown;
+  export const PRES_2024_NATIONAL: unknown;
+}
+declare module '*/shared/data/races.js' {
+  export const RACES: unknown[];
+  export const SENATE_NOT_UP: unknown;
+  export const HOUSE_TOTAL: unknown;
+  export const HOUSE_BASELINE: unknown;
+  export const HOUSE_COMPOSITION: unknown;
+  export const SENATE_COMPOSITION: unknown;
+  export const GOVERNOR_COMPOSITION: unknown;
+  export const RATER_TOTALS: unknown;
+  export const ELECTION_META: unknown;
+}
+declare module '*/shared/data/polls.js' {
+  export const POLL_SERIES: unknown[];
+  export const GENERIC_BALLOT: unknown;
+  export const APPROVAL: unknown;
+  export const MARKETS_BASELINE: unknown;
+  export const FALLBACK_NEWS: unknown[];
+}

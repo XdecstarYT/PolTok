@@ -1,6 +1,7 @@
 /** PolTok feed model: derives card stream from live data. Nothing here invents facts. */
 import type { Market, PollSeries, RaceCallEvent, RaceResult } from '../../types';
-import { POLL_SERIES, STATES, raceById } from '../../data';
+import { STATES, raceById } from '../../data';
+import { POLL_SERIES } from '../../data/polls';
 import { clusterNews, developingScore, type Cluster } from '../news/newsUtils';
 import type { LiveState } from '../../lib/live';
 

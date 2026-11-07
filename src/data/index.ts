@@ -1,9 +1,10 @@
 // Typed façade over shared/data (plain JS shared with the server).
-import type { NewsItem, PollSeries, Race, StateInfo } from '../types';
+import type { Race, StateInfo } from '../types';
+// Imported per file (not via shared/data/index.js) so the 180 KB poll table in polls.js stays out of
+// the entry chunk: poll consumers import from './polls' instead.
+import { STATES as S, POLL_CLOSE_FIRST as PCF, PRES_2024_NATIONAL as PN } from '../../shared/data/states.js';
 import {
-  STATES as S,
   RACES as R,
-  POLL_SERIES as P,
   SENATE_NOT_UP as N,
   HOUSE_TOTAL as H,
   HOUSE_BASELINE as HB,
@@ -12,13 +13,7 @@ import {
   GOVERNOR_COMPOSITION as GC,
   RATER_TOTALS as RT,
   ELECTION_META as EM,
-  POLL_CLOSE_FIRST as PCF,
-  PRES_2024_NATIONAL as PN,
-  GENERIC_BALLOT as GB,
-  APPROVAL as AP,
-  MARKETS_BASELINE as MB,
-  FALLBACK_NEWS as FN,
-} from '../../shared/data/index.js';
+} from '../../shared/data/races.js';
 export interface HouseBaseline { D: number; R: number; total: number; source: string }
 export interface HouseComposition {
   R: number; D: number; I: number; vacancies: number; total: number; majority: number;
@@ -61,7 +56,6 @@ export interface MarketsBaseline {
 
 export const STATES = S as StateInfo[];
 export const RACES = R as Race[];
-export const POLL_SERIES = P as PollSeries[];
 export const SENATE_NOT_UP = N as { D: number; R: number; I: number };
 export const HOUSE_TOTAL = H as number;
 /** Non-listed House seats by the party they are rated to go (Cook). D + R + listed house races = 435. */
@@ -74,16 +68,11 @@ export const ELECTION_META = EM as ElectionMeta;
 /** Earliest partial poll close (ET "HH:MM", hours >= 24 = next day) for two-wave states. */
 export const POLL_CLOSE_FIRST = PCF as Record<string, string>;
 export const PRES_2024_NATIONAL = PN as Pres2024National;
-export const GENERIC_BALLOT = GB as GenericBallotAverages;
-export const APPROVAL = AP as ApprovalAverages;
-export const MARKETS_BASELINE = MB as MarketsBaseline;
-export const FALLBACK_NEWS = FN as NewsItem[];
 
 export const stateByAbbr = new Map(STATES.map((s) => [s.abbr, s]));
-export const stateByFips = new Map(STATES.map((s) => [s.fips, s]));
+export const stateByFips = /* @__PURE__ */ new Map(/* @__PURE__ */ STATES.map((s) => [s.fips, s]));
 export const raceById = new Map(RACES.map((r) => [r.id, r]));
 export const racesByState = (abbr: string) => RACES.filter((r) => r.state === abbr);
-export const pollSeriesById = new Map(POLL_SERIES.map((p) => [p.id, p]));
 
 /** Parse a StateInfo.pollClose ("HH:MM" ET, hours >= 24 = Nov 4) to minutes after midnight Nov 3 ET. */
 export const pollCloseMinutes = (hhmm: string) => {

@@ -8,7 +8,7 @@
  *  - /feed renders "immersive": no ticker, no page padding; the page should fill
  *    `height: calc(100dvh - var(--shell-top) - var(--shell-bottom))`.
  */
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent as RMouseEvent, type ReactNode } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent as RMouseEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLive } from '../lib/live';
@@ -132,7 +132,7 @@ export const NAV_MORE = [
   { to: '/topic/senate', label: 'News topics', sub: 'Topic hubs, full-coverage stories & sources' },
 ];
 
-function MoreMenu() {
+function MoreMenu({ extra = [] }: { extra?: { to: string; label: string; sub?: string }[] }) {
   const loc = useLocation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -150,7 +150,8 @@ function MoreMenu() {
       window.removeEventListener('keydown', esc);
     };
   }, [open]);
-  const active = NAV_MORE.some((n) => loc.pathname.startsWith(n.to));
+  const items = [...extra, ...NAV_MORE];
+  const active = items.some((n) => (n.to === '/' ? loc.pathname === '/' : loc.pathname.startsWith(n.to)));
   return (
     <div className="sh-more" ref={ref}>
       <button type="button" className={`sh-nav__a sh-more__btn ${active ? 'is-active' : ''}`} aria-expanded={open} aria-haspopup="menu" onClick={() => setOpen((o) => !o)}>
@@ -158,10 +159,10 @@ function MoreMenu() {
       </button>
       {open && (
         <div className="sh-more__menu" role="menu">
-          {NAV_MORE.map((n) => (
-            <NavLink key={n.to} to={n.to} role="menuitem" className={({ isActive }) => `sh-more__item ${isActive ? 'is-on' : ''}`}>
+          {items.map((n) => (
+            <NavLink key={n.to} to={n.to} end={n.to === '/'} role="menuitem" className={({ isActive }) => `sh-more__item ${isActive ? 'is-on' : ''}`}>
               <b>{n.label}</b>
-              <span>{n.sub}</span>
+              {n.sub && <span>{n.sub}</span>}
             </NavLink>
           ))}
         </div>
@@ -179,7 +180,29 @@ export function Shell({ children }: { children: ReactNode }) {
   // Mount the palette (and its search index) only after first open, keeping it out of the entry chunk.
   const [cmdkUsed, setCmdkUsed] = useState(false);
   useEffect(() => { if (cmdk) setCmdkUsed(true); }, [cmdk]);
-  const { setPanelOpen: setSettingsOpen } = useSettings();
+  const { setPanelOpen: setSettingsOpen, settings } = useSettings();
+  // Priority nav: show as many primary links as fit; the rest move into "More" instead of overlapping the right-hand tools.
+  const navRef = useRef<HTMLElement>(null);
+  const [fit, setFit] = useState(NAV.length);
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const measure = () => {
+      // Overflowed links stay rendered (absolute + hidden) so their widths can always be measured.
+      const links = [...nav.querySelectorAll<HTMLElement>(':scope > .sh-nav__a')];
+      const more = (nav.querySelector<HTMLElement>('.sh-more')?.offsetWidth ?? 70) + 4;
+      const avail = nav.clientWidth - more;
+      let used = 0;
+      let n = 0;
+      while (n < links.length && used + links[n].offsetWidth + 2 <= avail) used += links[n++].offsetWidth + 2;
+      setFit(Math.max(1, n));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(nav);
+    document.fonts?.ready.then(measure).catch(() => {});
+    return () => ro.disconnect();
+  }, [settings.ui]);
   const closeCmdk = useCallback(() => setCmdk(false), []);
 
   useEffect(() => {
@@ -218,14 +241,14 @@ export function Shell({ children }: { children: ReactNode }) {
             <span className="sh-menubtn__t">Menu</span>
           </Link>
           <Wordmark />
-          <nav className="sh-nav" aria-label="Primary">
-            {NAV.map((n) => (
-              <NavLink key={n.to} to={n.to} end={n.to === '/'} className={() => `sh-nav__a ${isActive(n.to) ? 'is-active' : ''}`}>
-                {isActive(n.to) && <motion.span layoutId="sh-nav-bar" className="sh-nav__bar" transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 40 }} />}
+          <nav className="sh-nav" aria-label="Primary" ref={navRef}>
+            {NAV.map((n, i) => (
+              <NavLink key={n.to} to={n.to} end={n.to === '/'} className={() => `sh-nav__a ${isActive(n.to) ? 'is-active' : ''} ${i >= fit ? 'is-overflow' : ''}`} aria-hidden={i >= fit || undefined} tabIndex={i >= fit ? -1 : undefined}>
+                {isActive(n.to) && i < fit && <motion.span layoutId="sh-nav-bar" className="sh-nav__bar" transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 40 }} />}
                 <span className="sh-nav__t">{n.label}</span>
               </NavLink>
             ))}
-            <MoreMenu />
+            <MoreMenu extra={NAV.slice(fit)} />
           </nav>
           <div className="sh-right">
             <Clock />

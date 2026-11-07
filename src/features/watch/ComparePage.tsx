@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Button, SectionHeader, SimBadge } from '../../components';
-import { POLL_SERIES, RACES, raceById } from '../../data';
+import { Button, EmptyState, SectionHeader, SimBadge } from '../../components';
+import { RACES, raceById } from '../../data';
+import { POLL_SERIES } from '../../data/polls';
 import { useLive } from '../../lib/live';
 import { PARTY_HEX } from '../../lib/format';
 import type { Race, RaceResult } from '../../types';
@@ -168,7 +169,7 @@ export default function ComparePage() {
           ))}
         </div>
       ) : (
-        <p className="wt-hint mono">No races selected.</p>
+        <EmptyState compact title="No races selected yet" description="Pick up to four races above, or start with the key races, to compare them side by side." />
       )}
 
       <section className="cp-section">

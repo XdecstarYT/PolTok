@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, EmptyState, SectionHeader, Skeleton, Tabs, fmtTime, tzAbbr } from '../../components';
-import { POLL_SERIES, stateByAbbr } from '../../data';
+import { stateByAbbr } from '../../data';
+import { POLL_SERIES } from '../../data/polls';
 import { PARTY_HEX, fmtInt } from '../../lib/format';
 import { useSettings } from '../../lib/settings';
 import { NYT_CREDIT, fmtSigned, loadOverview, loadRaceDetail, type NRace, type Overview, type RaceDetail } from './nyt';
@@ -127,6 +128,7 @@ function Analysis({ ov }: { ov: Overview }) {
 
   return (
     <div className="page an">
+      <h1 className="sr-only">Election analysis</h1>
       <SectionHeader
         kicker="2026 midterms · the morning after"
         title="What happened"
