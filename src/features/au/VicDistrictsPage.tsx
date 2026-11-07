@@ -2,7 +2,8 @@
  *  marginal-seat arithmetic and Legislative Council regions. Data-only; no predictions. */
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card } from '../../components';
+import { Card, PersonAvatar } from '../../components';
+import { personPhoto } from '../../data/photos';
 import { useSeo } from '../../lib/seo';
 import { CENSUS_VIC } from '../../data/au-census';
 import { VIC_LC_2022, VIC_LC_2022_SOURCE } from '../../data/au-states';
@@ -154,7 +155,7 @@ export default function VicDistrictsPage() {
           const nc = (VIC_NOMINATIONS.regions[rg] ?? []).length;
           return (
             <Card key={rg} title={rg} kicker={`5 members · ${dists.length} districts`}>
-              <ul className="au-cands">{mem.map(([n, p]) => <li key={n}><i style={{ background: pColor(p) }} /><span>{n}</span><span className="mono muted">{party(p).short}</span></li>)}</ul>
+              <ul className="au-cands">{mem.map(([n, p]) => <li key={n}><PersonAvatar name={n} color={pColor(p)} photo={personPhoto({ name: n, scope: 'au' })} size={26} /><span>{n}</span><span className="mono muted">{party(p).short}</span></li>)}</ul>
               <p className="au-note">Elected 2022 (party at election). {nc} region candidates nominated so far.</p>
               <p className="au-note">{dists.map((d, i) => <span key={d.id}>{i ? ', ' : ''}<Link to={`/au/seat/${d.id}`}>{d.name}</Link></span>)}</p>
             </Card>

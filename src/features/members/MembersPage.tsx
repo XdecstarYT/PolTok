@@ -6,13 +6,13 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FEDERAL } from '../../data/au';
 import { AU_MEMBERS, US_PARTY, initials, usDir, useJson, type DirMember, type UsListResp } from './data';
+import { PersonAvatar } from '../../components';
+import { photoFromUrl } from '../../data/photos';
 import './members.css';
 
 export function Avatar({ m, size = 56 }: { m: { name: string; photo?: string; color: string; photoCredit?: string }; size?: number }) {
-  const [bad, setBad] = useState(false);
-  const style = { width: size, height: size * 1.22, borderColor: m.color };
-  if (m.photo && !bad) return <img className="mb-av" src={m.photo} alt="" loading="lazy" width={size} height={Math.round(size * 1.22)} style={style} title={m.photoCredit} onError={() => setBad(true)} />;
-  return <span className="mb-av mb-ini" style={{ ...style, background: m.color, fontSize: size * 0.36 }} aria-hidden="true">{initials(m.name)}</span>;
+  const ph = photoFromUrl(m.photo);
+  return <PersonAvatar name={m.name} color={m.color} photo={ph && m.photoCredit ? { ...ph, credit: m.photoCredit } : ph} size={size} shape="portrait" />;
 }
 
 function Scatter({ list }: { list: DirMember[] }) {

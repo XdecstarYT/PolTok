@@ -288,3 +288,4 @@
 .au-leader-av img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; display: block; }
 .au-leader-credit { font-size: 10px; color: var(--text-3); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .au-leader-credit:hover { color: var(--text-2); }
+.au-cands li > .pa { margin-right: 2px; }

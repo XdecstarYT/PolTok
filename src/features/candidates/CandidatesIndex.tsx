@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Avatar, SimBadge } from '../../components';
+import { Avatar, PersonAvatar, SimBadge } from '../../components';
+import { personPhoto } from '../../data/photos';
 import { STATES } from '../../data';
 import { VIC_CANDIDATES } from '../../data/au';
-import { auPhoto } from '../../data/au-photo';
 const VIC_ASAT = VIC_CANDIDATES.asAt;
 import { PARTY_HEX, PARTY_NAME } from '../../lib/format';
 import type { Party } from '../../types';
@@ -169,12 +169,10 @@ export default function CandidatesIndex() {
           </div>
           <p className="cd-muted cd-count" aria-live="polite">{auList.length} people · Victorian nominations as at {VIC_ASAT} (not final)</p>
           <ul className="cd-grid">
-            {auList.slice(0, 300).map((c) => { const ph = auPhoto(c.name); return (
+            {auList.slice(0, 300).map((c) => { return (
               <li key={c.id}>
                 <Link to={`/candidate/${c.id}`} className="cd-card" style={{ ['--pc' as string]: c.color }}>
-                  <span className="pt-avatar" style={{ width: 56, height: 56, fontSize: 20, borderColor: c.color, background: `radial-gradient(circle at 30% 25%, ${c.color}, #05070d 85%)` }} aria-hidden="true" title={ph?.credit}>
-                    {ph ? <img src={ph.thumbUrl} alt="" width={56} height={56} loading="lazy" /> : c.name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 1).join('') + (c.name.split(/\s+/).slice(-1)[0]?.[0] ?? '')}
-                  </span>
+                  <PersonAvatar name={c.name} color={c.color} photo={personPhoto({ name: c.name, scope: 'au' })} size={56} />
                   <div className="cd-card__body">
                     <b className="cd-card__name">{c.name}</b>
                     <span className="cd-card__sub">

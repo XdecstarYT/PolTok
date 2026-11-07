@@ -6,6 +6,9 @@ import './components.css';
 
 export {
   PartyDot, RatingBadge, Avatar, LiveDot, Card, SimBadge,
+} from './primitives';
+export { PersonAvatar } from './PersonAvatar';
+export {
   Button, Chip, MarginChip, partyTone, SectionHeader, Skeleton, EmptyState, ProgressBar, Tooltip, Kbd,
 } from './primitives';
 export type { ButtonProps, ButtonVariant, Tone } from './primitives';

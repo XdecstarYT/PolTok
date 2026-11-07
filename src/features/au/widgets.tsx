@@ -2,7 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import type { Market, NewsItem } from '../../types';
-import { BiasBar, Card, EmptyState, LiveDot, Skeleton, leanCounts, useReducedMotion } from '../../components';
+import { BiasBar, Card, PersonAvatar, EmptyState, LiveDot, Skeleton, leanCounts, useReducedMotion } from '../../components';
 import { fmtDay, fmtTime } from '../../components/time';
 import { LEAN_HEX, timeAgo } from '../../lib/format';
 import { party, partyKey, pColor, sortParties, type AuSeat, type PollRow } from './model';
@@ -393,10 +393,9 @@ export function NewsPanel({ items, error, title = 'Australian news', limit = 10,
 export function LeaderCard({ role, name, partyCode, seat, extra }: { role: string; name: string; partyCode?: string; seat?: string; extra?: ReactNode }) {
   const c = pColor(partyCode);
   const ph = auPhoto(name);
-  const initials = name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join('');
   return (
     <div className="au-leader" style={{ ['--pc' as string]: c }}>
-      <span className="au-leader-av" aria-hidden title={ph?.credit}>{ph ? <img src={ph.thumbUrl} alt="" width={46} height={46} loading="lazy" /> : initials}</span>
+      <PersonAvatar name={name} color={c} photo={ph ? { url: ph.thumbUrl, credit: ph.credit, licence: ph.licence, licenceUrl: ph.licenceUrl, source: ph.sourcePage } : undefined} size={46} />
       <div>
         <span className="mono au-leader-role">{role}</span>
         <b>{name}</b>

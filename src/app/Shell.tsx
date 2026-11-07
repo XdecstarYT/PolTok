@@ -16,7 +16,7 @@ import { useSettings } from '../lib/settings';
 import { UpdatesBell } from '../features/updates';
 import { ToastProvider, Kbd, useNow, useReducedMotion, fmtTime, tzAbbr } from '../components';
 import { Ticker } from './shell/Ticker';
-import { CommandPalette } from './shell/CommandPalette';
+const CommandPalette = lazy(() => import('./shell/CommandPalette').then((m) => ({ default: m.CommandPalette })));
 import { RaceCallWatcher } from './shell/RaceCallWatcher';
 import { HistoryRecorder } from '../features/home/prefs';
 import { AskPolTok } from '../features/ask/AskPolTok';
@@ -176,6 +176,9 @@ export function Shell({ children }: { children: ReactNode }) {
   const immersive =
     loc.pathname === '/feed' || loc.pathname.startsWith('/feed/');
   const [cmdk, setCmdk] = useState(false);
+  // Mount the palette (and its search index) only after first open, keeping it out of the entry chunk.
+  const [cmdkUsed, setCmdkUsed] = useState(false);
+  useEffect(() => { if (cmdk) setCmdkUsed(true); }, [cmdk]);
   const { setPanelOpen: setSettingsOpen } = useSettings();
   const closeCmdk = useCallback(() => setCmdk(false), []);
 
@@ -267,7 +270,7 @@ export function Shell({ children }: { children: ReactNode }) {
         })}
       </nav>
 
-      <CommandPalette open={cmdk} onClose={closeCmdk} />
+      {cmdkUsed && <Suspense fallback={null}><CommandPalette open={cmdk} onClose={closeCmdk} /></Suspense>}
       <RaceCallWatcher />
       <HistoryRecorder />
       <AskPolTok />

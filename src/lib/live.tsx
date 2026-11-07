@@ -12,7 +12,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { BalanceOfPower, LiveEvent, Market, NewsItem, RaceCallEvent, RaceResult } from '../types';
 import { RACES, STATES, raceById } from '../data';
-import { createSimulation } from '../../shared/sim.js';
 
 export interface TickerItem {
   id: string;
@@ -242,6 +241,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
         const { createNytProvider } = await import('../../shared/nyt.js');
         p = createNytProvider({ races: RACES, states: STATES, housePollMs: 180000 }) as Provider;
       } else {
+        const { createSimulation } = await import('../../shared/sim.js');
         p = createSimulation({ races: RACES, states: STATES }) as Provider;
       }
       if (cancelled) return;

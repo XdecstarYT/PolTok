@@ -94,3 +94,4 @@
 .cp-mk { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
 .cp-mk__row { display: flex; justify-content: space-between; gap: 8px; font-size: var(--fs-sm); }
 .wd-cty.is-prof { cursor: pointer; }
+.cp-card__name { display: flex; align-items: center; gap: 10px; }

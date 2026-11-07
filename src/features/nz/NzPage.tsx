@@ -7,12 +7,13 @@ import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { geoMercator, geoPath } from 'd3-geo';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import { Card, useNow, fmtTime, tzAbbr, splitDuration } from '../../components';
+import { Card, PersonAvatar, useNow, fmtTime, tzAbbr, splitDuration } from '../../components';
 import {
   CURRENT_PARLIAMENT, EC_RESULTS_URL, NZ_ELECTORATES, NZ_POLLS, NZ_TZ, PARTIES, POLLS_CLOSE, RESULT_2023,
   allocateMMP, callOf, incumbentElectorates, partyMeta, pollAverage, useNzNews, useNzResults, usePolymarket,
   type Alloc, type LiveElectorate, type NzResults,
 } from './data';
+import { personPhoto } from '../../data/photos';
 import './nz.css';
 
 const nzdt = (ts: number) => new Intl.DateTimeFormat('en-NZ', { timeZone: NZ_TZ, hour: 'numeric', minute: '2-digit', weekday: 'short' }).format(new Date(ts));
@@ -47,6 +48,11 @@ export default function NzPage() {
             71 electorates (64 general + 7 Māori) · 49 list seats · MMP · 61 for a majority of 120 (more if overhang).
             PM <b>Christopher Luxon</b> (National, with ACT &amp; NZ First) vs Opposition leader <b>Chris Hipkins</b> (Labour).
           </p>
+          <ul className="nz-leaders" aria-label="Party leaders">
+            {PARTIES.filter((p) => p.leader !== '—').flatMap((p) => p.leader.replace(/\(.*?\)/g, '').split(/\s*&\s*/).map((n) => (
+              <li key={n} title={`${n.trim()} — ${p.name}`}><PersonAvatar name={n.trim()} color={p.color} photo={personPhoto({ name: n, scope: 'nz' })} size={36} /><span>{n.trim()}<small>{p.short}</small></span></li>
+            )))}
+          </ul>
         </div>
         <Clock data={data} />
       </header>

@@ -1,6 +1,7 @@
 /** /2028 — 2028 presidential race tracker: live Polymarket odds, declared field, calendar, path-to-270 builder. */
 import { useEffect, useMemo, useState } from 'react';
-import { Avatar, Sparkline } from '../../components';
+import { PersonAvatar, Sparkline } from '../../components';
+import { personPhoto } from '../../data/photos';
 import { USMap } from '../map/USMap';
 import { ElectoralBar } from '../map/ElectoralBar';
 import { ALL_ABBRS, pres2024, stateEV, stateName } from '../map/stateTable';
@@ -35,7 +36,7 @@ function MarketCard({ m, color }: { m: Mkt; color: string }) {
       <ol className="p28-cands">
         {m.outcomes.map((o) => (
           <li key={o.label}>
-            <Avatar name={o.label} party={m.id === 'dem' ? 'D' : m.id === 'gop' ? 'R' : 'I'} size={34} />
+            <PersonAvatar name={o.label} party={m.id === 'dem' ? 'D' : m.id === 'gop' ? 'R' : 'I'} photo={personPhoto({ name: o.label, scope: 'us' })} size={34} />
             <span className="p28-name">{o.label}<small>{usd(o.volume)} vol</small></span>
             {o.history && o.history.length > 1 ? (
               <Sparkline values={o.history.map((h) => h.p)} width={80} height={24} color={color} ariaLabel={`${o.label} 1-week price`} />
@@ -121,7 +122,7 @@ export default function Pres2028Page() {
         {get('gop') && <MarketCard m={get('gop')!} color={REP} />}
         {get('winner') && <MarketCard m={get('winner')!} color="var(--accent)" />}
       </div>
-      <p className="p28-note">Market prices are traders' implied probabilities, not polls or forecasts. Listed names are market contracts, not declared candidates. Initials avatars used — no portraits.</p>
+      <p className="p28-note">Market prices are traders' implied probabilities, not polls or forecasts. Listed names are market contracts, not declared candidates. Portraits: Wikimedia Commons free licences (hover for credit); initials where none is verified.</p>
 
       <div className="p28-grid">
         <section className="p28-panel">

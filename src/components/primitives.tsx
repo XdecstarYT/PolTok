@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import type { Party, Rating } from '../types';
 import { initials, PARTY_COLOR, PARTY_NAME, RATING_HEX } from '../lib/format';
 import { useLive } from '../lib/live';
+import { PersonAvatar } from './PersonAvatar';
 
 /* ───────────── Original primitives (props are stable) ───────────── */
 
@@ -27,18 +28,9 @@ export function RatingBadge({ rating }: { rating: Rating }) {
   );
 }
 
-/** Candidate avatar: photo or initials fallback, ringed in party color. */
+/** Candidate avatar: licensed photo or initials fallback, ringed in party color (see PersonAvatar). */
 export function Avatar({ name, party, src, size = 40 }: { name: string; party: Party; src?: string; size?: number }) {
-  const c = PARTY_COLOR[party];
-  return (
-    <span
-      className="pt-avatar"
-      style={{ width: size, height: size, fontSize: size * 0.36, background: `radial-gradient(circle at 30% 25%, ${c}, #05070d 85%)`, borderColor: c }}
-    >
-      {src ? <img src={src} alt={name} width={size} height={size} loading="lazy" /> : <span aria-hidden="true">{initials(name || '?')}</span>}
-      {!src && <span className="sr-only">{name}</span>}
-    </span>
-  );
+  return <PersonAvatar name={name} party={party} photo={src} size={size} />;
 }
 
 /** Pulsing "● LIVE" indicator. */
