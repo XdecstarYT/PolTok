@@ -60,7 +60,7 @@ export default function NzPage() {
       <StatusBar data={data} err={err} />
 
       <div className="nz-grid">
-        <Card title={live ? 'Party vote — live' : 'Party vote — polling average'} kicker={live ? `Electoral Commission · ${data.status === 'final' ? 'official' : 'preliminary'}` : 'Latest poll from each pollster (≤21 days)'} live={!!live}>
+        <Card title={live ? 'Party vote — live' : 'Party vote — polling average'} kicker={live ? `${data.sourceKind === 'wikipedia' ? 'Wikipedia (unofficial)' : 'Electoral Commission'} · ${data.status === 'final' ? 'official' : 'preliminary'}` : 'Latest poll from each pollster (≤21 days)'} live={!!live}>
           <PartyBars data={data} avg={avg} />
         </Card>
         <Card title="Projected Parliament" kicker={proj.basis === 'live' ? 'PolTok MMP projection from live count — not official' : 'PolTok MMP projection from polls — not a result'}>
@@ -68,6 +68,7 @@ export default function NzPage() {
           <p className="nz-note">
             {proj.total} seats{proj.overhang > 0 ? ` (incl. ${proj.overhang} overhang)` : ''} · majority {proj.majority}. Sainte-Laguë, 5% threshold or electorate waiver.
             {proj.basis === 'polls' && ' Electorate seats assumed held by sitting MPs’ parties.'}
+            {proj.basis === 'live' && data?.sourceKind === 'wikipedia' && ` PolTok’s own maths from ${data.electorates.length} of 71 reported electorate winners — the seat totals in the party-vote panel are the reported preliminary figures.`}
           </p>
         </Card>
         <Card title="Coalition builder" kicker="Drag or tap parties into the government">
@@ -190,7 +191,7 @@ function PartyBars({ data, avg }: { data: NzResults | null; avg: Record<string, 
               <span className="nz-bars__thr" style={{ left: `${(5 / max) * 100}%` }} title="5% threshold" />
             </span>
             <span className="nz-bars__val mono">{pct(r.pct)}</span>
-            {r.votes != null && <small className="mono">{r.votes.toLocaleString()} · {r.seats} seats (EC)</small>}
+            {r.votes != null && <small className="mono">{r.votes.toLocaleString()} · {r.seats} seats{data.sourceKind === 'wikipedia' ? '' : ' (EC)'}</small>}
             {r.votes == null && RESULT_2023[r.party] != null && <small className="mono">2023: {RESULT_2023[r.party]}%</small>}
           </li>
         );
