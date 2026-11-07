@@ -39,7 +39,7 @@ const CODES = [
   [/^(IND|Independent)/i, 'IND'],
 ];
 export function partyCode(name) {
-  const n = String(name || '').trim();
+  const n = String(name || '').trim().replace(/^New Zealand (?!First)/i, '').replace(/^Green Party of Aotearoa.*/i, 'Green');
   if (!n) return 'IND';
   for (const [re, c] of CODES) if (re.test(n)) return c;
   return n;
@@ -211,4 +211,62 @@ export function parseWikipediaResults(wikitext) {
   if (!party.length || party.every((p) => !p.votes)) return null;
   party.sort((a, b) => b.votes - a.votes);
   return { party };
+}
+
+const wtPlain = (s) =>
+  String(s || '')
+    .replace(/'''?/g, '')
+    .replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, '$1')
+    .replace(/\{\{[^}]*\}\}/g, '')
+    .trim();
+
+/** Election infobox (party1/popular_vote1/percentage1/seats1…) -> { party } or null. */
+export function parseWikipediaInfobox(wikitext) {
+  const t = String(wikitext || '');
+  const get = (k) => {
+    const m = t.match(new RegExp(`^\\|\\s*${k}\\s*=([^\\n]*)`, 'm'));
+    return m ? wtPlain(m[1]) : '';
+  };
+  const party = [];
+  for (let i = 1; i < 20; i++) {
+    const name = get(`party${i}`);
+    if (!name) break;
+    const votes = num(get(`popular_vote${i}`));
+    const pct = parseFloat(get(`percentage${i}`).replace('%', ''));
+    if (!votes || !Number.isFinite(pct)) continue;
+    const seats = num(get(`seats${i}`)) || 0;
+    party.push({ party: partyCode(name.replace(/^New Zealand (?=National|Labour)/, '')), name, votes, pct, electorateSeats: 0, listSeats: 0, totalSeats: seats });
+  }
+  if (!party.length) return null;
+  party.sort((a, b) => b.votes - a.votes);
+  return { party };
+}
+
+/** {{NZ electorate result hold|change …}} templates -> electorates with a declared winner only. */
+export function parseWikipediaElectorates(wikitext) {
+  const out = [];
+  const re = /\{\{\s*NZ electorate result (?:hold|change|new)([\s\S]*?)\n\}\}/g;
+  let m;
+  while ((m = re.exec(String(wikitext || '')))) {
+    const f = {};
+    for (const line of m[1].split('\n')) {
+      const kv = line.match(/^\s*\|\s*([\w-]+)\s*=(.*)$/);
+      if (kv) f[kv[1]] = wtPlain(kv[2]);
+    }
+    if (!f.electorate || !f.winner) continue;
+    const id = nzSlug(f.electorate);
+    out.push({
+      id,
+      name: f.electorate,
+      type: MAORI.has(id) ? 'maori' : 'general',
+      leader: f.winner,
+      leadingParty: partyCode(f['winner-party'] || ''),
+      second: f.second || null,
+      secondParty: f['second-party'] ? partyCode(f['second-party']) : null,
+      margin: num(f.majority) || 0,
+      countedPct: null,
+      candidates: [],
+    });
+  }
+  return out;
 }

@@ -71,3 +71,14 @@ test('Wikipedia backup parser (2023 article Results table)', async () => {
   assert.equal(w.sourceKind, 'wikipedia');
   assert.match(w.sourceLabel, /community-edited, unofficial/);
 });
+
+test('wikipedia infobox + electorate templates (2026 layout)', async () => {
+  const { parseWikipediaInfobox, parseWikipediaElectorates } = await import('../shared/nz-parse.js');
+  const box = `| party1 = New Zealand National Party\n| seats1 = '''42'''\n| popular_vote1 = 705,174\n| percentage1 = 29.26%\n| party2 = Green Party of Aotearoa New Zealand\n| seats2 = 16\n| popular_vote2 = 320,628\n| percentage2 = 13.30%\n`;
+  const b = parseWikipediaInfobox(box);
+  assert.deepEqual(b.party.map((p) => [p.party, p.votes, p.pct, p.totalSeats]), [['NAT', 705174, 29.26, 42], ['GRN', 320628, 13.3, 16]]);
+  const el = `{{NZ electorate result change\n |electorate = Banks Peninsula\n |winner   = [[Tracey McLellan]]\n |winner-party = New Zealand Labour Party\n |majority = 2,261\n}}\n{{NZ electorate result hold\n |electorate = Botany\n |winner   = \n}}\n`;
+  const e = parseWikipediaElectorates(el);
+  assert.equal(e.length, 1);
+  assert.deepEqual([e[0].id, e[0].leader, e[0].leadingParty, e[0].margin], ['banks-peninsula', 'Tracey McLellan', 'LAB', 2261]);
+});

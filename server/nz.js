@@ -18,7 +18,7 @@ export const NZ_POLLS_CLOSE = '2026-11-07T06:00:00Z'; // 7:00pm NZDT, Sat 7 Nov 
 const UA = 'PolTok/1.0 (+https://poltok.netlify.app)';
 const TTL = 60_000;
 
-import { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage, parseWikipediaResults, combineNzResults, MAORI, ent, num } from '../shared/nz-parse.js';
+import { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage, parseWikipediaResults, parseWikipediaInfobox, parseWikipediaElectorates, combineNzResults, MAORI, ent, num } from '../shared/nz-parse.js';
 export { nzSlug, partyCode, parsePartyPage, parseStatusPage, parseDetailsPage, parseWikipediaResults };
 
 // Backup source, used ONLY when the Electoral Commission site cannot be fetched (it sits behind a
@@ -48,15 +48,18 @@ async function getWikiRaw(fetchImpl = fetch, title = NZ_WIKI_TITLE) {
 export async function fetchWikipediaResults({ fetchImpl = fetch, now = Date.now() } = {}) {
   if (now < Date.parse(NZ_POLLS_CLOSE)) return null;
   let w = null;
+  let electorates = [];
   for (const t of WIKI_TITLES) {
+    let raw = '';
     try {
-      w = parseWikipediaResults(await getWikiRaw(fetchImpl, t));
+      raw = await getWikiRaw(fetchImpl, t);
     } catch {
-      w = null;
+      continue;
     }
-    if (w) {
-      WIKI_PAGE = `https://en.wikipedia.org/wiki/${t}`;
-      break;
+    if (!electorates.length) electorates = parseWikipediaElectorates(raw);
+    if (!w) {
+      w = parseWikipediaResults(raw) || parseWikipediaInfobox(raw);
+      if (w) WIKI_PAGE = `https://en.wikipedia.org/wiki/${t}`;
     }
   }
   if (!w) return null;
@@ -67,7 +70,7 @@ export async function fetchWikipediaResults({ fetchImpl = fetch, now = Date.now(
     votesCountedPct: null,
     totalVotes: w.party.reduce((a, x) => a + x.votes, 0),
     party: w.party,
-    electorates: [],
+    electorates,
     source: WIKI_PAGE,
     sourceKind: 'wikipedia',
     sourceLabel: 'Wikipedia — community-edited, unofficial',
