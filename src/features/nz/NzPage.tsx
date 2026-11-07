@@ -191,7 +191,7 @@ function PartyBars({ data, avg }: { data: NzResults | null; avg: Record<string, 
               <span className="nz-bars__thr" style={{ left: `${(5 / max) * 100}%` }} title="5% threshold" />
             </span>
             <span className="nz-bars__val mono">{pct(r.pct)}</span>
-            {r.votes != null && <small className="mono">{r.votes.toLocaleString()} · {r.seats} seats{data.sourceKind === 'wikipedia' ? '' : ' (EC)'}</small>}
+            {r.votes != null && <small className="mono">{r.votes.toLocaleString()} · {r.seats} seats{data?.sourceKind === 'wikipedia' ? '' : ' (EC)'}</small>}
             {r.votes == null && RESULT_2023[r.party] != null && <small className="mono">2023: {RESULT_2023[r.party]}%</small>}
           </li>
         );
