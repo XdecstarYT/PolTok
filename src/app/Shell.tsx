@@ -10,7 +10,7 @@
  */
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent as RMouseEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { useLive } from '../lib/live';
 import { useSettings } from '../lib/settings';
 import { UpdatesBell } from '../features/updates';
@@ -78,16 +78,15 @@ function Wordmark() {
 }
 
 function LiveStatus() {
-  const { mode, connected, source } = useLive();
-  const local = mode === 'browser-live' || mode === 'browser-simulation';
+  const { mode, connected } = useLive();
+  const local = mode === 'browser-live';
   const state =
     mode === 'connecting' ? { cls: 'is-wait', label: 'CONNECTING' }
     : !connected && !local ? { cls: 'is-wait', label: 'RECONNECTING' }
-    : source === 'live' ? { cls: 'is-live', label: 'LIVE' }
-    : { cls: 'is-demo', label: 'DEMO' };
+    : { cls: 'is-live', label: 'LIVE' };
   return (
     <span className="sh-status">
-      <span className={`sh-pill ${state.cls}`} role="status" aria-live="polite" title={source === 'live' ? 'Real results: AP via The New York Times' : 'Demo replay (simulated) — change in Settings'}>
+      <span className={`sh-pill ${state.cls}`} role="status" aria-live="polite" title="Real results: AP via The New York Times">
         <span className="pulse" aria-hidden="true" />
         {state.label}
       </span>

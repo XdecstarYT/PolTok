@@ -5,9 +5,9 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FEDERAL } from '../../data/au';
-import { AU_MEMBERS, US_PARTY, initials, usDir, useJson, type DirMember, type UsListResp } from './data';
+import { AU_MEMBERS, US_PARTY, initials, usDir, useJson, withAuPhoto, type DirMember, type UsListResp } from './data';
 import { PersonAvatar } from '../../components';
-import { photoFromUrl } from '../../data/photos';
+import { photoFromUrl, usePhotoIndex } from '../../data/photos';
 import './members.css';
 
 export function Avatar({ m, size = 56 }: { m: { name: string; photo?: string; color: string; photoCredit?: string }; size?: number }) {
@@ -52,7 +52,8 @@ export default function MembersPage() {
   const set = (k: string, v: string) => { const n = new URLSearchParams(sp); if (v === 'all' || !v) n.delete(k); else n.set(k, v); if (k === 'c') { n.delete('p'); n.delete('s'); } setSp(n, { replace: true }); };
 
   const us = useJson<UsListResp>(country === 'US' ? '/api/members/us' : null);
-  const all = useMemo(() => (country === 'US' ? (us.data?.members || []).map(usDir) : AU_MEMBERS), [country, us.data]);
+  const pv = usePhotoIndex(country === 'AU' ? 'au' : null);
+  const all = useMemo(() => (country === 'US' ? (us.data?.members || []).map(usDir) : AU_MEMBERS.map(withAuPhoto)), [country, us.data, pv]);
   const parties = useMemo(() => [...new Set(all.map((m) => m.party))].sort(), [all]);
   const states = useMemo(() => [...new Set(all.map((m) => m.state))].sort(), [all]);
   const list = useMemo(() => {

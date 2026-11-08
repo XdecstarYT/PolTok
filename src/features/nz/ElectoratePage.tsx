@@ -1,7 +1,6 @@
 /** /nz/electorate/:id — one electorate: candidates, live count (Electoral Commission), 2023 result. */
 import { Link, useParams } from 'react-router-dom';
 import { Card, PersonAvatar, fmtTime } from '../../components';
-import { personPhoto } from '../../data/photos';
 import { NZ_ELECTORATES, callOf, partyMeta, useNzDetail } from './data';
 import './nz.css';
 
@@ -46,7 +45,7 @@ export default function NzElectoratePage() {
       </Card>
       <Card title="Candidates" kicker="Final candidate list (Electoral Commission, 9 Oct) via Wikipedia">
         <ul className="nz-chips">
-          {info.candidates.map((c) => <li key={c.name} className="nz-chip" style={{ ['--pc' as string]: partyMeta(c.party).color }}><PersonAvatar name={c.name} color={partyMeta(c.party).color} photo={personPhoto({ name: c.name, scope: 'nz' })} size={28} /> {c.name} <small>{partyMeta(c.party).name}{c.inc ? ' · sitting MP' : ''}</small></li>)}
+          {info.candidates.map((c) => <li key={c.name} className="nz-chip" style={{ ['--pc' as string]: partyMeta(c.party).color }}><PersonAvatar name={c.name} color={partyMeta(c.party).color} lookup={{ name: c.name, scope: 'nz' }} size={28} /> {c.name} <small>{partyMeta(c.party).name}{c.inc ? ' · sitting MP' : ''}</small></li>)}
         </ul>
       </Card>
     </div>

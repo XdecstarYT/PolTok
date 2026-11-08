@@ -7,16 +7,21 @@
  *    (scripts/gen-photos.mts → ./generated.ts), strict identity matching.
  * Unknown people get no photo — the UI renders an initials avatar, never a generated face.
  */
-import { AU_PHOTOS } from '../au-photos';
-import { PHOTOS, PHOTO_STATS } from './generated';
 import { personKey } from './key';
-export { personKey, PHOTO_STATS };
+import { auRec, genRec, type GenRec, type PhotoChunk } from './store';
+export { personKey };
+export { usePhotoIndex, loadPhotoIndex, photoIndexReady } from './store';
 
 export interface PersonPhoto { url: string; credit: string; licence: string; licenceUrl?: string; source: string }
-export type PhotoScope = 'au' | 'nz' | 'us' | 'world';
+export type PhotoScope = 'au' | 'nz' | 'us' | 'us26' | 'world';
+export type PhotoQuery = { name?: string | null; scope?: PhotoScope; qid?: string; bioguide?: string; src?: string };
+/** The lazy chunk a query needs (null when it resolves without one). */
+export const chunkFor = (q: PhotoQuery): PhotoChunk | null =>
+  q.bioguide || q.src ? null : q.qid ? 'gen' : !q.name ? null : q.scope === 'au' ? 'au' : q.scope === 'us26' ? 'us26' : q.scope ? 'gen' : null;
 
-const commons = (r: { f: string; a: string; l: string; u: string } | undefined): PersonPhoto | undefined => {
+const commons = (r: GenRec | undefined): PersonPhoto | undefined => {
   if (!r) return undefined;
+  if ('b' in r) return bioguidePhoto(r.b);
   const f = encodeURIComponent(r.f.replace(/ /g, '_'));
   return {
     url: `https://commons.wikimedia.org/wiki/Special:FilePath/${f}?width=256`,
@@ -44,15 +49,17 @@ export function photoFromUrl(url: string | undefined): PersonPhoto | undefined {
   return apPhoto(url);
 }
 
-/** Look up a portrait by stable id: `qid:Q…`, `bioguide:X000000`, or scope + name. */
-export function personPhoto(q: { name?: string | null; scope?: PhotoScope; qid?: string; bioguide?: string; src?: string }): PersonPhoto | undefined {
+/**
+ * Look up a portrait by stable id: `qid:Q…`, `bioguide:X000000`, or scope + name. The Commons maps load lazily, so this
+ * returns undefined until they arrive — components should call usePhotoIndex() (PersonAvatar's `lookup` prop does).
+ */
+export function personPhoto(q: PhotoQuery): PersonPhoto | undefined {
   if (q.bioguide) return bioguidePhoto(q.bioguide);
-  if (q.qid && PHOTOS[`qid:${q.qid}`]) return commons(PHOTOS[`qid:${q.qid}`]);
+  if (q.qid && genRec(`qid:${q.qid}`)) return commons(genRec(`qid:${q.qid}`));
   if (q.src) return photoFromUrl(q.src);
   if (!q.name) return undefined;
   const k = personKey(q.name);
-  if (q.scope === 'au') return commons(AU_PHOTOS[k]);
-  if (q.scope === 'nz') return commons(PHOTOS[`nz:${k}`]);
-  if (q.scope === 'us') return commons(PHOTOS[`us:${k}`]);
+  if (q.scope === 'au') return commons(auRec(k));
+  if (q.scope === 'nz' || q.scope === 'us' || q.scope === 'us26') return commons(genRec(`${q.scope}:${k}`));
   return undefined;
 }

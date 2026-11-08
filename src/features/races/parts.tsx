@@ -1,7 +1,7 @@
 // Local building blocks for the Races & States feature.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { line as d3line, curveMonotoneX } from 'd3-shape';
 import type { NewsItem, PollSeries, Race, RaceResult, StateInfo } from '../../types';
 import { AnimatedNumber, Avatar, PartyDot, RatingBadge, SimBadge } from '../../components';

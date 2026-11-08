@@ -44,7 +44,7 @@ export function WatchAlerts() {
       if (now.called && now.called !== prev.called && !(r.calledAt && r.calledAt < mountedAt.current - 5 * 60e3)) {
         const w = name(now.called);
         const title = `${race.title}: ${w?.name ?? 'Winner'} wins`;
-        const body = `Race called for ${w?.name ?? now.called}${w ? ` (${w.party})` : ''} · simulated call`;
+        const body = `Race called for ${w?.name ?? now.called}${w ? ` (${w.party})` : ''} · AP via NYT`;
         toast.push({ kicker: '★ WATCHLIST · RACE CALL', title, body, tone: w?.party === 'D' ? 'dem' : w?.party === 'R' ? 'rep' : 'ind', to: `/race/${id}`, duration: 9000 });
         notifyBrowser(title, body);
       } else if (!now.called && prev.leader && now.leader && now.leader !== prev.leader) {

@@ -1,7 +1,7 @@
 import { fmtHHMM, tzAbbr } from '../../components/time';
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type { Party, RaceResult } from '../../types';
 import type { LiveState } from '../../lib/live';
 import { LEAN_HEX, PARTY_HEX, PARTY_NAME, fmtInt, mixHex, timeAgo } from '../../lib/format';

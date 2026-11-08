@@ -5,7 +5,7 @@
 import { useSeo } from '../../lib/seo';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import type { Chamber, Race, Rating } from '../../types';
 import { racesByState } from '../../data';
 import { useLive } from '../../lib/live';

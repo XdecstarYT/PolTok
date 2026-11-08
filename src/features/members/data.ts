@@ -52,18 +52,20 @@ export function usDir(m: UsMember): DirMember {
 }
 
 const lastName = (n: string) => n.replace(/\s*\(.*\)$/, '').split(/\s+/).slice(-1)[0];
-function auPhotoFields(name: string): Partial<DirMember> {
-  const p = auPhoto(name);
-  return p ? { photo: p.thumbUrl, photoCredit: p.credit, photoLicenceUrl: p.licenceUrl, photoSource: p.sourcePage } : {};
+/** AU portrait fields, resolved at render time (the photo index loads lazily — call usePhotoIndex() first). */
+export function withAuPhoto<T extends DirMember>(m: T): T {
+  if (m.country !== 'AU' || m.photo) return m;
+  const p = auPhoto(m.name);
+  return p ? { ...m, photo: p.thumbUrl, photoCredit: p.credit, photoLicenceUrl: p.licenceUrl, photoSource: p.sourcePage } : m;
 }
 export const AU_MEMBERS: DirMember[] = [
   ...FEDERAL.seats.filter((s) => s.chamber === 'federal' && s.member && !s.vacant).map((s): DirMember => ({
     key: `au-h-${s.id}`, country: 'AU', name: s.member, last: lastName(s.member), chamber: 'house', party: s.party,
-    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: s.name, margin: s.margin, note: s.note, ...auPhotoFields(s.member),
+    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: s.name, margin: s.margin, note: s.note,
   })),
   ...SENATORS.map((s): DirMember => ({
     key: `au-s-${slugify(s.name)}`, country: 'AU', name: s.name, last: lastName(s.name), chamber: 'senate', party: s.party,
-    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: `${s.state} · Senate`, note: s.note, ...auPhotoFields(s.name),
+    partyLabel: AU_PARTIES[s.party]?.name ?? s.party, color: auPartyColor(s.party), state: s.state, seat: `${s.state} · Senate`, note: s.note,
   })),
 ];
 export const auSeatFor = (key: string) => FEDERAL.seats.find((s) => `au-h-${s.id}` === key);

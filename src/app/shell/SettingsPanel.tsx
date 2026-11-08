@@ -1,5 +1,4 @@
 import { Modal, fmtTime, tzAbbr, useNow, LOCAL_TZ } from '../../components';
-import { useLive } from '../../lib/live';
 import { TIME_ZONES, useSettings, playCallChime, type AlertLevel } from '../../lib/settings';
 
 function zoneNow(tz: string, now: number) {
@@ -15,7 +14,6 @@ function zoneNow(tz: string, now: number) {
 export function SettingsPanel() {
   const { settings, update, panelOpen: open, setPanelOpen } = useSettings();
   const onClose = () => setPanelOpen(false);
-  const { source, setSource } = useLive();
   const now = useNow(30000);
   const groups = [...new Set(TIME_ZONES.map((z) => z.group))];
 
@@ -96,16 +94,6 @@ export function SettingsPanel() {
           </label>
         </section>
 
-        <section className="set__sec" aria-labelledby="set-src">
-          <h3 id="set-src" className="set__h">Results source</h3>
-          <label className="set__row">
-            <span>
-              <b>Live results</b>
-              <span className="set__help">Real AP vote counts and race calls via The New York Times, with real Polymarket odds. Turn off only to watch a simulated demo replay of election night.</span>
-            </span>
-            <input type="checkbox" className="set__switch" checked={source === 'live'} onChange={(e) => setSource(e.target.checked ? 'live' : 'simulation')} />
-          </label>
-        </section>
       </div>
     </Modal>
   );

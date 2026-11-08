@@ -1,6 +1,6 @@
 import { useMemo, useState, type PointerEvent } from 'react';
 import { scaleBand, scaleLinear } from 'd3-scale';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { PARTY_COLOR, PARTY_HEX } from '../../lib/format';
 import { useReducedMotion, useSize } from './hooks';
 
@@ -132,7 +132,7 @@ export function OutcomeDots({ samples, dNeeds, runKey, minSpan = 14 }: { samples
         <svg width={w} height={h} role="img" aria-label={`${s.length} simulated outcomes: Democrats win control in ${dWins}.`}>
           <line x1={thrX} x2={thrX} y1={4} y2={h - 18} className="fc-thr" />
           {dots.map((d) => (
-            <motion.circle
+            <m.circle
               key={`${runKey}-${d.i}`}
               cx={x(d.v)}
               cy={h - 24 - r - d.k * (r * 2 + 2)}

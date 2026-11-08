@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type { Race, Rating } from '../../types';
 import { HOUSE_BASELINE, RACES, SENATE_NOT_UP } from '../../data';
 import { useLive } from '../../lib/live';

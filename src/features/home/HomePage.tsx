@@ -1,13 +1,13 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useSeo } from '../../lib/seo';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { RACES, STATES } from '../../data';
 import { PARTY_HEX, fmtInt, fmtPct, marginColor, timeAgo } from '../../lib/format';
 import type { BalanceOfPower, Candidate, Party, Race, RaceResult } from '../../types';
 import {
-  Avatar, Button, Card, Chip, Countdown, EmptyState, LiveDot, SectionHeader, SimBadge, Skeleton,
+  Avatar, Button, Card, Chip, Countdown, EmptyState, LiveDot, SectionHeader, Skeleton,
   fmtTime, useNow, useReducedMotion,
 } from '../../components';
 import { useFlipsData, type FlipRace } from '../flips/data';
@@ -101,7 +101,7 @@ function useResultsData() {
 /* ───────── banner ───────── */
 
 function Banner() {
-  const { balance, source, lastUpdate } = useLive();
+  const { balance, lastUpdate } = useLive();
   const s = controlOf(balance.senate);
   const h = controlOf(balance.house);
   let head: string;
@@ -125,19 +125,48 @@ function Banner() {
   return (
     <section className={`hm-banner ${tone ? `is-${tone}` : 'is-open'}`} aria-labelledby="hm-title">
       <div className="hm-banner__top">
-        <LiveDot label={source === 'live' ? 'RESULTS · AP' : 'SIMULATED'} />
+        <LiveDot label="RESULTS · AP" />
         <span className="kicker kicker--muted">2026 U.S. Midterms · The morning after</span>
         {lastUpdate > 0 && <span className="kicker kicker--muted">Updated {fmtTime(lastUpdate)}</span>}
-        {source !== 'live' && <SimBadge compact />}
       </div>
-      <h1 id="hm-title" className="hm-banner__title">{head}</h1>
-      <p className="hm-banner__sub">{sub}</p>
+      <div className="hm-banner__main">
+        <div className="hm-banner__copy">
+          <h1 id="hm-title" className="hm-banner__title">{head}</h1>
+          <p className="hm-banner__sub">{sub}</p>
+        </div>
+        <Scoreboard />
+      </div>
       <div className="row row-wrap" style={{ gap: 10 }}>
         <Button variant="accent" size="lg" to="/analysis">Read the analysis →</Button>
         <Button variant="ghost" size="lg" to="/replay">Replay the night</Button>
         <Button variant="ghost" size="lg" to="/live">Results desk</Button>
       </div>
     </section>
+  );
+}
+
+/** Hero scoreboard: seats won per chamber, straight from the live balance of power. */
+function Scoreboard() {
+  const { balance } = useLive();
+  const rows = (['senate', 'house'] as Ch[]).map((ch) => ({ ch, b: balance[ch] })).filter((x) => x.b?.total);
+  if (!rows.length) return null;
+  return (
+    <dl className="hm-score" aria-label="Seats won by chamber">
+      {rows.map(({ ch, b }) => {
+        const d = b!.dem + b!.ind, r = b!.rep;
+        return (
+          <div key={ch} className="hm-score__ch">
+            <dt className="row spread"><span>{CH_NAME[ch]}</span><span className="faint num">{b!.majority} to win</span></dt>
+            <dd className="hm-score__nums num">
+              <b style={{ color: 'var(--dem)' }}>{d}</b>
+              <span className="faint">{b!.undecided ? `${b!.undecided} uncalled` : 'all called'}</span>
+              <b style={{ color: 'var(--rep)' }}>{r}</b>
+            </dd>
+            <dd><SeatBar b={b!} /></dd>
+          </div>
+        );
+      })}
+    </dl>
   );
 }
 
@@ -300,7 +329,7 @@ function ResultCard({ race, result, i }: { race: Race; result?: RaceResult; i: n
   const glow = winner ? PARTY_HEX[winner.party] : lead ? PARTY_HEX[lead.c.party] : 'var(--line-2)';
   const flip = winner && winner.party !== race.incumbentParty && race.incumbentParty !== 'I';
   return (
-    <motion.li className="hm-race" initial={reduce ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i, 8) * 0.04 }}>
+    <m.li className="hm-race" initial={reduce ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i, 8) * 0.04 }}>
       <Link to={`/race/${race.id}`} className="card card--hover hm-race__card" style={{ '--glow': glow } as CSSProperties}>
         <div className="row spread">
           <span className="kicker">{race.chamber} · {race.state}{race.special ? ' · special' : ''}</span>
@@ -325,7 +354,7 @@ function ResultCard({ race, result, i }: { race: Race; result?: RaceResult; i: n
           <span>{Math.round(result?.expectedPct ?? 0)}% counted</span>
         </div>
       </Link>
-    </motion.li>
+    </m.li>
   );
 }
 
@@ -416,14 +445,9 @@ function QuickLinks() {
 }
 
 function SourceFoot() {
-  const { source } = useLive();
   return (
     <p className="hm-foot faint">
-      {source === 'live' ? (
-        <>Results and race calls are from the Associated Press via The New York Times. Flips and net change use AP's party-gain flag. A party is only shown as winning a chamber once its called seats reach the majority. Headlines are real and link to their publishers.</>
-      ) : (
-        <>Chamber results on this page are <b>simulated</b> — switch to <b>Live</b> in the top bar for real AP results. Flips are always real AP data. Headlines are real.</>
-      )}
+      Results and race calls are from the Associated Press via The New York Times. Flips and net change use AP's party-gain flag. A party is only shown as winning a chamber once its called seats reach the majority. Headlines are real and link to their publishers.
     </p>
   );
 }
@@ -459,15 +483,14 @@ export default function HomePage() {
   return (
     <div className="page hm">
       <CountryHero />
-      <LazySection min={110} eager><S.WorldLive /></LazySection>
-      <Balance flipsAll={flipsAll} />
+      <LazySection min={150} eager><S.WorldLive /></LazySection>
       <LazySection min={56} eager><S.Markets /></LazySection>
       <Numbers flipsAll={flipsAll} flips={flips} />
-      <LazySection min={260}><S.ForYou /></LazySection>
-      <LazySection min={90}><S.Tools /></LazySection>
-      <LazySection min={200}><S.Highlights /></LazySection>
       <Flips flips={flips} loading={flipsLoading} />
+      <Balance flipsAll={flipsAll} />
       <Marquee />
+      <LazySection min={200}><S.Highlights /></LazySection>
+      <LazySection min={90}><S.Tools /></LazySection>
       <div className="hm-row">
         <LazySection min={480}><S.TopStories /></LazySection>
         <div className="hm-side">
@@ -475,6 +498,7 @@ export default function HomePage() {
           <AUPromo />
         </div>
       </div>
+      <LazySection min={260}><S.ForYou /></LazySection>
       <div className="hm-row hm-row--2">
         <LazySection min={300}><S.Today /></LazySection>
         <LazySection min={200}><S.WhatsNew /></LazySection>

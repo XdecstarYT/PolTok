@@ -5,11 +5,16 @@
 //    Australian citizen + Australian party for non-MP candidates); >1 qualifying item => ambiguous, rejected.
 // 3. P18 image -> Commons imageinfo extmetadata; keep only CC BY / CC BY-SA / CC0 / public domain.
 // 4. Write src/data/au-photos.ts keyed by normalised name (see auPhotoKey).
+// Second pass: names that matched nothing are retried against every Australian-party member / federal or Victorian MP
+// on Wikidata by the same name key (catches labels with middle names); one qualifying item per key, else rejected.
+// Matched people with no usable P18 fall back to a Commons file that depicts exactly them (P180) or sits in their own
+// category (P373) and names their surname (scripts/photo-lib.mts), licence-checked the same way.
 import { writeFileSync } from 'node:fs';
 import { FEDERAL, VICTORIA, SENATORS, VIC_CANDIDATES, AU_PARTY_PROFILES } from '../src/data/au.ts';
 import { VIC_NOMINATIONS } from '../src/data/au-vic.ts';
 import { AU_STATES } from '../src/data/au-states.ts';
 import { auPhotoKey } from '../src/data/au-photo-key.ts';
+import { resolveFallbacks, fileOf } from './photo-lib.mts';
 
 const UA = 'PolTokBot/1.0 (https://poltok.netlify.app; build-time photo licence check)';
 const HOR = 'Q18912794', SEN = 'Q6814428', VLA = 'Q18534408';
@@ -53,18 +58,19 @@ async function get(url: string, init: RequestInit = {}, tries = 6): Promise<any>
 }
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-interface Hit { qid: string; key: string; imgs: string[]; pos: string[]; posLabels: string[]; au: boolean; auParty: boolean }
+interface Hit { qid: string; key: string; cat?: string; imgs: string[]; pos: string[]; posLabels: string[]; au: boolean; auParty: boolean }
 const hits: Hit[] = [];
 const entries = [...people.entries()];
 for (let i = 0; i < entries.length; i += 60) {
   const batch = entries.slice(i, i + 60);
   const values = batch.map(([, p]) => JSON.stringify(p.name) + '@en').join(' ');
   const q = `SELECT ?item ?name (GROUP_CONCAT(DISTINCT ?img;separator="|") AS ?imgs) (GROUP_CONCAT(DISTINCT ?pos;separator="|") AS ?poss)
- (GROUP_CONCAT(DISTINCT ?posLabel;separator="|") AS ?posLabels) (SAMPLE(?au) AS ?isAu) (SAMPLE(?ap) AS ?auParty) WHERE {
+ (GROUP_CONCAT(DISTINCT ?posLabel;separator="|") AS ?posLabels) (SAMPLE(?au) AS ?isAu) (SAMPLE(?ap) AS ?auParty) (SAMPLE(?ct) AS ?cat) WHERE {
  VALUES ?name { ${values} }
  { ?item rdfs:label ?name } UNION { ?item skos:altLabel ?name }
  ?item wdt:P31 wd:Q5 .
  OPTIONAL { ?item wdt:P18 ?img }
+ OPTIONAL { ?item wdt:P373 ?ct }
  OPTIONAL { ?item wdt:P39 ?pos . ?pos rdfs:label ?posLabel FILTER(lang(?posLabel)="en") }
  BIND(EXISTS { ?item wdt:P27 wd:Q408 } AS ?au)
  BIND(EXISTS { ?item wdt:P102 ?pty . ?pty wdt:P17 wd:Q408 } AS ?ap)
@@ -76,7 +82,7 @@ for (let i = 0; i < entries.length; i += 60) {
   for (const b of j.results.bindings) {
     const sp = (v?: { value: string }) => (v?.value ? v.value.split('|') : []);
     hits.push({
-      qid: b.item.value.split('/').pop(), key: auPhotoKey(b.name.value),
+      qid: b.item.value.split('/').pop(), key: auPhotoKey(b.name.value), cat: b.cat?.value,
       imgs: sp(b.imgs).map((u) => decodeURIComponent(u.split('Special:FilePath/')[1]).replace(/_/g, ' ')),
       pos: sp(b.poss).map((u) => u.split('/').pop()!), posLabels: sp(b.posLabels),
       au: b.isAu?.value === 'true', auParty: b.auParty?.value === 'true',
@@ -95,12 +101,45 @@ function qualifies(h: Hit, roles: Set<Role>): boolean {
   return false;
 }
 
-const matched = new Map<string, { qid: string; file?: string }>();
+const matched = new Map<string, { qid: string; file?: string; cat?: string }>();
 let ambiguous = 0;
+const ambiguousKeys = new Set<string>();
 for (const [k, p] of people) {
   const qs = [...new Map(hits.filter((h) => h.key === k && qualifies(h, p.roles)).map((h) => [h.qid, h])).values()];
-  if (qs.length > 1) { ambiguous++; console.warn(`ambiguous: ${p.name} -> ${qs.map((q) => q.qid).join(',')}`); continue; }
-  if (qs.length === 1) matched.set(k, { qid: qs[0].qid, file: qs[0].imgs[0] });
+  if (qs.length > 1) { ambiguous++; ambiguousKeys.add(k); console.warn(`ambiguous: ${p.name} -> ${qs.map((q) => q.qid).join(',')}`); continue; }
+  if (qs.length === 1) matched.set(k, { qid: qs[0].qid, file: qs[0].imgs[0], cat: qs[0].cat });
+}
+
+// Pool pass: unmatched names vs every Australian-party member / federal or Victorian MP, by name key.
+{
+  const pool = await get('https://query.wikidata.org/sparql', {
+    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/sparql-results+json' },
+    body: new URLSearchParams({ format: 'json', query: `SELECT ?item ?lab (SAMPLE(?img) AS ?im) (SAMPLE(?ct) AS ?cat) WHERE {
+ { ?item wdt:P102 ?pty . ?pty wdt:P17 wd:Q408 } UNION { ?item wdt:P39 wd:${HOR} } UNION { ?item wdt:P39 wd:${SEN} } UNION { ?item wdt:P39 wd:${VLA} }
+ ?item wdt:P31 wd:Q5 .
+ { ?item rdfs:label ?lab FILTER(lang(?lab)="en") } UNION { ?item skos:altLabel ?lab FILTER(lang(?lab)="en") }
+ OPTIONAL { ?item wdt:P18 ?img } OPTIONAL { ?item wdt:P373 ?ct }
+} GROUP BY ?item ?lab` }),
+  });
+  const byKey = new Map<string, Map<string, { img?: string; cat?: string }>>();
+  for (const b of pool.results.bindings) {
+    const k = auPhotoKey(b.lab.value);
+    const m = byKey.get(k) ?? new Map();
+    m.set(b.item.value.split('/').pop(), { img: b.im ? fileOf(b.im.value) : undefined, cat: b.cat?.value });
+    byKey.set(k, m);
+  }
+  const used = new Set([...matched.values()].map((m) => m.qid));
+  let rescued = 0;
+  for (const [k, p] of people) {
+    if (matched.has(k) || ambiguousKeys.has(k)) continue;
+    const m = byKey.get(k);
+    if (!m) continue;
+    if (m.size > 1) { ambiguous++; console.warn(`ambiguous (pool): ${p.name} -> ${[...m.keys()]}`); continue; }
+    const [[qid, v]] = [...m.entries()];
+    if (used.has(qid)) continue;
+    matched.set(k, { qid, file: v.img, cat: v.cat }); rescued++;
+  }
+  console.log(`pool pass rescued ${rescued}`);
 }
 
 // Commons licence check
@@ -137,12 +176,16 @@ for (const [k, m] of matched) {
   out[k] = { f: m.file, a: author.slice(0, 90), l: lic, u: md.LicenseUrl?.value ?? '', q: m.qid };
 }
 
+// Fallback for matched people without a usable P18 (none, or rejected on licence).
+const fb = await resolveFallbacks([...matched.entries()].filter(([k]) => !out[k]).map(([k, m]) => ({ key: k, qid: m.qid, surname: people.get(k)!.name.trim().split(/\s+/).pop()!, category: m.cat })));
+for (const [k, rec] of fb) out[k] = rec;
+console.log(`fallback portraits: ${fb.size}`);
 const total = people.size;
 const generated = new Date().toISOString().slice(0, 10);
-const summary = `${total} people, ${matched.size} matched on Wikidata (${ambiguous} ambiguous rejected), ${matched.size - noImg} with P18 image, ${Object.keys(out).length} freely licensed (${rejected} rejected on licence)`;
+const summary = `${total} people, ${matched.size} matched on Wikidata (${ambiguous} ambiguous rejected), ${matched.size - noImg} with P18 image, ${Object.keys(out).length} freely licensed (${rejected} P18 rejected on licence; ${fb.size} via Commons depicts/category fallback)`;
 console.log(summary);
 const body = `// GENERATED by scripts/gen-au-photos.mts on ${generated} — do not hand-edit.
-// Wikidata (P18) portraits of AU people, kept only when the Commons file licence is CC BY / CC BY-SA / CC0 / public domain.
+// Loaded lazily (see src/data/photos/store.ts). Wikidata (P18, else depicts/category fallback) portraits of AU people, kept only when the Commons file licence is CC BY / CC BY-SA / CC0 / public domain.
 // ${summary}
 // f = Commons file (thumb = Special:FilePath ?width=256, source = File: page; see src/data/au-photo-key.ts), a = author, l = licence, u = licence URL, q = Wikidata item.
 export interface AuPhotoRec { f: string; a: string; l: string; u: string; q: string }

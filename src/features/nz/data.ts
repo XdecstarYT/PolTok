@@ -88,7 +88,15 @@ export interface NzDetail { status: string; updatedAt: number; source: string; e
 
 const NZ_POLLS_CLOSE_ISO = '2026-11-07T06:00:00Z';
 /** Set once the direct Electoral Commission fetch is refused (CORS), so we stop retrying it every poll. */
-let directBlocked = false;
+const BLOCK_KEY = 'poltok:nz-direct-blocked';
+let directBlocked = (() => {
+  // Remember a CORS refusal for 30 minutes so each page load doesn't log the same browser error.
+  try {
+    return Date.now() - Number(sessionStorage.getItem(BLOCK_KEY) || 0) < 30 * 60e3;
+  } catch {
+    return false;
+  }
+})();
 
 export function useNzResults(intervalMs = 60_000) {
   const [data, setData] = useState<NzResults | null>(null);
@@ -108,6 +116,11 @@ export function useNzResults(intervalMs = 60_000) {
         return r ? { ...r, sourceKind: 'ec' as const, error: undefined, heading: `${r.heading ?? ''} (loaded directly from the Electoral Commission)` } : d;
       } catch {
         directBlocked = true;
+        try {
+          sessionStorage.setItem(BLOCK_KEY, String(Date.now()));
+        } catch {
+          /* storage unavailable */
+        }
         return d; // CORS or network refusal — keep the honest 'pre' state with the official link
       }
     };

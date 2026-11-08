@@ -5,7 +5,7 @@
  */
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { raceById, stateByAbbr } from '../../data';
 import { PARTY_HEX, PARTY_NAME } from '../../lib/format';
@@ -79,7 +79,7 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
   const t0 = reduce ? 0 : 1; // multiply delays by 0 when motion is reduced
 
   return (
-    <motion.div
+    <m.div
       className={`ct ${call.flip ? 'is-flip' : ''}`}
       role="alertdialog"
       aria-live="assertive"
@@ -90,7 +90,7 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
       exit={{ opacity: 0, transition: { duration: reduce ? 0 : 0.4 } }}
       onClick={onClose}
     >
-      <motion.div className="ct__bloom" initial={reduce ? false : { scale: 0.2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.75 * t0, duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }} />
+      <m.div className="ct__bloom" initial={reduce ? false : { scale: 0.2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.75 * t0, duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }} />
       <div className="ct__grid" aria-hidden="true" />
       {call.flip && !reduce && <div className="ct__glitch" aria-hidden="true" />}
 
@@ -121,7 +121,7 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
                 {/* flood fill from the center, clipped to the state */}
                 <g clipPath="url(#ct-clip)">
                   <rect width={W} height={H} fill="rgba(255,255,255,0.04)" />
-                  <motion.circle
+                  <m.circle
                     cx={shape.cx}
                     cy={shape.cy}
                     fill="url(#ct-fill)"
@@ -131,7 +131,7 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
                   />
                   {!reduce &&
                     [0, 1, 2].map((i) => (
-                      <motion.circle
+                      <m.circle
                         key={i}
                         cx={shape.cx}
                         cy={shape.cy}
@@ -145,7 +145,7 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
                     ))}
                 </g>
                 {/* outline draws itself */}
-                <motion.path
+                <m.path
                   d={shape.d}
                   fill="none"
                   stroke="#fff"
@@ -159,7 +159,7 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
                 {/* shockwaves */}
                 {!reduce &&
                   [0, 0.18, 0.36].map((d, i) => (
-                    <motion.circle
+                    <m.circle
                       key={i}
                       cx={shape.cx}
                       cy={shape.cy}
@@ -173,7 +173,7 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
                 {/* particle burst */}
                 {!reduce &&
                   parts.map((p, i) => (
-                    <motion.circle
+                    <m.circle
                       key={i}
                       r={p.s}
                       fill={i % 3 === 0 ? '#fff' : color}
@@ -185,29 +185,29 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
               </>
             )}
           </svg>
-          <motion.div
+          <m.div
             className="ct__check"
             initial={reduce ? false : { scale: 0, rotate: -40 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ delay: 1.5 * t0, type: 'spring', stiffness: 420, damping: 14 }}
           >
             ✓
-          </motion.div>
+          </m.div>
         </div>
 
         <div className="ct__copy">
-          <motion.div className="ct__kicker" initial={reduce ? false : { x: -24, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.25 * t0 }}>
+          <m.div className="ct__kicker" initial={reduce ? false : { x: -24, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.25 * t0 }}>
             <span className="ct__dot" aria-hidden="true" />
             {kicker}
-          </motion.div>
-          <motion.div className="ct__state" initial={reduce ? false : { y: 30, opacity: 0, filter: 'blur(8px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} transition={{ delay: 0.35 * t0, duration: 0.5 }}>
+          </m.div>
+          <m.div className="ct__state" initial={reduce ? false : { y: 30, opacity: 0, filter: 'blur(8px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} transition={{ delay: 0.35 * t0, duration: 0.5 }}>
             {stateName}
-          </motion.div>
-          <motion.div className="ct__office" initial={reduce ? false : { y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 * t0 }}>
+          </m.div>
+          <m.div className="ct__office" initial={reduce ? false : { y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 * t0 }}>
             {race ? race.title.replace(stateName, '').trim() || race.title : call.raceId}
-          </motion.div>
+          </m.div>
 
-          <motion.div className="ct__winner" initial={reduce ? false : { y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.6 * t0, type: 'spring', stiffness: 200, damping: 20 }}>
+          <m.div className="ct__winner" initial={reduce ? false : { y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.6 * t0, type: 'spring', stiffness: 200, damping: 20 }}>
             {cand && <Avatar name={cand.name} party={call.party} src={cand.photo} size={84} />}
             <div className="ct__who">
               <div className="ct__label">{call.preview ? 'Preview only' : 'Projected winner'}</div>
@@ -222,18 +222,18 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
                 )}
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
-          {!call.preview && <motion.div
+          {!call.preview && <m.div
             className="ct__stamp"
             initial={reduce ? false : { scale: 2.6, opacity: 0, rotate: -18 }}
             animate={{ scale: 1, opacity: 1, rotate: -7 }}
             transition={{ delay: 1.9 * t0, type: 'spring', stiffness: 420, damping: 15 }}
           >
             {call.flip ? 'FLIP' : 'CALLED'}
-          </motion.div>}
+          </m.div>}
 
-          <motion.div className="ct__actions" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.1 * t0 }}>
+          <m.div className="ct__actions" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.1 * t0 }}>
             <Link to={`/race/${call.raceId}`} className="btn btn--sm" onClick={onClose}>
               Open race →
             </Link>
@@ -242,10 +242,10 @@ export function CallTakeover({ call, reduce, onClose, durationMs }: { call: Race
             </button>
             <span className="ct__time num">{fmtET(call.at)}</span>
             <SimBadge />
-          </motion.div>
+          </m.div>
         </div>
       </div>
-      {!reduce && <motion.div className="ct__timer" initial={{ scaleX: 1 }} animate={{ scaleX: 0 }} transition={{ duration: durationMs / 1000, ease: 'linear' }} />}
-    </motion.div>
+      {!reduce && <m.div className="ct__timer" initial={{ scaleX: 1 }} animate={{ scaleX: 0 }} transition={{ duration: durationMs / 1000, ease: 'linear' }} />}
+    </m.div>
   );
 }

@@ -15,7 +15,7 @@ interface Item {
 
 /** Breaking-news / race-call marquee under the nav. Pauses on hover / focus. */
 export function Ticker() {
-  const { ticker, calls, news, source } = useLive();
+  const { ticker, calls, news } = useLive();
   const reduce = useReducedMotion();
   const items = useMemo<Item[]>(() => {
     const out: Item[] = [];
@@ -37,11 +37,11 @@ export function Ticker() {
         out.push({ id: `n-${n.id}`, label: n.source.toUpperCase().slice(0, 14), color: '#a3adc8', text: n.title });
     if (!out.length)
       out.push(
-        { id: 'w1', label: 'ELECTION DAY', color: '#c6ff3d', text: source === 'live' ? 'Polls are open across the country — AP results stream in as polls close' : 'Polls are open across the country — results will stream in as polls close (simulated results)' },
+        { id: 'w1', label: 'ELECTION DAY', color: '#c6ff3d', text: 'Polls are open across the country — AP results stream in as polls close' },
         { id: 'w2', label: 'TIP', color: '#22d3ee', text: 'Press ⌘K / Ctrl+K to jump to any state, race or page' },
       );
     return out;
-  }, [ticker, calls, news, source]);
+  }, [ticker, calls, news]);
 
   // duration scales with content length so speed stays ~40px/s
   const chars = items.reduce((a, i) => a + i.text.length + i.label.length + 8, 0);

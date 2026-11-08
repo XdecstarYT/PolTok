@@ -4,7 +4,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Modal, useReducedMotion } from '../../components';
 import { useLive } from '../../lib/live';
 import { renderCard, cardFileName, type CardData } from '../../lib/cards';
@@ -79,7 +79,7 @@ function IssuesQuiz() {
       </div>
       <div className="qz-progress" aria-hidden="true"><span style={{ width: `${((i + 1) / STATEMENTS.length) * 100}%` }} /></div>
       <AnimatePresence mode="wait">
-        <motion.div key={s.id} initial={reduce ? false : { opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={reduce ? undefined : { opacity: 0, x: -24 }} transition={{ duration: 0.22 }}>
+        <m.div key={s.id} initial={reduce ? false : { opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={reduce ? undefined : { opacity: 0, x: -24 }} transition={{ duration: 0.22 }}>
           <p className="qz-meta">{i + 1} / {STATEMENTS.length} · {s.topic}</p>
           <h2 className="qz-q" id="qz-stmt">{s.text}</h2>
           <div className="qz-scale" role="radiogroup" aria-labelledby="qz-stmt">
@@ -95,7 +95,7 @@ function IssuesQuiz() {
               ))}
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </AnimatePresence>
       <div className="qz-nav">
         <button type="button" className="btn" disabled={i === 0} onClick={() => setI(i - 1)}>Back</button>
@@ -135,7 +135,7 @@ function IssuesResults({ region, answers, onBack, onReset }: { region: Region; a
         {scores.map(({ p, pct, n }, k) => (
           <li key={p.id}>
             <div className="qz-bars__top"><b>{p.name}</b><span>{pct == null ? 'no overlap' : `${pct}%`}</span></div>
-            <div className="qz-bars__track"><motion.span style={{ background: p.color }} initial={{ width: 0 }} animate={{ width: `${pct ?? 0}%` }} transition={{ duration: 0.7, delay: k * 0.08 }} /></div>
+            <div className="qz-bars__track"><m.span style={{ background: p.color }} initial={{ width: 0 }} animate={{ width: `${pct ?? 0}%` }} transition={{ duration: 0.7, delay: k * 0.08 }} /></div>
             <small>Based on {n} statement{n === 1 ? '' : 's'} with a stated position · <a href={p.url} target="_blank" rel="noreferrer">{p.doc}</a></small>
           </li>
         ))}
@@ -260,7 +260,7 @@ function Trivia() {
         </div>
       ) : (
         <AnimatePresence mode="wait">
-          <motion.div key={q.id} initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, y: -12 }}>
+          <m.div key={q.id} initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, y: -12 }}>
             <p className="qz-meta">Question {idx + 1} of {qs.length} · {q.source}</p>
             <h2 className="qz-q" id="qz-tq">{q.q}</h2>
             <div className="qz-answers" role="group" aria-labelledby="qz-tq">
@@ -271,13 +271,13 @@ function Trivia() {
             </div>
             <div aria-live="polite">
               {shown !== null && (
-                <motion.div className="qz-explain" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <m.div className="qz-explain" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <b>{shown === q.answer ? 'Correct!' : 'Not quite.'}</b> {q.explain} {q.link && <Link to={q.link.to}>{q.link.label} →</Link>}
                   <div className="qz-nav"><button type="button" className="btn btn--accent" onClick={next} autoFocus>{idx + 1 === qs.length ? 'Finish' : 'Next question'}</button></div>
-                </motion.div>
+                </m.div>
               )}
             </div>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       )}
       <p className="qz-fine">Questions are generated each day from real results ({live.mode.includes('live') ? 'live AP calls' : 'baked facts — live results not connected'}) and PolTok’s data. Streaks are stored only in this browser.</p>
@@ -322,7 +322,7 @@ function MapGame() {
       <div className="qz-map">
         {shape && (
           <svg viewBox="0 0 300 220" role="img" aria-label={`Outline of ${r.title.replace(/ (Senate|Governor).*/, '')}`}>
-            <motion.path key={r.id} d={shape.d} initial={{ pathLength: 0, opacity: 0.3 }} animate={{ pathLength: 1, opacity: 1, fill }} transition={{ duration: 0.6 }} stroke="var(--text-2)" strokeWidth={1.5} />
+            <m.path key={r.id} d={shape.d} initial={{ pathLength: 0, opacity: 0.3 }} animate={{ pathLength: 1, opacity: 1, fill }} transition={{ duration: 0.6 }} stroke="var(--text-2)" strokeWidth={1.5} />
           </svg>
         )}
       </div>

@@ -61,7 +61,8 @@ export function Sparkle() {
   );
 }
 
-export function Chat({ autoFocus }: { autoFocus?: boolean }) {
+/** `hideOffNotice`: the host page already shows the "AI isn't configured" notice. */
+export function Chat({ autoFocus, hideOffNotice }: { autoFocus?: boolean; hideOffNotice?: boolean }) {
   const status = useAiStatus();
   const { msgs, busy, ask, stop, reset } = useAiChat();
   const [q, setQ] = useState('');
@@ -83,7 +84,7 @@ export function Chat({ autoFocus }: { autoFocus?: boolean }) {
   return (
     <div className="ask-chat">
       <div className="ask-log" aria-live="polite">
-        {disabled && <div className="ask-empty">{errorText(status, '')}</div>}
+        {disabled && !hideOffNotice && <div className="ask-empty">{errorText(status, '')}</div>}
         {!disabled && !msgs.length && (
           <div className="ask-empty">
             <div className="ask-hero">

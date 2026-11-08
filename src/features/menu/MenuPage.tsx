@@ -1,7 +1,7 @@
 /** Main Menu hub: full-screen launcher of every section of PolTok. */
 import { useMemo, type CSSProperties, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { useSettings } from '../../lib/settings';
 import { useWatchlist } from '../../lib/watchlist';
@@ -147,7 +147,7 @@ export default function MenuPage() {
               );
               const style = (t.tone ? { '--tone': t.tone } : undefined) as CSSProperties | undefined;
               return (
-                <motion.li
+                <m.li
                   key={t.title}
                   initial={reduce ? false : { opacity: 0, y: 14, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -158,7 +158,7 @@ export default function MenuPage() {
                   ) : (
                     <Link to={t.to!} className="mn-tile" style={style}>{body}</Link>
                   )}
-                </motion.li>
+                </m.li>
               );
             })}
           </ul>

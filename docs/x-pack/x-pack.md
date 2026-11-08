@@ -21,10 +21,10 @@ https://poltok.netlify.app/
 
 **Image:** post-02.png  
 **When:** Reply to previous tweet in thread  
-**Alt text:** Thread slide 2 of 6: 'Real US results' — AP results via The New York Times with a Live/Simulated switch.
+**Alt text:** Thread slide 2 of 6: 'Real US results' — AP results via The New York Times, live data only.
 
 ```
-2/ Real US results: PolTok shows AP results via The New York Times, with a clear Live/Simulated switch so you always know what you're looking at.
+2/ Real US results: PolTok shows live AP data only, via The New York Times, so what you see is always real.
 
 Maps morph between geographic and hex views.
 https://poltok.netlify.app/live
@@ -83,7 +83,7 @@ https://poltok.netlify.app/updates
 **Alt text:** Banner card: 'US midterm results, live' with the count of tracked races called, sourced from AP via The New York Times.
 
 ```
-US midterm results on PolTok: AP data via The New York Times, race calls, and maps that morph between geographic and hex views. A Live/Simulated switch keeps it clear what's real.
+US midterm results on PolTok: AP data via The New York Times, race calls, and maps that morph between geographic and hex views. Live AP data only, never simulated.
 
 #Midterms2026
 https://poltok.netlify.app/live

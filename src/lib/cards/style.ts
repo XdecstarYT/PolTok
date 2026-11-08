@@ -73,7 +73,7 @@ export const SIZE_PRESETS: { id: string; label: string; w: number; h: number }[]
 
 export const TEXTURES: Texture[] = ['none', 'grain', 'halftone', 'grid', 'scanlines', 'paper'];
 
-/** Fonts the page already loads, plus a few extra Google Fonts injected on demand. */
+/** Theme fonts (each theme only loads its own, so these are injected on demand too), plus extra Google Fonts. */
 export const PAGE_FONTS = ['Inter', 'Space Grotesk', 'Oswald', 'Roboto Condensed', 'Playfair Display', 'Source Serif 4', 'JetBrains Mono', 'IBM Plex Mono'];
 export const EXTRA_FONTS: Record<string, string> = {
   Anton: 'Anton',
@@ -86,13 +86,23 @@ export const EXTRA_FONTS: Record<string, string> = {
   'Bricolage Grotesque': 'Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800',
   'Barlow Condensed': 'Barlow+Condensed:wght@500;700;800',
 };
+const PAGE_FONT_Q: Record<string, string> = {
+  Inter: 'Inter:wght@400;500;600;700;800',
+  'Space Grotesk': 'Space+Grotesk:wght@400;500;600;700',
+  Oswald: 'Oswald:wght@500;600;700',
+  'Roboto Condensed': 'Roboto+Condensed:wght@400;700;900',
+  'Playfair Display': 'Playfair+Display:wght@600;700;900',
+  'Source Serif 4': 'Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700',
+  'JetBrains Mono': 'JetBrains+Mono:wght@400;600;700',
+  'IBM Plex Mono': 'IBM+Plex+Mono:wght@400;600;700',
+};
 export const FONT_CHOICES = [...PAGE_FONTS, ...Object.keys(EXTRA_FONTS)];
 
 const injected = new Set<string>();
 /** Loads a font for canvas use; extra fonts get a stylesheet link added on first use. */
 export async function ensureFont(name?: string): Promise<void> {
   if (!name || typeof document === 'undefined') return;
-  const q = EXTRA_FONTS[name];
+  const q = EXTRA_FONTS[name] ?? PAGE_FONT_Q[name];
   if (q && !injected.has(name)) {
     injected.add(name);
     const l = document.createElement('link');

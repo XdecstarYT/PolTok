@@ -51,9 +51,8 @@ const AU_RE = /\b(australia|australian|victoria|victorian|vic|albanese|allan|lab
 
 /** Build the grounded context JSON for a question. `raceId` narrows to one race. */
 export async function buildContext(live: LiveState, question: string, raceId?: string) {
-  const isSim = live.source === 'simulation' || live.mode.includes('simulation');
   const base = {
-    note: isSim ? 'SIMULATED demo results — not real.' : 'Live results: AP via The New York Times (source name "AP via NYT").',
+    note: 'Live results: AP via The New York Times (source name "AP via NYT").',
     mode: live.mode,
     asOf: live.lastUpdate ? new Date(live.lastUpdate).toISOString() : null,
     balanceOfPower: live.balance,

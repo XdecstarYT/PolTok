@@ -1,15 +1,14 @@
 /**
- * Live data layer. Two result sources, chosen by the user (persisted):
- *   - 'live'       real AP results via the NYT results JSON (shared/nyt.js)
- *   - 'simulation' the seeded election-night simulation (shared/sim.js)
- * Connects to the API's SSE stream (/api/stream?source=…). If the API is unreachable
+ * Live data layer. Live data only: real AP results via the NYT results JSON (shared/nyt.js).
+ * PolTok never shows simulated results.
+ * Connects to the API's SSE stream (/api/stream). If the API is unreachable
  * (static hosting), the same provider runs in the browser, and news is fetched from
  * CORS-friendly RSS routes (src/lib/browserNews.ts).
  *
  * Consumers: `const live = useLive();` — see LiveState below. Do not open your own
  * EventSource in feature code; extend this provider instead (coordinate first).
  */
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { BalanceOfPower, LiveEvent, Market, NewsItem, RaceCallEvent, RaceResult } from '../types';
 import { RACES, STATES, raceById } from '../data';
 
@@ -20,15 +19,15 @@ export interface TickerItem {
   at: number;
 }
 
-export type ResultsSource = 'live' | 'simulation';
+/** Results always come from live AP data. Kept as a field for older consumers. */
+export type ResultsSource = 'live';
 
 export interface LiveState {
   connected: boolean;
   /** Where results come from right now. browser-* = no API server; computed in the browser. */
-  mode: 'connecting' | 'live' | 'simulation' | 'browser-live' | 'browser-simulation';
-  /** The user's chosen results source (persisted). */
+  mode: 'connecting' | 'live' | 'browser-live';
+  /** Always 'live' (simulation mode was removed). */
   source: ResultsSource;
-  setSource: (s: ResultsSource) => void;
   results: Record<string, RaceResult>;
   balance: Record<'senate' | 'house', BalanceOfPower | undefined>;
   calls: RaceCallEvent[]; // newest first
@@ -36,7 +35,7 @@ export interface LiveState {
   markets: Market[];
   ticker: TickerItem[]; // newest first
   lastUpdate: number;
-  /** Simulated Eastern-time election-night clock (simMinute = minutes after 18:00 ET). */
+  /** Election-night clock from the results provider (simMinute = minutes after 18:00 ET). */
   clock?: SimClock;
 }
 
@@ -53,7 +52,6 @@ const initial: LiveState = {
   connected: false,
   mode: 'connecting',
   source: 'live',
-  setSource: () => {},
   results: {},
   balance: { senate: undefined, house: undefined },
   calls: [],
@@ -74,7 +72,7 @@ function reduce(s: LiveState, ev: LiveEvent): LiveState {
       return {
         ...s,
         connected: true,
-        mode: s.mode === 'browser-live' || s.mode === 'browser-simulation' ? s.mode : ev.mode,
+        mode: s.mode === 'browser-live' ? s.mode : 'live',
         lastUpdate: now,
       };
     case 'results': {
@@ -130,18 +128,6 @@ function reduce(s: LiveState, ev: LiveEvent): LiveState {
   }
 }
 
-// v2: everyone defaults back to live results; the demo replay is opt-in from Settings.
-const SOURCE_KEY = 'poltok:source:v2';
-function readSource(): ResultsSource {
-  try {
-    const v = localStorage.getItem(SOURCE_KEY);
-    if (v === 'live' || v === 'simulation') return v;
-  } catch {
-    /* storage unavailable */
-  }
-  return 'live';
-}
-
 /** Apply the provider's authoritative candidate list (live mode) to the shared race objects. */
 function syncCandidates(results: RaceResult[]) {
   for (const r of results) {
@@ -164,18 +150,8 @@ type Provider = {
 };
 
 export function LiveProvider({ children }: { children: ReactNode }) {
-  const [source, setSourceState] = useState<ResultsSource>(readSource);
-  const [state, setState] = useState<LiveState>(() => ({ ...initial, source }));
+  const [state, setState] = useState<LiveState>(initial);
   const queue = useRef<LiveEvent[]>([]);
-
-  const setSource = useCallback((s: ResultsSource) => {
-    try {
-      localStorage.setItem(SOURCE_KEY, s);
-    } catch {
-      /* ignore */
-    }
-    setSourceState(s);
-  }, []);
 
   /* ------------------------------- results ------------------------------- */
   useEffect(() => {
@@ -184,10 +160,6 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     let browser: { stop(): void } | null = null;
     const timers: ReturnType<typeof setInterval>[] = [];
     let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
-
-    // Fresh slate for the new source (news is source-independent and kept).
-    setState((s) => ({ ...initial, news: s.news, source, mode: 'connecting' }));
-    queue.current = [];
 
     let raf = 0;
     const push = (ev: LiveEvent) => {
@@ -204,7 +176,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
 
     const pollServerClock = () =>
       !browser &&
-      fetch(`/api/health?source=${source}`)
+      fetch('/api/health')
         .then((r) => (r.ok ? r.json() : Promise.reject()))
         .then((d: { clock?: SimClock }) => !cancelled && !browser && d.clock && setState((s) => ({ ...s, clock: d.clock })))
         .catch(() => {});
@@ -212,7 +184,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     const connectServer = () => {
       es?.close();
       let opened = false;
-      es = new EventSource(`/api/stream?source=${source}`);
+      es = new EventSource('/api/stream');
       es.onmessage = (m) => {
         opened = true;
         try {
@@ -236,19 +208,13 @@ export function LiveProvider({ children }: { children: ReactNode }) {
       browser = { stop() {} };
       es?.close();
       es = null;
-      let p: Provider;
-      if (source === 'live') {
-        const { createNytProvider } = await import('../../shared/nyt.js');
-        p = createNytProvider({ races: RACES, states: STATES, housePollMs: 180000 }) as Provider;
-      } else {
-        const { createSimulation } = await import('../../shared/sim.js');
-        p = createSimulation({ races: RACES, states: STATES }) as Provider;
-      }
+      const { createNytProvider } = await import('../../shared/nyt.js');
+      const p = createNytProvider({ races: RACES, states: STATES, housePollMs: 180000 }) as Provider;
       if (cancelled) return;
       const unsub = p.subscribe(push);
       const snap = p.snapshot();
-      push({ type: 'hello', serverTime: Date.now(), mode: source === 'live' ? 'live' : 'simulation' });
-      setState((s) => ({ ...s, mode: source === 'live' ? 'browser-live' : 'browser-simulation' }));
+      push({ type: 'hello', serverTime: Date.now(), mode: 'live' });
+      setState((s) => ({ ...s, mode: 'browser-live' }));
       push({ type: 'results', results: snap.results });
       push({ type: 'balance', balance: snap.balance });
       push({ type: 'markets', markets: snap.markets });
@@ -265,7 +231,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
             if (!d?.ok || d.stream === false || cancelled) return;
             browser?.stop();
             browser = null;
-            setState((s) => ({ ...initial, news: s.news, source, mode: 'connecting' }));
+            setState((s) => ({ ...initial, news: s.news, mode: 'connecting' }));
             connectServer();
           })
           .catch(() => {});
@@ -283,7 +249,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     timers.push(setInterval(pollServerClock, 5000));
     // Capability probe: static/serverless hosts (Netlify) answer /api/health with stream:false
     // (or not at all) — go straight to the in-browser provider instead of waiting on SSE.
-    fetch(`/api/health?source=${source}`, { signal: AbortSignal.timeout(2500) })
+    fetch('/api/health', { signal: AbortSignal.timeout(2500) })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d: { ok?: boolean; stream?: boolean }) => {
         if (cancelled) return;
@@ -306,7 +272,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
       es?.close();
       browser?.stop();
     };
-  }, [source]);
+  }, []);
 
   /* --------------------------------- news -------------------------------- */
   useEffect(() => {
@@ -341,8 +307,7 @@ export function LiveProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const value = useMemo(() => ({ ...state, source, setSource }), [state, source, setSource]);
-  return <LiveCtx.Provider value={value}>{children}</LiveCtx.Provider>;
+  return <LiveCtx.Provider value={state}>{children}</LiveCtx.Provider>;
 }
 
 export const useLive = () => useContext(LiveCtx);

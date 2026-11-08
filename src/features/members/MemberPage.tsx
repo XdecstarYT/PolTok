@@ -1,7 +1,8 @@
 /** /member/:id — profile. US: bioguide id (congress-legislators + Voteview). AU: au-h-{seat} / au-s-{slug}. */
 import { Link, useParams } from 'react-router-dom';
 import { useLive } from '../../lib/live';
-import { AU_MEMBERS, US_PARTY, auSeatFor, useJson, type DirMember, type UsMemberResp } from './data';
+import { AU_MEMBERS, US_PARTY, auSeatFor, useJson, withAuPhoto, type DirMember, type UsMemberResp } from './data';
+import { usePhotoIndex } from '../../data/photos';
 import { Avatar } from './MembersPage';
 import { PARTY_HEX } from '../../lib/format';
 import './members.css';
@@ -32,7 +33,9 @@ function IdeologyBar({ v }: { v: number }) {
   );
 }
 
-function AuProfile({ m }: { m: DirMember }) {
+function AuProfile({ m: raw }: { m: DirMember }) {
+  usePhotoIndex();
+  const m = withAuPhoto(raw);
   const seat = auSeatFor(m.key);
   return (
     <main className="page mb-page">

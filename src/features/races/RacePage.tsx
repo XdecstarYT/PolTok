@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { RACES, raceById, racesByState, stateByAbbr } from '../../data';
 import { POLL_SERIES } from '../../data/polls';
 import { useLive } from '../../lib/live';

@@ -33,46 +33,136 @@ function useJSON<T>(url: string): T | null | undefined {
 }
 
 /* ───────── (2) live around the world ───────── */
+/** Minimal shape of /api/nz/results (see server/nz.js) — kept local so the NZ data module stays out of this chunk. */
+interface NzParty { party: string; name?: string; pct: number; totalSeats: number }
+interface NzRes { status: 'pre' | 'counting' | 'final'; updatedAt: number; votesCountedPct: number | null; party: NzParty[]; sourceKind?: 'ec' | 'wikipedia' | 'none'; error?: string }
+const NZ_COLOR: Record<string, string> = { NAT: '#1f5fbf', LAB: '#d82a20', GRN: '#2e9e44', ACT: '#e8b400', NZF: '#6b6b6b', TPM: '#a2463c', OPP: '#1fb5a3' };
+const NZ_SHORT: Record<string, string> = { NAT: 'National', LAB: 'Labour', GRN: 'Green', ACT: 'ACT', NZF: 'NZ First', TPM: 'Te Pāti Māori', OPP: 'Opportunity' };
+/** Victorian state election — polls close 6pm AEDT Sat 28 Nov 2026. */
+const VIC_DATE = '2026-11-28';
+const VIC_CLOSE_MS = Date.parse('2026-11-28T18:00:00+11:00');
+
+function NzResultCard({ r }: { r: NzRes }) {
+  const top = [...r.party].sort((a, b) => b.pct - a.pct).slice(0, 4);
+  const seats = r.party.some((p) => p.totalSeats > 0);
+  const label = r.status === 'final' ? 'Official result' : r.sourceKind === 'wikipedia' ? 'Preliminary · unofficial' : 'Preliminary count';
+  return (
+    <Link to="/nz" className="card card--hover hm-wl hm-wl--res">
+      <span className="row spread" style={{ gap: 6 }}>
+        <span className="kicker kicker--muted truncate">Oceania</span>
+        <Chip size="sm" tone={r.status === 'final' ? undefined : 'live'}>{r.status === 'final' ? 'Final' : 'Counting'}</Chip>
+      </span>
+      <b className="truncate">🇳🇿 New Zealand</b>
+      <span className="hm-wl__bar" aria-hidden="true">
+        {top.map((p) => <i key={p.party} style={{ width: `${p.pct}%`, background: NZ_COLOR[p.party] ?? 'var(--text-3)' }} />)}
+      </span>
+      <ul className="hm-wl__rows" aria-label="Party vote">
+        {top.map((p) => (
+          <li key={p.party}>
+            <i style={{ background: NZ_COLOR[p.party] ?? 'var(--text-3)' }} aria-hidden="true" />
+            <span className="truncate">{NZ_SHORT[p.party] ?? p.name ?? p.party}</span>
+            <b className="num">{p.pct.toFixed(1)}%</b>
+            {seats && <span className="num faint">{p.totalSeats}</span>}
+          </li>
+        ))}
+      </ul>
+      <span className="faint hm-wl__foot">{label}{r.votesCountedPct != null ? ` · ${Math.round(r.votesCountedPct)}% counted` : ''}{seats ? ' · seats' : ''}</span>
+    </Link>
+  );
+}
+
+function UsResultCard({ balance }: { balance: ReturnType<typeof useLive>['balance'] }) {
+  const rows = (['senate', 'house'] as const).map((ch) => ({ ch, b: balance[ch] })).filter((x) => x.b?.total);
+  return (
+    <Link to="/live" className="card card--hover hm-wl hm-wl--res">
+      <span className="row spread" style={{ gap: 6 }}>
+        <span className="kicker kicker--muted truncate">Americas</span>
+        <Chip size="sm">AP</Chip>
+      </span>
+      <b className="truncate">🇺🇸 United States</b>
+      <ul className="hm-wl__rows" aria-label="Seats won">
+        {rows.map(({ ch, b }) => (
+          <li key={ch} className="hm-wl__ch">
+            <span>{ch === 'senate' ? 'Senate' : 'House'}</span>
+            <b className="num" style={{ color: 'var(--dem)' }}>{b!.dem + b!.ind}</b>
+            <b className="num" style={{ color: 'var(--rep)' }}>{b!.rep}</b>
+            <span className="num faint">{b!.undecided ? `${b!.undecided} open` : 'all called'}</span>
+          </li>
+        ))}
+      </ul>
+      <span className="faint hm-wl__foot">D (incl. caucusing ind.) – R · {rows[0].b!.majority} for Senate majority</span>
+    </Link>
+  );
+}
+
+type WItem = { kind: 'live' | 'soon'; key: string; d: number; country: string; region: string; office: string; dateLabel: string; at: number; to?: string; href?: string };
+
+/** Live / recent / upcoming elections. Always has content: results already in and the next dates on the calendar. */
 export function WorldLive() {
   const data = useWorldElections();
-  const list = useMemo(() => (data?.elections ?? [])
-    .map((e) => ({ e, d: daysUntil(e.date) }))
-    .filter((x) => x.d != null && x.d >= -1 && x.d <= 7)
-    .sort((a, b) => (a.d ?? 0) - (b.d ?? 0)), [data]);
-  if (data && !list.length) return null;
+  const nz = useJSON<NzRes>('/api/nz/results');
+  const { live, soon } = useMemo(() => {
+    const all: WItem[] = (data?.elections ?? [])
+      .filter((e) => !e.dependent)
+      .map((e) => ({ e, d: daysUntil(e.date) }))
+      .filter((x): x is { e: (typeof x)['e']; d: number } => x.d != null && x.d >= -1)
+      .map(({ e, d }) => ({
+        kind: d <= 7 ? 'live' as const : 'soon' as const, key: e.id, d, country: e.country, region: e.region, office: e.office, dateLabel: e.dateLabel,
+        at: Date.parse(`${e.date}T00:00:00Z`), to: e.country === 'New Zealand' ? '/nz' : e.country === 'Australia' ? '/au' : undefined, href: e.articleUrl ?? undefined,
+      }));
+    // Victoria is a state election, so it is not in the national calendar; add it from PolTok's AU data.
+    const vd = daysUntil(VIC_DATE);
+    if (vd != null && vd >= -1 && !all.some((x) => /victoria/i.test(x.office))) {
+      all.push({ kind: vd <= 7 ? 'live' : 'soon', key: 'au-vic', d: vd, country: 'Victoria, Australia', region: 'Oceania · State', office: 'Legislative Assembly', dateLabel: '28 Nov 2026', at: VIC_CLOSE_MS, to: '/au/victoria' });
+    }
+    all.sort((a, b) => a.d - b.d);
+    // NZ is shown as a result card once figures exist, so don't repeat it as "counting".
+    const nzHasNums = !!nz && nz.status !== 'pre' && nz.party?.length > 0;
+    return {
+      live: all.filter((x) => x.kind === 'live' && !(nzHasNums && x.country === 'New Zealand')),
+      soon: all.filter((x) => x.kind === 'soon').slice(0, 8),
+    };
+  }, [data, nz]);
+ const nzHasNums = !!nz && nz.status !== 'pre' && nz.party?.length > 0;
+  const { balance } = useLive();
+  const usHasNums = !!balance.senate?.total;
   return (
     <section aria-labelledby="hm-world" className="hm-world">
       <div className="row spread row-wrap" style={{ gap: 8 }}>
-        <h2 id="hm-world" className="hm-strip__title"><span className="hm-pulse" aria-hidden="true" />Live around the world <span className="faint">· this week</span></h2>
+        <h2 id="hm-world" className="hm-strip__title"><span className="hm-pulse" aria-hidden="true" />Live around the world</h2>
         <Link to="/world" className="link" style={{ fontSize: 13 }}>World calendar →</Link>
       </div>
-      {!data ? <Skeleton height={64} radius={12} /> : (
-        <ul className="hm-hscroll" aria-label="Elections this week">
-          {list.map(({ e, d }) => {
-            const at = Date.parse(`${e.date}T00:00:00Z`);
-            const nz = e.country === 'New Zealand';
-            const body = (
-              <>
-                <span className="row spread" style={{ gap: 6 }}>
-                  <span className="kicker kicker--muted truncate">{e.region}</span>
-                  {d === 0 ? <Chip size="sm" tone="live">TODAY</Chip> : d! < 0 ? <Chip size="sm">Counting</Chip> : null}
-                </span>
-                <b className="truncate">{e.country}</b>
-                <span className="faint truncate" style={{ fontSize: 12.5 }}>{e.office}</span>
-                <span className="num hm-wl__cd">{d! > 0 ? <Countdown to={at} compact /> : e.dateLabel}</span>
-              </>
-            );
-            return (
-              <li key={e.id}>
-                {nz ? <Link to="/nz" className="card card--hover hm-wl">{body}</Link>
-                  : <a href={e.articleUrl ?? '/world'} target="_blank" rel="noreferrer noopener" className="card card--hover hm-wl">{body}</a>}
-              </li>
-            );
-          })}
+      {!data && nz === undefined ? <Skeleton height={118} radius={12} /> : (
+        <ul className="hm-hscroll hm-wlist" aria-label="Elections: live, latest results and coming up">
+          {live.map((x, i) => <li key={x.key}><GL l={i === 0 ? 'Live this week' : undefined} /><WCard x={x} /></li>)}
+          {nzHasNums && <li><GL l="Latest results" /><NzResultCard r={nz!} /></li>}
+          {usHasNums && <li><GL l={nzHasNums ? undefined : 'Latest results'} /><UsResultCard balance={balance} /></li>}
+          {soon.map((x, i) => <li key={x.key}><GL l={i === 0 ? 'Coming up' : undefined} /><WCard x={x} /></li>)}
+          {!live.length && !nzHasNums && !usHasNums && !soon.length && <li className="faint" style={{ fontSize: 13 }}>No elections on the calendar right now.</li>}
         </ul>
       )}
     </section>
   );
+}
+/** Group label above the first card of each group (blank spacer on the others keeps the cards aligned). */
+const GL = ({ l }: { l?: string }) => <span className={`hm-wgl ${l ? '' : 'is-blank'}`} aria-hidden={!l}>{l ?? ' '}</span>;
+
+function WCard({ x }: { x: WItem }) {
+  const body = (
+    <>
+      <span className="row spread" style={{ gap: 6 }}>
+        <span className="kicker kicker--muted truncate">{x.region}</span>
+        {x.d === 0 ? <Chip size="sm" tone="live">TODAY</Chip> : x.d < 0 ? <Chip size="sm">Counting</Chip> : x.kind === 'live' ? <Chip size="sm" tone="tossup">This week</Chip> : <span className="num faint hm-wl__in">in {x.d}d</span>}
+      </span>
+      <b className="truncate">{x.country}</b>
+      <span className="faint truncate" style={{ fontSize: 12.5 }}>{x.office}</span>
+      <span className="num hm-wl__cd">{x.d > 0 && x.d <= 7 ? <Countdown to={x.at} compact /> : x.dateLabel}</span>
+    </>
+  );
+  const cls = `card card--hover hm-wl ${x.kind === 'soon' ? 'hm-wl--soon' : ''}`;
+  return x.to ? <Link to={x.to} className={cls}>{body}</Link>
+    : x.href ? <a href={x.href} target="_blank" rel="noreferrer noopener" className={cls}>{body}</a>
+    : <Link to="/world" className={cls}>{body}</Link>;
 }
 
 /* ───────── (5) markets ticker ───────── */

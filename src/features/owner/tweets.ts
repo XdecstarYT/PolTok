@@ -43,8 +43,6 @@ const raceSubj = (id: string): Subject => ({ kind: 'race', id });
 export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Date.now()): Tweet[] {
   const out: Tweet[] = [];
   const add = (t: Omit<Tweet, 'id'>) => out.push({ ...t, id: `t${out.length + 1}` });
-  const isSim = live.source === 'simulation' || live.mode.includes('simulation');
-  const simNote = isSim ? ' (demo replay)' : '';
   const results = Object.values(live.results);
 
   // ---- balance of power
@@ -55,7 +53,7 @@ export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Dat
     const lead = dem === b.rep ? 'tied' : dem > b.rep ? `Dems lead ${dem}–${b.rep}` : `GOP leads ${b.rep}–${dem}`;
     add({
       group: 'Results',
-      text: fit(`🏛️ ${ch === 'senate' ? 'SENATE' : 'HOUSE'} CONTROL${simNote}: ${lead} with ${b.undecided} seats still undecided. ${b.majority} needed for a majority.${b.controlProb ? ` Model odds: D ${Math.round(b.controlProb.D * 100)}% / R ${Math.round(b.controlProb.R * 100)}%.` : ''}\n\nLive tracker 👇`, `#Midterms2026 #${ch === 'senate' ? 'Senate' : 'House'}`),
+      text: fit(`🏛️ ${ch === 'senate' ? 'SENATE' : 'HOUSE'} CONTROL: ${lead} with ${b.undecided} seats still undecided. ${b.majority} needed for a majority.${b.controlProb ? ` Model odds: D ${Math.round(b.controlProb.D * 100)}% / R ${Math.round(b.controlProb.R * 100)}%.` : ''}\n\nLive tracker 👇`, `#Midterms2026 #${ch === 'senate' ? 'Senate' : 'House'}`),
       path: ch === 'senate' ? '/live' : '/house',
       subject: { kind: 'balance', id: ch },
       hints: ['balance', 'chamber', 'seat'],
@@ -72,7 +70,7 @@ export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Dat
     if (!w) continue;
     add({
       group: 'Results',
-      text: fit(`🚨 CALL${simNote}: ${w.c.name} (${w.c.party}) wins the ${race.title}${c.flip ? ' — a FLIP 🔄' : ''}. ${pct(w.pct)} with ${Math.round(r?.expectedPct ?? 0)}% of the expected vote in.`, `#ElectionNight ${tag(race)}`),
+      text: fit(`🚨 CALL: ${w.c.name} (${w.c.party}) wins the ${race.title}${c.flip ? ' — a FLIP 🔄' : ''}. ${pct(w.pct)} with ${Math.round(r?.expectedPct ?? 0)}% of the expected vote in.`, `#ElectionNight ${tag(race)}`),
       path: `/race/${race.id}`,
       subject: raceSubj(race.id),
       hints: ['call', 'winner', 'race', 'result'],
@@ -91,7 +89,7 @@ export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Dat
   close.slice(0, 3).forEach((x, i) => {
     add({
       group: 'Races',
-      text: fit(`${i === 0 ? '😬 CLOSEST RACE RIGHT NOW' : '🔥 Nail-biter'}${simNote}: ${x.race.title}. ${x.ls[0].c.name} (${x.ls[0].c.party}) ${pct(x.ls[0].pct)} vs ${x.ls[1].c.name} (${x.ls[1].c.party}) ${pct(x.ls[1].pct)} — a ${x.margin.toFixed(1)}-pt gap with ${Math.round(x.r.expectedPct)}% counted.`, `#ElectionNight ${tag(x.race)}`),
+      text: fit(`${i === 0 ? '😬 CLOSEST RACE RIGHT NOW' : '🔥 Nail-biter'}: ${x.race.title}. ${x.ls[0].c.name} (${x.ls[0].c.party}) ${pct(x.ls[0].pct)} vs ${x.ls[1].c.name} (${x.ls[1].c.party}) ${pct(x.ls[1].pct)} — a ${x.margin.toFixed(1)}-pt gap with ${Math.round(x.r.expectedPct)}% counted.`, `#ElectionNight ${tag(x.race)}`),
       path: `/race/${x.race.id}`,
       subject: raceSubj(x.race.id),
       hints: ['race', 'close', 'versus', 'vs', 'head'],
@@ -103,7 +101,7 @@ export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Dat
   if (results.length) {
     add({
       group: 'Results',
-      text: fit(`📊 Scoreboard${simNote}: ${called} of ${results.length} tracked races called, ${results.length - called} still counting.\n\nEvery Senate, House & governor race in one live dashboard.`, '#Midterms2026 #ElectionResults'),
+      text: fit(`📊 Scoreboard: ${called} of ${results.length} tracked races called, ${results.length - called} still counting.\n\nEvery Senate, House & governor race in one live dashboard.`, '#Midterms2026 #ElectionResults'),
       path: '/races',
       subject: { kind: 'balance', id: 'senate' },
       hints: ['scoreboard', 'stat', 'balance'],
@@ -118,7 +116,7 @@ export function buildTweets(live: LiveState, flips: FlipRace[] | null, now = Dat
     }
     add({
       group: 'Results',
-      text: fit(`🏠 GOVERNORS${simNote}: ${Object.entries(by).map(([p, n]) => `${PN[p] ?? p} ${n}`).join(', ')} of ${govs.length} called so far. See every mansion on the map.`, '#Governor #Midterms2026'),
+      text: fit(`🏠 GOVERNORS: ${Object.entries(by).map(([p, n]) => `${PN[p] ?? p} ${n}`).join(', ')} of ${govs.length} called so far. See every mansion on the map.`, '#Governor #Midterms2026'),
       path: '/governors',
       subject: raceSubj(govs[0].raceId),
       hints: ['governor', 'map', 'stat'],

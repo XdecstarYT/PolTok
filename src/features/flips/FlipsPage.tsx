@@ -3,7 +3,7 @@
  * all 435 House seats), polled every 60s. Owned by src/features/flips/**.
  */
 import { useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { LiveDot, fmtTime, tzAbbr, useReducedMotion } from '../../components';
 import { PARTY_HEX } from '../../lib/format';
 import { USMap } from '../map/USMap';
@@ -229,7 +229,7 @@ function FlipCard({ r, i }: { r: FlipRace; i: number }) {
   const w = r.winner!;
   const second = r.cands.find((c) => c.id !== w.id);
   return (
-    <motion.article
+    <m.article
       layout={!reduce}
       className="fl-card"
       initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -240,7 +240,7 @@ function FlipCard({ r, i }: { r: FlipRace; i: number }) {
     >
       <svg className="fl-shape" viewBox="0 0 72 56" aria-hidden="true">
         {shape && (
-          <motion.path
+          <m.path
             d={shape.d}
             initial={reduce ? { fill: to } : { fill: from }}
             animate={{ fill: to }}
@@ -265,6 +265,6 @@ function FlipCard({ r, i }: { r: FlipRace; i: number }) {
           {r.calledAt ? ` · called ${fmtTime(r.calledAt)}` : ''}
         </div>
       </div>
-    </motion.article>
+    </m.article>
   );
 }

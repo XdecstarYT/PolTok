@@ -31,10 +31,31 @@
     <link rel="canonical" href="https://poltok.netlify.app/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Non-render-blocking webfonts: system fallbacks paint first, fonts swap in. -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Oswald:wght@500;600;700&family=Roboto+Condensed:wght@400;700;900&family=Playfair+Display:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Oswald:wght@500;600;700&family=Roboto+Condensed:wght@400;700;900&family=Playfair+Display:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Oswald:wght@500;600;700&family=Roboto+Condensed:wght@400;700;900&family=Playfair+Display:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
+    <!-- Webfonts for the active theme only (src/lib/themeFonts.ts has the same map). Non-render-blocking. -->
+    <script>
+      (function () {
+        var ui = 'command';
+        try { ui = (JSON.parse(localStorage.getItem('poltok:settings') || '{}') || {}).ui || 'command'; } catch (e) {}
+        var J = 'family=JetBrains+Mono:wght@400;600;700', P = 'family=IBM+Plex+Mono:wght@400;600;700';
+        var C = 'family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&' + J;
+        var F = {
+          command: C, aurora: C,
+          broadcast: 'family=Oswald:wght@500;600;700&family=Roboto+Condensed:wght@400;700;900&' + J,
+          paper: 'family=Playfair+Display:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&' + P,
+          terminal: P
+        };
+        if (!F[ui]) ui = 'command';
+        document.documentElement.setAttribute('data-ui', ui);
+        var l = document.createElement('link');
+        l.id = 'theme-fonts';
+        l.rel = 'stylesheet';
+        l.media = 'print';
+        l.onload = function () { l.media = 'all'; };
+        l.href = 'https://fonts.googleapis.com/css2?' + F[ui] + '&display=swap';
+        document.head.appendChild(l);
+      })();
+    </script>
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
   </head>
   <body>
     <div id="root"></div>

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Avatar, PersonAvatar, SimBadge } from '../../components';
-import { personPhoto } from '../../data/photos';
 import { STATES } from '../../data';
 import { VIC_CANDIDATES } from '../../data/au';
 const VIC_ASAT = VIC_CANDIDATES.asAt;
@@ -172,7 +171,7 @@ export default function CandidatesIndex() {
             {auList.slice(0, 300).map((c) => { return (
               <li key={c.id}>
                 <Link to={`/candidate/${c.id}`} className="cd-card" style={{ ['--pc' as string]: c.color }}>
-                  <PersonAvatar name={c.name} color={c.color} photo={personPhoto({ name: c.name, scope: 'au' })} size={56} />
+                  <PersonAvatar name={c.name} color={c.color} lookup={{ name: c.name, scope: 'au' }} size={56} />
                   <div className="cd-card__body">
                     <b className="cd-card__name">{c.name}</b>
                     <span className="cd-card__sub">

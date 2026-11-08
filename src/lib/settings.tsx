@@ -5,6 +5,7 @@
  */
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import { setDisplayTZ } from '../components/time';
+import { loadThemeFonts } from './themeFonts';
 
 export type AlertLevel = 'all' | 'key' | 'off';
 
@@ -54,6 +55,7 @@ function applyUi(ui: Settings['ui']) {
   try {
     if (!UI_IDS.includes(ui)) ui = 'command';
     document.documentElement.dataset.ui = ui;
+    loadThemeFonts(ui);
     document.documentElement.style.colorScheme = ui === 'paper' ? 'light' : 'dark';
     let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
     if (!meta) {

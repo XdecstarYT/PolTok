@@ -1,7 +1,7 @@
 /** /ask — "Night in 60 seconds" AI brief + full chat. */
 import { useSeo } from '../../lib/seo';
 import { Markdown } from './Markdown';
-import { Chat, Disclaimer, Sources } from './Chat';
+import { Chat, Sources } from './Chat';
 import { useAiOneShot, useAiStatus, errorText } from './useAsk';
 import './ask.css';
 
@@ -14,6 +14,7 @@ export default function AskPage() {
     <div className="page ask-page">
       <h1>✦ Ask PolTok</h1>
       <p className="ask-sub">An AI assistant grounded only in PolTok’s live results, markets and headlines.</p>
+      {off && <p className="ask-empty" role="status">{errorText(status, '')}</p>}
       <section className="ask-card">
         <header className="ask-card-head">
           <strong>The night in 60 seconds</strong>
@@ -21,7 +22,6 @@ export default function AskPage() {
             {brief.busy ? 'Writing…' : brief.text ? 'Refresh' : 'Generate brief'}
           </button>
         </header>
-        {off && <p className="ask-empty">{errorText(status, '')}</p>}
         {brief.error && <p className="ask-msg--error">{brief.error}</p>}
         {brief.text && (
           <>
@@ -29,10 +29,9 @@ export default function AskPage() {
             <Sources text={brief.text} />
           </>
         )}
-        <Disclaimer />
       </section>
       <section className="ask-card ask-card--chat">
-        <Chat />
+        <Chat hideOffNotice />
       </section>
     </div>
   );

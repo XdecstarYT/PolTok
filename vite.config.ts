@@ -6,7 +6,8 @@ function manualChunks(id: string) {
   if (!id.includes('node_modules')) return undefined;
   if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'vendor-react';
   if (/node_modules\/(react-router|react-router-dom|@remix-run)\//.test(id)) return 'vendor-router';
-  if (id.includes('node_modules/framer-motion/') || id.includes('node_modules/motion-')) return 'vendor-motion';
+  // framer-motion is not forced into one chunk: the shell only needs `m` + LazyMotion; the
+  // animation features (domMax) split into a lazy chunk (src/lib/motionFeatures.ts).
   if (/node_modules\/(d3-[a-z]+|internmap)\//.test(id)) return 'vendor-d3';
   if (id.includes('node_modules/topojson-client/')) return 'vendor-topojson';
   return undefined;

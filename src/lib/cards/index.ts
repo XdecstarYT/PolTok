@@ -9,7 +9,7 @@
 import type { CardData, CardDesign, CardKind } from './types';
 import type { K } from './kit';
 import { FONT_LOADS, KIND_LABEL, loadImage, RT, rr } from './kit';
-import { type CardStyle, colorMapper, mappedCtx, coverImage, drawOverlays, ensureFont, hasStyle } from './style';
+import { type CardStyle, colorMapper, mappedCtx, coverImage, drawOverlays, ensureFont, hasStyle, PAGE_FONTS } from './style';
 import { DESIGNS_D } from './designs-d';
 import { DESIGNS_E } from './designs-e';
 import { DESIGNS_F } from './designs-f';
@@ -51,8 +51,12 @@ function ensureFonts(): Promise<void> {
     const fs = (document as Document & { fonts?: FontFaceSet }).fonts;
     fontsReady = fs
       ? Promise.race([
-          Promise.all(FONT_LOADS.map((f) => fs.load(f).catch(() => []))).then(() => fs.ready).then(() => undefined),
-          new Promise<void>((r) => setTimeout(r, 3000)),
+          // The page only loads the active theme's fonts; cards use all of them.
+          Promise.all(PAGE_FONTS.map((f) => ensureFont(f)))
+            .then(() => Promise.all(FONT_LOADS.map((f) => fs.load(f).catch(() => []))))
+            .then(() => fs.ready)
+            .then(() => undefined),
+          new Promise<void>((r) => setTimeout(r, 4000)),
         ])
       : Promise.resolve();
   }

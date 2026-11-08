@@ -97,7 +97,7 @@ export function TweetKit() {
   const shown = group === 'All' ? tweets : tweets.filter((t) => t.group === group);
   return (
     <section>
-      <p className="ow-muted">{tweets.length} tweets generated from live data ({live.source === 'live' ? 'AP via NYT' : 'demo replay'}; updated {live.lastUpdate ? new Date(live.lastUpdate).toLocaleTimeString() : '—'}). {ds && !ds.shared && 'Shared card designs not found — using classic share cards.'}</p>
+      <p className="ow-muted">{tweets.length} tweets generated from live data (AP via NYT; updated {live.lastUpdate ? new Date(live.lastUpdate).toLocaleTimeString() : '—'}). {ds && !ds.shared && 'Shared card designs not found — using classic share cards.'}</p>
       <div className="ow-filter">
         {groups.map((g) => (
           <button key={g} type="button" className={`ow-pill ${g === group ? 'is-on' : ''}`} onClick={() => setGroup(g)}>{g}</button>

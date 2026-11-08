@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m as motion } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { timeAgo } from '../../lib/format';
 import { raceById } from '../../data';
@@ -408,7 +408,7 @@ export default function FeedPage() {
             <span>{counts.story} stories</span>
             <span>{store.saved.length} saved</span>
           </div>
-          {anySim && <p className="fd-muted small">{live.source === 'live' ? 'Results and calls: AP via The New York Times.' : 'Results, calls and market odds are simulated for demonstration.'}</p>}
+          {anySim && <p className="fd-muted small">Results and calls: AP via The New York Times.</p>}
         </div>
       </aside>
     </div>

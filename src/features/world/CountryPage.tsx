@@ -8,7 +8,6 @@ import { useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { COUNTRY_CODES, daysUntil, fmtDate, relDays, todayUTC, useCountryProfile, useWorldElections, useWorldNews, type Party } from './data';
 import { PersonAvatar } from '../../components';
-import { personPhoto } from '../../data/photos';
 import './world.css';
 
 const PALETTE = ['#6b7280', '#9ca3af', '#4b5563', '#a1a1aa', '#71717a'];
@@ -118,7 +117,7 @@ export default function CountryPage() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <PersonAvatar name={x.name} photo={personPhoto({ qid: x.qid })} size={40} className="cp-card__av" />
+                      <PersonAvatar name={x.name} lookup={{ qid: x.qid }} size={40} className="cp-card__av" />
                       {x.name}
                       {h.check === 'disagree' && <span className="wd-muted"> ({x.source === 'wikipedia' ? 'per Wikipedia infobox' : 'per Wikidata'})</span>}
                     </a>

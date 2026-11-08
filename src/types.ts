@@ -149,7 +149,7 @@ export interface RaceCallEvent {
 
 /** Server-sent event envelope streamed from /api/stream */
 export type LiveEvent =
-  | { type: 'hello'; serverTime: number; mode: 'simulation' | 'live' }
+  | { type: 'hello'; serverTime: number; mode: 'live' }
   | { type: 'results'; results: RaceResult[] }
   | { type: 'balance'; balance: BalanceOfPower[] }
   | RaceCallEvent

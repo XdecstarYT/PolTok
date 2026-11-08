@@ -124,10 +124,10 @@
     "id": "v0-3-real-results",
     "version": "v0.3",
     "date": "2026-11-03T22:00:00Z",
-    "title": "Real AP results, with a Live/Simulated switch",
+    "title": "Real AP results, live data only",
     "categories": ["Data", "New"],
     "major": true,
-    "body": "PolTok can now show **real AP results (via The New York Times)**. A toggle lets you switch between Live and the simulated demo replay, and every simulated surface is clearly labelled.\n\nIf our news server is unreachable, your browser now fetches headlines directly as a fallback.",
+    "body": "PolTok now shows **real AP results (via The New York Times)**. Live AP data only: nothing is simulated.\n\nIf our news server is unreachable, your browser now fetches headlines directly as a fallback.",
     "links": [{ "label": "Election night", "to": "/live" }]
   },
   {

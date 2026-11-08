@@ -56,7 +56,7 @@ export function Health() {
       {!d ? <p className="ow-muted">Checking…</p> : (
         <div className="ow-health">
           <Row k="API /api/health" ok={d.health.status === 200} v={`${d.health.status || 'down'} · ${d.health.ms}ms · ${String(d.health.body?.platform ?? 'node')} · mode ${String(d.health.body?.mode ?? '?')}${d.health.body?.uptime != null ? ` · uptime ${String(d.health.body.uptime)}s` : ''}`} />
-          <Row k="Live results" ok={live.connected || live.mode.startsWith('browser')} v={`${live.mode} · source ${live.source} · ${Object.keys(live.results).length} races · ${age == null ? 'no update yet' : `last update ${age}s ago`}`} />
+          <Row k="Live results" ok={live.connected || live.mode.startsWith('browser')} v={`${live.mode} · ${Object.keys(live.results).length} races · ${age == null ? 'no update yet' : `last update ${age}s ago`}`} />
           <Row k="AI (Ask PolTok)" ok={!!d.ai.body?.configured} v={d.ai.body ? `${d.ai.body.configured ? 'configured' : 'NOT configured (GROQ env)'} · model ${String(d.ai.body.model)}` : 'unreachable'} />
           <Row k="News feed" ok={!!news?.items?.length} v={news ? `${news.items?.length ?? 0} items · ${news.sources?.filter((s) => s.ok).length ?? 0}/${news.sources?.length ?? 0} sources ok${news.fetchedAt ? ` · fetched ${new Date(news.fetchedAt).toLocaleTimeString()}` : ''}` : 'unreachable'} />
           {news?.sources?.some((s) => !s.ok) && <Row k="News sources failing" ok={false} v={news.sources.filter((s) => !s.ok).map((s) => s.name).join(', ')} />}

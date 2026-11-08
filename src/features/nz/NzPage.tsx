@@ -13,7 +13,6 @@ import {
   allocateMMP, callOf, incumbentElectorates, partyMeta, pollAverage, useNzNews, useNzResults, usePolymarket,
   type Alloc, type LiveElectorate, type NzResults,
 } from './data';
-import { personPhoto } from '../../data/photos';
 import './nz.css';
 
 const nzdt = (ts: number) => new Intl.DateTimeFormat('en-NZ', { timeZone: NZ_TZ, hour: 'numeric', minute: '2-digit', weekday: 'short' }).format(new Date(ts));
@@ -50,7 +49,7 @@ export default function NzPage() {
           </p>
           <ul className="nz-leaders" aria-label="Party leaders">
             {PARTIES.filter((p) => p.leader !== '—').flatMap((p) => p.leader.replace(/\(.*?\)/g, '').split(/\s*&\s*/).map((n) => (
-              <li key={n} title={`${n.trim()} — ${p.name}`}><PersonAvatar name={n.trim()} color={p.color} photo={personPhoto({ name: n, scope: 'nz' })} size={36} /><span>{n.trim()}<small>{p.short}</small></span></li>
+              <li key={n} title={`${n.trim()} — ${p.name}`}><PersonAvatar name={n.trim()} color={p.color} lookup={{ name: n, scope: 'nz' }} size={36} /><span>{n.trim()}<small>{p.short}</small></span></li>
             )))}
           </ul>
         </div>

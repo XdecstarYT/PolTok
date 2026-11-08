@@ -1,12 +1,12 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type { Market, NewsItem } from '../../types';
 import { BiasBar, Card, PersonAvatar, EmptyState, LiveDot, Skeleton, leanCounts, useReducedMotion } from '../../components';
 import { fmtDay, fmtTime } from '../../components/time';
 import { LEAN_HEX, timeAgo } from '../../lib/format';
 import { party, partyKey, pColor, sortParties, type AuSeat, type PollRow } from './model';
-import { auPhoto } from '../../data/au-photo';
+import { auPhoto, usePhotoIndex } from '../../data/au-photo';
 
 /* ═════════════ Hemicycle (parliament arc) ═════════════ */
 
@@ -392,6 +392,7 @@ export function NewsPanel({ items, error, title = 'Australian news', limit = 10,
 
 export function LeaderCard({ role, name, partyCode, seat, extra }: { role: string; name: string; partyCode?: string; seat?: string; extra?: ReactNode }) {
   const c = pColor(partyCode);
+  usePhotoIndex();
   const ph = auPhoto(name);
   return (
     <div className="au-leader" style={{ ['--pc' as string]: c }}>

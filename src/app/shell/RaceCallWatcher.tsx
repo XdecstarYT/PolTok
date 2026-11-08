@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { raceById } from '../../data';
 import { PARTY_HEX, PARTY_NAME } from '../../lib/format';
@@ -18,7 +18,7 @@ const SHOW_MS = 6500;
  * every other new call → toast. Backlog on load / reconnect is ignored.
  */
 export function RaceCallWatcher() {
-  const { calls, source } = useLive();
+  const { calls } = useLive();
   const { settings } = useSettings();
   const toast = useToast();
   const reduce = useReducedMotion();
@@ -43,7 +43,7 @@ export function RaceCallWatcher() {
       if (race?.key || c.flip) queue.current.push(c);
       else if (settings.alerts === 'all')
         toast.push({
-          kicker: c.flip ? `FLIP · ${c.party} GAIN` : source === 'live' ? 'RACE CALL · AP' : 'RACE CALL · SIMULATED',
+          kicker: c.flip ? `FLIP · ${c.party} GAIN` : 'RACE CALL · AP',
           title: `${cand?.name ?? PARTY_NAME[c.party]} wins ${race?.title ?? c.raceId}`,
           body: `Projected ${fmtET(c.at)}`,
           tone: c.party === 'D' ? 'dem' : c.party === 'R' ? 'rep' : 'ind',
@@ -51,7 +51,7 @@ export function RaceCallWatcher() {
         });
     }
     setActive((a) => a ?? queue.current.shift() ?? null);
-  }, [calls, toast, source, settings.alerts, settings.sound]);
+  }, [calls, toast, settings.alerts, settings.sound]);
 
   // Preview hook: /?callDemo=GA-SEN plays the takeover for that race (no data is changed).
   useEffect(() => {

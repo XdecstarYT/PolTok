@@ -23,8 +23,16 @@ export function registerSW(): void {
       reg.addEventListener('updatefound', () => track(reg.installing));
       // Long-lived election-night tabs: check for a new build every 30 min.
       setInterval(() => { reg.update().catch(() => {}); }, 30 * 60 * 1000);
+      // Reload only when an update replaces an existing worker. On a first visit the new worker
+      // claims the page (clients.claim) and fires controllerchange too; reloading then would
+      // load the whole app twice.
+      let hadController = !!navigator.serviceWorker.controller;
       let reloaded = false;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!hadController) {
+          hadController = true;
+          return;
+        }
         if (reloaded) return;
         reloaded = true;
         window.location.reload();

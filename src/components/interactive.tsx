@@ -3,7 +3,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m as motion } from 'framer-motion';
 import { useNow, useReducedMotion } from './hooks';
 import { splitDuration } from './time';
 

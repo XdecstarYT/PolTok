@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type { Race, RaceResult } from '../../types';
 import { racesByState, stateByAbbr } from '../../data';
 import { useLive } from '../../lib/live';

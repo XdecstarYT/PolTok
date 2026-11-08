@@ -11,7 +11,7 @@ import { type CandEntry, candidateNews, officeLabel, useCandidates } from './dat
 import { OutcomeTag } from './CandidatesIndex';
 import { fecUrl, usd } from '../money/data';
 import { VIC_CANDIDATES } from '../../data/au';
-import { auPhoto } from '../../data/au-photo';
+import { auPhoto, usePhotoIndex } from '../../data/au-photo';
 import { AU_CANDS, type AuCand, fmtDate, useMoneyIndex, useProfile } from './profile';
 import { Career, HeroPhoto, IdeologyMeter, QuickFacts, SourcesList, WikiBlurb } from './ProfileParts';
 import '../races/races.css';
@@ -42,6 +42,7 @@ export default function CandidatePage() {
 }
 
 function AuCandidatePage({ c }: { c: AuCand }) {
+  usePhotoIndex();
   const prof = useProfile({ name: c.name, state: c.state, office: c.office, party: c.party, country: 'au' });
   const p = prof.data;
   useEffect(() => {
