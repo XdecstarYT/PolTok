@@ -18,6 +18,7 @@
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { NZ_ELECTORATES } from '../src/features/nz/generated.ts';
 import { personKey } from '../src/data/photos/key.ts';
+import { US_2028 } from './us-2028.mts';
 import { get, sparql, fileOf, sleep, commonsInfo, licensed, resolveFallbacks, type PhotoRec } from './photo-lib.mts';
 
 type Group = 'nz' | 'us';
@@ -35,14 +36,8 @@ const add = (name: string, group: Group) => {
 };
 for (const e of NZ_ELECTORATES) for (const c of e.candidates) add(c.name, 'nz');
 for (const m of readFileSync(new URL('../src/features/nz/data.ts', import.meta.url), 'utf8').matchAll(/leader: '([^']+)'/g)) add(m[1], 'nz');
-export const US_2028 = ['Gavin Newsom', 'JD Vance', 'Alexandria Ocasio-Cortez', 'Pete Buttigieg', 'Josh Shapiro', 'Marco Rubio',
-  'Gretchen Whitmer', 'Wes Moore', 'Andy Beshear', 'JB Pritzker', 'Kamala Harris', 'Ron DeSantis', 'Donald Trump Jr.',
-  'Tucker Carlson', 'Cory Booker', 'Ro Khanna', 'Rahm Emanuel', 'Mark Cuban', 'Jon Ossoff', 'Ruben Gallego', 'Raphael Warnock',
-  'Chris Murphy', 'Tim Walz', 'Glenn Youngkin', 'Vivek Ramaswamy', 'Ted Cruz', 'Rand Paul', 'Marjorie Taylor Greene',
-  'Donald Trump', 'Nikki Haley', 'Mark Kelly', 'Amy Klobuchar', 'Jasmine Crockett', 'Stephen A. Smith', 'Phil Murphy',
-  'Roy Cooper', 'Gina Raimondo', 'Elissa Slotkin', 'Byron Donalds', 'Sarah Huckabee Sanders', 'Brian Kemp', 'Greg Abbott',
-  'Kristi Noem', 'James Talarico', 'Thomas Massie', 'John McEntee', 'Josh Hawley', 'Tom Cotton', 'Mike Pence', 'Michelle Obama', 'Hillary Clinton', 'Jared Polis', 'Andy Kim'];
 for (const n of US_2028) add(n, 'us');
+export { US_2028 };
 
 /* ---- us26: every named 2026 candidate in the AP results feed (via NYT) ---- */
 const STATE_NAME: Record<string, string> = { AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' };

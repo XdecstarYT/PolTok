@@ -10,7 +10,7 @@ export function HeroPhoto({ name, color, profile, fallback, free }: { name: stri
   return (
     <figure className="cd-photo" style={{ ['--pc' as string]: color }}>
       <div className="cd-photo__frame">
-        {src ? <img src={src} alt={name} width={180} height={220} loading="eager" decoding="async" /> : <span aria-hidden="true">{initials(name)}</span>}
+        {src ? <img src={src} alt={name} title={!p && free ? free.credit : undefined} width={180} height={220} loading="eager" decoding="async" /> : <span aria-hidden="true">{initials(name)}</span>}
       </div>
       <figcaption className="cd-photo__credit">
         {p ? (
@@ -19,6 +19,8 @@ export function HeroPhoto({ name, color, profile, fallback, free }: { name: stri
             {p.licenceUrl ? <a href={p.licenceUrl} target="_blank" rel="noopener noreferrer">{p.licence}</a> : p.licence} ·{' '}
             <a href={p.page} target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>
           </>
+        ) : free?.official ? (
+          <a href={free.sourcePage} target="_blank" rel="noopener noreferrer">{free.credit}</a>
         ) : free ? (
           <>
             Photo: {free.author} ·{' '}

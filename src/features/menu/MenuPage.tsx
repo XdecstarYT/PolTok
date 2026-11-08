@@ -164,6 +164,21 @@ export default function MenuPage() {
           </ul>
         </section>
       ))}
+      <footer className="mn-about" aria-label="About PolTok photos">
+        <p>
+          <b>Photo credits.</b> Portraits are freely licensed (Wikimedia Commons, public-domain government portraits) where
+          one exists; otherwise PolTok shows the official headshot published on the person's own party, parliament or
+          government page, credited on the image and linked to its source.
+        </p>
+        <p>
+          <b>Photo removal requests:</b> if you are pictured, or hold the rights to a photo, and want it removed, open a request at{' '}
+          <a href={PHOTO_REMOVAL_URL} target="_blank" rel="noopener noreferrer">{PHOTO_REMOVAL_URL.replace(/^https:\/\//, '')}</a>{' '}
+          with the person's name and the page it appears on — it is taken down in the next deploy.
+        </p>
+      </footer>
     </div>
   );
 }
+
+/** Where photo takedown requests go (no in-app feedback form exists yet). */
+const PHOTO_REMOVAL_URL = 'https://github.com/XdecstarYT/PolTok/issues';

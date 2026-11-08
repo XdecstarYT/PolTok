@@ -4,7 +4,7 @@ export function auPhotoKey(name: string): string {
   return t.length > 1 ? `${t[0]} ${t[t.length - 1]}` : t.join('');
 }
 
-export interface AuPhoto { file: string; thumbUrl: string; author: string; licence: string; licenceUrl: string; sourcePage: string; credit: string }
+export interface AuPhoto { file: string; thumbUrl: string; author: string; licence: string; licenceUrl: string; sourcePage: string; credit: string; official?: boolean }
 
 const fileUrl = (f: string) => encodeURIComponent(f.replace(/ /g, '_'));
 

@@ -5,14 +5,19 @@
  *  - AU people: Wikimedia Commons free licences (scripts/gen-au-photos.mts → ../au-photos.ts).
  *  - NZ 2026 candidates, 2028 contenders, world leaders: Wikimedia Commons free / open-government licences
  *    (scripts/gen-photos.mts → ./generated.ts), strict identity matching.
+ *  - Gaps only: official headshots from the person's own party / parliament / government / campaign page, stored locally
+ *    under public/portraits/ with source page and credit (scripts/gen-official-photos.mts → ./official.ts). Free photos
+ *    always win; slugs in ./blocklist.ts are never shown (takedown requests).
  * Unknown people get no photo — the UI renders an initials avatar, never a generated face.
  */
 import { personKey } from './key';
-import { auRec, genRec, type GenRec, type PhotoChunk } from './store';
+import { auRec, genRec, offRec, type GenRec, type PhotoChunk } from './store';
+import { isPhotoBlocked } from './blocklist';
+export { PHOTO_BLOCKLIST, isPhotoBlocked, photoSlug } from './blocklist';
 export { personKey };
 export { usePhotoIndex, loadPhotoIndex, photoIndexReady } from './store';
 
-export interface PersonPhoto { url: string; credit: string; licence: string; licenceUrl?: string; source: string }
+export interface PersonPhoto { url: string; credit: string; licence: string; licenceUrl?: string; source: string; official?: boolean }
 export type PhotoScope = 'au' | 'nz' | 'us' | 'us26' | 'world';
 export type PhotoQuery = { name?: string | null; scope?: PhotoScope; qid?: string; bioguide?: string; src?: string };
 /** The lazy chunk a query needs (null when it resolves without one). */
@@ -29,6 +34,13 @@ const commons = (r: GenRec | undefined): PersonPhoto | undefined => {
     source: `https://commons.wikimedia.org/wiki/File:${f}`,
   };
 };
+
+/** Official headshot (gap filler) for a key in ./official.ts, unless its slug is on the takedown blocklist. */
+export function officialPhoto(key: string): PersonPhoto | undefined {
+  const r = offRec(key);
+  if (!r || isPhotoBlocked(r.p.replace(/^\/portraits\//, '').replace(/\.webp$/, ''))) return undefined;
+  return { url: r.p, credit: r.c, licence: 'Official photo, used with credit', source: r.s, official: true };
+}
 
 /** Official congressional portrait (public domain) for a sitting/former member by bioguide id. */
 export const bioguidePhoto = (bioguide: string, size: '225x275' | '450x550' = '225x275'): PersonPhoto => ({
@@ -57,9 +69,10 @@ export function personPhoto(q: PhotoQuery): PersonPhoto | undefined {
   if (q.bioguide) return bioguidePhoto(q.bioguide);
   if (q.qid && genRec(`qid:${q.qid}`)) return commons(genRec(`qid:${q.qid}`));
   if (q.src) return photoFromUrl(q.src);
+  if (q.qid && offRec(`qid:${q.qid}`)) return officialPhoto(`qid:${q.qid}`);
   if (!q.name) return undefined;
   const k = personKey(q.name);
-  if (q.scope === 'au') return commons(auRec(k));
-  if (q.scope === 'nz' || q.scope === 'us' || q.scope === 'us26') return commons(genRec(`${q.scope}:${k}`));
+  if (q.scope === 'au') return commons(auRec(k)) ?? officialPhoto(`au:${k}`);
+  if (q.scope === 'nz' || q.scope === 'us' || q.scope === 'us26') return commons(genRec(`${q.scope}:${k}`)) ?? officialPhoto(`${q.scope}:${k}`);
   return undefined;
 }

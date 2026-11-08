@@ -45,3 +45,6 @@
   .mn-tile__b { position: static; order: -1; justify-self: start; }
 }
 @media (prefers-reduced-motion: reduce) { .mn-tile, .mn-tile::after { transition: none; } .mn-tile:hover { transform: none; } }
+.mn-about { margin-top: 28px; padding: 14px 16px; border-top: 1px solid var(--line, rgba(127,127,127,.25)); color: var(--text-2, var(--text)); font-size: var(--fs-sm, 13px); line-height: 1.5; }
+.mn-about p { margin: 0 0 8px; }
+.mn-about a { color: inherit; text-decoration: underline; }
