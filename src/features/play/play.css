@@ -252,6 +252,7 @@ kbd { font-family: var(--font-mono); font-size: 11px; padding: 1px 5px; border-r
 /* ── Election ── */
 .q-elec { display: grid; gap: 12px; }
 .q-elec__ticker { padding: 10px 12px; border-radius: var(--radius-sm); background: var(--bg-2); border-left: 4px solid var(--accent); min-height: 44px; font-size: var(--fs-sm); }
+.q-elec__gov { margin: 10px 0 0; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--bg-2); font-weight: 600; font-size: var(--fs-sm); }
 .q-elec__grid { display: grid; gap: 12px; }
 @media (min-width: 800px) { .q-elec__grid { grid-template-columns: 1fr 1fr; align-items: center; } }
 .q-race { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; font-size: var(--fs-sm); }
@@ -310,7 +311,7 @@ kbd { font-family: var(--font-mono); font-size: 11px; padding: 1px 5px; border-r
 .q-coach__card { position: fixed; left: 16px; right: 16px; max-width: 380px; margin: 0 auto; pointer-events: auto; background: linear-gradient(var(--bg-1), var(--bg-1)), var(--bg); border: 1px solid var(--accent); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
 .q-coach__card h3 { margin: 0 0 4px; font-family: var(--font-display); }
 .q-coach__btns { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; }
-.q-toast-wrap { position: fixed; left: 0; right: 0; top: calc(var(--shell-top, 0px) + 10px); z-index: var(--z-toast, 90); display: grid; justify-items: center; pointer-events: none; padding: 0 16px; }
+.q-toast-wrap { position: fixed; left: 0; right: 0; top: calc(var(--shell-top, 0px) + 76px); z-index: var(--z-toast, 90); display: grid; justify-items: center; pointer-events: none; padding: 0 16px; }
 .q-toast { max-width: 420px; padding: 10px 16px; border-radius: var(--radius-pill); background: var(--text); color: var(--bg); font-size: var(--fs-sm); font-weight: 600; box-shadow: var(--shadow-sm); animation: q-pop .25s ease-out; }
 .q-toast.is-bad { background: var(--danger); color: #fff; }
 @keyframes q-pop { from { transform: translateY(10px) scale(0.95); opacity: 0; } }
@@ -333,3 +334,6 @@ kbd { font-family: var(--font-mono); font-size: 11px; padding: 1px 5px; border-r
 
 /* The game's sticky End Turn bar owns the bottom edge; hide the shell's floating Ask button while playing. */
 body:has(.q-endbar) .ask-fab { display: none; }
+
+.q-sum__row { display: grid; gap: 4px; margin: 8px 0; }
+.q-sum__row .q-effects { gap: 6px 10px; }

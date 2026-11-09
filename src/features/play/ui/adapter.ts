@@ -3,7 +3,7 @@
 import * as engine from '../engine';
 import rawContent from '../engine/content.json';
 import type {
-  Action, ActionPreview, ApplyResult, Content, GameState, GroupId, LawDef, PartyId, RegionId, RivalId, StatId, VoteTally,
+  Action, ActionPreview, ApplyResult, CoalitionTerms, Content, GameState, GroupId, LawDef, PartyId, RegionId, RivalId, StatId, VoteTally,
 } from '../engine/types';
 
 export const CONTENT = rawContent as unknown as Content;
@@ -19,6 +19,10 @@ export const api = {
   endTurn: engine.endTurn as (s: GameState) => ApplyResult,
   listAvailableActions: engine.listAvailableActions as (s: GameState) => Action[],
   score: engine.score,
+  /** Engine's own coalition rule: which rivals accept a player-led government, and why. */
+  coalitionTerms: engine.coalitionTerms as (s: GameState) => CoalitionTerms[],
+  /** Who governs if the player passes on forming/joining a coalition. */
+  fallbackGovernment: engine.fallbackGovernment as (s: GameState) => PartyId[],
 };
 
 export const STATS: StatId[] = ['economy', 'order', 'liberty', 'environment', 'health'];

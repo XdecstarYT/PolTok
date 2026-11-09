@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import type { Action, ApplyResult, EraDef, ElectionResult, GameState, LogEntry, NewGameOptions, PartyId } from './engine/types';
 import { api, CONTENT, lawById, partyColor } from './ui/adapter';
-import { clearSave, hasSave, loadMeta, loadPrefs, loadSave, resetAll, writeMeta, writePrefs, writeSave, type Meta, type Prefs } from './ui/storage';
+import { clearSave, hasSave, saveIsOver, loadSeenElection, writeSeenElection, loadMeta, loadPrefs, loadSave, resetAll, writeMeta, writePrefs, writeSave, type Meta, type Prefs } from './ui/storage';
 import { Confetti, Dialog } from './ui/visuals';
 import { CourtPanel, Dashboard, LawLibrary, LobbyPanel, RegionPanel, TopBar, type Sheet } from './ui/game';
 import { VoteScreen } from './ui/vote';
@@ -51,7 +51,7 @@ export default function PlayPage() {
       const m2: Meta = { ...loadMeta(), bestScore: Math.max(loadMeta().bestScore, sc.total), achievements: Array.from(new Set([...loadMeta().achievements, ...sc.achievements])), games: loadMeta().games + 1 };
       writeMeta(m2); setMeta(m2);
     } catch { /* ignore */ }
-    clearSave(); setCanContinue(false);
+    // keep the finished save until the player leaves the end screen, so a reload still shows the results
   }, []);
 
   const act = useCallback((a: Action): ApplyResult | null => {
@@ -69,12 +69,12 @@ export default function PlayPage() {
       repeal: () => { sfx.ballot(); say('Repeal placed on the docket'); setSheet(null); },
       lobby: () => { sfx.coin(); say(r.log[0]?.text ?? 'Lobbied'); setSheet(null); },
       resolveEvent: () => { sfx.click(); },
-      formCoalition: () => { sfx.gavel(); say(r.log.find((l) => l.kind === 'coalition')?.text ?? 'Government formed'); },
+      formCoalition: () => { sfx.gavel(); if (!r.transitions.eraChanged && !r.transitions.gameOver) say(r.log.find((l) => l.kind === 'coalition')?.text ?? 'Government formed'); },
       answerOffer: () => { sfx.gavel(); },
     };
     nice[a.type]?.();
-    if (r.state.era !== s.era) { const e = CONTENT.eras.find((x) => x.id === r.state.era); if (e) { sfx.era(); setOverlays((q) => [...q, { kind: 'era', era: e }]); } }
-    if (r.state.phase === 'over' && s.phase !== 'over') finishGame(r.state);
+    if (r.transitions.eraChanged) { const e = CONTENT.eras.find((x) => x.id === r.state.era); if (e) { sfx.era(); setOverlays((q) => [...q, { kind: 'era', era: e }]); } }
+    if (r.transitions.gameOver) finishGame(r.state);
     return r;
   }, [commit, coach, finishGame]);
 
@@ -85,27 +85,36 @@ export default function PlayPage() {
     const err = r.log.find((l) => l.kind === 'error');
     if (err && r.state === s) { say(err.text, true); return; }
     const q: Overlay[] = [{ kind: 'summary', prev: s, log: r.log }];
-    if (r.state.elections.length > s.elections.length) q.push({ kind: 'election', result: r.state.elections[r.state.elections.length - 1] });
-    if (r.state.era !== s.era) { const e = CONTENT.eras.find((x) => x.id === r.state.era); if (e) q.push({ kind: 'era', era: e }); }
+    if (r.transitions.electionHeld) q.push({ kind: 'election', result: r.state.elections[r.state.elections.length - 1] });
+    if (r.transitions.eraChanged) { const e = CONTENT.eras.find((x) => x.id === r.state.era); if (e) q.push({ kind: 'era', era: e }); }
     if (r.state.treasury > s.treasury) sfx.coin(); else sfx.gavel();
     setSheet(null); setVoteId(null);
     if (coach !== null) { setCoach(null); const m2 = { ...meta, tutorialDone: true }; writeMeta(m2); setMeta(m2); }
     gsRef.current = r.state; commit(r.state);
     setOverlays(q);
-    if (r.state.phase === 'over') finishGame(r.state);
+    if (r.transitions.gameOver) finishGame(r.state);
   }, [commit, coach, meta, finishGame]);
 
   const start = (o: NewGameOptions) => {
     sfx.gavel();
     const s = api.newGame({ ...o, seed: (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0 });
+    writeSeenElection(-1);
     commit(s); setScreen('game'); setCanContinue(true);
     setOverlays(s.elections.length ? [{ kind: 'election', result: s.elections[s.elections.length - 1] }] : []);
     setCoach(meta.tutorialDone ? null : 0);
   };
-  const cont = () => { const s = loadSave(); if (!s) { say('Save could not be read. Starting fresh.', true); setScreen('setup'); return; } setGs(s); setScreen('game'); sfx.click(); };
+  const cont = () => {
+    const s = loadSave();
+    if (!s) { say('Save could not be read. Starting fresh.', true); setScreen('setup'); return; }
+    // reloaded between an election and government formation: replay the count before the talks
+    const last = s.elections[s.elections.length - 1];
+    setOverlays(last && (s.phase === 'coalition' || last.turn > loadSeenElection()) ? [{ kind: 'election', result: last }] : []);
+    setGs(s); setScreen('game'); sfx.click();
+  };
+  const leaveEnd = (to: 'setup' | 'title') => { clearSave(); setCanContinue(false); if (to === 'setup') setScreen('setup'); else toTitle(); };
   const toTitle = () => { setScreen('title'); setPaused(false); setSheet(null); setVoteId(null); setOverlays([]); setCoach(null); setCanContinue(hasSave()); };
 
-  const popOverlay = () => { setOverlays((q) => { const [first, ...rest] = q; if (rest[0]?.kind === 'era') sfx.era(); void first; return rest; }); };
+  const popOverlay = () => { setOverlays((q) => { const [first, ...rest] = q; if (first?.kind === 'election') writeSeenElection(first.result.turn); if (rest[0]?.kind === 'era') sfx.era(); void first; return rest; }); };
   const onPassed = (proposer: PartyId) => { if (!rm) setConfetti((c) => ({ n: c.n + 1, colors: [partyColor(gsRef.current, proposer), '#ffffff', '#c6ff3d'] })); sfx.cheer(); };
 
   // ------------------------------------------------ keyboard
@@ -149,17 +158,17 @@ export default function PlayPage() {
   if (screen === 'title' || !s) {
     body = screen === 'setup'
       ? <SetupScreen onStart={start} onBack={() => setScreen('title')} />
-      : <TitleScreen canContinue={canContinue} best={meta.bestScore} muted={prefs.muted} rm={rm} onContinue={cont} onNew={() => { sfx.click(); setScreen('setup'); }}
+      : <TitleScreen canContinue={canContinue} continueLabel={canContinue && saveIsOver() ? 'See final results' : 'Continue'} best={meta.bestScore} muted={prefs.muted} rm={rm} onContinue={cont} onNew={() => { sfx.click(); setScreen('setup'); }}
           onHow={() => setHow(true)} onToggleMute={() => setPrefs({ ...prefs, muted: !prefs.muted })} onSettings={() => setPaused(true)} />;
   } else if (screen === 'setup') {
     body = <SetupScreen onStart={start} onBack={() => setScreen('title')} />;
   } else if (s.phase === 'over' && !ov) {
-    body = <EndScreen s={s} best={meta.bestScore} onNew={() => setScreen('setup')} onTitle={toTitle} />;
+    body = <EndScreen s={s} best={meta.bestScore} onNew={() => leaveEnd('setup')} onTitle={() => leaveEnd('title')} />;
   } else {
     body = (
       <>
         <TopBar s={s} rm={rm} muted={prefs.muted} onPause={() => setPaused(true)} onMute={() => setPrefs({ ...prefs, muted: !prefs.muted })} />
-        <Dashboard s={s} rm={rm} log={s.history ?? []} act={act} onSheet={(x) => { sfx.click(); setSheet(x); }} onOpenVote={(id) => { sfx.click(); setVoteId(id); if (coach === 2) setCoach(3); }} onEndTurn={endTurn} />
+        <Dashboard s={s} rm={rm} log={s.history ?? []} act={act} onSheet={(x) => { sfx.click(); setToast(null); setSheet(x); }} onOpenVote={(id) => { sfx.click(); setToast(null); setVoteId(id); if (coach === 2) setCoach(3); }} onEndTurn={endTurn} />
         {ov?.kind === 'summary' && <Dialog label="End of turn summary" rm={rm} variant="center" onClose={popOverlay}><TurnSummary prev={ov.prev} s={s} log={ov.log} onClose={popOverlay} /></Dialog>}
         {ov?.kind === 'election' && <Dialog label="Election night" rm={rm} variant="full" className="q-dlg--elec"><ElectionNight s={s} result={ov.result} rm={rm} onDone={popOverlay} onMajority={(c) => !rm && setConfetti((x) => ({ n: x.n + 1, colors: [c, '#ffffff', c] }))} /></Dialog>}
         {ov?.kind === 'era' && <Dialog label={`New era: ${ov.era.name}`} rm={rm} variant="full"><EraInterstitial era={ov.era} s={s} rm={rm} onClose={popOverlay} /></Dialog>}

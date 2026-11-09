@@ -2,7 +2,7 @@
 import type {
   Action, ActionPreview, ApplyResult, BlocStance, DocketItem, ElectionResult, GameState, GroupId,
   LawDef, LawId, LogEntry, LogKind, NewGameOptions, PartyId, RegionId, RelationStep, RivalId,
-  ScoreBreakdown, Stance, StatId, VoteTally, AchievementId, EraId, Outcome, TimedEffect,
+  ScoreBreakdown, Stance, StatId, VoteTally, AchievementId, EraId, Outcome, TimedEffect, CoalitionTerms, Transitions,
 } from './types';
 import * as K from './constants';
 import { CONTENT, EVENTS, GROUPS, GROUP_IDS, LAWS, REGIONS, REGION_IDS, RIVALS, RIVAL_IDS } from './content';
@@ -26,8 +26,12 @@ const round1 = (v: number) => Math.round(v * 10) / 10;
 const clone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 const dist = (a: [number, number], b: [number, number]) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
+const NO_TRANSITIONS: Transitions = { electionHeld: false, eraChanged: false, gameOver: false, governmentFormed: false };
+
 class Ctx {
   log: LogEntry[] = [];
+  tr: Transitions = { ...NO_TRANSITIONS };
+  result(): ApplyResult { return { state: this.s, log: this.log, transitions: this.tr }; }
   constructor(public s: GameState) {}
   push(kind: LogKind, text: string, data?: unknown) {
     const e: LogEntry = { turn: this.s.turn, kind, text, ...(data === undefined ? {} : { data }) };
@@ -299,8 +303,21 @@ function applyElection(c: Ctx, res: ElectionResult) {
       rv.termWelfareDone = false;
     }
   }
+  // rivals that lose seats while the player gains blame the player's campaign
+  if (res.turn > 0 && res.seats.player > s.seats.player) {
+    for (const id of RIVAL_IDS) {
+      const lost = s.seats[id] - res.seats[id];
+      if (lost >= K.BLAME_SEAT_LOSS) {
+        const rv = s.rivals[id];
+        const before = rv.relation;
+        rv.relation = clamp(rv.relation - 1, -2, 2) as RelationStep;
+        if (rv.relation !== before) c.push('rival', `${RIVALS[id].name} lost ${lost} seats and blames your campaign (relation -1).`);
+      }
+    }
+  }
   s.seats = { ...res.seats };
   s.elections.push(res);
+  if (res.turn > 0) c.tr.electionHeld = true;
   c.push('election', res.turn === 0 ? `Founding Assembly: you hold ${res.seats.player} of 72 seats.` : `Election: you win ${res.seats.player} of 72 seats.`, res);
   s.campaign = Object.fromEntries(REGION_IDS.map((id) => [id, 0]));
   for (const id of RIVAL_IDS) s.rivals[id].campaign = Object.fromEntries(REGION_IDS.map((r) => [r, 0]));
@@ -309,20 +326,59 @@ function applyElection(c: Ctx, res: ElectionResult) {
     if (res.seats.player < 8) s.lowSeatElections++; else s.lowSeatElections = 0;
   }
   if (res.seats.player < 10) s.hadLowSeats = true;
+  rollPacts(s);
   formGovernment(c);
 }
 
-function rivalAccepts(s: GameState, leader: PartyId, cand: PartyId): boolean {
-  // hawk refuses progressive partners; the rule is symmetric for hawk-led governments
-  const hawkBlock = (a: PartyId, b: PartyId) => a !== 'player' && RIVALS[a].aiStyle === 'hawk' && partyAxis(s, b)[1] > 0.4;
-  if (hawkBlock(cand, leader) || hawkBlock(leader, cand)) return false;
-  if (cand === 'player' || leader === 'player') {
-    const rival = cand === 'player' ? leader : cand;
-    const rel = s.rivals[rival].relation;
-    if (rel === 2) return true;
-    return rel >= 0 && axisDist(s, 'player', rival) < 1.1;
+/** Would `cand` join a government led by `leader`? Returns the decision and the reasons behind it.
+ *  Player <-> rival: tolerated distance grows with relation (COALITION_DIST + COALITION_REL_STEP * relation);
+ *  allies always accept. Rival <-> rival: within RIVAL_COALITION_DIST. Hawks never sit with progressives. */
+export function coalitionStance(s: GameState, leader: PartyId, cand: PartyId): { accepts: boolean; reasons: string[]; distance: number; maxDistance: number } {
+  const name = (p: PartyId) => (p === 'player' ? s.player.name : RIVALS[p].name);
+  const distance = Math.round(axisDist(s, leader, cand) * 100) / 100;
+  for (const [a, b] of [[cand, leader], [leader, cand]] as [PartyId, PartyId][]) {
+    if (a !== 'player' && RIVALS[a].aiStyle === 'hawk' && partyAxis(s, b)[1] > K.HAWK_SOCIAL_LIMIT) {
+      return { accepts: false, reasons: [`${name(a)} will not govern with a progressive party (social above ${K.HAWK_SOCIAL_LIMIT}).`], distance, maxDistance: 0 };
+    }
   }
-  return axisDist(s, leader, cand) < 1.1;
+  if (cand !== 'player' && leader !== 'player') {
+    const maxDistance = K.RIVAL_COALITION_DIST;
+    if (distance >= maxDistance) return { accepts: false, reasons: [`Too far apart on policy (${distance.toFixed(2)}, limit ${maxDistance}).`], distance, maxDistance };
+    const accepts = (s.rivalPacts ?? []).includes(pactKey(leader, cand));
+    return { accepts, reasons: [accepts ? `${name(leader)} and ${name(cand)} have a working deal this term.` : `Talks between ${name(leader)} and ${name(cand)} broke down this term.`], distance, maxDistance };
+  }
+  const rival = cand === 'player' ? leader : cand;
+  const rel = s.rivals[rival].relation;
+  const relName = ['hostile', 'cool', 'neutral', 'friendly', 'an ally'][rel + 2];
+  if (rel >= 2) return { accepts: true, reasons: [`${name(rival)} is your ally and will deal regardless of policy.`], distance, maxDistance: 99 };
+  const maxDistance = Math.round((K.COALITION_DIST + K.COALITION_REL_STEP * rel) * 100) / 100;
+  const accepts = distance < maxDistance;
+  const reasons = accepts
+    ? [`Policy gap ${distance.toFixed(2)} is within what a ${relName} party tolerates (${maxDistance.toFixed(2)}).`]
+    : [`Policy gap ${distance.toFixed(2)} is too wide while relations are ${relName} (tolerates ${maxDistance.toFixed(2)}).`];
+  if (!accepts) {
+    const need = [-1, 0, 1, 2].find((r) => r > rel && (r >= 2 || distance < K.COALITION_DIST + K.COALITION_REL_STEP * r));
+    if (need !== undefined) reasons.push(`Lobby them up to ${['cool', 'neutral', 'friendly', 'ally'][need + 1]} and they would accept.`);
+  }
+  return { accepts, reasons, distance, maxDistance };
+}
+
+const pactKey = (a: PartyId, b: PartyId) => [a, b].sort().join('+');
+
+/** Roll which rival pairs are willing to deal this term (once per election). */
+function rollPacts(s: GameState) {
+  const out: string[] = [];
+  for (let i = 0; i < RIVAL_IDS.length; i++) {
+    for (let j = i + 1; j < RIVAL_IDS.length; j++) {
+      const [a, b] = [RIVAL_IDS[i], RIVAL_IDS[j]];
+      if (axisDist(s, a, b) < K.RIVAL_COALITION_DIST && rand(s) < K.RIVAL_PACT_CHANCE) out.push(pactKey(a, b));
+    }
+  }
+  s.rivalPacts = out;
+}
+
+function rivalAccepts(s: GameState, leader: PartyId, cand: PartyId): boolean {
+  return coalitionStance(s, leader, cand).accepts;
 }
 
 /** Which rivals would accept joining a player-led coalition right now. */
@@ -330,11 +386,28 @@ export function acceptablePartners(s: GameState): RivalId[] {
   return RIVAL_IDS.filter((id) => rivalAccepts(s, 'player', id));
 }
 
+/** Coalition terms of every rival for a player-led government (accept/refuse plus reasons). */
+export function coalitionTerms(s: GameState): CoalitionTerms[] {
+  return RIVAL_IDS.map((id) => ({ party: id, seats: s.seats[id] ?? 0, ...coalitionStance(s, 'player', id) }));
+}
+
+/** The government that forms if the player declines to lead or join one: a majority coalition of
+ *  rivals if one can be built (biggest rival first), otherwise the largest party alone as a minority. */
+export function fallbackGovernment(s: GameState): PartyId[] {
+  const byseats = [...RIVAL_IDS].filter((id) => s.seats[id] > 0).sort((a, b) => s.seats[b] - s.seats[a]);
+  for (const r of byseats) {
+    const m = aiFormation(s, r, ['player']);
+    if (m.length > 1) return m;
+  }
+  return [largestParty(s)];
+}
+
 function setGovernment(c: Ctx, leader: PartyId, members: PartyId[]) {
   const s = c.s;
   const seats = members.reduce((a, p) => a + s.seats[p], 0);
   s.government = { leader, members, minority: seats < K.MAJORITY };
   s.pendingCoalition = null;
+  c.tr.governmentFormed = true;
   const inGov = members.includes('player');
   if (inGov && s.elections.length > 1) s.politicalCapital = Math.min(K.MAX_PC, s.politicalCapital + 2);
   if (inGov && members.length > 1 && s.elections.length > 1) s.termsInCoalition++;
@@ -372,6 +445,18 @@ function formGovernment(c: Ctx) {
     return;
   }
   const members = aiFormation(s, lead);
+  if (members.length === 1) {
+    // the largest party found no majority: any other majority coalition gets its chance
+    const ok = acceptablePartners(s).reduce((a, p) => a + s.seats[p], s.seats.player);
+    if (s.seats.player > 0 && ok >= K.MAJORITY) {
+      s.phase = 'coalition';
+      s.pendingCoalition = { kind: 'form', seats: { ...s.seats } };
+      c.push('coalition', `${RIVALS[lead].name} cannot find a majority. Coalition talks pass to you.`);
+      return;
+    }
+    const alt = fallbackGovernment(s);
+    if (alt.length > 1) { c.push('coalition', `${RIVALS[lead].name} cannot find a majority; ${alt.map((p) => RIVALS[p].name).join(' and ')} strike a deal.`); setGovernment(c, alt[0], alt); return; }
+  }
   if (members.includes('player')) {
     s.phase = 'coalition';
     s.pendingCoalition = { kind: 'offer', leader: lead, partners: members.filter((p) => p !== 'player' && p !== lead) };
@@ -493,7 +578,8 @@ function tally(s: GameState, item: DocketItem, actual: boolean): VoteTally {
       }
     }
     yes += b.yes; no += b.no; abstain += b.abstain;
-    blocs.push({ party: p, seats, stance, support: sup, ...b, defectors, rebels, whipped });
+    const supportPct = p === 'player' ? (stance === 'yes' ? 100 : stance === 'no' ? 0 : 50) : Math.round(clamp(sup, 0, 1) * 100);
+    blocs.push({ party: p, seats, stance, support: sup, ...b, defectors, rebels, whipped, supportPct });
   }
   const th = threshold(item);
   const t: VoteTally = {
@@ -619,6 +705,8 @@ function eventEligible(s: GameState, id: string): number {
   const last = s.eventHistory[id];
   if (last !== undefined && s.turn - last < K.EVENT_COOLDOWN) return 0;
   let w = e.weight;
+  // each era's own crises come up more often than the evergreen ones, so eras feel distinct
+  if (e.era !== 0) w *= K.ERA_EVENT_WEIGHT;
   // Corvane Border Line: manned border posts halve skirmish odds.
   if (id === 'border_skirmish' && s.enacted.includes('border_wall')) w *= 0.5;
   return w;
@@ -677,7 +765,9 @@ function lawFit(s: GameState, rival: RivalId, law: LawDef): number {
   const r = RIVALS[rival];
   const d = dist([r.economic, r.social], law.axis);
   const base = Object.keys(r.base).reduce((a, g) => a + (law.groupEffects[g] ?? 0), 0);
-  return 1 - d / 1.4 + base / 40;
+  // rivals push the new agenda of the era rather than re-tabling old bills
+  const fresh = law.era === s.era ? K.RIVAL_NEW_LAW_BONUS : 0;
+  return 1 - d / 1.4 + base / 40 + fresh;
 }
 
 function rivalProposals(c: Ctx) {
@@ -774,6 +864,7 @@ function finish(c: Ctx, o: Outcome) {
   const s = c.s;
   s.outcome = o;
   s.phase = 'over';
+  c.tr.gameOver = true;
   s.docket = [];
   const sc = score(s);
   c.push('gameover', `Game over (${o}). Score ${sc.total} — ${sc.rank}.`, sc);
@@ -793,6 +884,7 @@ function nextTurn(c: Ctx) {
   const era = eraForTurn(s.turn);
   if (era !== s.era) {
     s.era = era;
+    c.tr.eraChanged = true;
     const shift: Record<GroupId, number> = era === 2 ? { laborers: 0.03, growers: -0.03 } : { scholars: 0.03, elders: 0.02, growers: -0.02, chapel: -0.03 };
     const norm = (m: Record<GroupId, number>) => {
       for (const [g, d] of Object.entries(shift)) m[g] = Math.max(0.005, (m[g] ?? 0) + d);
@@ -813,7 +905,7 @@ function nextTurn(c: Ctx) {
 
 /** End the turn: vote any remaining docket, resolve budget, stats, rival AI, elections and eras. */
 export function endTurn(state: GameState): ApplyResult {
-  if (state.phase !== 'actions') return { state, log: [{ turn: state.turn, kind: 'error', text: `Cannot end turn during phase '${state.phase}'.` }] };
+  if (state.phase !== 'actions') return { state, log: [{ turn: state.turn, kind: 'error', text: `Cannot end turn during phase '${state.phase}'.` }], transitions: { ...NO_TRANSITIONS } };
   const s = clone(state);
   const c = new Ctx(s);
   for (const item of [...s.docket]) holdVote(c, item.id);
@@ -845,14 +937,14 @@ export function endTurn(state: GameState): ApplyResult {
   // party economy
   s.partyFunds += Math.round(s.seats.player * K.FUNDS_PER_SEAT);
   if (playerInGovernment(s)) { s.turnsInGovernment++; s.politicalCapital = Math.min(K.MAX_PC, s.politicalCapital + 1); }
-  if (checkLoss(c)) return { state: s, log: c.log };
+  if (checkLoss(c)) return c.result();
   if (s.turn % K.ELECTION_EVERY === 0) {
     applyElection(c, runElection(s, s.turn));
-    if (checkLoss(c)) return { state: s, log: c.log };
-    if (s.phase === 'coalition') return { state: s, log: c.log };
+    if (checkLoss(c)) return c.result();
+    if (s.phase === 'coalition') return c.result();
   }
   nextTurn(c);
-  return { state: s, log: c.log };
+  return c.result();
 }
 
 // ------------------------------------------------------------------ actions
@@ -948,7 +1040,7 @@ export function validate(s: GameState, a: Action): string | null {
 /** Apply an action. Never mutates the input; invalid actions return the same state and an 'error' log entry. */
 export function apply(state: GameState, a: Action): ApplyResult {
   const err = validate(state, a);
-  if (err) return { state, log: [{ turn: state.turn, kind: 'error', text: err }] };
+  if (err) return { state, log: [{ turn: state.turn, kind: 'error', text: err }], transitions: { ...NO_TRANSITIONS } };
   if (a.type === 'endTurn') return endTurn(state);
   const s = clone(state);
   const c = new Ctx(s);
@@ -1001,10 +1093,15 @@ export function apply(state: GameState, a: Action): ApplyResult {
       break;
     }
     case 'callVote': holdVote(c, a.itemId); break;
-    case 'formCoalition':
-      setGovernment(c, 'player', ['player', ...a.partners]);
+    case 'formCoalition': {
+      const fb = a.partners.length ? null : fallbackGovernment(s);
+      if (fb && fb[0] !== 'player') {
+        c.push('coalition', fb.length > 1 ? `Without a deal from you, ${fb.map((p) => RIVALS[p].name).join(' and ')} form a majority. You go into opposition.` : `${RIVALS[fb[0]].name} governs as a minority.`);
+        setGovernment(c, fb[0], fb);
+      } else setGovernment(c, 'player', ['player', ...a.partners]);
       if (s.turn >= K.TURNS && s.elections.length > 1) finishAtEnd(c); else if (s.elections.length === 1) startActions(c); else nextTurn(c);
       break;
+    }
     case 'answerOffer': {
       const pc = s.pendingCoalition as { kind: 'offer'; leader: RivalId; partners: RivalId[] };
       const members: PartyId[] = a.accept ? [pc.leader, ...pc.partners, 'player'] : aiFormation(s, pc.leader, ['player']);
@@ -1013,7 +1110,7 @@ export function apply(state: GameState, a: Action): ApplyResult {
       break;
     }
   }
-  return { state: s, log: c.log };
+  return c.result();
 }
 
 /** All currently valid actions (endTurn included when allowed). Coalition 'form' lists every valid partner subset. */

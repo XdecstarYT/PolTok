@@ -31,7 +31,20 @@ export const TURNOUT_NOISE = 0.04;
 export const REGION_THRESHOLD = 0.05;
 /** A brand-new party only gets this fraction of its attraction at the founding assembly. */
 export const FOUNDING_FACTOR = 0.55;
-export const RIVAL_DEFAULT_APPROVAL = 43;
+export const RIVAL_DEFAULT_APPROVAL = 46;
+// coalitions
+/** Policy distance a neutral rival tolerates in a coalition with the player. */
+export const COALITION_DIST = 0.7;
+/** Extra (or less) tolerated distance per relation step (hostile -2 .. friendly +1; allies always accept). */
+export const COALITION_REL_STEP = 0.35;
+/** Two rivals will govern together within this distance. */
+export const RIVAL_COALITION_DIST = 1.6;
+/** Chance, rolled per election, that two rivals within RIVAL_COALITION_DIST are willing to deal this term. */
+export const RIVAL_PACT_CHANCE = 0.16;
+/** A rival losing this many seats at an election in which the player gains blames the player (relation -1). */
+export const BLAME_SEAT_LOSS = 2;
+/** Hawks refuse partners more progressive than this. */
+export const HAWK_SOCIAL_LIMIT = 0.4;
 /** Rivals' approval drifts back toward their base by this fraction per turn. */
 export const RIVAL_DRIFT = 0.05;
 /** Each turn every rival courts the nearby group where the player out-polls it most. */
@@ -65,7 +78,11 @@ export const WHIP_PC = 1;
 // events
 export const EVENT_CHANCE = 0.6;
 export const EVENT_COOLDOWN = 6;
+/** Weight multiplier for events that belong to the current era (era 0 events keep weight 1). */
+export const ERA_EVENT_WEIGHT = 2.5;
 
 // rival AI
 export const RIVAL_PROPOSE_P = 0.5;
 export const RIVAL_PROPOSE_P_GOV = 0.8;
+/** Fit bonus rivals give to laws unlocked in the current era. */
+export const RIVAL_NEW_LAW_BONUS = 0.2;

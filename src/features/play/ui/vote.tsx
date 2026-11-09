@@ -118,13 +118,14 @@ export function VoteScreen({ s, itemId, rm, act, onClose, onPassed }: {
                 <li key={b.party} className="q-bloc">
                   <span className="q-dot q-dot--lg" style={{ background: partyColor(s, b.party) }} />
                   <span className="q-bloc__t"><b>{partyName(s, b.party)}</b>
-                    <small className="q-muted">{b.seats} seats · support {b.support.toFixed(2)} {b.support >= 0.55 ? '≥ 0.55' : b.support <= 0.35 ? '≤ 0.35' : '(wavering)'}{b.defectors ? ` · ~${b.defectors} defect` : ''}{b.rebels ? ` · ${b.rebels} rebels` : ''}{b.whipped ? ' · whipped' : ''}</small></span>
+                    <small className="q-muted">{b.seats} seats · {b.party === 'player' ? 'your call' : `support ${b.supportPct}%${b.stance === 'abstain' ? ' (wavering)' : ''}`}{b.defectors ? ` · ~${b.defectors} defect` : ''}{b.rebels ? ` · ${b.rebels} rebels` : ''}{b.whipped ? ' · whipped' : ''}</small></span>
                   <span className={`q-stance is-${b.stance}`}>{b.stance.toUpperCase()}</span>
                   {canWhip && <button className="btn q-btn-sm" disabled={!wp.valid} title={wp.reason} onClick={() => { sfx.click(); act(wa); }}>Whip · 1 PC</button>}
                 </li>
               );
             })}
           </ul>
+          <p className="q-small q-muted">Blocs vote YES at 55%+ support and NO at 35% or less. In between they abstain, and you can whip them for 1 PC.</p>
           <div className="q-vote__btns">
             <button className="btn q-btn-ghost q-btn-lg" onClick={onClose}>Later</button>
             <button className="btn btn--accent q-btn-lg" onClick={call} data-autofocus>Call the Vote</button>

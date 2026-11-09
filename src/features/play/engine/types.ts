@@ -139,6 +139,9 @@ export interface VoteTally {
     /** Player bloc only: rebels voting against the player's stance. */
     rebels: number;
     whipped: boolean;
+    /** `support` normalised for display: 0..100 (rival blocs: raw support clamped; the player's
+     *  own bloc: 100 YES, 50 ABSTAIN, 0 NO). YES at 55+, NO at 35 or less, otherwise ABSTAIN. */
+    supportPct: number;
   }[];
   /** Actual results only: per-seat votes in roll-call order (party, vote). */
   rollCall?: { party: PartyId; vote: BlocStance }[];
@@ -239,6 +242,9 @@ export interface GameState {
   lowSeatElections: number;
   unanimous: boolean;
   outcome: Outcome | null;
+  /** Rival pairs ("a+b", ids sorted) whose coalition talks succeeded at the last election.
+   *  Rolled once per election so formation previews are deterministic. Missing in old saves = none. */
+  rivalPacts?: string[];
   /** Free-form log of the whole game (most recent last). */
   history: LogEntry[];
 }
@@ -280,8 +286,33 @@ export type LogKind =
 /** One line of narrative plus optional structured data for animations. */
 export interface LogEntry { turn: number; kind: LogKind; text: string; data?: unknown }
 
+/** What happened during an apply/endTurn, so the UI does not have to diff states. */
+export interface Transitions {
+  /** An election was held (seats changed hands). */
+  electionHeld: boolean;
+  /** A new era began (the new era is state.era). */
+  eraChanged: boolean;
+  /** The game ended (see state.outcome). */
+  gameOver: boolean;
+  /** A government was formed (state.government is the new one). */
+  governmentFormed: boolean;
+}
+
 /** Result of apply/endTurn. The input state is never mutated. */
-export interface ApplyResult { state: GameState; log: LogEntry[] }
+export interface ApplyResult { state: GameState; log: LogEntry[]; transitions: Transitions }
+
+/** Whether a rival would join a coalition, and why. */
+export interface CoalitionTerms {
+  party: RivalId;
+  accepts: boolean;
+  /** Human-readable reasons (first one is the deciding reason). */
+  reasons: string[];
+  /** Axis distance between the two parties. */
+  distance: number;
+  /** Largest distance this rival tolerates at the current relation. */
+  maxDistance: number;
+  seats: number;
+}
 
 /** Options for newGame. */
 export interface NewGameOptions {

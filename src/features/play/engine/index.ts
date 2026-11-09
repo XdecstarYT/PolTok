@@ -3,6 +3,7 @@ export * from './types';
 export {
   newGame, apply, endTurn, forecastVote, previewAction, listAvailableActions, score,
   validate, budget, courtGain, projectSeats, regionShares, dhondt, eventChoice, acceptablePartners,
+  coalitionStance, coalitionTerms, fallbackGovernment,
   draftableLaws, playerInGovernment, rivalGroup, topGroups, startingApproval, axisDist, partyAxis,
   migrate, serialize, deserialize, STAT_IDS, STYLE_CATEGORIES,
 } from './engine';

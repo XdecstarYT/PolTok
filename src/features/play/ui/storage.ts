@@ -21,7 +21,10 @@ export function loadSave(): GameState | null {
   if (!s || typeof s !== 'object' || typeof s.turn !== 'number' || !s.player || !s.approval) return null;
   return s;
 }
-export const hasSave = () => { const s = loadSave(); return !!s && s.phase !== 'over'; };
+/** A save exists (an unfinished game, or a finished one whose results have not been dismissed). */
+export const hasSave = () => !!loadSave();
+/** The saved game has ended (Continue shows its results). */
+export const saveIsOver = () => loadSave()?.phase === 'over';
 export const writeSave = (s: GameState) => write(SAVE_KEY, s);
 export const clearSave = () => { try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ } };
 
@@ -30,3 +33,8 @@ export const writeMeta = (m: Meta) => write(META_KEY, m);
 export const loadPrefs = (): Prefs => ({ muted: false, volume: 0.8, reduceMotion: false, ...(read<Partial<Prefs>>(PREFS_KEY) ?? {}) });
 export const writePrefs = (p: Prefs) => write(PREFS_KEY, p);
 export const resetAll = () => { for (const k of [SAVE_KEY, META_KEY]) try { localStorage.removeItem(k); } catch { /* ignore */ } };
+
+const SEEN_KEY = 'poltok.quorum.seen.v1';
+/** Turn of the last election night the player watched to the end (so Continue can replay an unseen one). */
+export const loadSeenElection = (): number => { const v = read<number>(SEEN_KEY); return typeof v === 'number' ? v : -1; };
+export const writeSeenElection = (turn: number) => write(SEEN_KEY, turn);

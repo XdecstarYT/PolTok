@@ -1212,7 +1212,7 @@
    "id": "student_march",
    "era": 0,
    "title": "Lamplight March",
-   "text": "Thousands of students march on Parliament.",
+   "text": "Thousands of students march on the Assembly.",
    "choices": [
     {
      "label": "Meet their leaders",
@@ -1392,7 +1392,7 @@
    "text": "A foreign bank offers a cheap loan.",
    "choices": [
     {
-     "label": "Accept +50, +5 debt interest/turn",
+     "label": "Accept +50, repay 5/turn for 6 turns",
      "groupEffects": {
       "merchants": 4,
       "guardians": -3
@@ -1506,7 +1506,7 @@
    "text": "A charismatic preacher fills the squares.",
    "choices": [
     {
-     "label": "Invite to Parliament",
+     "label": "Invite to the Assembly",
      "groupEffects": {
       "chapel": 10,
       "scholars": -6

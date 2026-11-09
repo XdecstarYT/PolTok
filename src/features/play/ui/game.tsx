@@ -81,7 +81,7 @@ export function StatChips({ s }: { s: GameState }) {
     <ul className="q-stats" aria-label="National stats">
       {STATS.map((k) => {
         const v = Math.round(s.stats[k]);
-        return <li key={k} className={v < 40 ? 'is-low' : v > 70 ? 'is-high' : ''} title={`${STAT_LABEL[k]} ${v}/100, drifts 1 per turn toward 50`}><span aria-hidden="true">{STAT_ICON[k]}</span><span className="q-stats__k">{STAT_LABEL[k]}</span><b className="q-num">{v}</b></li>;
+        return <li key={k} className={v < 40 ? 'is-low' : v > 70 ? 'is-high' : ''} title={`${STAT_LABEL[k]} ${v}/100, drifts 1 per turn toward 50`}><span aria-hidden="true">{STAT_ICON[k]}</span><span className="q-stats__k">{k === 'environment' ? 'Environ.' : STAT_LABEL[k]}</span><b className="q-num">{v}</b></li>;
       })}
     </ul>
   );

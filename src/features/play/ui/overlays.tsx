@@ -42,12 +42,22 @@ export function TurnSummary({ prev, s, log, onClose }: { prev: GameState; s: Gam
         <div className="q-stat"><span>Pol. capital</span><b className="q-num">{s.politicalCapital}</b><Delta n={s.politicalCapital - prev.politicalCapital} /></div>
         <div className="q-stat"><span>Seats</span><b className="q-num">{s.seats.player ?? 0}</b><Delta n={(s.seats.player ?? 0) - (prev.seats.player ?? 0)} /></div>
       </div>
-      <div className="q-effects q-sum__appr">
-        {CONTENT.groups.map((g) => <span key={g.id} title={g.name}>{groupGlyph(g.id)} <Delta n={Math.round((s.approval[g.id] ?? 0) - (prev.approval[g.id] ?? 0))} /></span>)}
-        {STATS.map((k) => <span key={k} title={STAT_LABEL[k]}>{STAT_ICON[k]} <Delta n={Math.round(s.stats[k] - prev.stats[k])} /></span>)}
-      </div>
-      {shown.length > 0 && <ul className="q-sum__log">{shown.map((l, i) => <li key={i} className={`q-news__${l.kind}`}>{l.text}</li>)}</ul>}
+      <SumChanges label="Approval" items={CONTENT.groups.map((g) => ({ k: g.id, icon: groupGlyph(g.id), name: g.name.split(' ').pop() ?? g.name, full: g.name, n: Math.round((s.approval[g.id] ?? 0) - (prev.approval[g.id] ?? 0)) }))} />
+      <SumChanges label="Nation" items={STATS.map((k) => ({ k, icon: STAT_ICON[k], name: STAT_LABEL[k], full: STAT_LABEL[k], n: Math.round(s.stats[k] - prev.stats[k]) }))} />
+      {shown.length > 0 && <ul className="q-sum__log">{shown.map((l, i) => <li key={i} className={`q-news__${l.kind}`}>{l.kind === 'event' && !String(l.text).includes(':') ? `Dispatch: ${l.text}` : l.text}</li>)}</ul>}
       <button className="btn btn--accent q-btn-lg q-wide" onClick={onClose} data-autofocus>Continue</button>
+    </div>
+  );
+}
+
+function SumChanges({ label, items }: { label: string; items: { k: string; icon: string; name: string; full: string; n: number }[] }) {
+  const moved = items.filter((x) => x.n !== 0);
+  return (
+    <div className="q-sum__row">
+      <span className="q-label">{label}</span>
+      {moved.length ? (
+        <span className="q-effects">{moved.map((x) => <span key={x.k} title={x.full}><span aria-hidden="true">{x.icon}</span> {x.name} <Delta n={x.n} /></span>)}</span>
+      ) : <span className="q-muted q-small">No change</span>}
     </div>
   );
 }
@@ -64,7 +74,7 @@ export function EraInterstitial({ era, s, rm, onClose }: { era: EraDef; s: GameS
       <ul className="q-era__laws">
         {laws.map((l, i) => <m.li key={l.id} initial={rm ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.08 }}><b>{l.name}</b> <small className="q-muted">{l.category}</small></m.li>)}
       </ul>
-      <button className="btn btn--accent q-btn-lg q-wide" onClick={onClose} data-autofocus>Enter the {era.name}</button>
+      <button className="btn btn--accent q-btn-lg q-wide" onClick={onClose} data-autofocus>Enter {era.name.replace(/^The /, 'the ')}</button>
     </m.div>
   );
 }

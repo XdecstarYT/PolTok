@@ -6,13 +6,39 @@ All constants live in `src/features/play/engine/constants.ts`. The smoke test (`
 - **Random bot:** picks a random valid action each step and ends the turn at random. It is a floor, not a player.
 - **Smart bot ("reasonable player"):** takes the event choice with the better approval/treasury sum, drafts the affordable law that is forecast to pass and pleases its groups most, whips close votes, votes NO on costly rival bills when the budget is tight, campaigns in the three biggest regions, courts its top groups, and accepts any government it can join.
 
-## Current results (seeds 1..N, ideologies rotated)
-| Bot | Games | In government at end (win) | Coalition (lead + junior) | Opposition | Lost (bankrupt/collapse/dissolved) | Avg score | Avg final seats |
-|---|---|---|---|---|---|---|---|
-| Random | 200 | 20.5% | 19.5% | 76.5% | 3.0% (all bankrupt) | 239 | 14.1 |
-| Smart | 100 | 85% (82% minority, 2% coalition, 1% junior) | 3% | 15% | 0% | 355 | 21.7 |
+## Current results (seeds 1..300, ideologies rotated)
+Measured with the bots from the test file. `npm test` reruns 200 random and 100 smart games and checks the ranges below. That run uses seeds 1..100 for the smart bot, so its win rate reads a few points higher (about 74%).
 
-Target: a sensible player usually governs but has to work for it. A random clicker mostly ends in opposition and sometimes goes bankrupt.
+| Bot | Games | Win (in government at end) | Coalition government formed | Opposition | Lost (bankrupt/collapse/dissolved) | Avg score |
+|---|---|---|---|---|---|---|
+| Random | 300 | **16%** (15% junior, 1% other) | **38% of elections** (21% rival-only, 14% you as junior, 2% you leading) | 76% | 8% (7% bankrupt) | 210 |
+| Smart | 300 | **69%** (67% minority, 2% coalition) | **39% of elections** (23% you leading, 10% rival-only, 6% you as junior) | 31% | 0% | 332 |
+
+Before this pass (same bots, 200 games each):
+
+| Bot | Win | Coalition government formed | Rival-only coalitions |
+|---|---|---|---|
+| Random | 20.5% | 20% of elections | 0% (never) |
+| Smart | 81.5-85% | 36% of elections, all led by the player, and almost none survived to the end (2%) | 0% (never) |
+
+Targets: a sensible player governs about two games in three; a careless one about one in five or fewer; a coalition (of any kind) forms after 25-40% of elections, and the player sits in coalition talks (leading them or receiving an offer) after about a third (random) to three quarters (smart) of elections.
+
+Each era now feels distinct (smart bot, 60 games):
+
+| Era | Events that belong to this era | Rival bills from this era's new laws |
+|---|---|---|
+| Lamp (1) | 29% (was 14%) | 100% |
+| Smokestack (2) | 46% (was 27%) | 92% (was 69%) |
+| Signal (3) | 53% (was 37%) | 97% (was 46%) |
+
+## Coalition rules (as built, this pass)
+Before, every pair of rivals was 1.33 or more apart and the acceptance limit was 1.1, so two rivals could never govern together. Worse, the player's nearest rival accepted at any relation of neutral or better, so the result was always "minority government" or "the player plus their natural partner".
+
+- **Player <-> rival:** a rival tolerates a policy gap of `COALITION_DIST + COALITION_REL_STEP * relation` = 0.7 + 0.35 x relation. So a hostile rival tolerates 0, cool 0.35, neutral 0.7, friendly 1.05, and an ally always accepts. Hawks still refuse any partner with social above 0.4 (`HAWK_SOCIAL_LIMIT`), even an ally.
+- **Blame (`BLAME_SEAT_LOSS` = 2):** at an election where the player gains seats, every rival that loses 2 or more seats drops one relation step. Your natural partner (0.2 to 0.41 away) turns cool, then hostile, if you keep eating its vote. Lobbying before the election is how you keep a partner, and the coalition screen tells you how far you need to lobby.
+- **Rival pacts (`RIVAL_PACT_CHANCE` = 0.16, `RIVAL_COALITION_DIST` = 1.6):** at each election, each rival pair within 1.6 rolls once to see whether its talks succeed this term. The result is stored in `state.rivalPacts`, so previews are deterministic. In practice that means Harbor + Iron Crown (1.56) and Harbor + Glass (1.53); Iron Crown never sits with the progressive Glass Circle.
+- **Formation order:** a party with 37 or more seats governs alone. Otherwise the largest party tries first. If a rival leads and finds no majority, the player gets the next try when an acceptable majority exists. If the player passes, a rival pact that reaches 37 takes power and the player goes into opposition. Only if no majority exists does the largest party govern alone. `fallbackGovernment(s)` shows the UI what passing would lead to.
+- Engine API: `coalitionTerms(s)` / `coalitionStance(s, leader, cand)` return `accepts` plus human-readable `reasons`. The UI no longer re-implements the rule.
 
 ## What we changed from the first pass, and why
 | Knob | GDD / first value | Now | Why |
@@ -24,6 +50,9 @@ Target: a sensible player usually governs but has to work for it. A random click
 | `RIVAL_DEFAULT_APPROVAL` | 30 | 43 | At 30 rivals were three thin single-issue parties and the player was the largest party almost every time. |
 | Rival courting (new) | none | each turn each rival gets +4 (`RIVAL_COURT_GAIN`) with the group within 0.9 of its axis where the player out-polls it most | Gives the AI a counter-move to the player's courting. |
 | `FOUNDING_FACTOR` (new) | n/a | 0.55 | The new party's attraction at the founding assembly is cut, so it starts small (about 8 seats), as Comeback and the founding fantasy assume. |
+| `RIVAL_DEFAULT_APPROVAL` (pass 2) | 43 | 46 | With rival pacts in place, this sets the smart bot's win rate (about -4 points of win rate per +1). It also keeps the careless bot under 20%. |
+| `ERA_EVENT_WEIGHT` (new) | 1 | 2.5 | Era-specific events had a 1-in-7 share in the Lamp Era. Now each era's own crises dominate. |
+| `RIVAL_NEW_LAW_BONUS` (new) | 0 | +0.2 fit | In the Signal Era, rivals were still re-tabling Lamp-era bills (54% of their bills). Now they push the new agenda. |
 
 ## Rules the GDD left open (as built)
 - **Silver Seam (`windfall`):** Nationalize gives +30 now plus royalties of +5 per turn for 4 turns. Auction gives +20 now and economy +2.
@@ -33,9 +62,10 @@ Target: a sensible player usually governs but has to work for it. A random click
 - **Campaign cost:** 10 treasury in government, 10 party funds in opposition (section 7 wording).
 - **Debt:** a surplus above 60 treasury is paid against debt automatically.
 - **Win:** being in government after the final election, in any form (`majority`, `coalition`, `minority` or `junior`). `opposition` is a finish but not a win.
-- **Minority governments** are common for the smart bot, because rivals rarely accept each other (all rival pairs are 1.1 or more apart). Bills from a minority government still have to pass the floor, which is the cost of governing that way.
+- **Minority governments** remain the smart bot's most common win, but they are now at risk: if a rival pact can reach 37, passing on coalition talks hands them power. Bills from a minority government still have to pass the floor.
 
 ## Known levers if it plays too easy or too hard
-- To make it harder: raise `RIVAL_DEFAULT_APPROVAL` (each +3 costs the smart bot about 6-8 points of win rate), or raise `RIVAL_COURT_GAIN`.
+- More or fewer coalitions: `RIVAL_PACT_CHANCE` (each +0.03 adds about 3 points of rival-only coalitions and costs the smart bot about 3 points of win rate). `COALITION_DIST` barely matters for natural partners, which sit 0.2 to 0.41 away; `COALITION_REL_STEP` and `BLAME_SEAT_LOSS` do.
+- To make it harder: raise `RIVAL_DEFAULT_APPROVAL` (each +1 costs the smart bot about 3-4 points of win rate), or raise `RIVAL_COURT_GAIN`.
 - To make it easier: lower `APPROVAL_DRIFT` or raise `COURT_SOFT_CAP`.
 - If bankruptcy is too rare for careless play, lower `BASE_INCOME` or raise `BASE_EXPENSES`.

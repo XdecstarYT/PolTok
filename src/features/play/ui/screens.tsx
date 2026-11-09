@@ -7,8 +7,8 @@ import { sfx } from '../audio';
 
 // ---------------------------------------------------------------- Title
 
-export function TitleScreen({ canContinue, best, muted, rm, onContinue, onNew, onHow, onToggleMute, onSettings }: {
-  canContinue: boolean; best: number; muted: boolean; rm: boolean;
+export function TitleScreen({ canContinue, continueLabel = 'Continue', best, muted, rm, onContinue, onNew, onHow, onToggleMute, onSettings }: {
+  canContinue: boolean; continueLabel?: string; best: number; muted: boolean; rm: boolean;
   onContinue: () => void; onNew: () => void; onHow: () => void; onToggleMute: () => void; onSettings: () => void;
 }) {
   const colors = useMemo(() => Array.from({ length: SEATS_TOTAL }, (_, i) => [CONTENT.rivals[0].color, PARTY_SWATCHES[0], CONTENT.rivals[1].color, CONTENT.rivals[2].color][Math.floor((i / SEATS_TOTAL) * 4)]), []);
@@ -21,7 +21,7 @@ export function TitleScreen({ canContinue, best, muted, rm, onContinue, onNew, o
         <p className="q-logo__sub">The Calderra Ledger</p>
         <p className="q-title__pitch">Found a party in a newborn harbor republic. 24 turns. 72 seats. 37 to pass anything.</p>
         <div className="q-title__btns">
-          {canContinue && <button className="btn btn--accent q-btn-lg" onClick={onContinue} data-autofocus>Continue</button>}
+          {canContinue && <button className="btn btn--accent q-btn-lg" onClick={onContinue} data-autofocus>{continueLabel}</button>}
           <button className={`btn q-btn-lg${canContinue ? ' q-btn-ghost' : ' btn--accent'}`} onClick={onNew}>New Game</button>
           <button className="btn q-btn-ghost q-btn-lg" onClick={onHow}>How to Play</button>
         </div>
@@ -153,7 +153,8 @@ export const ACHIEVEMENTS: Record<AchievementId, { name: string; desc: string; i
   long_memory: { name: 'Long Memory', desc: 'Never repealed a law', icon: '∞' },
 };
 const OUTCOME: Record<string, string> = {
-  majority: 'Governing majority', coalition: 'In coalition government', opposition: 'In opposition',
+  majority: 'Governing majority', coalition: 'Leading a coalition government', minority: 'Governing as a minority',
+  junior: 'Junior partner in government', opposition: 'In opposition',
   bankrupt: 'The Republic went bankrupt', collapse: 'National collapse', dissolved: 'Party dissolved',
 };
 

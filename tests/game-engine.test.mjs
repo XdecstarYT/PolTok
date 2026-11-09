@@ -90,13 +90,16 @@ function smartBot(s, r) {
   }
   return { type: 'endTurn' };
 }
-function play(seed, bot, check) {
+/** Plays one game; `govs` (if given) collects every government formed after a real election. */
+function play(seed, bot, check, govs) {
   let s = E.newGame({ seed, ideologyId: ['commonwealth', 'hearth', 'ledger'][seed % 3] });
   const r = rng(seed * 7 + 1);
   for (let n = 0; s.phase !== 'over' && n < 3000; n++) {
     const a = bot(s, r);
-    const res = E.apply(s, a);
-    s = res.log[0]?.kind === 'error' ? E.endTurn(s).state : res.state;
+    let res = E.apply(s, a);
+    if (res.log[0]?.kind === 'error') res = E.endTurn(s);
+    s = res.state;
+    if (govs && res.transitions.governmentFormed && s.elections.length > 1) govs.push(s.government);
     check?.(s);
   }
   return s;
@@ -275,12 +278,76 @@ test('full 24-turn game with the smart bot: never crashes, invariants hold, dete
   assert.ok(typeof sc.rank === 'string' && Array.isArray(sc.achievements));
 });
 
+test('coalitions: engine terms match validation, relations widen tolerance, rival pacts, fallback government', () => {
+  let s = actionsState(3, { ideologyId: 'commonwealth' });
+  // terms agree with validate() for every rival
+  const terms = E.coalitionTerms(s);
+  assert.equal(terms.length, 3);
+  for (const t of terms) {
+    assert.ok(t.reasons.length >= 1 && typeof t.reasons[0] === 'string');
+    assert.equal(t.accepts, E.acceptablePartners(s).includes(t.party));
+  }
+  // allies always accept (unless a hawk's red line applies); relation widens the tolerated distance
+  const far = { ...s, rivals: { ...s.rivals, glass_circle: { ...s.rivals.glass_circle, relation: -1 } } };
+  const ally = { ...s, rivals: { ...s.rivals, glass_circle: { ...s.rivals.glass_circle, relation: 2 } } };
+  assert.equal(E.coalitionStance(far, 'player', 'glass_circle').accepts, false);
+  assert.equal(E.coalitionStance(ally, 'player', 'glass_circle').accepts, true);
+  assert.ok(E.coalitionStance(far, 'player', 'glass_circle').reasons.some((r) => /Lobby/.test(r)), 'refusal explains how to fix it');
+  // hawk refuses progressives even as an ally
+  const hawkAlly = { ...s, rivals: { ...s.rivals, iron_crown: { ...s.rivals.iron_crown, relation: 2 } } };
+  assert.equal(E.coalitionStance(hawkAlly, 'player', 'iron_crown').accepts, false);
+  // rival pairs deal only with a pact for this term
+  const pact = { ...s, rivalPacts: ['glass_circle+harbor_left'] };
+  assert.equal(E.coalitionStance(pact, 'harbor_left', 'glass_circle').accepts, true);
+  assert.equal(E.coalitionStance({ ...s, rivalPacts: [] }, 'harbor_left', 'glass_circle').accepts, false);
+  // fallback: a rival majority if a pact can reach 37, else the largest party alone
+  const seats = { player: 28, iron_crown: 6, harbor_left: 19, glass_circle: 19 };
+  assert.deepEqual(E.fallbackGovernment({ ...pact, seats }).sort(), ['glass_circle', 'harbor_left']);
+  assert.deepEqual(E.fallbackGovernment({ ...s, rivalPacts: [], seats }), ['player']);
+  // passing on a coalition while a rival pact has a majority sends the player into opposition
+  const form = { ...pact, seats, phase: 'coalition', pendingCoalition: { kind: 'form', seats }, elections: [...s.elections, s.elections[0]] };
+  const r = E.apply(form, { type: 'formCoalition', partners: [] });
+  assert.equal(r.transitions.governmentFormed, true);
+  assert.equal(E.playerInGovernment(r.state), false);
+});
+
+test('transitions: endTurn reports elections, eras and game over; bloc support is normalised', () => {
+  let s = actionsState(5);
+  const seen = { electionHeld: 0, eraChanged: 0, gameOver: 0 };
+  const r0 = E.apply(s, { type: 'court', groupId: 'elders' });
+  assert.deepEqual(r0.transitions, { electionHeld: false, eraChanged: false, gameOver: false, governmentFormed: false });
+  assert.equal(E.apply(s, { type: 'lobby', rivalId: 'nope' }).transitions.gameOver, false, 'errors carry transitions too');
+  const r = rng(99);
+  for (let n = 0; s.phase !== 'over' && n < 3000; n++) {
+    const prev = s;
+    let res = E.apply(s, smartBot(s, r));
+    if (res.log[0]?.kind === 'error') res = E.endTurn(s);
+    s = res.state;
+    assert.equal(res.transitions.electionHeld, s.elections.length > prev.elections.length);
+    assert.equal(res.transitions.eraChanged, s.era !== prev.era);
+    assert.equal(res.transitions.gameOver, s.phase === 'over' && prev.phase !== 'over');
+    for (const k of Object.keys(seen)) seen[k] += res.transitions[k] ? 1 : 0;
+    for (const d of s.docket) {
+      for (const b of E.forecastVote(s, d.id).blocs) {
+        assert.ok(Number.isInteger(b.supportPct) && b.supportPct >= 0 && b.supportPct <= 100, `supportPct ${b.supportPct}`);
+        if (b.party !== 'player' && b.stance === 'yes' && d.proposer !== b.party && !(d.government && s.government.members.includes(b.party)) && !b.whipped) assert.ok(b.supportPct >= 55);
+      }
+    }
+  }
+  if (s.outcome && !['bankrupt', 'collapse', 'dissolved'].includes(s.outcome)) {
+    assert.equal(seen.electionHeld, 6);
+    assert.equal(seen.eraChanged, 2);
+  }
+  assert.equal(seen.gameOver, 1);
+});
+
 test('balance smoke: 200 random-bot games + 100 smart-bot games', () => {
   const run = (bot, n) => {
     const c = {};
+    const govs = [];
     let score = 0, seats = 0;
     for (let i = 1; i <= n; i++) {
-      const s = play(i, bot);
+      const s = play(i, bot, undefined, govs);
       assert.equal(s.phase, 'over');
       c[s.outcome] = (c[s.outcome] ?? 0) + 1;
       score += E.score(s).total;
@@ -288,13 +355,18 @@ test('balance smoke: 200 random-bot games + 100 smart-bot games', () => {
     }
     const gov = (c.majority ?? 0) + (c.coalition ?? 0) + (c.minority ?? 0) + (c.junior ?? 0);
     const lost = (c.bankrupt ?? 0) + (c.collapse ?? 0) + (c.dissolved ?? 0);
-    return { c, win: gov / n, lost: lost / n, coalition: ((c.coalition ?? 0) + (c.junior ?? 0)) / n, score: Math.round(score / n), seats: +(seats / n).toFixed(1) };
+    const coalitionGovs = +(govs.filter((g) => g.members.length > 1).length / govs.length).toFixed(3);
+    return { c, win: gov / n, lost: lost / n, coalition: ((c.coalition ?? 0) + (c.junior ?? 0)) / n, coalitionGovs, score: Math.round(score / n), seats: +(seats / n).toFixed(1) };
   };
   const rnd = run(randomBot, 200);
   const smart = run(smartBot, 100);
   console.log('random bot x200:', JSON.stringify(rnd));
   console.log('smart bot x100:', JSON.stringify(smart));
   assert.ok(smart.win > rnd.win + 0.2, 'skill matters');
-  assert.ok(smart.win >= 0.5 && smart.win <= 0.95, `smart win rate ${smart.win}`);
-  assert.ok(rnd.win <= 0.4, `random win rate ${rnd.win}`);
+  assert.ok(smart.win >= 0.5 && smart.win <= 0.78, `smart win rate ${smart.win}`);
+  assert.ok(rnd.win <= 0.3, `random win rate ${rnd.win}`);
+  // coalitions (any multi-party government) should be a regular sight, not a rarity or the norm
+  for (const [name, r] of [['random', rnd], ['smart', smart]]) {
+    assert.ok(r.coalitionGovs >= 0.2 && r.coalitionGovs <= 0.5, `${name} coalition share of elections ${r.coalitionGovs}`);
+  }
 });

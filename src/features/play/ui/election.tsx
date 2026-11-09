@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
 import type { Action, ElectionResult, GameState, PartyId, RegionId, RivalId } from '../engine/types';
-import { axisDist, CONTENT, MAJORITY, partiesLeftToRight, partyAxis, partyColor, partyName, regionName, RELATION_LABEL, SEATS_TOTAL } from './adapter';
+import { api, CONTENT, MAJORITY, partiesLeftToRight, partyColor, partyName, regionName, RELATION_LABEL, SEATS_TOTAL } from './adapter';
 import { Hemicycle, RegionMap } from './visuals';
 import { sfx, startBed, stopBed } from '../audio';
 
@@ -54,12 +54,26 @@ export function ElectionNight({ s, result, rm, onDone, onMajority }: {
           </ul>
         </div>
       </div>
+      {done && <p className="q-elec__gov" role="status">{govLine(s, result)}</p>}
       <div className="q-vote__btns">
         {!done && <button className="btn q-btn-ghost" onClick={() => setK(n)}>Skip count</button>}
         <button className="btn btn--accent q-btn-lg" disabled={!done} onClick={onDone} data-autofocus>{done ? 'Continue' : `Counting ${k}/${n}…`}</button>
       </div>
     </div>
   );
+}
+
+/** One line on what the count means for government formation. */
+function govLine(s: GameState, result: ElectionResult): string {
+  const top = Object.entries(result.seats).sort((a, b) => b[1] - a[1]);
+  const [lp, ls] = top[0] ?? ['', 0];
+  if (ls >= MAJORITY) return lp === 'player' ? `You win an outright majority: ${ls} seats.` : `${partyName(s, lp)} wins an outright majority (${ls} seats).`;
+  if (s.phase === 'coalition' && s.pendingCoalition?.kind === 'offer') return `Hung Assembly. ${partyName(s, s.pendingCoalition.leader)} wants you in its government. Coalition talks next.`;
+  if (s.phase === 'coalition') return `Hung Assembly: nobody has ${MAJORITY}. Coalition talks are yours to lead.`;
+  const g = s.government;
+  if (!g.leader) return '';
+  const names = g.members.map((p) => partyName(s, p)).join(' + ');
+  return g.members.length > 1 ? `Hung Assembly. Coalition formed: ${names}.` : `Hung Assembly. ${names} governs as a minority.`;
 }
 
 export function CoalitionBuilder({ s, act }: { s: GameState; act: (a: Action) => void }) {
@@ -82,11 +96,21 @@ export function CoalitionBuilder({ s, act }: { s: GameState; act: (a: Action) =>
   }
   const seats = pc.seats;
   const total = (seats.player ?? 0) + picked.reduce((a, r) => a + (seats[r] ?? 0), 0);
-  const me = partyAxis(s, 'player');
+  const terms = api.coalitionTerms(s);
+  const fallback = api.fallbackGovernment(s);
+  const passLabel = fallback[0] === 'player' ? 'Govern as minority' : fallback.length > 1 ? 'Pass (they take power)' : `Pass (${partyName(s, fallback[0])} governs)`;
+  const passNote = fallback[0] === 'player'
+    ? 'Governing as a minority means every bill must still find 37 votes on the floor.'
+    : fallback.length > 1
+      ? `If you pass, ${fallback.map((p) => partyName(s, p)).join(' and ')} will form a majority without you, and you go into opposition.`
+      : `If you pass, ${partyName(s, fallback[0])} governs as a minority and you sit in opposition.`;
+  const firstOk = terms.find((t) => t.accepts && t.seats)?.party;
+  const lead = Object.entries(seats).sort((a, b) => b[1] - a[1])[0]?.[0];
   return (
     <div className="q-coal">
-      <p className="q-kicker">Coalition builder</p>
+      <p className="q-kicker">Coalition talks</p>
       <h2>Reach {MAJORITY} seats to govern</h2>
+      {lead && lead !== 'player' && <p className="q-small">{partyName(s, lead)} could not find a majority. You get the next try.</p>}
       <div className="q-coal__meter" role="meter" aria-valuemin={0} aria-valuemax={SEATS_TOTAL} aria-valuenow={total} aria-label={`Coalition seats ${total} of ${MAJORITY} needed`}>
         <span style={{ width: `${((seats.player ?? 0) / SEATS_TOTAL) * 100}%`, background: s.player.color }} />
         {picked.map((r) => <span key={r} style={{ width: `${((seats[r] ?? 0) / SEATS_TOTAL) * 100}%`, background: partyColor(s, r) }} />)}
@@ -94,25 +118,27 @@ export function CoalitionBuilder({ s, act }: { s: GameState; act: (a: Action) =>
       </div>
       <p className="q-num"><b>{total}</b> / {MAJORITY} {total >= MAJORITY ? <span className="q-ok">Majority!</span> : <span className="q-muted">short by {MAJORITY - total}</span>}</p>
       <ul className="q-list">
-        {CONTENT.rivals.map((r) => {
-          const rel = s.rivals[r.id]?.relation ?? 0;
-          const d = axisDist(me, [r.economic, r.social]);
-          const likely = rel === 2 || (rel >= 0 && d < 1.1 && !(r.aiStyle === 'hawk' && s.player.social > 0.4));
-          const on = picked.includes(r.id);
+        {terms.map((t) => {
+          const r = CONTENT.rivals.find((x) => x.id === t.party)!;
+          const rel = s.rivals[t.party]?.relation ?? 0;
+          const on = picked.includes(t.party);
           return (
-            <li key={r.id}>
-              <button className={`q-row${on ? ' is-on' : ''}`} aria-pressed={on} disabled={rel < 0} onClick={() => setPicked(on ? picked.filter((x) => x !== r.id) : [...picked, r.id])}>
+            <li key={t.party}>
+              <button className={`q-row${on ? ' is-on' : ''}`} aria-pressed={on} disabled={!t.accepts || !t.seats} {...(firstOk === t.party ? { 'data-autofocus': true } : {})} onClick={() => setPicked(on ? picked.filter((x) => x !== t.party) : [...picked, t.party])}>
                 <span className="q-dot q-dot--lg" style={{ background: r.color }} />
-                <span className="q-row__t"><b>{r.name}</b><small className="q-muted">{RELATION_LABEL[rel]} · {rel < 0 ? 'refuses to talk' : likely ? 'likely to accept' : 'may refuse (too far apart)'}</small></span>
-                <b className="q-num q-row__v">{seats[r.id] ?? 0}</b>
+                <span className="q-row__t"><b>{r.name}</b>
+                  <small className={t.accepts ? 'q-ok' : 'q-warn'}>{RELATION_LABEL[rel]} · {t.accepts ? 'willing to join' : 'refuses'}</small>
+                  <small className="q-muted">{t.reasons.join(' ')}</small></span>
+                <b className="q-num q-row__v">{t.seats}</b>
               </button>
             </li>
           );
         })}
       </ul>
+      <p className="q-small q-muted">{passNote}</p>
       <div className="q-vote__btns">
-        <button className="btn q-btn-ghost q-btn-lg" onClick={() => act({ type: 'formCoalition', partners: [] })}>Govern as minority</button>
-        <button className="btn btn--accent q-btn-lg" disabled={!picked.length} onClick={() => act({ type: 'formCoalition', partners: picked })}>Propose coalition</button>
+        <button className="btn q-btn-ghost q-btn-lg" onClick={() => act({ type: 'formCoalition', partners: [] })} {...(firstOk ? {} : { 'data-autofocus': true })}>{passLabel}</button>
+        <button className="btn btn--accent q-btn-lg" disabled={!picked.length || total < MAJORITY} onClick={() => act({ type: 'formCoalition', partners: picked })}>{picked.length && total < MAJORITY ? `Need ${MAJORITY - total} more` : 'Propose coalition'}</button>
       </div>
     </div>
   );
