@@ -1,0 +1,1887 @@
+{
+ "meta": {
+  "game": "Quorum: The Calderra Ledger",
+  "country": "Republic of Calderra",
+  "version": 1,
+  "seatsTotal": 72,
+  "majority": 37,
+  "turnsTotal": 24
+ },
+ "eras": [
+  {
+   "id": 1,
+   "name": "The Lamp Era",
+   "years": "1871-1886",
+   "turns": [
+    1,
+    8
+   ],
+   "blurb": "Founding of the republic. Charters, rails, and chapels."
+  },
+  {
+   "id": 2,
+   "name": "The Smokestack Era",
+   "years": "1887-1902",
+   "turns": [
+    9,
+    16
+   ],
+   "blurb": "Factories, unions, mass suffrage."
+  },
+  {
+   "id": 3,
+   "name": "The Signal Era",
+   "years": "1903-1918",
+   "turns": [
+    17,
+    24
+   ],
+   "blurb": "Networks, climate, and the price of a long life."
+  }
+ ],
+ "groups": [
+  {
+   "id": "laborers",
+   "name": "Dockside Laborers",
+   "icon": "wrench",
+   "share": 0.18,
+   "economic": -0.7,
+   "social": 0.1,
+   "wants": "wages, unions, cheap transit"
+  },
+  {
+   "id": "growers",
+   "name": "Valley Growers",
+   "icon": "wheat",
+   "share": 0.14,
+   "economic": 0.2,
+   "social": -0.5,
+   "wants": "subsidies, rural roads, low fuel tax"
+  },
+  {
+   "id": "merchants",
+   "name": "Guild Merchants",
+   "icon": "coins",
+   "share": 0.1,
+   "economic": 0.8,
+   "social": 0.2,
+   "wants": "low tax, trade, light regulation"
+  },
+  {
+   "id": "chapel",
+   "name": "Lantern Chapels",
+   "icon": "lantern",
+   "share": 0.13,
+   "economic": 0.0,
+   "social": -0.8,
+   "wants": "tradition, family support, charity"
+  },
+  {
+   "id": "scholars",
+   "name": "Young Scholars",
+   "icon": "book",
+   "share": 0.11,
+   "economic": -0.3,
+   "social": 0.8,
+   "wants": "tuition, rights, open net"
+  },
+  {
+   "id": "elders",
+   "name": "Silver Elders",
+   "icon": "cane",
+   "share": 0.16,
+   "economic": -0.2,
+   "social": -0.3,
+   "wants": "pensions, clinics, stability"
+  },
+  {
+   "id": "greenward",
+   "name": "Greenward Circle",
+   "icon": "leaf",
+   "share": 0.08,
+   "economic": -0.4,
+   "social": 0.6,
+   "wants": "clean air, forests, transit"
+  },
+  {
+   "id": "guardians",
+   "name": "Watch & Guard",
+   "icon": "shield",
+   "share": 0.1,
+   "economic": 0.3,
+   "social": -0.6,
+   "wants": "police, border, order"
+  }
+ ],
+ "regions": [
+  {
+   "id": "brassport",
+   "name": "Brassport",
+   "seats": 14,
+   "blurb": "Harbor capital, cranes and ferries",
+   "mix": {
+    "laborers": 0.3,
+    "growers": 0.04,
+    "merchants": 0.18,
+    "chapel": 0.06,
+    "scholars": 0.14,
+    "elders": 0.12,
+    "greenward": 0.08,
+    "guardians": 0.08
+   }
+  },
+  {
+   "id": "lowmere",
+   "name": "Lowmere Fens",
+   "seats": 8,
+   "blurb": "Wet farmland and peat villages",
+   "mix": {
+    "laborers": 0.1,
+    "growers": 0.34,
+    "merchants": 0.02,
+    "chapel": 0.2,
+    "scholars": 0.02,
+    "elders": 0.2,
+    "greenward": 0.04,
+    "guardians": 0.08
+   }
+  },
+  {
+   "id": "ardent",
+   "name": "Ardent Heights",
+   "seats": 9,
+   "blurb": "Mining plateau, proud and poor",
+   "mix": {
+    "laborers": 0.32,
+    "growers": 0.1,
+    "merchants": 0.04,
+    "chapel": 0.18,
+    "scholars": 0.03,
+    "elders": 0.14,
+    "greenward": 0.03,
+    "guardians": 0.16
+   }
+  },
+  {
+   "id": "sallow",
+   "name": "Sallow Coast",
+   "seats": 7,
+   "blurb": "Retirement towns and fishing piers",
+   "mix": {
+    "laborers": 0.14,
+    "growers": 0.12,
+    "merchants": 0.08,
+    "chapel": 0.14,
+    "scholars": 0.02,
+    "elders": 0.34,
+    "greenward": 0.1,
+    "guardians": 0.06
+   }
+  },
+  {
+   "id": "quillon",
+   "name": "Quillon",
+   "seats": 10,
+   "blurb": "University city of lamps and debates",
+   "mix": {
+    "laborers": 0.12,
+    "growers": 0.04,
+    "merchants": 0.14,
+    "chapel": 0.06,
+    "scholars": 0.32,
+    "elders": 0.1,
+    "greenward": 0.16,
+    "guardians": 0.06
+   }
+  },
+  {
+   "id": "tamsfield",
+   "name": "Tamsfield",
+   "seats": 8,
+   "blurb": "Orchard valleys and market towns",
+   "mix": {
+    "laborers": 0.06,
+    "growers": 0.3,
+    "merchants": 0.14,
+    "chapel": 0.18,
+    "scholars": 0.02,
+    "elders": 0.16,
+    "greenward": 0.04,
+    "guardians": 0.1
+   }
+  },
+  {
+   "id": "corvane",
+   "name": "Corvane March",
+   "seats": 6,
+   "blurb": "Border garrison country",
+   "mix": {
+    "laborers": 0.12,
+    "growers": 0.16,
+    "merchants": 0.04,
+    "chapel": 0.18,
+    "scholars": 0.02,
+    "elders": 0.14,
+    "greenward": 0.02,
+    "guardians": 0.32
+   }
+  },
+  {
+   "id": "glasswick",
+   "name": "Glasswick",
+   "seats": 10,
+   "blurb": "Banking towers and glass foundries",
+   "mix": {
+    "laborers": 0.18,
+    "growers": 0.04,
+    "merchants": 0.3,
+    "chapel": 0.06,
+    "scholars": 0.12,
+    "elders": 0.12,
+    "greenward": 0.08,
+    "guardians": 0.1
+   }
+  }
+ ],
+ "ideologies": [
+  {
+   "id": "commonwealth",
+   "name": "Commonwealth (left, open)",
+   "economic": -0.6,
+   "social": 0.5
+  },
+  {
+   "id": "hearth",
+   "name": "Hearth (center, traditional)",
+   "economic": 0,
+   "social": -0.6
+  },
+  {
+   "id": "ledger",
+   "name": "Ledger (right, liberal)",
+   "economic": 0.7,
+   "social": 0.4
+  },
+  {
+   "id": "custom",
+   "name": "Custom",
+   "economic": null,
+   "social": null
+  }
+ ],
+ "rivals": [
+  {
+   "id": "iron_crown",
+   "name": "Iron Crown League",
+   "color": "#b5532c",
+   "economic": 0.4,
+   "social": -0.7,
+   "leader": "Marshal Odile Venn",
+   "base": {
+    "guardians": 50,
+    "chapel": 48,
+    "growers": 42
+   },
+   "aiStyle": "hawk",
+   "personality": "Proposes security/faith laws; votes no on rights laws; never coalitions with parties whose social axis > 0.4"
+  },
+  {
+   "id": "harbor_left",
+   "name": "Harbor Labor Front",
+   "color": "#c8a12a",
+   "economic": -0.8,
+   "social": 0.2,
+   "leader": "Tobin Achterberg",
+   "base": {
+    "laborers": 55,
+    "elders": 44,
+    "scholars": 40
+   },
+   "aiStyle": "populist",
+   "personality": "Proposes welfare/labor laws; demands 1 welfare law per term as coalition price"
+  },
+  {
+   "id": "glass_circle",
+   "name": "Glass Circle Liberals",
+   "color": "#3a8fa8",
+   "economic": 0.7,
+   "social": 0.6,
+   "leader": "Ines Calloway-Rhee",
+   "base": {
+    "merchants": 55,
+    "scholars": 42,
+    "greenward": 38
+   },
+   "aiStyle": "technocrat",
+   "personality": "Proposes trade/rights laws; votes on treasury health; kingmaker"
+  }
+ ],
+ "laws": [
+  {
+   "id": "ten_hour_day",
+   "name": "Ten-Hour Workday Act",
+   "era": 1,
+   "category": "labor",
+   "upkeep": 0,
+   "groupEffects": {
+    "laborers": 12,
+    "merchants": -8,
+    "scholars": 3
+   },
+   "stats": {
+    "economy": -2
+   },
+   "axis": [
+    -0.6,
+    0
+   ],
+   "desc": "Caps shifts at ten hours.",
+   "repealable": true
+  },
+  {
+   "id": "guild_charters",
+   "name": "Free Guild Charters",
+   "era": 1,
+   "category": "economy",
+   "upkeep": -2,
+   "groupEffects": {
+    "merchants": 10,
+    "laborers": -6
+   },
+   "stats": {
+    "economy": 4
+   },
+   "axis": [
+    0.7,
+    0
+   ],
+   "desc": "Anyone may found a trading guild.",
+   "repealable": true
+  },
+  {
+   "id": "grain_floor",
+   "name": "Grain Price Floor",
+   "era": 1,
+   "category": "agriculture",
+   "upkeep": 6,
+   "groupEffects": {
+    "growers": 14,
+    "laborers": -4,
+    "merchants": -3
+   },
+   "stats": {
+    "economy": -1
+   },
+   "axis": [
+    -0.2,
+    -0.2
+   ],
+   "desc": "State buys grain at a guaranteed price.",
+   "repealable": true
+  },
+  {
+   "id": "lamp_schools",
+   "name": "Lamp Schools for All",
+   "era": 1,
+   "category": "education",
+   "upkeep": 8,
+   "groupEffects": {
+    "scholars": 10,
+    "laborers": 5,
+    "chapel": -3
+   },
+   "stats": {
+    "economy": 1,
+    "liberty": 2
+   },
+   "axis": [
+    -0.3,
+    0.5
+   ],
+   "desc": "Free primary schooling.",
+   "repealable": true
+  },
+  {
+   "id": "chapel_tithe",
+   "name": "Chapel Tithe Exemption",
+   "era": 1,
+   "category": "faith",
+   "upkeep": 3,
+   "groupEffects": {
+    "chapel": 12,
+    "scholars": -6,
+    "merchants": -2
+   },
+   "stats": {
+    "order": 1
+   },
+   "axis": [
+    0,
+    -0.7
+   ],
+   "desc": "Chapels pay no property tax.",
+   "repealable": true
+  },
+  {
+   "id": "watch_houses",
+   "name": "Watch House Network",
+   "era": 1,
+   "category": "security",
+   "upkeep": 7,
+   "groupEffects": {
+    "guardians": 12,
+    "elders": 4,
+    "scholars": -5
+   },
+   "stats": {
+    "order": 4,
+    "liberty": -2
+   },
+   "axis": [
+    0.2,
+    -0.5
+   ],
+   "desc": "A watch house in every town.",
+   "repealable": true
+  },
+  {
+   "id": "harbor_tariff",
+   "name": "Harbor Tariff",
+   "era": 1,
+   "category": "trade",
+   "upkeep": -6,
+   "groupEffects": {
+    "laborers": 5,
+    "growers": 6,
+    "merchants": -10
+   },
+   "stats": {
+    "economy": -2
+   },
+   "axis": [
+    -0.2,
+    -0.3
+   ],
+   "desc": "Duty on imported goods.",
+   "repealable": true
+  },
+  {
+   "id": "open_ports",
+   "name": "Open Ports Treaty",
+   "era": 1,
+   "category": "trade",
+   "upkeep": -1,
+   "groupEffects": {
+    "merchants": 12,
+    "growers": -6,
+    "laborers": -3
+   },
+   "stats": {
+    "economy": 4
+   },
+   "axis": [
+    0.7,
+    0.3
+   ],
+   "desc": "Abolishes tariffs.",
+   "repealable": true
+  },
+  {
+   "id": "widow_purse",
+   "name": "Widow and Elder Purse",
+   "era": 1,
+   "category": "welfare",
+   "upkeep": 9,
+   "groupEffects": {
+    "elders": 14,
+    "chapel": 4,
+    "merchants": -5
+   },
+   "stats": {},
+   "axis": [
+    -0.4,
+    -0.1
+   ],
+   "desc": "Small state pension.",
+   "repealable": true
+  },
+  {
+   "id": "press_freedom",
+   "name": "Printing Press Freedom",
+   "era": 1,
+   "category": "rights",
+   "upkeep": 0,
+   "groupEffects": {
+    "scholars": 10,
+    "merchants": 3,
+    "guardians": -5,
+    "chapel": -3
+   },
+   "stats": {
+    "liberty": 4,
+    "order": -1
+   },
+   "axis": [
+    0.1,
+    0.8
+   ],
+   "desc": "Ends licensing of printers.",
+   "repealable": true
+  },
+  {
+   "id": "forest_wardens",
+   "name": "Forest Wardens",
+   "era": 1,
+   "category": "environment",
+   "upkeep": 4,
+   "groupEffects": {
+    "greenward": 12,
+    "growers": -4
+   },
+   "stats": {
+    "environment": 4
+   },
+   "axis": [
+    -0.2,
+    0.3
+   ],
+   "desc": "Protects the old forests.",
+   "repealable": true
+  },
+  {
+   "id": "rail_bond",
+   "name": "Iron Rail Bond",
+   "era": 1,
+   "category": "infrastructure",
+   "upkeep": 10,
+   "groupEffects": {
+    "growers": 6,
+    "merchants": 6,
+    "laborers": 6,
+    "greenward": -3
+   },
+   "stats": {
+    "economy": 3
+   },
+   "axis": [
+    0,
+    0
+   ],
+   "desc": "Borrow to build the national railway.",
+   "repealable": true,
+   "oneOff": -40
+  },
+  {
+   "id": "union_rights",
+   "name": "Union Recognition Act",
+   "era": 2,
+   "category": "labor",
+   "upkeep": 0,
+   "groupEffects": {
+    "laborers": 14,
+    "merchants": -12,
+    "guardians": -2
+   },
+   "stats": {
+    "economy": -2,
+    "liberty": 1
+   },
+   "axis": [
+    -0.8,
+    0.3
+   ],
+   "desc": "Unions may bargain collectively.",
+   "repealable": true
+  },
+  {
+   "id": "income_tax",
+   "name": "Progressive Income Tax",
+   "era": 2,
+   "category": "tax",
+   "upkeep": -16,
+   "groupEffects": {
+    "laborers": 6,
+    "merchants": -14,
+    "scholars": 3,
+    "elders": -2
+   },
+   "stats": {
+    "economy": -2
+   },
+   "axis": [
+    -0.7,
+    0
+   ],
+   "desc": "Higher rates on higher earners.",
+   "repealable": true
+  },
+  {
+   "id": "flat_tax",
+   "name": "Flat Tax Reform",
+   "era": 2,
+   "category": "tax",
+   "upkeep": -6,
+   "groupEffects": {
+    "merchants": 14,
+    "laborers": -10,
+    "elders": -3
+   },
+   "stats": {
+    "economy": 3
+   },
+   "axis": [
+    0.8,
+    0
+   ],
+   "desc": "One rate for all.",
+   "repealable": true
+  },
+  {
+   "id": "clinic_network",
+   "name": "Public Clinic Network",
+   "era": 2,
+   "category": "health",
+   "upkeep": 14,
+   "groupEffects": {
+    "elders": 14,
+    "laborers": 8,
+    "merchants": -6
+   },
+   "stats": {
+    "health": 6
+   },
+   "axis": [
+    -0.6,
+    0.1
+   ],
+   "desc": "Free basic care in every region.",
+   "repealable": true
+  },
+  {
+   "id": "smoke_act",
+   "name": "Clean Smoke Act",
+   "era": 2,
+   "category": "environment",
+   "upkeep": 3,
+   "groupEffects": {
+    "greenward": 14,
+    "laborers": -5,
+    "merchants": -6
+   },
+   "stats": {
+    "environment": 6,
+    "economy": -2
+   },
+   "axis": [
+    -0.3,
+    0.4
+   ],
+   "desc": "Limits factory emissions.",
+   "repealable": true
+  },
+  {
+   "id": "conscription",
+   "name": "National Service",
+   "era": 2,
+   "category": "security",
+   "upkeep": 6,
+   "groupEffects": {
+    "guardians": 14,
+    "chapel": 4,
+    "scholars": -12,
+    "elders": 3
+   },
+   "stats": {
+    "order": 4,
+    "liberty": -3
+   },
+   "axis": [
+    0.1,
+    -0.7
+   ],
+   "desc": "Two years of service for all 19-year-olds.",
+   "repealable": true
+  },
+  {
+   "id": "womens_vote",
+   "name": "Equal Franchise Act",
+   "era": 2,
+   "category": "rights",
+   "upkeep": 0,
+   "groupEffects": {
+    "scholars": 12,
+    "chapel": -6,
+    "greenward": 4
+   },
+   "stats": {
+    "liberty": 6
+   },
+   "axis": [
+    0,
+    0.9
+   ],
+   "desc": "Universal suffrage. Adds 6% turnout.",
+   "repealable": false
+  },
+  {
+   "id": "farm_coops",
+   "name": "Farm Cooperative Credit",
+   "era": 2,
+   "category": "agriculture",
+   "upkeep": 7,
+   "groupEffects": {
+    "growers": 12,
+    "merchants": -4
+   },
+   "stats": {
+    "economy": 1
+   },
+   "axis": [
+    -0.3,
+    -0.2
+   ],
+   "desc": "Cheap loans to co-ops.",
+   "repealable": true
+  },
+  {
+   "id": "central_bank",
+   "name": "Calderran Reserve Bank",
+   "era": 2,
+   "category": "economy",
+   "upkeep": 2,
+   "groupEffects": {
+    "merchants": 10,
+    "laborers": -2
+   },
+   "stats": {
+    "economy": 4
+   },
+   "axis": [
+    0.4,
+    0.1
+   ],
+   "desc": "Stable currency, lower debt interest (-1%).",
+   "repealable": false
+  },
+  {
+   "id": "family_stipend",
+   "name": "Family Hearth Stipend",
+   "era": 2,
+   "category": "welfare",
+   "upkeep": 10,
+   "groupEffects": {
+    "chapel": 12,
+    "laborers": 6,
+    "merchants": -5
+   },
+   "stats": {},
+   "axis": [
+    -0.3,
+    -0.5
+   ],
+   "desc": "Monthly support per child.",
+   "repealable": true
+  },
+  {
+   "id": "tuition_free",
+   "name": "Free University Tuition",
+   "era": 2,
+   "category": "education",
+   "upkeep": 12,
+   "groupEffects": {
+    "scholars": 16,
+    "merchants": -4,
+    "elders": -3
+   },
+   "stats": {
+    "economy": 2
+   },
+   "axis": [
+    -0.5,
+    0.5
+   ],
+   "desc": "Universities free to attend.",
+   "repealable": true
+  },
+  {
+   "id": "border_wall",
+   "name": "Corvane Border Line",
+   "era": 2,
+   "category": "security",
+   "upkeep": 9,
+   "groupEffects": {
+    "guardians": 12,
+    "chapel": 3,
+    "scholars": -8,
+    "merchants": -4
+   },
+   "stats": {
+    "order": 3
+   },
+   "axis": [
+    0.2,
+    -0.8
+   ],
+   "desc": "Fortified border posts.",
+   "repealable": true
+  },
+  {
+   "id": "sunday_rest",
+   "name": "Day of Rest Law",
+   "era": 2,
+   "category": "faith",
+   "upkeep": 0,
+   "groupEffects": {
+    "chapel": 12,
+    "laborers": 4,
+    "merchants": -8,
+    "scholars": -4
+   },
+   "stats": {
+    "economy": -1
+   },
+   "axis": [
+    0,
+    -0.6
+   ],
+   "desc": "Shops close on Lantern Day.",
+   "repealable": true
+  },
+  {
+   "id": "open_net",
+   "name": "Open Net Charter",
+   "era": 3,
+   "category": "rights",
+   "upkeep": 2,
+   "groupEffects": {
+    "scholars": 14,
+    "merchants": 4,
+    "guardians": -6
+   },
+   "stats": {
+    "liberty": 4
+   },
+   "axis": [
+    0.2,
+    0.8
+   ],
+   "desc": "Guarantees uncensored network access.",
+   "repealable": true
+  },
+  {
+   "id": "surveillance",
+   "name": "Watchful Eye Act",
+   "era": 3,
+   "category": "security",
+   "upkeep": 8,
+   "groupEffects": {
+    "guardians": 14,
+    "elders": 4,
+    "scholars": -14,
+    "greenward": -4
+   },
+   "stats": {
+    "order": 6,
+    "liberty": -6
+   },
+   "axis": [
+    0.2,
+    -0.8
+   ],
+   "desc": "Cameras and data retention.",
+   "repealable": true
+  },
+  {
+   "id": "carbon_levy",
+   "name": "Carbon Levy",
+   "era": 3,
+   "category": "environment",
+   "upkeep": -12,
+   "groupEffects": {
+    "greenward": 16,
+    "laborers": -6,
+    "growers": -8,
+    "merchants": -6
+   },
+   "stats": {
+    "environment": 8,
+    "economy": -2
+   },
+   "axis": [
+    -0.2,
+    0.5
+   ],
+   "desc": "Charges per ton emitted.",
+   "repealable": true
+  },
+  {
+   "id": "basic_income",
+   "name": "Citizen Dividend",
+   "era": 3,
+   "category": "welfare",
+   "upkeep": 22,
+   "groupEffects": {
+    "laborers": 10,
+    "scholars": 10,
+    "elders": 6,
+    "merchants": -14,
+    "guardians": -4
+   },
+   "stats": {
+    "economy": -1
+   },
+   "axis": [
+    -0.9,
+    0.4
+   ],
+   "desc": "Every adult gets a monthly payment.",
+   "repealable": true
+  },
+  {
+   "id": "gig_protections",
+   "name": "Platform Worker Protections",
+   "era": 3,
+   "category": "labor",
+   "upkeep": 1,
+   "groupEffects": {
+    "laborers": 10,
+    "scholars": 6,
+    "merchants": -10
+   },
+   "stats": {},
+   "axis": [
+    -0.6,
+    0.2
+   ],
+   "desc": "Benefits for app workers.",
+   "repealable": true
+  },
+  {
+   "id": "pension_age",
+   "name": "Raise Pension Age",
+   "era": 3,
+   "category": "welfare",
+   "upkeep": -10,
+   "groupEffects": {
+    "elders": -18,
+    "merchants": 8
+   },
+   "stats": {
+    "economy": 2
+   },
+   "axis": [
+    0.6,
+    0
+   ],
+   "desc": "Retirement at 68.",
+   "repealable": true
+  },
+  {
+   "id": "solar_grid",
+   "name": "Sunfield Grid",
+   "era": 3,
+   "category": "infrastructure",
+   "upkeep": 14,
+   "groupEffects": {
+    "greenward": 12,
+    "laborers": 4,
+    "growers": -2
+   },
+   "stats": {
+    "environment": 5,
+    "economy": 2
+   },
+   "axis": [
+    -0.2,
+    0.3
+   ],
+   "desc": "National solar build-out.",
+   "repealable": true
+  },
+  {
+   "id": "privatize_rail",
+   "name": "Sell the Railways",
+   "era": 3,
+   "category": "economy",
+   "upkeep": -14,
+   "groupEffects": {
+    "merchants": 12,
+    "laborers": -12,
+    "growers": -4
+   },
+   "stats": {
+    "economy": 2
+   },
+   "axis": [
+    0.8,
+    0
+   ],
+   "desc": "One-off +60 treasury; rail upkeep gone.",
+   "repealable": true,
+   "oneOff": 60
+  },
+  {
+   "id": "civic_union",
+   "name": "Civic Union Act",
+   "era": 3,
+   "category": "rights",
+   "upkeep": 0,
+   "groupEffects": {
+    "scholars": 12,
+    "greenward": 4,
+    "chapel": -12
+   },
+   "stats": {
+    "liberty": 5
+   },
+   "axis": [
+    0,
+    0.9
+   ],
+   "desc": "Legal recognition of any partnership.",
+   "repealable": true
+  },
+  {
+   "id": "land_reform",
+   "name": "Valley Land Reform",
+   "era": 3,
+   "category": "agriculture",
+   "upkeep": 4,
+   "groupEffects": {
+    "growers": 8,
+    "laborers": 6,
+    "merchants": -8,
+    "chapel": -2
+   },
+   "stats": {},
+   "axis": [
+    -0.6,
+    0
+   ],
+   "desc": "Breaks up the largest estates.",
+   "repealable": true
+  }
+ ],
+ "events": [
+  {
+   "id": "dock_strike",
+   "era": 0,
+   "title": "Dock Strike in Brassport",
+   "text": "Cranes stand idle. Laborers demand a raise.",
+   "choices": [
+    {
+     "label": "Mediate a raise",
+     "groupEffects": {
+      "laborers": 8,
+      "merchants": -6
+     },
+     "treasury": -10,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Send the Watch",
+     "groupEffects": {
+      "laborers": -12,
+      "guardians": 6
+     },
+     "treasury": 0,
+     "stats": {
+      "order": 2
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "blight",
+   "era": 0,
+   "title": "Orchard Blight",
+   "text": "A grey rot spreads through Tamsfield.",
+   "choices": [
+    {
+     "label": "Emergency aid",
+     "groupEffects": {
+      "growers": 10
+     },
+     "treasury": -15,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Let the market adjust",
+     "groupEffects": {
+      "growers": -10,
+      "merchants": 3
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "flood",
+   "era": 0,
+   "title": "Lowmere Floods",
+   "text": "The fens overflow after a week of rain.",
+   "choices": [
+    {
+     "label": "Rebuild dykes",
+     "groupEffects": {
+      "growers": 6,
+      "elders": 4
+     },
+     "treasury": -20,
+     "stats": {
+      "environment": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Relocate villages",
+     "groupEffects": {
+      "growers": -6,
+      "chapel": -4
+     },
+     "treasury": -5,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "scandal",
+   "era": 0,
+   "title": "Ledger Leak",
+   "text": "A minister's expense ledger appears in the Quillon Courier.",
+   "choices": [
+    {
+     "label": "Fire the minister",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": -2
+    },
+    {
+     "label": "Deny everything",
+     "groupEffects": {
+      "scholars": -8,
+      "merchants": -3
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 2
+  },
+  {
+   "id": "chapel_fire",
+   "era": 0,
+   "title": "Great Lantern Fire",
+   "text": "Brassport's oldest chapel burns.",
+   "choices": [
+    {
+     "label": "State funds restoration",
+     "groupEffects": {
+      "chapel": 12,
+      "scholars": -4
+     },
+     "treasury": -12,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Private donations only",
+     "groupEffects": {
+      "chapel": -6,
+      "merchants": 2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "student_march",
+   "era": 0,
+   "title": "Lamplight March",
+   "text": "Thousands of students march on Parliament.",
+   "choices": [
+    {
+     "label": "Meet their leaders",
+     "groupEffects": {
+      "scholars": 10,
+      "guardians": -5
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": -1
+    },
+    {
+     "label": "Disperse the march",
+     "groupEffects": {
+      "scholars": -14,
+      "guardians": 8
+     },
+     "treasury": 0,
+     "stats": {
+      "liberty": -2
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "border_skirmish",
+   "era": 0,
+   "title": "Corvane Skirmish",
+   "text": "Shots exchanged at a border post.",
+   "choices": [
+    {
+     "label": "Reinforce",
+     "groupEffects": {
+      "guardians": 10,
+      "scholars": -4
+     },
+     "treasury": -12,
+     "stats": {
+      "order": 2
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Open talks",
+     "groupEffects": {
+      "guardians": -8,
+      "merchants": 4
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 1
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "windfall",
+   "era": 0,
+   "title": "Silver Seam",
+   "text": "Miners strike a silver seam in Ardent Heights.",
+   "choices": [
+    {
+     "label": "Nationalize the find",
+     "groupEffects": {
+      "laborers": 8,
+      "merchants": -8
+     },
+     "treasury": 30,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Auction mining rights",
+     "groupEffects": {
+      "merchants": 8
+     },
+     "treasury": 20,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "plague",
+   "era": 0,
+   "title": "Fen Fever",
+   "text": "A fever spreads along the Sallow Coast.",
+   "choices": [
+    {
+     "label": "Quarantine and doctors",
+     "groupEffects": {
+      "elders": 10,
+      "merchants": -4
+     },
+     "treasury": -18,
+     "stats": {
+      "health": 2
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Keep ports open",
+     "groupEffects": {
+      "elders": -14,
+      "merchants": 6
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "defector",
+   "era": 0,
+   "title": "Floor Crossing",
+   "text": "A rival deputy offers to join your bench.",
+   "choices": [
+    {
+     "label": "Welcome them (+1 seat)",
+     "groupEffects": {
+      "scholars": -2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 1
+    },
+    {
+     "label": "Decline, keep clean",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "drought",
+   "era": 0,
+   "title": "Dry Summer",
+   "text": "Wells run low across the valleys.",
+   "choices": [
+    {
+     "label": "Water rationing",
+     "groupEffects": {
+      "growers": -4,
+      "greenward": 6
+     },
+     "treasury": -5,
+     "stats": {
+      "environment": 2
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Drill new wells",
+     "groupEffects": {
+      "growers": 8,
+      "greenward": -8
+     },
+     "treasury": -12,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "foreign_loan",
+   "era": 0,
+   "title": "Offer from the Ostmark Bank",
+   "text": "A foreign bank offers a cheap loan.",
+   "choices": [
+    {
+     "label": "Accept +50, +5 debt interest/turn",
+     "groupEffects": {
+      "merchants": 4,
+      "guardians": -3
+     },
+     "treasury": 50,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Refuse",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "rail_crash",
+   "era": 1,
+   "title": "Hollow Bend Rail Crash",
+   "text": "A passenger train derails.",
+   "choices": [
+    {
+     "label": "Safety inquiry",
+     "groupEffects": {
+      "laborers": 6
+     },
+     "treasury": -10,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Blame the driver",
+     "groupEffects": {
+      "laborers": -8
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "condition": "law:rail_bond"
+  },
+  {
+   "id": "cholera",
+   "era": 1,
+   "title": "Brassport Cholera",
+   "text": "Bad water in the harbor slums.",
+   "choices": [
+    {
+     "label": "Build sewers",
+     "groupEffects": {
+      "laborers": 10,
+      "elders": 6
+     },
+     "treasury": -25,
+     "stats": {
+      "health": 3
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Boil notices",
+     "groupEffects": {
+      "laborers": -10
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "guild_cartel",
+   "era": 1,
+   "title": "Salt Cartel",
+   "text": "Guilds fix the price of salt.",
+   "choices": [
+    {
+     "label": "Break the cartel",
+     "groupEffects": {
+      "laborers": 8,
+      "merchants": -10
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Look away",
+     "groupEffects": {
+      "merchants": 6,
+      "laborers": -6
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "condition": "law:guild_charters"
+  },
+  {
+   "id": "prophet",
+   "era": 1,
+   "title": "The Lantern Preacher",
+   "text": "A charismatic preacher fills the squares.",
+   "choices": [
+    {
+     "label": "Invite to Parliament",
+     "groupEffects": {
+      "chapel": 10,
+      "scholars": -6
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Ignore him",
+     "groupEffects": {
+      "chapel": -6
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "factory_fire",
+   "era": 2,
+   "title": "Glasswick Foundry Fire",
+   "text": "Forty workers die behind locked doors.",
+   "choices": [
+    {
+     "label": "Pass safety rules now",
+     "groupEffects": {
+      "laborers": 12,
+      "merchants": -8
+     },
+     "treasury": -5,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Charity fund",
+     "groupEffects": {
+      "laborers": -6
+     },
+     "treasury": -8,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "general_strike",
+   "era": 2,
+   "title": "General Strike",
+   "text": "Unions call everyone out.",
+   "choices": [
+    {
+     "label": "Negotiate",
+     "groupEffects": {
+      "laborers": 10,
+      "merchants": -8
+     },
+     "treasury": -15,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Emergency powers",
+     "groupEffects": {
+      "laborers": -16,
+      "guardians": 8
+     },
+     "treasury": 0,
+     "stats": {
+      "liberty": -4
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "condition": "law:union_rights"
+  },
+  {
+   "id": "smog",
+   "era": 2,
+   "title": "Black Fog Week",
+   "text": "Smog shuts Glasswick for a week.",
+   "choices": [
+    {
+     "label": "Close the worst stacks",
+     "groupEffects": {
+      "greenward": 10,
+      "merchants": -6
+     },
+     "treasury": 0,
+     "stats": {
+      "environment": 3,
+      "economy": -1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Hand out masks",
+     "groupEffects": {
+      "greenward": -8
+     },
+     "treasury": -4,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "bank_panic",
+   "era": 2,
+   "title": "Run on the Banks",
+   "text": "Depositors queue at dawn.",
+   "choices": [
+    {
+     "label": "Bail out the banks",
+     "groupEffects": {
+      "merchants": 10,
+      "laborers": -8
+     },
+     "treasury": -35,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Let them fail",
+     "groupEffects": {
+      "merchants": -14,
+      "elders": -6
+     },
+     "treasury": 0,
+     "stats": {
+      "economy": -4
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "suffrage_rally",
+   "era": 2,
+   "title": "Ten Thousand Bonnets",
+   "text": "A suffrage rally fills the capital.",
+   "choices": [
+    {
+     "label": "Promise a vote",
+     "groupEffects": {
+      "scholars": 8,
+      "chapel": -4
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Arrest organizers",
+     "groupEffects": {
+      "scholars": -12,
+      "guardians": 4
+     },
+     "treasury": 0,
+     "stats": {
+      "liberty": -2
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "data_leak",
+   "era": 3,
+   "title": "The Glasswick Leak",
+   "text": "Millions of citizen records are stolen.",
+   "choices": [
+    {
+     "label": "Data protection fund",
+     "groupEffects": {
+      "scholars": 8
+     },
+     "treasury": -15,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Blame hackers abroad",
+     "groupEffects": {
+      "guardians": 4,
+      "scholars": -6
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "heatwave",
+   "era": 3,
+   "title": "Record Heatwave",
+   "text": "Elders collapse on the Sallow Coast.",
+   "choices": [
+    {
+     "label": "Cooling centers",
+     "groupEffects": {
+      "elders": 12,
+      "greenward": 4
+     },
+     "treasury": -14,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Advise staying indoors",
+     "groupEffects": {
+      "elders": -10
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "viral_clip",
+   "era": 3,
+   "title": "Viral Clip",
+   "text": "A clip of your leader stumbling goes everywhere.",
+   "choices": [
+    {
+     "label": "Laugh it off",
+     "groupEffects": {
+      "scholars": 4
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 1
+    },
+    {
+     "label": "Demand takedown",
+     "groupEffects": {
+      "scholars": -10,
+      "guardians": 2
+     },
+     "treasury": 0,
+     "stats": {
+      "liberty": -1
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "app_strike",
+   "era": 3,
+   "title": "Couriers Log Off",
+   "text": "Platform couriers stop deliveries.",
+   "choices": [
+    {
+     "label": "Back the couriers",
+     "groupEffects": {
+      "laborers": 8,
+      "merchants": -6
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Back the platforms",
+     "groupEffects": {
+      "merchants": 8,
+      "laborers": -8
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "wildfire",
+   "era": 3,
+   "title": "Tamsfield Wildfire",
+   "text": "Orchards burn across the valley.",
+   "choices": [
+    {
+     "label": "Air tankers and aid",
+     "groupEffects": {
+      "growers": 12,
+      "greenward": 4
+     },
+     "treasury": -22,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Local volunteers",
+     "groupEffects": {
+      "growers": -10
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "aging_wave",
+   "era": 3,
+   "title": "Pension Crunch",
+   "text": "Actuaries warn pensions run dry in 10 years.",
+   "choices": [
+    {
+     "label": "Raise contributions",
+     "groupEffects": {
+      "merchants": -6,
+      "laborers": -4
+     },
+     "treasury": 15,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Borrow",
+     "groupEffects": {
+      "elders": 4
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "condition": "law:widow_purse"
+  },
+  {
+   "id": "ai_rumor",
+   "era": 3,
+   "title": "The Thinking Loom",
+   "text": "A firm claims its machine will replace clerks.",
+   "choices": [
+    {
+     "label": "Retraining fund",
+     "groupEffects": {
+      "laborers": 8,
+      "scholars": 4
+     },
+     "treasury": -12,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Celebrate innovation",
+     "groupEffects": {
+      "merchants": 10,
+      "laborers": -8
+     },
+     "treasury": 0,
+     "stats": {
+      "economy": 2
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  }
+ ]
+}
