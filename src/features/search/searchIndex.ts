@@ -45,6 +45,7 @@ export interface Hit {
 export const PAGES: { to: string; label: string; sub: string; keys?: string }[] = [
   { to: '/', label: 'Home', sub: 'Front page · results & what happened', keys: 'front dashboard' },
   { to: '/live', label: 'Live results', sub: 'Election night command center', keys: 'results now' },
+  { to: '/play', label: 'Play QUORUM', sub: 'Strategy game · The Calderra Ledger', keys: 'game play quorum calderra strategy parliament' },
   { to: '/map', label: 'Map', sub: 'Electoral & results map' },
   { to: '/map/senate', label: 'Senate map', sub: 'Map · Senate races' },
   { to: '/map/house', label: 'House map', sub: 'Map · House races' },

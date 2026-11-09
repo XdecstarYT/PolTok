@@ -109,6 +109,7 @@ export default function MenuPage() {
         { title: 'PolTok feed', desc: 'Swipe the night, short-form', to: '/feed', icon: ic.feed },
         { title: 'Ask PolTok AI', desc: 'Ask anything about the results', to: '/ask', icon: ic.ai, tone: 'var(--signal)' },
         { title: 'Quiz', desc: 'Issues match, daily trivia & map game', to: '/quiz', icon: ic.ballot },
+        { title: 'Play QUORUM', desc: 'Found a party, pass laws, win Calderra', to: '/play', icon: ic.ballot },
       ],
     },
     {

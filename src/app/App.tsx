@@ -55,6 +55,7 @@ const MenuPage = lazy(() => import('../features/menu/MenuPage'));
 const MyAreaPage = lazy(() => import('../features/myarea/MyAreaPage'));
 const AskPage = lazy(() => import('../features/ask/AskPage'));
 const QuizPage = lazy(() => import('../features/quiz/QuizPage'));
+const PlayPage = lazy(() => import('../features/play/PlayPage'));
 const WorldPage = lazy(() => import('../features/world/WorldPage'));
 const NzPage = lazy(() => import('../features/nz/NzPage'));
 const NotFound = lazy(() => import('./NotFound'));
@@ -121,6 +122,7 @@ export function App() {
           <Route path="/my" element={<MyAreaPage />} />
           <Route path="/ask" element={<AskPage />} />
           <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/play" element={<PlayPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/owner" element={<OwnerPage />} />
           <Route path="/2028" element={<Pres2028Page />} />
