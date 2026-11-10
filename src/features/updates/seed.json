@@ -1,5 +1,56 @@
 [
   {
+    "id": "v1-3-redesign",
+    "version": "v1.3",
+    "date": "2026-11-10T20:00:00Z",
+    "title": "A fresh new look for all of PolTok",
+    "categories": [
+      "Improved"
+    ],
+    "major": true,
+    "body": "PolTok has a brand-new design, built to read like a front page on election night.\n\n- **A new front page:** a big headline next to the Senate and House scoreboard, then key numbers, top stories, marquee races and the balance of power\n- **Cleaner and calmer:** solid cards, crisp type and party colours as the only bright colour\n- **Easier to read:** every text colour in the default theme now meets accessibility contrast standards\n- **Easier to get around:** a simpler top bar with search, a grouped **More** menu, a better tab bar on phones, and a clear header on every main page\n- All 5 themes are still here, each polished up",
+    "links": [
+      {
+        "label": "See the new home page",
+        "to": "/"
+      }
+    ]
+  },
+  {
+    "id": "v1-2-quorum-3d",
+    "version": "v1.2",
+    "date": "2026-11-10T09:00:00Z",
+    "title": "QUORUM goes 3D, with cabinets, debates and scenarios",
+    "categories": [
+      "New",
+      "Improved"
+    ],
+    "major": true,
+    "body": "Our political strategy game got its biggest upgrade yet.\n\n- **A 3D world:** explore Calderra as a tabletop diorama, with towns that grow from gas lamps to factories to radio masts. On election night the map goes dark and regions light up as they declare\n- **A 3D Assembly chamber:** watch 72 members stand and vote as the roll call comes in\n- **Your cabinet:** 12 politicians with traits, loyalty and ambition. They can cause scandals, defect or challenge you for the leadership\n- **Party wings, debates and amendments:** keep your own party happy, win debates and add amendments to swing a vote\n- **4 scenarios and 4 difficulty levels**, plus perks to unlock and a daily challenge\n- **More of everything:** 52 laws, 57 events with storylines, a newspaper between turns, an advisor and undo\n\nThe 3D view is optional. Switch to 2D or lower the quality in the game's settings.",
+    "links": [
+      {
+        "label": "Play QUORUM",
+        "to": "/play"
+      }
+    ]
+  },
+  {
+    "id": "v1-1-quorum",
+    "version": "v1.1",
+    "date": "2026-11-09T12:00:00Z",
+    "title": "Introducing QUORUM, a political strategy game",
+    "categories": [
+      "New"
+    ],
+    "body": "Found a party in the Republic of Calderra and lead it through 24 turns and three eras.\n\n- Campaign in 8 regions and win over 8 interest groups\n- Draft laws and round up votes in a 72-seat Assembly, with the expected count shown before every vote\n- Survive crisis events and six elections, then form a coalition or govern alone\n- Saves as you play, works on phone and desktop, and finishes in 20–40 minutes",
+    "links": [
+      {
+        "label": "Play QUORUM",
+        "to": "/play"
+      }
+    ]
+  },
+  {
     "id": "v1-0-mega-update",
     "version": "v1.0",
     "date": "2026-11-08T09:00:00Z",
