@@ -1,0 +1,35 @@
+/* Publish to X sheet — app tokens only, so it follows every theme. */
+.xp { display: grid; gap: 12px; min-width: 0; }
+.xp-for { margin: 0; color: var(--text-2); font-size: var(--fs-sm); }
+.xp-for b { color: var(--text); }
+.xp-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 700px) { .xp-grid { grid-template-columns: minmax(0, 1fr); } }
+.xp-card { margin: 0; display: grid; gap: 6px; min-width: 0; }
+.xp-card img, .xp-card__ph { width: 100%; height: auto; aspect-ratio: 1200 / 675; border-radius: 10px; border: 1px solid var(--line-2); display: block; background: var(--bg-2); }
+.xp-card__ph { display: grid; place-items: center; color: var(--text-3); font-size: var(--fs-sm); }
+.xp-card figcaption { font-size: var(--fs-xs); color: var(--text-3); }
+.xp-text { display: grid; gap: 10px; min-width: 0; }
+.xp-mode { display: inline-flex; gap: 4px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 999px; padding: 3px; justify-self: start; }
+.xp-mode__b { font: inherit; font-size: var(--fs-sm); border: 0; background: transparent; color: var(--text-2); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.xp-mode__b.is-on { background: var(--bg-1); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 0.15); }
+.xp-field { display: grid; gap: 4px; font-size: var(--fs-sm); color: var(--text-2); min-width: 0; }
+.xp-field__h { display: flex; align-items: center; gap: 8px; }
+.xp-field textarea { width: 100%; box-sizing: border-box; background: var(--bg-3, var(--bg-2)); color: var(--text); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: var(--fs-sm); resize: vertical; }
+.xp-count { margin-left: auto; font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-3); }
+.xp-count.is-over { color: var(--danger, #d33); font-weight: 700; }
+.xp-x { font: inherit; border: 0; background: transparent; color: var(--text-3); cursor: pointer; padding: 0 4px; }
+.xp-warn { display: grid; gap: 6px; border: 1px solid var(--warn, #c90); background: color-mix(in srgb, var(--warn, #c90) 12%, transparent); border-radius: 10px; padding: 10px 12px; font-size: var(--fs-sm); color: var(--text); }
+.xp-warn a { color: var(--signal); font-weight: 600; }
+.xp-check { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.xp-setup { border: 1px dashed var(--line-3, var(--line-2)); border-radius: 10px; padding: 10px 14px; font-size: var(--fs-sm); color: var(--text-2); }
+.xp-setup b { color: var(--text); }
+.xp-setup ol { margin: 6px 0; padding-left: 20px; display: grid; gap: 3px; }
+.xp-setup a { color: var(--signal); }
+.xp-setup code { font-size: 0.92em; overflow-wrap: anywhere; }
+.xp-msg { margin: 0; font-size: var(--fs-sm); }
+.xp-msg.is-ok { color: var(--ok); }
+.xp-msg.is-err { color: var(--danger, #d33); }
+.xp-done { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.xp-chip { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); font-weight: 700; color: var(--ok); border: 1px solid var(--ok); border-radius: 999px; padding: 3px 10px; text-decoration: none; }
+.xp-chip:hover { text-decoration: underline; }
+.xp-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

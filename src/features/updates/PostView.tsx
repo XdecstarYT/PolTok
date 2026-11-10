@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Markdown } from './Markdown';
 import { CAT_TONE, fmtPostDate, type UpdatePost } from './api';
+import { XShare } from './XShare';
 import './updates.css';
 
 export function CategoryChip({ c }: { c: UpdatePost['categories'][number] }) {
@@ -35,6 +36,7 @@ export function PostView({ post, isNew }: { post: UpdatePost; isNew?: boolean })
           )}
         </div>
       )}
+      {!post.draft && <XShare post={post} />}
     </article>
   );
 }

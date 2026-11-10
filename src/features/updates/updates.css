@@ -77,3 +77,14 @@
 .up-latest__t a { color: var(--text); text-decoration: none; }
 .up-latest__t a:hover { text-decoration: underline; }
 .up-latest .up-try__a { justify-self: start; }
+/* X actions (Share on X for everyone; Publish to X + posted chip for the owner only) */
+.up-x { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.up-x__share, .up-x__pub { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: var(--fs-sm); font-weight: 600; border-radius: 999px; padding: 5px 12px; text-decoration: none; cursor: pointer; min-height: 32px; box-sizing: border-box; }
+.up-x__share { color: var(--text-2); background: transparent; border: 1px solid var(--line-2); }
+.up-x__share:hover { color: var(--text); border-color: var(--line-3, var(--text-3)); }
+.up-x__pub { color: var(--bg-1); background: var(--text); border: 1px solid var(--text); }
+.up-x__pub:hover { opacity: 0.88; }
+.up-x__pub:focus-visible, .up-x__share:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.up-x__done { font-size: var(--fs-xs); font-weight: 700; color: var(--ok); border: 1px solid var(--ok); border-radius: 999px; padding: 3px 10px; text-decoration: none; }
+a.up-x__done:hover { text-decoration: underline; }
+.up-latest .up-x { margin-top: 4px; }

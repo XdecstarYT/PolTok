@@ -132,6 +132,7 @@ async function main() {
       if (p.startsWith('/api/')) {
         if (p === '/api/ai') return (await import('./ai.js')).nodeAiHandler(req, res);
         if (p === '/api/xqueue' || p.startsWith('/api/xqueue/')) return (await import('./xqueue.js')).nodeXQueueHandler(req, res);
+        if (p === '/api/xpost') return (await import('./xpost.js')).nodeXPostHandler(req, res);
         if (p === '/api/pv' || p === '/api/analytics') return (await import('./analytics.js')).nodeAnalyticsHandler(req, res);
         if (p.startsWith('/api/owner')) return (await import('./owner.js')).nodeOwnerHandler(req, res);
         if (p === '/api/updates' || p === '/api/updates.rss' || p.startsWith('/api/updates/')) return (await import('./updates.js')).nodeUpdatesHandler(req, res);

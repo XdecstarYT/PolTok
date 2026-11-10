@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Markdown } from './Markdown';
 import { CategoryChip } from './PostView';
 import { fmtPostDate, lastSeen, useUpdates } from './api';
+import { XShare } from './XShare';
 import './updates.css';
 
 /** Compact "latest update" card, for the home page (mount: <LatestUpdateCard />). */
@@ -22,6 +23,7 @@ export function LatestUpdateCard({ className }: { className?: string }) {
       <div className="up-chips">{p.categories.map((c) => <CategoryChip key={c} c={c} />)}</div>
       <Markdown text={excerpt} className="up-md up-md--clamp" />
       <Link to="/updates" className="up-try__a">See all updates →</Link>
+      <XShare post={p} />
     </section>
   );
 }
