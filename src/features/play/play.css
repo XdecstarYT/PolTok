@@ -753,7 +753,7 @@ body:has(.q-endbar) .ask-fab { display: none; }
 .q3d__center { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 2; padding: 4px 14px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--bg) 78%, transparent); border: 1px solid var(--line); backdrop-filter: blur(6px); }
 .q-select { min-height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-1); color: var(--text); font: inherit; width: 100%; }
 @keyframes q3d-pulse { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--q-gold) 35%, transparent); } }
-@media (max-width: 560px) { .q3d { aspect-ratio: 1 / 1; } .q3d.is-compact { aspect-ratio: 5 / 4; } .q-mapview.is-tall .q3d { height: auto; aspect-ratio: 1 / 1.1; } .q3d--chamber { aspect-ratio: 4 / 3.4; } .q3d__tool--wide span { display: none; } }
+@media (max-width: 560px) { .q3d { aspect-ratio: 1 / 1; } .q3d.is-compact { aspect-ratio: 5 / 4; } .q-mapview.is-tall .q3d { height: auto; aspect-ratio: 1 / 1.1; } .q3d--chamber { aspect-ratio: 4 / 3.4; } .q3d__tool--wide span { display: none; } .q3d__lbl { min-height: 24px; padding: 1px 7px; font-size: 11px; gap: 4px; } .q3d__lbl small { display: none; } }
 .q-root[data-rm] .q3d__lbl.is-pulse { animation: none; }
 
 .q-amend__moves { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0; }
