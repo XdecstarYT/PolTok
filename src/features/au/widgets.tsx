@@ -274,7 +274,7 @@ export function PollsPanel({ polls, title, kicker }: { polls: PollRow[]; title: 
         </svg>
       ) : (
         <div className="au-table-wrap">
-          <table className="au-table">
+          <table className="pt-table au-table">
             <thead>
               <tr>
                 <th>Date</th>

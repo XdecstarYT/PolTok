@@ -9,8 +9,10 @@ export {
 } from './primitives';
 export { PersonAvatar } from './PersonAvatar';
 export {
-  Button, Chip, MarginChip, partyTone, SectionHeader, Skeleton, EmptyState, ProgressBar, Tooltip, Kbd,
+  Button, Chip, MarginChip, partyTone, SectionHeader, Skeleton, EmptyState, ErrorState, StatTile, StatGroup, ProgressBar, Tooltip, Kbd,
 } from './primitives';
+export { PageHeader, Breadcrumbs, useCrumbs } from './PageHeader';
+export type { Crumb } from './PageHeader';
 export type { ButtonProps, ButtonVariant, Tone } from './primitives';
 export { AnimatedNumber, CountUp, Sparkline, Needle, Gauge, BalanceBar, BiasBar, leanCounts } from './data-viz';
 export { Tabs, Countdown, Modal, Sheet, ToastProvider, useToast } from './interactive';

@@ -12,6 +12,9 @@ import { LiveProvider } from './lib/live';
 import { SettingsProvider } from './lib/settings';
 import { WatchlistProvider } from './lib/watchlist';
 import { SettingsPanel } from './app/shell/SettingsPanel';
+import { startBeacon } from './lib/beacon';
+
+startBeacon(); // anonymous, cookieless pageview count (see src/lib/beacon.ts)
 
 // Animation features (incl. layout animations) load in their own chunk after first paint;
 // components render with the lightweight `m` element.

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Avatar, PersonAvatar, SimBadge } from '../../components';
+import { Avatar, PageHeader, PersonAvatar, SimBadge } from '../../components';
 import { STATES } from '../../data';
 import { VIC_CANDIDATES } from '../../data/au';
 const VIC_ASAT = VIC_CANDIDATES.asAt;
@@ -116,17 +116,15 @@ export default function CandidatesIndex() {
 
   return (
     <div className="page cd-page">
-      <header className="cd-head">
-        <div>
-          <span className="kicker">2026 Midterms</span>
-          <h1>Candidates</h1>
-          <p className="cd-muted">
+      <PageHeader
+        kicker="2026 Midterms"
+        title="Candidates"
+        sub={<>
             Every Senate and governor nominee plus candidates in {new Set(all.filter((e) => e.race.chamber === 'house').map((e) => e.race.id)).size} key House
             races. {won > 0 && `${won} declared winners so far.`} Headshots: NYT/AP where available.
-          </p>
-        </div>
-        <SimBadge />
-      </header>
+          </>}
+        meta={<SimBadge />}
+      />
 
       <div className="cd-seg" role="group" aria-label="Country">
         {(['us', 'au'] as const).map((c) => (

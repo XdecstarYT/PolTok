@@ -33,7 +33,7 @@
 .wt-reorder button, .cp-x { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-2); color: var(--text-2); cursor: pointer; font: inherit; }
 .wt-reorder button:hover, .cp-x:hover { color: var(--text); border-color: var(--line-3); }
 .wt-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--text-2); }
-.wt-status { font-family: var(--font-mono); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .08em; padding: 3px 8px; border-radius: var(--radius-pill); background: var(--bg-3); }
+.wt-status { font-family: var(--font-data); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .08em; padding: 3px 8px; border-radius: var(--radius-pill); background: var(--bg-3); }
 .wt-status--called { background: var(--accent-soft); color: var(--accent); }
 .wt-status--counting { color: var(--live); }
 .wt-status--too-close { color: var(--tossup); }
@@ -81,7 +81,7 @@
 .cp-col__h { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
 .cp-stats { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .cp-stat { padding: 8px 10px; background: var(--bg-2); border-radius: var(--radius-sm); min-width: 0; }
-.cp-stat dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+.cp-stat dt { font-family: var(--font-data); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
 .cp-stat dd { margin: 2px 0 0; font-weight: 700; font-size: var(--fs-md); overflow-wrap: anywhere; }
 .cp-stat:last-child { grid-column: 1 / -1; }
 .cp-stat:last-child dd { font-size: var(--fs-sm); }
@@ -89,7 +89,7 @@
 .cp-section { display: flex; flex-direction: column; gap: 12px; }
 .cp-board { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .cp-board li { display: grid; grid-template-columns: 80px 1fr 52px minmax(0, 200px); gap: 10px; align-items: center; font-size: var(--fs-sm); }
-.cp-board__n { color: var(--text); font-family: var(--font-mono); text-decoration: none; }
+.cp-board__n { color: var(--text); font-family: var(--font-data); text-decoration: none; }
 .cp-board__bar { position: relative; height: 14px; background: var(--bg-2); border-radius: 3px; }
 .cp-board__axis { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--line-3); }
 .cp-board__fill { position: absolute; top: 2px; bottom: 2px; border-radius: 2px; }

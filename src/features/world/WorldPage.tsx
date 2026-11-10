@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import { Sheet } from '../../components';
+import { PageHeader, Sheet } from '../../components';
 import { useLive } from '../../lib/live';
 import { useNavigate } from 'react-router-dom';
 import { COUNTRY_CODES, TYPE_LABEL, atlasName, daysUntil, fmtDate, newsTerms, relDays, todayUTC, useSummary, useWorldElections, type ElectionType, type WorldElection } from './data';
@@ -111,14 +111,12 @@ export default function WorldPage() {
 
   return (
     <div className="page wd">
-      <header className="wd-head">
-        <div>
-          <div className="wd-kicker">Global elections hub</div>
-          <h1 className="wd-title">World elections</h1>
-          <p className="wd-sub">
-            National elections and referendums from the last 3 months and the next 12 — {upcoming} upcoming in view.
-          </p>
-        </div>
+      <PageHeader
+        kicker="Global elections hub"
+        title="World elections"
+        crumbLabel="World"
+        sub={<>National elections and referendums from the last 3 months and the next 12 — {upcoming} upcoming in view.</>}
+        aside={<>
         {data && (
           <div className="wd-src">
             <span className={`wd-pill ${data.live ? 'is-live' : ''}`}>{data.live ? (data.stale ? 'CACHED' : 'LIVE SOURCE') : 'SNAPSHOT'}</span>
@@ -134,7 +132,8 @@ export default function WorldPage() {
             ))}
           </div>
         )}
-      </header>
+        </>}
+      />
 
       <section className="wd-week" aria-label="This week">
         <h2 className="wd-h2">This week</h2>

@@ -3,7 +3,7 @@
 .nw-bias { width: 100%; }
 .nw-bias-track { display: flex; gap: 2px; border-radius: 99px; overflow: hidden; background: var(--bg-3); }
 .nw-bias-track > span { display: flex; align-items: center; justify-content: center; min-width: 3px; transition: flex 0.6s cubic-bezier(.2,.7,.2,1); }
-.nw-bias-track em { font-style: normal; font: 700 10px var(--font-mono); color: #0b0d14; letter-spacing: 0.04em; white-space: nowrap; }
+.nw-bias-track em { font-style: normal; font: 700 10px var(--font-data); color: #0b0d14; letter-spacing: 0.04em; white-space: nowrap; }
 .nw-bias-legend { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; font-size: 10.5px; color: var(--text-2); }
 .nw-bias-legend span { display: inline-flex; align-items: center; gap: 5px; }
 .nw-bias-legend i { width: 7px; height: 7px; border-radius: 2px; display: inline-block; }

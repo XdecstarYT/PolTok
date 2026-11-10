@@ -197,7 +197,7 @@ function RaceTable({ races, results }: { races: Race[]; results: Results }) {
         <span className="rx-muted mono">{rows.length} races</span>
       </div>
       <div className="rx-table-wrap">
-        <table className="rx-table">
+        <table className="pt-table rx-table">
           <thead>
             <tr>
               {th('race', 'Race')}

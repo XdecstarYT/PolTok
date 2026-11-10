@@ -118,7 +118,7 @@ export default function VicDistrictsPage() {
         </select>
       }>
         <div className="au-table-wrap">
-          <table className="au-table au-dt">
+          <table className="pt-table au-table au-dt">
             <thead><tr>{th('name', 'District')}{th('region', 'Region')}<th>Held</th>{th('margin', 'Margin')}{th('alp', 'ALP 22')}{th('coal', 'L/NP 22')}{th('grn', 'GRN 22')}{th('inc', 'Med. hh inc')}{th('cands', 'Nominated')}</tr></thead>
             <tbody>
               {rows.map(({ s, region: rg, alp, coal, grn, cands, inc }) => (

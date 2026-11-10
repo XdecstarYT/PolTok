@@ -190,7 +190,7 @@ export function Needle({
             if (i !== 3) return null;
             const x = 100, y = 4;
             return (
-              <text key={i} x={x} y={y + 2} textAnchor="middle" fontSize="6.2" fill="var(--text-3)" fontFamily="var(--font-mono)" letterSpacing="0.05em">
+              <text key={i} x={x} y={y + 2} textAnchor="middle" fontSize="6.2" fill="var(--text-3)" fontFamily="var(--font-data)" letterSpacing="0.05em">
                 {b.toUpperCase()}
               </text>
             );
@@ -199,8 +199,8 @@ export function Needle({
           <path d="M100,24 L103.2,100 L96.8,100 Z" fill="var(--text)" style={{ filter: 'drop-shadow(0 0 4px rgba(255,255,255,.5))' }} />
         </g>
         <circle cx="100" cy="100" r="8" fill="var(--bg-1)" stroke="var(--text)" strokeWidth="2.5" />
-        <text x="8" y="114" fontSize="8" fontWeight="700" fill="var(--dem-glow)" fontFamily="var(--font-mono)">{demLabel}</text>
-        <text x="192" y="114" fontSize="8" fontWeight="700" fill="var(--rep-glow)" textAnchor="end" fontFamily="var(--font-mono)">{repLabel}</text>
+        <text x="8" y="114" fontSize="8" fontWeight="700" fill="var(--dem-glow)" fontFamily="var(--font-data)">{demLabel}</text>
+        <text x="192" y="114" fontSize="8" fontWeight="700" fill="var(--rep-glow)" textAnchor="end" fontFamily="var(--font-data)">{repLabel}</text>
       </svg>
       <figcaption className="pt-needle__cap">
         {label && <span className="panel-title">{label}</span>}

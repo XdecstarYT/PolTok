@@ -1,11 +1,12 @@
-.mn { max-width: 1320px; margin: 0 auto; padding: var(--sp-6) var(--sp-4) var(--sp-16); display: grid; gap: var(--sp-8); }
+.mn { max-width: var(--maxw); margin: 0 auto; padding: var(--sp-5) var(--gutter) calc(var(--sp-16) + var(--shell-bottom)); display: grid; gap: var(--sp-10); }
+.mn > .pt-pagehead { margin-bottom: 0; }
 .mn-head { display: grid; gap: 6px; }
-.mn-kicker { margin: 0; font: 600 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.mn-kicker { margin: 0; font: 600 var(--fs-xs)/1 var(--font-data); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .mn-title { margin: 0; font: 700 var(--fs-2xl)/1.05 var(--font-display); color: var(--text); letter-spacing: -0.02em; }
 .mn-sec { display: grid; gap: var(--sp-3); }
-.mn-sec__h { margin: 0; display: flex; align-items: baseline; gap: 10px; font: 700 var(--fs-lg)/1.2 var(--font-display); color: var(--text); }
-.mn-sec__h::before { content: ''; width: 4px; height: 18px; border-radius: 2px; background: var(--tone); align-self: center; }
-.mn-sec__h small { font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+.mn-sec__h { margin: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding-top: var(--sp-3); border-top: 1px solid var(--line-3); font: 600 var(--fs-xl)/1.2 var(--font-serif); color: var(--text); }
+.mn-sec__h::before { content: ''; width: 10px; height: 10px; border-radius: 2px; background: var(--tone); align-self: center; }
+.mn-sec__h small { font: 500 var(--fs-xs)/1 var(--font-data); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
 .mn-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (min-width: 720px) { .mn-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (min-width: 1000px) { .mn-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -14,19 +15,19 @@
 .mn-tile {
   position: relative; overflow: hidden; flex: 1; display: grid; align-content: start; gap: 6px; min-height: 132px; width: 100%;
   padding: var(--sp-4); text-align: left; color: var(--text); font: inherit; cursor: pointer;
-  background: var(--bg-2); border: 1px solid var(--line-2); border-radius: var(--radius);
+  background: var(--bg-1); border: 1px solid var(--line-2); border-radius: var(--radius);
   transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 .mn-tile::after {
   content: ''; position: absolute; inset: auto -30% -60% auto; width: 70%; aspect-ratio: 1; border-radius: 50%;
-  background: var(--tone); opacity: 0.07; filter: blur(30px); pointer-events: none; transition: opacity 0.2s;
+  display: none;
 }
-.mn-tile:hover { transform: translateY(-2px); border-color: var(--tone); background: var(--bg-3); box-shadow: 0 10px 30px -18px var(--tone); }
+.mn-tile:hover { transform: translateY(-1px); border-color: var(--line-3); background: var(--bg-2); box-shadow: inset 0 2px 0 var(--tone); }
 .mn-tile:hover::after { opacity: 0.18; }
 .mn-tile:active { transform: scale(0.98); }
 .mn-tile:focus-visible { outline: 2px solid var(--tone); outline-offset: 3px; }
 .mn-tile__icon {
-  display: inline-grid; place-items: center; width: 46px; height: 46px; margin-bottom: 6px; border-radius: 12px;
+  display: inline-grid; place-items: center; width: 40px; height: 40px; margin-bottom: 6px; border-radius: var(--radius-sm);
   color: var(--tone); background: var(--bg-3); border: 1px solid var(--line-2);
 }
 .mn-tile__t { font: 700 var(--fs-md)/1.2 var(--font-display); }
@@ -34,13 +35,13 @@
 .mn-tile__b { position: absolute; top: var(--sp-3); right: var(--sp-3); }
 .mn-badge {
   display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px; border-radius: 99px;
-  font: 600 10px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase;
+  font: 600 10px/1 var(--font-data); letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--text-2); background: var(--bg-1); border: 1px solid var(--line-2);
 }
 .mn-badge.is-live { color: var(--live); --pulse-c: var(--live); }
 @media (max-width: 480px) {
   .mn { padding-top: var(--sp-4); gap: var(--sp-6); }
-  .mn-tile { min-height: 124px; padding: var(--sp-3); }
+  .mn-tile { min-height: 0; padding: var(--sp-3); }
   .mn-tile__icon { width: 40px; height: 40px; }
   .mn-tile__b { position: static; order: -1; justify-self: start; }
 }

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSeo } from '../../lib/seo';
+import { PageHeader } from '../../components';
 import { PostView } from './PostView';
 import { CATEGORIES, dayKey, fmtPostDate, lastSeen, markSeen, useUpdates, type UpdateCategory } from './api';
 import './updates.css';
@@ -42,15 +43,18 @@ export default function UpdatesPage() {
 
   return (
     <div className="page up-page">
-      <header className="up-hero">
-        <p className="up-kicker">Changelog</p>
-        <h1 className="up-h1">What’s new on PolTok</h1>
-        <p className="up-lede">Every feature, fix and data update, as it ships. Dates shown in your Settings time zone.</p>
+      <PageHeader
+        kicker="Changelog"
+        title="What’s new on PolTok"
+        crumbLabel="What's new"
+        sub="Every feature, fix and data update, as it ships. Dates shown in your Settings time zone."
+        aside={
         <a className="up-rss" href="/api/updates.rss">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="19" r="2.5" /><path d="M3 10a11 11 0 0 1 11 11h-3a8 8 0 0 0-8-8zm0-7a18 18 0 0 1 18 18h-3A15 15 0 0 0 3 6z" /></svg>
           RSS feed
         </a>
-      </header>
+        }
+      />
 
       <div className="up-tools" role="search">
         <div className="up-filters" role="group" aria-label="Filter by category">

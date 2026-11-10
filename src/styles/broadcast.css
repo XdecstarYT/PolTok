@@ -2,6 +2,7 @@
  * glossy panels, lower-third crawl, ALERT bars). Generic styling; no third-party branding.
  * Enabled by Settings → Look, which sets <html data-ui="broadcast">. */
 :root[data-ui='broadcast'] {
+  --font-data: 'Roboto Condensed', 'Inter', system-ui, sans-serif;
   --bg: #04102b;
   --bg-1: #0a1d47;
   --bg-2: #0f2659;
@@ -15,11 +16,28 @@
   --rep: #e3122d;
   --accent: #ffcc00;
   --live: #e3122d;
+  --live-fill: #d0102a;
   --breaking: #e3122d;
+  --bg-4: #1d3c84;
+  --line-3: rgba(255, 255, 255, 0.36);
+  --dem-glow: #79a8ff;
+  --rep-glow: #ff8a98;
+  --signal: #8cc4ff;
+  --kicker: #ffcc00;
+  --accent-ink: #04102b;
   --font-display: 'Oswald', 'Roboto Condensed', system-ui, sans-serif;
+  --font-serif: 'Oswald', 'Roboto Condensed', system-ui, sans-serif;
   --font-body: 'Roboto Condensed', 'Inter', system-ui, sans-serif;
+  --radius-xs: 2px;
   --radius: 4px;
   --radius-sm: 3px;
+  --radius-lg: 6px;
+  --card-bg: linear-gradient(180deg, #12306e 0%, #0b1f4d 55%, #08183d 100%);
+  --card-bd: rgba(255, 255, 255, 0.18);
+  --chrome-bg: linear-gradient(180deg, #0d2763, #071a45);
+  --glass-strong: #0a1d47;
+  --grad-hero: none;
+  --tracking-caps: 0.06em;
 }
 [data-ui='broadcast'] body {
   background: radial-gradient(120% 80% at 50% -10%, #17357e 0%, #04102b 55%) fixed, #04102b;
@@ -37,20 +55,24 @@
 }
 
 /* Top bar: deep navy with a red underline stripe */
-[data-ui='broadcast'] .sh-top {
-  background: linear-gradient(180deg, #0d2763, #071a45) !important;
-  border-bottom: 4px solid var(--rep);
-  box-shadow: 0 4px 0 #ffffff22;
-}
+[data-ui='broadcast'] .sh-top { border-bottom: 4px solid var(--rep); max-width: none; }
+[data-ui='broadcast'] .sh-chrome { border-bottom: 0; }
+[data-ui='broadcast'] .sh-nav__bar { background: #ffcc00; height: 4px; bottom: -4px; border-radius: 0; }
+[data-ui='broadcast'] .pt-pagehead__title, [data-ui='broadcast'] .pt-sechead__title { text-transform: uppercase; font-weight: 700; letter-spacing: 0; }
+[data-ui='broadcast'] .pt-sechead { border-top: 3px solid var(--rep); }
+[data-ui='broadcast'] .pt-pagehead { border-bottom: 3px solid var(--rep); }
+[data-ui='broadcast'] .pt-stat__value { font-family: 'Oswald', sans-serif; }
+[data-ui='broadcast'] .sh-tabbar { background: #071a45; border-top: 3px solid var(--rep); }
+[data-ui='broadcast'] .sh-more__menu { background: #0a1d47; border-top: 4px solid #ffcc00; }
 [data-ui='broadcast'] .sh-logo__word { font-family: 'Oswald', sans-serif; font-weight: 700; letter-spacing: 0.04em; font-style: italic; }
 [data-ui='broadcast'] .sh-nav a, [data-ui='broadcast'] .sh-nav__t { text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.04em; }
 [data-ui='broadcast'] .sh-pill.is-live { background: var(--rep); border-color: #fff; color: #fff; border-radius: 3px; }
 
 /* Lower-third crawl */
-[data-ui='broadcast'] .tk { background: #ffffff; border-top: 0; height: 38px; }
+[data-ui='broadcast'] .tk { background: #ffffff; border-top: 0; height: 38px; padding-left: 0; }
 [data-ui='broadcast'] .tk__badge {
   background: linear-gradient(180deg, #ff2a44, #c40d24); color: #fff; font-family: 'Oswald', sans-serif; font-size: 15px;
-  letter-spacing: 0.08em; clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%); padding-right: 26px;
+  letter-spacing: 0.08em; clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%); padding: 0 26px 0 var(--gutter); border: 0; --pulse-c: #fff;
 }
 [data-ui='broadcast'] .tk__item { color: #0a1d47; font-weight: 700; font-size: 15px; height: 38px; text-transform: uppercase; }
 [data-ui='broadcast'] .tk__label { background: #0a1d47 !important; color: #fff !important; border-color: #0a1d47 !important; border-radius: 2px; }

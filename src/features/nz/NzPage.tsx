@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { geoMercator, geoPath } from 'd3-geo';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import { Card, PersonAvatar, useNow, fmtTime, tzAbbr, splitDuration } from '../../components';
+import { Card, PageHeader, PersonAvatar, useNow, fmtTime, tzAbbr, splitDuration } from '../../components';
 import {
   CURRENT_PARLIAMENT, EC_RESULTS_URL, NZ_ELECTORATES, NZ_POLLS, NZ_TZ, PARTIES, POLLS_CLOSE, RESULT_2023,
   allocateMMP, callOf, incumbentElectorates, partyMeta, pollAverage, useNzNews, useNzResults, usePolymarket,
@@ -39,22 +39,22 @@ export default function NzPage() {
 
   return (
     <div className="nz page">
-      <header className="nz-hero">
-        <div>
-          <span className="kicker">New Zealand · General election · Sat 7 Nov 2026</span>
-          <h1>Aotearoa decides</h1>
-          <p className="nz-sub">
+      <PageHeader
+        kicker="New Zealand · General election · Sat 7 Nov 2026"
+        title="Aotearoa decides"
+        crumbLabel="New Zealand"
+        sub={<>
             71 electorates (64 general + 7 Māori) · 49 list seats · MMP · 61 for a majority of 120 (more if overhang).
             PM <b>Christopher Luxon</b> (National, with ACT &amp; NZ First) vs Opposition leader <b>Chris Hipkins</b> (Labour).
-          </p>
+          </>}
+        aside={<Clock data={data} />}
+      >
           <ul className="nz-leaders" aria-label="Party leaders">
             {PARTIES.filter((p) => p.leader !== '—').flatMap((p) => p.leader.replace(/\(.*?\)/g, '').split(/\s*&\s*/).map((n) => (
               <li key={n} title={`${n.trim()} — ${p.name}`}><PersonAvatar name={n.trim()} color={p.color} lookup={{ name: n, scope: 'nz' }} size={36} /><span>{n.trim()}<small>{p.short}</small></span></li>
             )))}
           </ul>
-        </div>
-        <Clock data={data} />
-      </header>
+      </PageHeader>
 
       <StatusBar data={data} err={err} />
 
@@ -415,7 +415,7 @@ function PollChart() {
           </g>
         ))}
       </svg>
-      <table className="nz-ptable">
+      <table className="pt-table nz-ptable">
         <thead><tr><th>Latest</th>{keys.map((k) => <th key={k}>{k}</th>)}</tr></thead>
         <tbody>
           {latest.map((p) => <tr key={p.pollster}><td>{p.pollster} <small>{p.date}</small></td>{keys.map((k) => <td key={k} className="mono">{p[k]}</td>)}</tr>)}

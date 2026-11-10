@@ -56,7 +56,7 @@
   paint-order: stroke; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2px;
 }
 .aumap-hex-label.on-light { fill: #0b0d14; stroke: none; }
-.aumap-group { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; fill: var(--text-3); pointer-events: none; }
+.aumap-group { font-family: var(--font-data); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; fill: var(--text-3); pointer-events: none; }
 
 /* ---- tooltip ---- */
 .aumap-tip {

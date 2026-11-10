@@ -23,6 +23,11 @@ export async function login(user: string, pass: string): Promise<{ ok: true } | 
     const d = (await r.json().catch(() => ({}))) as { token?: string; error?: string };
     if (!r.ok || !d.token) return { ok: false, error: d.error || `Login failed (${r.status})` };
     try {
+      localStorage.setItem('poltok.analytics.ignore', '1'); // never count the owner's own visits (src/lib/beacon.ts)
+    } catch {
+      /* ignore */
+    }
+    try {
       sessionStorage.setItem(KEY, d.token);
     } catch {
       /* private mode — token lives only in memory for this page */

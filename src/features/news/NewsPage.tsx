@@ -5,7 +5,7 @@ import type { Lean, NewsItem } from '../../types';
 import { useLive } from '../../lib/live';
 import { LEAN_HEX, timeAgo } from '../../lib/format';
 import { stateByAbbr } from '../../data';
-import { LiveDot } from '../../components';
+import { LiveDot, PageHeader } from '../../components';
 import { BlindspotBadge, CoverageBar, LeanDot } from './BiasBar';
 import {
   balanceInterleave,
@@ -205,15 +205,13 @@ export default function NewsPage() {
 
   return (
     <div className="page nw">
-      <header className="nw-head">
-        <div className="nw-head-text">
-          <div className="nw-eyebrow mono">
-            <LiveDot label="NEWSROOM" />
-            <span>ELECTION DAY · NOV 3, 2026</span>
-          </div>
-          <h1>Every side of tonight’s story</h1>
-          <p className="nw-sub">
-            {loading ? (
+      <PageHeader
+        live
+        kicker="Newsroom · every outlet, every side"
+        title="Every side of tonight’s story"
+        crumbLabel="News"
+        meta={<span>
+              {loading ? (
               'Connecting to the newsroom…'
             ) : (
               <>
@@ -222,13 +220,14 @@ export default function NewsPage() {
                 {lastFetched ? <> · latest {timeAgo(lastFetched, now)}</> : null}
               </>
             )}
-          </p>
-        </div>
+            </span>}
+        aside={
         <div className="nw-mix">
           <span className="nw-mix-label mono">TODAY’S COVERAGE MIX</span>
           <CoverageBar coverage={overall} height={10} showLabels />
         </div>
-      </header>
+        }
+      />
 
       {/* ---------- Developing ---------- */}
       {!q && !sourceF && (

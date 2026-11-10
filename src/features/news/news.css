@@ -44,7 +44,7 @@
 .nw-stack-item:first-child { margin-left: 0; }
 
 /* ---------- tags ---------- */
-.nw-tag { font: 700 10px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 7px; border-radius: 5px;
+.nw-tag { font: 700 10px var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 7px; border-radius: 5px;
   background: rgba(255,255,255,0.06); color: var(--text-2); border: 1px solid var(--line); white-space: nowrap; }
 .nw-tag.breaking { background: var(--breaking); border-color: var(--breaking); color: #fff; }
 .nw-tag.sm { font-size: 9px; padding: 1px 5px; margin-right: 6px; vertical-align: 2px; }
@@ -250,5 +250,5 @@
 .nw-more:hover { background: var(--bg-3); }
 .nw-more .mono { color: var(--text-3); }
 
-.nw-card .nw-thumb.is-art { aspect-ratio: 16 / 6; }
+.nw-card .nw-thumb.is-art { aspect-ratio: 16 / 4; }
 .nw-pane .nw-thumb.is-art { aspect-ratio: 16 / 5; }

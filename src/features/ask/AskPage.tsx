@@ -1,5 +1,6 @@
 /** /ask — "Night in 60 seconds" AI brief + full chat. */
 import { useSeo } from '../../lib/seo';
+import { PageHeader } from '../../components';
 import { Markdown } from './Markdown';
 import { Chat, Sources } from './Chat';
 import { useAiOneShot, useAiStatus, errorText } from './useAsk';
@@ -12,8 +13,7 @@ export default function AskPage() {
   const off = status === 'not_configured' || status === 'unavailable';
   return (
     <div className="page ask-page">
-      <h1>✦ Ask PolTok</h1>
-      <p className="ask-sub">An AI assistant grounded only in PolTok’s live results, markets and headlines.</p>
+      <PageHeader kicker="AI assistant" title="Ask PolTok" crumbLabel="Ask" sub="An AI assistant grounded only in PolTok’s live results, markets and headlines. Every answer cites its sources." />
       {off && <p className="ask-empty" role="status">{errorText(status, '')}</p>}
       <section className="ask-card">
         <header className="ask-card-head">

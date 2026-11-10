@@ -4,7 +4,7 @@
 import { useSeo } from '../../lib/seo';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Avatar, LiveDot, fmtTime, tzAbbr } from '../../components';
+import { Avatar, PageHeader, fmtTime, tzAbbr } from '../../components';
 import { STATES, raceById } from '../../data';
 import { PARTY_HEX } from '../../lib/format';
 import type { Party } from '../../types';
@@ -63,16 +63,18 @@ export default function GovernorsPage() {
 
   return (
     <main className="page gv-page">
-      <header>
-        <div className="gv-kicker"><LiveDot label="AP LIVE" /> <span>GOVERNORS · 2026</span></div>
-        <h1>The governorships</h1>
-        <p className="gv-sub">All 36 governor races from real AP results, plus the 14 states that didn't vote for governor this year, which keep their current governor's party.</p>
-        <span className="gv-upd">{ATTRIBUTION}{at ? ` · updated ${fmtTime(at)} ${tzAbbr(at)}` : ''}{error ? ` · last fetch failed (${error})` : ''}</span>
-      </header>
+      <PageHeader
+        live
+        kicker="Governors · 2026 · AP live"
+        title="The governorships"
+        crumbLabel="Governors"
+        sub="All 36 governor races from real AP results, plus the 14 states that didn't vote for governor this year, which keep their current governor's party."
+        meta={<span>{ATTRIBUTION}{at ? ` · updated ${fmtTime(at)} ${tzAbbr(at)}` : ''}{error ? ` · last fetch failed (${error})` : ''}</span>}
+      />
 
       <section className="gv-stats" aria-label="Governorships after tonight">
-        <div style={{ borderColor: PARTY_HEX.D }}><b>{count('D')}</b>Dem governors <small>was {priorCount('D')}</small></div>
-        <div style={{ borderColor: PARTY_HEX.R }}><b>{count('R')}</b>GOP governors <small>was {priorCount('R')}</small></div>
+        <div style={{ boxShadow: `inset 0 3px 0 ${PARTY_HEX.D}` }}><b>{count('D')}</b>Dem governors <small>was {priorCount('D')}</small></div>
+        <div style={{ boxShadow: `inset 0 3px 0 ${PARTY_HEX.R}` }}><b>{count('R')}</b>GOP governors <small>was {priorCount('R')}</small></div>
         {count('O') > 0 && <div><b>{count('O')}</b>Other</div>}
         <div><b>{netD === 0 ? '±0' : netD > 0 ? `D+${netD}` : `R+${-netD}`}</b>Net change <small>{flips.length} flip{flips.length === 1 ? '' : 's'} called</small></div>
         <div><b>{races.length - uncalled.length}/{races.length || 36}</b>Called</div>

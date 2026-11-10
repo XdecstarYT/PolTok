@@ -2,6 +2,7 @@
  * muted party colours, no glows. Enabled by Settings → Look (<html data-ui="paper">).
  * All text tokens meet WCAG AA (≥4.5:1) on --bg … --bg-3. */
 :root[data-ui='paper'] {
+  --font-data: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
   color-scheme: light;
   --bg: #f4efe4;
   --bg-1: #f8f4ea;
@@ -42,6 +43,15 @@
   --warn: #8a6a00;
   --danger: #a3302a;
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --kicker: #a3302a;
+  --card-bg: #fbf8f1;
+  --card-bd: rgba(26, 22, 16, 0.26);
+  --card-hi: none;
+  --chrome-bg: #f8f4ea;
+  --elev-1: none;
+  --elev-2: 0 1px 0 rgba(20, 18, 16, 0.12);
+  --elev-3: 0 12px 40px rgba(20, 18, 16, 0.18);
   --font-body: 'Source Serif 4', Georgia, serif;
   --font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
   --radius: 2px;
@@ -68,9 +78,18 @@
 [data-ui='paper'] *, [data-ui='paper'] *::before, [data-ui='paper'] *::after { text-shadow: none !important; }
 [data-ui='paper'] h1, [data-ui='paper'] h2, [data-ui='paper'] h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.005em; }
 [data-ui='paper'] .card { background: var(--bg-2); border: 1px solid var(--line-2); border-top: 2px solid var(--text); box-shadow: none; backdrop-filter: none; }
-[data-ui='paper'] .sh-top { background: #f8f4ea !important; border-bottom: 3px double #141210; box-shadow: none; backdrop-filter: none; }
+[data-ui='paper'] .sh-chrome { border-bottom: 3px double #141210; backdrop-filter: none; -webkit-backdrop-filter: none; }
+[data-ui='paper'] .sh-nav__bar { background: #141210; }
+[data-ui='paper'] .sh-logo__word span { color: #a3302a; }
+[data-ui='paper'] .pt-pagehead { border-bottom: 3px double #141210; }
+[data-ui='paper'] .pt-sechead { border-top: 2px solid #141210; }
+[data-ui='paper'] .pt-pagehead__title { font-weight: 800; }
+[data-ui='paper'] .sh-more__menu { background: #fbf8f1; backdrop-filter: none; }
+[data-ui='paper'] .pt-stats { border-color: #141210; }
+[data-ui='paper'] .sh-pill.is-live .pulse { --pulse-c: #a3302a; }
 [data-ui='paper'] .sh-logo__word { font-family: 'Playfair Display', serif; font-weight: 900; }
 [data-ui='paper'] .tk { background: #141210; border-top: 0; }
+[data-ui='paper'] .tk__badge { border-right: 0; padding-left: 10px; margin-left: calc(-1 * 10px); }
 [data-ui='paper'] .tk__item, [data-ui='paper'] .tk__item a { color: #f4efe4; }
 [data-ui='paper'] .tk__badge { background: #a3302a; color: #fff; }
 [data-ui='paper'] .tk__label { background: #f4efe4 !important; color: #141210 !important; border-color: #f4efe4 !important; }
@@ -97,7 +116,8 @@
 [data-ui='paper'] .hm-hero__title, [data-ui='paper'] .mp-title h1, [data-ui='paper'] .rx-404-code, [data-ui='paper'] .nw-head h1 {
   background: none; -webkit-text-fill-color: currentColor; color: var(--text);
 }
-[data-ui='paper'] .hm-banner { --banner-a: transparent; --banner-b: transparent; background: var(--bg-2); border: 1px solid #141210; border-top: 6px double #141210; box-shadow: none; }
+[data-ui='paper'] .hm-banner { background: none; border: 0; border-bottom: 1px solid #141210; box-shadow: none; }
+[data-ui='paper'] .hm-banner::before { height: 3px; }
 [data-ui='paper'] .hm-lead__img--blank { background: repeating-linear-gradient(135deg, #e7e0cf 0 2px, #f1ebdd 2px 8px); }
 [data-ui='paper'] .mp-bg { display: none; }
 [data-ui='paper'] .mp-stats, [data-ui='paper'] .mp-panel, [data-ui='paper'] .fd-panel { background: var(--bg-2); border-color: var(--line-2); backdrop-filter: none; box-shadow: none; }

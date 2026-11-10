@@ -5,7 +5,7 @@
 import { useSeo } from '../../lib/seo';
 import { useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { LiveDot, Sheet, fmtTime, tzAbbr } from '../../components';
+import { PageHeader, Sheet, fmtTime, tzAbbr } from '../../components';
 import { PARTY_HEX, fmtInt } from '../../lib/format';
 import { STATES, raceById } from '../../data';
 import { ATTRIBUTION, POLL_MS, useHouseData, type HCand, type HRace, type P } from './data';
@@ -94,17 +94,18 @@ export default function HousePage() {
 
   return (
     <div className="hs page">
-      <header className="hs-head">
-        <div>
-          <p className="hs-kicker"><LiveDot /> U.S. House 2026</p>
-          <h1>All 435 House races</h1>
-          <p className="hs-sub">
+      <PageHeader
+        live
+        kicker="U.S. House 2026"
+        title="All 435 House races"
+        crumbLabel="House"
+        meta={<span>
             {ATTRIBUTION}. {data?.updatedAt ? <>Results updated {fmtTime(data.updatedAt)} {tzAbbr(data.updatedAt)}. </> : null}
             {fetchedAt ? <>Checked {fmtTime(fetchedAt)} · refreshes every {POLL_MS / 1000}s.</> : null}
-          </p>
-        </div>
+          </span>}
+      >
         {error && <p className="hs-err" role="status">Feed error: {error}{data ? ' — showing last good data.' : ''}</p>}
-      </header>
+      </PageHeader>
 
       {loading && <p className="hs-empty" aria-busy="true">Loading all 435 races (≈10 MB from the AP/NYT feed)…</p>}
       {!data && error && <p className="hs-empty">Could not reach the results feed. Retrying every {POLL_MS / 1000}s.</p>}
@@ -186,7 +187,7 @@ export default function HousePage() {
               <span className="hs-count" aria-live="polite">{rows.length} of {races.length}</span>
             </div>
             <div className="hs-tablewrap">
-              <table className="hs-table">
+              <table className="pt-table hs-table">
                 <thead>
                   <tr>
                     <th aria-sort={ariaSort('district')}>{sortBtn('district', 'District')}</th>

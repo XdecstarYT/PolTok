@@ -1,6 +1,6 @@
 /* /live — election-night control room. Scoped with .lv- prefix. */
 .lv-page {
-  --lv-amber: #ffb020;
+  --lv-amber: var(--terminal);
   --lv-panel: var(--bg-1);
   --lv-gap: 14px;
   display: flex;
@@ -11,10 +11,10 @@
 .lv-page .muted { color: var(--text-3); }
 .lv-page .ok { color: var(--accent); }
 .lv-page h2 {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   color: var(--text-2);
 }
@@ -30,12 +30,11 @@
 .lv-top h1 { font-size: clamp(22px, 3.2vw, 34px); line-height: 1.05; margin-top: 6px; }
 .lv-kicker { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.12em; color: var(--text-2); flex-wrap: wrap; }
 .lv-top-stats { display: flex; gap: 2px; margin: 0; flex-wrap: wrap; }
-.lv-top-stats > div { background: var(--bg-1); border: 1px solid var(--line); padding: 6px 12px; min-width: 76px; }
-.lv-top-stats > div:first-child { border-radius: 8px 0 0 8px; }
-.lv-top-stats > div:last-child { border-radius: 0 8px 8px 0; }
-.lv-top-stats dt { font-size: 9px; letter-spacing: 0.14em; color: var(--text-3); }
-.lv-top-stats dd { margin: 2px 0 0; font-size: 14px; font-weight: 700; color: var(--lv-amber); white-space: nowrap; }
-.lv-top-stats dd.ok { color: var(--accent); font-size: 12px; }
+.lv-top-stats { gap: 1px; background: var(--line-2); border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; }
+.lv-top-stats > div { background: var(--bg-1); padding: 8px 14px; min-width: 84px; }
+.lv-top-stats dt { font-size: 10.5px; font-weight: 700; letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-3); }
+.lv-top-stats dd { margin: 3px 0 0; font-size: 18px; font-weight: 700; color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lv-top-stats dd.ok { color: var(--ok); font-size: 14px; }
 .lv-top-stats dd.muted { font-size: 12px; }
 
 /* ---------- panels ---------- */
@@ -48,7 +47,7 @@
   position: relative;
 }
 .lv-panel-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-.lv-panel-h h2::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 99px; background: var(--accent); margin-right: 8px; vertical-align: 1px; box-shadow: 0 0 8px var(--accent); }
+.lv-panel-h h2::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 99px; background: var(--accent); margin-right: 8px; vertical-align: 1px; }
 .lv-panel-sub { font-size: 11px; color: var(--text-3); }
 .lv-panel-sub b { color: var(--lv-amber); }
 .lv-empty { color: var(--text-3); font-size: 13px; padding: 12px 0; margin: 0; }
@@ -63,7 +62,7 @@
 .lv-chamber-body { display: flex; flex-direction: column; gap: 10px; }
 .lv-needle { margin: 0 auto; width: 100%; max-width: 340px; text-align: center; }
 .lv-needle svg { width: 100%; height: auto; display: block; overflow: visible; }
-.lv-needle-tick { font: 600 10px var(--font-mono); fill: var(--text-3); letter-spacing: 0.04em; }
+.lv-needle-tick { font: 600 10px var(--font-data); fill: var(--text-3); letter-spacing: 0.04em; }
 .lv-needle-gridline { stroke: var(--bg); stroke-width: 1.5; }
 .lv-needle-band { opacity: 0.38; transition: d 0.6s ease; }
 .lv-needle-hand { fill: var(--text); filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35)); }
@@ -78,7 +77,7 @@
 .lv-seats { display: flex; flex-direction: column; line-height: 1.05; }
 .lv-seats.u { align-items: center; }
 .lv-seats.r { align-items: flex-end; text-align: right; }
-.lv-seats-l { font: 700 10px var(--font-mono); letter-spacing: 0.12em; color: var(--text-3); }
+.lv-seats-l { font: 700 10px var(--font-data); letter-spacing: 0.12em; color: var(--text-3); }
 .lv-seats-n { font-size: clamp(30px, 3.6vw, 46px); font-weight: 700; }
 .lv-seats.d .lv-seats-n { color: var(--dem); text-shadow: 0 0 24px rgba(61, 123, 255, 0.35); }
 .lv-seats.r .lv-seats-n { color: var(--rep); text-shadow: 0 0 24px rgba(255, 61, 85, 0.35); }
@@ -110,8 +109,8 @@
 .lv-feed-item.is-flip { background: linear-gradient(90deg, color-mix(in srgb, var(--pc) 16%, transparent), transparent 70%); }
 .lv-feed-t { display: block; line-height: 1.35; }
 .lv-feed-t:hover { text-decoration: underline; }
-.lv-alert { display: block; font: 700 9.5px var(--font-mono); letter-spacing: 0.14em; color: var(--breaking, #ff2e63); margin-bottom: 2px; }
-.lv-gain { display: inline-block; margin-left: 6px; font: 800 9.5px var(--font-mono); letter-spacing: 0.08em; padding: 1px 5px; border-radius: 3px; background: color-mix(in srgb, var(--pc, var(--accent)) 72%, #000); color: #fff; vertical-align: 1px; }
+.lv-alert { display: block; font: 700 9.5px var(--font-data); letter-spacing: 0.14em; color: var(--breaking, #ff2e63); margin-bottom: 2px; }
+.lv-gain { display: inline-block; margin-left: 6px; font: 800 9.5px var(--font-data); letter-spacing: 0.08em; padding: 1px 5px; border-radius: 3px; background: color-mix(in srgb, var(--pc, var(--accent)) 72%, #000); color: #fff; vertical-align: 1px; }
 @keyframes lv-in { from { opacity: 0; transform: translateY(-6px); } }
 
 /* ---------- timeline ---------- */
@@ -119,7 +118,7 @@
 .lv-tl { position: relative; min-width: calc(var(--cols) * 92px); padding-top: 30px; }
 .lv-tl-axis { position: absolute; left: 0; right: 0; top: 22px; height: 4px; border-radius: 4px; background: var(--bg-3); }
 .lv-tl-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, rgba(198, 255, 61, 0.2), var(--accent)); transition: width 1s linear; }
-.lv-tl-now { position: absolute; top: -8px; width: 2px; height: 20px; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: left 1s linear; }
+.lv-tl-now { position: absolute; top: -8px; width: 2px; height: 20px; background: var(--accent); transition: left 1s linear; }
 .lv-tl-now span { position: absolute; top: -12px; left: 4px; font-size: 9.5px; font-weight: 700; color: var(--accent); white-space: nowrap; }
 .lv-tl-cols { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 6px; }
 .lv-tl-col { padding: 10px 6px 6px; border-top: 2px solid var(--line-2); opacity: 0.6; transition: opacity 0.4s; }
@@ -177,7 +176,7 @@
 .lv-seg-b { border: 0; background: transparent; padding: 5px 11px; font-size: 12px; color: var(--text-2); }
 .lv-seg-b + .lv-seg-b { border-left: 1px solid var(--line-2); }
 .lv-seg-b.is-on { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
-.lv-select { display: inline-flex; align-items: center; gap: 6px; font: 600 10px var(--font-mono); letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; }
+.lv-select { display: inline-flex; align-items: center; gap: 6px; font: 600 10px var(--font-data); letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; }
 .lv-select select, .lv-search { background: var(--bg-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 8px; padding: 6px 8px; font: 500 12px var(--font-body); }
 .lv-search { flex: 1; min-width: 160px; max-width: 280px; margin-left: auto; }
 .lv-page button:focus-visible, .lv-page a:focus-visible, .lv-page select:focus-visible, .lv-page input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -199,9 +198,9 @@
 .lv-card-t { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
 .lv-card-t b { font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lv-card-t small { font-size: 10.5px; color: var(--text-3); }
-.lv-key { font: 700 9px var(--font-mono); font-style: normal; color: var(--lv-amber); margin-left: 6px; letter-spacing: 0.1em; }
+.lv-key { font: 700 9px var(--font-data); font-style: normal; color: var(--lv-amber); margin-left: 6px; letter-spacing: 0.1em; }
 
-.lv-chip { display: inline-flex; align-items: center; gap: 4px; font: 700 9.5px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 6px; border-radius: 4px; border: 1px solid var(--line-2); color: var(--text-3); white-space: nowrap; }
+.lv-chip { display: inline-flex; align-items: center; gap: 4px; font: 700 9.5px var(--font-data); letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 6px; border-radius: 4px; border: 1px solid var(--line-2); color: var(--text-3); white-space: nowrap; }
 .lv-chip.is-closed { color: var(--text-2); }
 .lv-chip.is-counting { color: var(--accent); border-color: rgba(198, 255, 61, 0.35); }
 .lv-chip.is-close { color: var(--tossup); border-color: rgba(245, 197, 24, 0.5); background: rgba(245, 197, 24, 0.08); }
@@ -215,7 +214,7 @@
 .lv-cands li.is-won .lv-cand-name { font-weight: 700; color: var(--text); }
 .lv-cand-n { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .lv-cand-name { font-size: 12.5px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lv-cand-name sup { font: 700 8px var(--font-mono); color: var(--text-3); margin-left: 4px; vertical-align: 3px; }
+.lv-cand-name sup { font: 700 8px var(--font-data); color: var(--text-3); margin-left: 4px; vertical-align: 3px; }
 .lv-check { color: var(--accent); margin-left: 4px; font-weight: 800; }
 .lv-cand-bar { height: 4px; background: var(--bg-3); border-radius: 2px; overflow: hidden; }
 .lv-cand-bar i { display: block; height: 100%; border-radius: 2px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
@@ -242,7 +241,7 @@
 .lv-sticky.is-on { transform: none; opacity: 1; pointer-events: auto; }
 .lv-sticky-in { max-width: 1440px; margin: 0 auto; padding: 7px var(--gutter); display: flex; align-items: center; gap: 10px 22px; flex-wrap: wrap; }
 .lv-mini { display: flex; align-items: center; gap: 8px; }
-.lv-mini-l { font: 700 10px var(--font-mono); letter-spacing: 0.12em; color: var(--text-3); text-transform: uppercase; width: 52px; }
+.lv-mini-l { font: 700 10px var(--font-data); letter-spacing: 0.12em; color: var(--text-3); text-transform: uppercase; width: 52px; }
 .lv-mini b { font-size: 16px; min-width: 28px; text-align: center; }
 .lv-mini-bar { position: relative; display: flex; justify-content: space-between; width: 130px; height: 8px; background: var(--bg-3); border-radius: 3px; overflow: hidden; }
 .lv-mini-bar i { height: 100%; transition: width 0.6s; }

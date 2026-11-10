@@ -377,7 +377,7 @@ export function PollPanel({ series }: { series: PollSeries }) {
         </text>
       </svg>
       <div className="rx-table-wrap">
-        <table className="rx-ptable">
+        <table className="pt-table rx-ptable">
           <thead>
             <tr>
               <th>Pollster</th>

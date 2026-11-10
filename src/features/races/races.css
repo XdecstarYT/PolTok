@@ -5,7 +5,7 @@
 .rx-small { font-size: 12px; }
 .rx-inline { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .rx-sep { margin: 0 10px; color: var(--text-3); }
-.rx-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 600 11px/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.rx-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 600 11px/1 var(--font-data); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .rx-live-dot { width: 8px; height: 8px; border-radius: 99px; background: var(--accent); box-shadow: 0 0 0 0 var(--accent); animation: rx-ping 1.8s infinite; }
 @keyframes rx-ping { 0% { box-shadow: 0 0 0 0 rgba(198, 255, 61, 0.6); } 100% { box-shadow: 0 0 0 10px rgba(198, 255, 61, 0); } }
 .rx-h1 { font-size: clamp(30px, 5vw, 56px); line-height: 1.02; margin-top: 8px; letter-spacing: -0.035em; }
@@ -18,9 +18,9 @@
 .rx-page a:focus-visible, .rx-page button:focus-visible, .rx-page input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rx-check { display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 6px; border-radius: 99px; background: var(--accent); color: var(--accent-ink); font-size: 10px; font-weight: 900; vertical-align: middle; }
 .rx-check.big { width: 22px; height: 22px; font-size: 13px; margin: 0 4px 0 0; }
-.rx-flip { font: 800 10px/1 var(--font-mono); letter-spacing: 0.1em; padding: 4px 7px; border-radius: 4px; background: var(--breaking); color: #fff; }
+.rx-flip { font: 800 10px/1 var(--font-data); letter-spacing: 0.1em; padding: 4px 7px; border-radius: 4px; background: var(--breaking); color: #fff; }
 .rx-flip.big { font-size: 12px; padding: 6px 10px; box-shadow: 0 0 24px rgba(255, 46, 99, 0.5); }
-.rx-hold { font: 700 11px/1 var(--font-mono); letter-spacing: 0.1em; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--line-2); color: var(--text-2); }
+.rx-hold { font: 700 11px/1 var(--font-data); letter-spacing: 0.1em; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--line-2); color: var(--text-2); }
 .rx-search { width: 100%; max-width: 420px; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text); font: inherit; font-size: 14px; }
 .rx-search::placeholder { color: var(--text-3); }
 .rx-empty { padding: 40px 24px; text-align: center; margin-top: 16px; }
@@ -78,7 +78,7 @@
 .rx-chip.is-called { border-color: color-mix(in srgb, var(--stripe) 55%, transparent); box-shadow: 0 0 18px color-mix(in srgb, var(--stripe) 22%, transparent); }
 .rx-chip-id { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rx-chip-check { grid-column: 2; grid-row: 1; width: 16px; height: 16px; border-radius: 99px; display: grid; place-items: center; font-size: 10px; font-weight: 900; color: #fff; }
-.rx-chip-flip { grid-column: 2; grid-row: 2; font: 800 8px/1 var(--font-mono); padding: 3px 4px; border-radius: 3px; background: var(--breaking); color: #fff; align-self: center; }
+.rx-chip-flip { grid-column: 2; grid-row: 2; font: 800 8px/1 var(--font-data); padding: 3px 4px; border-radius: 3px; background: var(--breaking); color: #fff; align-self: center; }
 .rx-chip-sub { grid-column: 1; font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rx-more { border: 1px dashed var(--line-2); background: none; color: var(--text-2); border-radius: 8px; padding: 6px; font-size: 12px; }
 
@@ -124,8 +124,8 @@
 .rx-fighter-txt { display: grid; gap: 4px; justify-items: start; }
 .rx-fighter.is-right .rx-fighter-txt { justify-items: end; }
 .rx-fighter h2 { font-size: clamp(20px, 2.6vw, 34px); line-height: 1.05; }
-.rx-party { font: 700 11px/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; }
-.rx-inc { font: 700 10px/1 var(--font-mono); letter-spacing: 0.1em; padding: 4px 7px; border-radius: 4px; background: rgba(255, 255, 255, 0.1); color: var(--text); border: 1px solid var(--line-2); }
+.rx-party { font: 700 11px/1 var(--font-data); letter-spacing: 0.14em; text-transform: uppercase; }
+.rx-inc { font: 700 10px/1 var(--font-data); letter-spacing: 0.1em; padding: 4px 7px; border-radius: 4px; background: rgba(255, 255, 255, 0.1); color: var(--text); border: 1px solid var(--line-2); }
 .rx-bio { margin: 2px 0 0; font-size: 12px; color: var(--text-2); max-width: 320px; }
 .rx-fighter-pct { font-size: clamp(26px, 3.4vw, 44px); letter-spacing: -0.03em; }
 .rx-vs { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; border-radius: 99px; display: grid; place-items: center; font: 800 16px/1 var(--font-display); background: var(--bg); border: 1px solid var(--line-2); box-shadow: 0 0 30px rgba(0, 0, 0, 0.6); }
@@ -136,7 +136,7 @@
 .rx-banner b { font-size: 16px; display: inline-flex; align-items: center; }
 .rx-banner.is-called { border-color: color-mix(in srgb, var(--pc) 60%, transparent); background: linear-gradient(90deg, color-mix(in srgb, var(--pc) 28%, var(--bg-1)), var(--bg-1)); box-shadow: 0 0 40px color-mix(in srgb, var(--pc) 25%, transparent); }
 .rx-banner.is-called b { font-size: 20px; }
-.rx-banner-k { font: 700 11px/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.rx-banner-k { font: 700 11px/1 var(--font-data); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .rx-banner.s-too-close { border-color: rgba(245, 197, 24, 0.5); }
 .rx-pulse { width: 10px; height: 10px; border-radius: 99px; background: var(--text-3); }
 .rx-pulse.s-counting { background: var(--accent); animation: rx-ping 1.6s infinite; }
@@ -165,7 +165,7 @@
 .rx-row-num small { color: var(--text-3); font-size: 11px; }
 .rx-row-bar { height: 8px; background: var(--bg-3); border-radius: 99px; margin-top: 8px; overflow: hidden; }
 .rx-rows.is-big .rx-row-bar { height: 12px; }
-.rx-row-bar span { display: block; height: 100%; background: var(--pc); border-radius: 99px; box-shadow: 0 0 16px var(--pc); }
+.rx-row-bar span { display: block; height: 100%; background: var(--pc); border-radius: 99px; }
 .rx-rows li.is-won .rx-row-name b { color: var(--text); }
 
 /* ---------- meter ---------- */
@@ -211,11 +211,11 @@
 .rx-card.is-called { border-color: color-mix(in srgb, var(--glow) 45%, transparent); }
 .rx-card > header { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
 .rx-card h4 { font-size: 15px; margin-top: 2px; }
-.rx-kicker { font: 600 10px/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+.rx-kicker { font: 600 10px/1 var(--font-data); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
 .rx-mini-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .rx-mini-rows li { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 8px; align-items: center; font-size: 13px; }
 .rx-mini-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rx-mini-name em { font: 700 9px/1 var(--font-mono); font-style: normal; margin-left: 6px; padding: 2px 4px; border-radius: 3px; background: var(--bg-3); color: var(--text-2); vertical-align: 1px; }
+.rx-mini-name em { font: 700 9px/1 var(--font-data); font-style: normal; margin-left: 6px; padding: 2px 4px; border-radius: 3px; background: var(--bg-3); color: var(--text-2); vertical-align: 1px; }
 .rx-mini-bar { grid-column: 1 / -1; height: 4px; background: var(--bg-3); border-radius: 99px; overflow: hidden; }
 .rx-mini-bar i { display: block; height: 100%; background: var(--pc); }
 .rx-card > footer { display: flex; gap: 8px; align-items: center; font-size: 12px; flex-wrap: wrap; }
@@ -235,7 +235,7 @@
 .rx-news a:hover { background: var(--bg-2); }
 .rx-news-src { font-size: 11px; color: var(--text-2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; grid-column: 1; }
 .rx-news-src i { width: 8px; height: 8px; border-radius: 2px; }
-.rx-news-src em { font: 800 9px/1 var(--font-mono); font-style: normal; padding: 3px 5px; border-radius: 3px; background: var(--breaking); color: #fff; }
+.rx-news-src em { font: 800 9px/1 var(--font-data); font-style: normal; padding: 3px 5px; border-radius: 3px; background: var(--breaking); color: #fff; }
 .rx-news b { grid-column: 1; font-size: 15px; line-height: 1.35; font-weight: 600; }
 .rx-news-out { grid-column: 2; grid-row: 1 / 3; align-self: center; color: var(--text-3); }
 
@@ -325,7 +325,7 @@
 .cm__row { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; }
 .cm__row i { width: 10px; height: 10px; border-radius: 3px; }
 .cm__foot { color: var(--text-3); font-size: 12px; }
-.cm__src { font-size: 11.5px; color: var(--text-3); font-family: var(--font-mono); }
+.cm__src { font-size: 11.5px; color: var(--text-3); font-family: var(--font-data); }
 .cm__skel { width: 100%; border-radius: 12px; }
 
 /* ── Race market ── */

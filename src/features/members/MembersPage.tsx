@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FEDERAL } from '../../data/au';
 import { AU_MEMBERS, US_PARTY, initials, usDir, useJson, withAuPhoto, type DirMember, type UsListResp } from './data';
-import { PersonAvatar } from '../../components';
+import { PageHeader, PersonAvatar } from '../../components';
 import { photoFromUrl, usePhotoIndex } from '../../data/photos';
 import './members.css';
 
@@ -67,11 +67,12 @@ export default function MembersPage() {
 
   return (
     <main className="page mb-page">
-      <header>
-        <div className="mb-kicker">MEMBERS · {country === 'US' ? '119TH US CONGRESS' : '48TH AUSTRALIAN PARLIAMENT'}</div>
-        <h1>Who represents you</h1>
-        <p className="mb-sub">Every sitting member of {country === 'US' ? 'the US Senate and House' : 'the Australian House of Representatives and Senate'} — facts from open data only.</p>
-      </header>
+      <PageHeader
+        kicker={<>MEMBERS · {country === 'US' ? '119TH US CONGRESS' : '48TH AUSTRALIAN PARLIAMENT'}</>}
+        title="Who represents you"
+        crumbLabel="Members"
+        sub={<>Every sitting member of {country === 'US' ? 'the US Senate and House' : 'the Australian House of Representatives and Senate'} — facts from open data only.</>}
+      />
 
       <div className="mb-seg" role="tablist" aria-label="Country">
         {(['US', 'AU'] as const).map((c) => <button key={c} role="tab" aria-selected={country === c} className={country === c ? 'on' : ''} onClick={() => set('c', c === 'AU' ? 'au' : '')}>{c === 'US' ? 'US Congress' : 'Australia'}</button>)}

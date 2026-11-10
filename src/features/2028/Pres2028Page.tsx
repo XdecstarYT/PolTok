@@ -1,6 +1,6 @@
 /** /2028 — 2028 presidential race tracker: live Polymarket odds, declared field, calendar, path-to-270 builder. */
 import { useEffect, useMemo, useState } from 'react';
-import { PersonAvatar, Sparkline } from '../../components';
+import { PageHeader, PersonAvatar, Sparkline } from '../../components';
 import { USMap } from '../map/USMap';
 import { ElectoralBar } from '../map/ElectoralBar';
 import { ALL_ABBRS, pres2024, stateEV, stateName } from '../map/stateTable';
@@ -90,14 +90,15 @@ export default function Pres2028Page() {
 
   return (
     <main className="page p28-page">
-      <header>
-        <div className="p28-kicker">ROAD TO 2028 · ELECTION DAY NOV 7, 2028</div>
-        <h1>2028 Presidential Race</h1>
-        <p className="p28-sub">Live prediction-market odds, the declared field, the primary calendar, and a build-your-own path to 270 starting from the 2024 map.</p>
-        <span className="p28-upd">
+      <PageHeader
+        kicker="Road to 2028 · Election day Nov 7, 2028"
+        title="2028 Presidential Race"
+        crumbLabel="2028"
+        sub="Live prediction-market odds, the declared field, the primary calendar, and a build-your-own path to 270 starting from the 2024 map."
+        meta={<span>
           {data ? <>Polymarket odds · updated {timeAgo(data.fetchedAt)}{data.stale ? ' (stale — refresh failed)' : ''} · refreshes every 2 min</> : err ? <>Market data unavailable: {err}</> : 'Loading live markets…'}
-        </span>
-      </header>
+        </span>}
+      />
 
       {party && (
         <section className="p28-panel">

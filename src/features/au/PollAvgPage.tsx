@@ -54,7 +54,7 @@ function Block({ title, polls, baseline }: { title: string; polls: AuPoll[]; bas
       )}
       <Card title="Polls in the average" kicker={`share of total weight on ${new Date(now).toISOString().slice(0, 10)}`}>
         <div className="au-table-wrap">
-          <table className="au-table">
+          <table className="pt-table au-table">
             <thead><tr><th>Date</th><th>Pollster</th><th>n</th>{SERIES.map((k) => <th key={k}>{k}</th>)}<th>2PP</th><th>Weight</th></tr></thead>
             <tbody>
               {ws.map(({ p, w }) => (

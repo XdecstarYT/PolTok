@@ -5,7 +5,7 @@ import { m } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { useSettings } from '../../lib/settings';
 import { useWatchlist } from '../../lib/watchlist';
-import { useReducedMotion } from '../../components';
+import { PageHeader, useReducedMotion } from '../../components';
 import './menu.css';
 
 type Tile = { title: string; desc: string; icon: ReactNode; to?: string; action?: 'settings'; badge?: ReactNode; tone?: string };
@@ -128,10 +128,7 @@ export default function MenuPage() {
   let i = 0;
   return (
     <div className="mn">
-      <header className="mn-head">
-        <p className="mn-kicker">Main menu</p>
-        <h1 className="mn-title">Everything on PolTok</h1>
-      </header>
+      <PageHeader kicker="All sections" title="Everything on PolTok" crumbLabel="Menu" sub="Results, people, places and tools, grouped by what you want to do." />
       {sections.map((s) => (
         <section key={s.id} className="mn-sec" aria-labelledby={`mn-${s.id}`} style={{ '--tone': s.tone } as CSSProperties}>
           <h2 id={`mn-${s.id}`} className="mn-sec__h"><span>{s.title}</span><small>{s.kicker}</small></h2>
@@ -175,6 +172,10 @@ export default function MenuPage() {
           <b>Photo removal requests:</b> if you are pictured, or hold the rights to a photo, and want it removed, open a request at{' '}
           <a href={PHOTO_REMOVAL_URL} target="_blank" rel="noopener noreferrer">{PHOTO_REMOVAL_URL.replace(/^https:\/\//, '')}</a>{' '}
           with the person's name and the page it appears on — it is taken down in the next deploy.
+        </p>
+        <p>
+          <b>Privacy.</b> PolTok's own visit counts are anonymous and cookie-free. Ads are provided by Google, which may use cookies (
+          <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">how Google uses data</a>).
         </p>
       </footer>
     </div>

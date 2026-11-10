@@ -44,7 +44,7 @@ const DEFAULTS: Settings = { timeZone: 'America/New_York', alerts: 'key', sound:
 
 const UI_IDS: Settings['ui'][] = ['command', 'broadcast', 'paper', 'terminal', 'aurora'];
 const THEME_COLOR: Record<Settings['ui'], string> = {
-  command: '#05070d',
+  command: '#090b10',
   broadcast: '#04102b',
   paper: '#f4efe4',
   terminal: '#000000',

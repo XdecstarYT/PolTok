@@ -13,10 +13,15 @@ import { SocialPack } from './SocialPack';
 import { MotionStudio } from './motion/MotionStudio';
 import { OPEN_EDITOR } from './editorBus';
 import { UpdatesAdmin } from './UpdatesAdmin';
+import { XStudio, type XTab } from './xstudio/XStudio';
+import { XReminders } from './xstudio/Reminders';
+import { Analytics } from './Analytics';
+import { MissingPhotos } from './MissingPhotos';
 import './owner.css';
 
-type Tab = 'make' | 'director' | 'ai' | 'x' | 'studio' | 'motion' | 'social' | 'health' | 'content' | 'updates';
+type Tab = 'xstudio' | 'analytics' | 'photos' | 'make' | 'director' | 'ai' | 'x' | 'studio' | 'motion' | 'social' | 'health' | 'content' | 'updates';
 const TABS: { id: Tab; label: string }[] = [
+  { id: 'xstudio', label: 'X Studio' },
   { id: 'make', label: 'Make with AI' },
   { id: 'director', label: 'Creative director' },
   { id: 'ai', label: 'AI Studio' },
@@ -25,13 +30,16 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'motion', label: 'Motion studio' },
   { id: 'social', label: 'Social pack' },
   { id: 'health', label: 'Site health' },
+  { id: 'analytics', label: 'Analytics' },
+  { id: 'photos', label: 'Missing photos' },
   { id: 'content', label: 'Content tools' },
   { id: 'updates', label: 'Updates' },
 ];
 
 export default function OwnerPage() {
   const [auth, setAuth] = useState<'checking' | 'out' | { user: string; exp: number }>('checking');
-  const [tab, setTab] = useState<Tab>('make');
+  const [tab, setTab] = useState<Tab>('xstudio');
+  const [xs, setXs] = useState<{ tab: XTab; open: string | null; n: number }>({ tab: 'release', open: null, n: 0 });
   const check = useCallback(() => {
     me().then((u) => setAuth(u ?? 'out'));
   }, []);
@@ -65,8 +73,12 @@ export default function OwnerPage() {
         </div>
         <Button size="sm" variant="ghost" onClick={() => { clearToken(); setAuth('out'); }}>Sign out</Button>
       </header>
+      <XReminders onOpen={(id) => { setXs((x) => ({ tab: 'queue', open: id ?? null, n: x.n + 1 })); setTab('xstudio'); }} />
       <div className="ow-tabs"><Tabs tabs={TABS} value={tab} onChange={setTab} variant="pill" ariaLabel="Owner tools" /></div>
       <div className="ow-body">
+        {tab === 'xstudio' && <XStudio key={xs.n} initialTab={xs.tab} openId={xs.open} />}
+        {tab === 'analytics' && <Analytics />}
+        {tab === 'photos' && <MissingPhotos />}
         {tab === 'make' && <MakeWithAi />}
         {tab === 'director' && <Director />}
         {tab === 'ai' && <AiStudio />}

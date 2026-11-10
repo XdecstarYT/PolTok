@@ -2,7 +2,7 @@
 import { useSeo } from '../../lib/seo';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Countdown, LiveDot } from '../../components';
+import { Card, Countdown, LiveDot, PageHeader } from '../../components';
 import { fmtDay } from '../../components/time';
 import { useAuMarkets, useAuNews } from './api';
 import { FED_ZOOMS, MapPanel } from './MapPanel';
@@ -32,20 +32,22 @@ export default function AUPage() {
 
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono"><LiveDot /> AUSTRALIA · 48TH PARLIAMENT</div>
-          <h1>Australia</h1>
-          <p className="au-sub">Federal parliament, polls, markets and the road to Victoria's 28 November state election.</p>
-        </div>
+      <PageHeader
+        live
+        kicker="Australia · 48th Parliament"
+        title="Australia"
+        sub="Federal parliament, polls, markets and the road to Victoria's 28 November state election."
+        aside={
         <dl className="au-stats mono">
           <div><dt>House</dt><dd>{houseTotal} seats</dd></div>
           <div><dt>Senate</dt><dd>{senateTotal} seats</dd></div>
           <div><dt>Marginal &lt;3%</dt><dd>{marginals}</dd></div>
           <div><dt>Vic polls close</dt><dd><Countdown to={VIC_CLOSE} compact doneLabel="Closed" /></dd></div>
         </dl>
-      </header>
+        }
+      >
+        <AuNav />
+      </PageHeader>
 
       <div className="au-leaders">
         <LeaderCard role="Prime Minister" name={pm.name} partyCode={pm.party ?? 'ALP'} seat={pm.seat} />

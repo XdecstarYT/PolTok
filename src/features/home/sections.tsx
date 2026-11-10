@@ -128,10 +128,7 @@ export function WorldLive() {
   const usHasNums = !!balance.senate?.total;
   return (
     <section aria-labelledby="hm-world" className="hm-world">
-      <div className="row spread row-wrap" style={{ gap: 8 }}>
-        <h2 id="hm-world" className="hm-strip__title"><span className="hm-pulse" aria-hidden="true" />Live around the world</h2>
-        <Link to="/world" className="link" style={{ fontSize: 13 }}>World calendar →</Link>
-      </div>
+      <SectionHeader id="hm-world" kicker="Global" live title="Live around the world" action={<Link to="/world" className="link" style={{ fontSize: 13 }}>World calendar →</Link>} />
       {!data && nz === undefined ? <Skeleton height={118} radius={12} /> : (
         <ul className="hm-hscroll hm-wlist" aria-label="Elections: live, latest results and coming up">
           {live.map((x, i) => <li key={x.key}><GL l={i === 0 ? 'Live this week' : undefined} /><WCard x={x} /></li>)}
@@ -313,7 +310,7 @@ export function TopStories() {
   }, [news, now]);
   return (
     <section aria-labelledby="hm-news" className="hm-news">
-      <SectionHeader id="hm-news" kicker="News 2.0" title="Top stories" sub="Grouped by story, with who's covering it." action={<Button variant="ghost" size="sm" to="/news">All news</Button>} />
+      <SectionHeader id="hm-news" kicker="The coverage" live title="Top stories" sub="Grouped by story, with who's covering it across the spectrum." action={<Button variant="ghost" size="sm" to="/news">All news</Button>} />
       {!clusters.length ? <div className="card pt-card stack"><Skeleton height={22} /><Skeleton lines={5} /></div> : (
         <ol className="hm-stories">
           {clusters.map(({ arr, srcs, latest }, i) => {

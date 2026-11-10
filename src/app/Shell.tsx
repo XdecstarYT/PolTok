@@ -28,13 +28,13 @@ export const NAV = [
   { to: '/', label: 'Home' },
   { to: '/live', label: 'Live' },
   { to: '/map', label: 'Map' },
-  { to: '/feed', label: 'PolTok' },
   { to: '/news', label: 'News' },
+  { to: '/races', label: 'Races' },
   { to: '/polls', label: 'Polls' },
   { to: '/forecast', label: 'Forecast' },
-  { to: '/races', label: 'Races' },
-  { to: '/analysis', label: 'Analysis' },
   { to: '/au', label: 'Australia' },
+  { to: '/world', label: 'World' },
+  { to: '/feed', label: 'Feed' },
 ];
 
 const TABS = [
@@ -71,7 +71,6 @@ function Wordmark() {
       <span className="sh-logo__word">
         POL<span>TOK</span>
       </span>
-      <span className="sh-logo__pulse pulse" aria-hidden="true" style={{ '--pulse-c': 'var(--accent)' } as CSSProperties} />
     </Link>
     </>
   );
@@ -105,33 +104,58 @@ function Clock() {
   );
 }
 
-/** Secondary pages, grouped under the "More" menu so the top bar fits. */
-export const NAV_MORE = [
-  { to: '/house', label: 'House', sub: 'All 435 districts, live' },
-  { to: '/my', label: 'Your area', sub: 'Your representatives & races by address or postcode' },
-  { to: '/2028', label: '2028', sub: 'Presidential race odds & path to 270' },
-  { to: '/embed', label: 'Embed', sub: 'Live widgets for your site' },
-  { to: '/candidates', label: 'Candidates', sub: 'Every nominee, headshots & results' },
-  { to: '/flips', label: 'Flips', sub: 'Seats that changed hands' },
-  { to: '/money', label: 'Money', sub: 'Campaign finance (FEC)' },
-  { to: '/measures', label: 'Ballot measures', sub: 'Live statewide measures' },
-  { to: '/governors', label: 'Governors', sub: '36 races + state dashboards' },
-  { to: '/replay', label: 'Replay', sub: 'Relive election night' },
-  { to: '/compare', label: 'Compare', sub: 'Races side by side, polling miss' },
-  { to: '/watch', label: 'Watchlist', sub: 'Your starred races' },
-  { to: '/parliament', label: 'Parliament', sub: 'Live bills — US Congress & Australia' },
-  { to: '/quiz', label: 'Quiz', sub: 'Issues match & daily trivia' },
-  { to: '/world', label: 'World', sub: 'Global elections calendar & map' },
-  { to: '/nz', label: 'NZ Election', sub: 'Live results 7 Nov · MMP seats' },
-  { to: '/country/GB', label: 'Countries', sub: '40 democracies: leaders, parliaments, news & markets' },
-  { to: '/members', label: 'Members', sub: 'Every US & Australian lawmaker' },
-  { to: '/calendar', label: 'Calendar', sub: 'Elections & key dates — US & AU' },
-  { to: '/au/states', label: 'AU states', sub: 'All 8 state & territory parliaments' },
-  { to: '/updates', label: "What's new", sub: 'Release notes & changelog' },
-  { to: '/topic/senate', label: 'News topics', sub: 'Topic hubs, full-coverage stories & sources' },
-];
+type NavItem = { to: string; label: string; sub?: string };
 
-function MoreMenu({ extra = [] }: { extra?: { to: string; label: string; sub?: string }[] }) {
+/** Secondary pages for the "More" menu, grouped by audience task. */
+export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
+  {
+    title: 'US 2026 results',
+    items: [
+      { to: '/house', label: 'House', sub: 'All 435 districts, live' },
+      { to: '/governors', label: 'Governors', sub: '36 races + state dashboards' },
+      { to: '/candidates', label: 'Candidates', sub: 'Every nominee, headshots & results' },
+      { to: '/flips', label: 'Flips', sub: 'Seats that changed hands' },
+      { to: '/measures', label: 'Ballot measures', sub: 'Live statewide measures' },
+      { to: '/money', label: 'Money', sub: 'Campaign finance (FEC)' },
+      { to: '/analysis', label: 'Analysis', sub: 'Swing, turnout & trends' },
+      { to: '/replay', label: 'Replay', sub: 'Relive election night' },
+      { to: '/compare', label: 'Compare', sub: 'Races side by side' },
+    ],
+  },
+  {
+    title: 'Around the world',
+    items: [
+      { to: '/nz', label: 'New Zealand', sub: 'Live results · MMP seats' },
+      { to: '/au/states', label: 'AU states', sub: 'All 8 state & territory parliaments' },
+      { to: '/country/GB', label: 'Countries', sub: '40 democracies: leaders & parliaments' },
+      { to: '/calendar', label: 'Calendar', sub: 'Elections & key dates' },
+      { to: '/2028', label: '2028', sub: 'Presidential odds & path to 270' },
+    ],
+  },
+  {
+    title: 'People & lawmaking',
+    items: [
+      { to: '/members', label: 'Members', sub: 'Every US & Australian lawmaker' },
+      { to: '/parliament', label: 'Parliament', sub: 'Live bills: Congress & Australia' },
+      { to: '/my', label: 'Your area', sub: 'Your reps & races by address' },
+    ],
+  },
+  {
+    title: 'Tools',
+    items: [
+      { to: '/ask', label: 'Ask PolTok', sub: 'AI answers grounded in live data' },
+      { to: '/watch', label: 'Watchlist', sub: 'Your starred races' },
+      { to: '/topic/senate', label: 'News topics', sub: 'Topic hubs & sources' },
+      { to: '/quiz', label: 'Quiz', sub: 'Issues match & daily trivia' },
+      { to: '/embed', label: 'Embed', sub: 'Live widgets for your site' },
+      { to: '/updates', label: "What's new", sub: 'Release notes' },
+    ],
+  },
+];
+/** Flat list (kept for compatibility). */
+export const NAV_MORE: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
+
+function MoreMenu({ extra = [] }: { extra?: NavItem[] }) {
   const loc = useLocation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -149,21 +173,30 @@ function MoreMenu({ extra = [] }: { extra?: { to: string; label: string; sub?: s
       window.removeEventListener('keydown', esc);
     };
   }, [open]);
-  const items = [...extra, ...NAV_MORE];
-  const active = items.some((n) => (n.to === '/' ? loc.pathname === '/' : loc.pathname.startsWith(n.to)));
+  const groups = extra.length ? [{ title: 'Main', items: extra }, ...NAV_GROUPS] : NAV_GROUPS;
+  const active = [...extra, ...NAV_MORE].some((n) => (n.to === '/' ? loc.pathname === '/' : loc.pathname.startsWith(n.to)));
   return (
     <div className="sh-more" ref={ref}>
-      <button type="button" className={`sh-nav__a sh-more__btn ${active ? 'is-active' : ''}`} aria-expanded={open} aria-haspopup="menu" onClick={() => setOpen((o) => !o)}>
-        <span className="sh-nav__t">More ▾</span>
+      <button type="button" className={`sh-nav__a sh-more__btn ${active ? 'is-active' : ''}`} aria-expanded={open} aria-haspopup="true" onClick={() => setOpen((o) => !o)}>
+        <span className="sh-nav__t">More</span>
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" className="sh-more__chev"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" strokeWidth="1.5" /></svg>
       </button>
       {open && (
-        <div className="sh-more__menu" role="menu">
-          {items.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.to === '/'} role="menuitem" className={({ isActive }) => `sh-more__item ${isActive ? 'is-on' : ''}`}>
-              <b>{n.label}</b>
-              {n.sub && <span>{n.sub}</span>}
-            </NavLink>
-          ))}
+        <div className="sh-more__menu">
+          <div className="sh-more__cols">
+            {groups.map((g) => (
+              <div key={g.title} className="sh-more__group">
+                <p className="sh-more__gh">{g.title}</p>
+                {g.items.map((n) => (
+                  <NavLink key={n.to} to={n.to} end={n.to === '/'} className={({ isActive }) => `sh-more__item ${isActive ? 'is-on' : ''}`}>
+                    <b>{n.label}</b>
+                    {n.sub && <span>{n.sub}</span>}
+                  </NavLink>
+                ))}
+              </div>
+            ))}
+          </div>
+          <Link to="/menu" className="sh-more__all">See every section <span aria-hidden="true">→</span></Link>
         </div>
       )}
     </div>
@@ -235,10 +268,6 @@ export function Shell({ children }: { children: ReactNode }) {
       <a href="#main" className="sh-skip">Skip to content</a>
       <div className={`sh-chrome ${immersive ? 'is-immersive' : ''}`}>
         <header className="sh-top">
-          <Link to="/menu" className={`sh-menubtn ${isActive('/menu') ? 'is-active' : ''}`} aria-label="Main menu" title="Main menu" aria-current={isActive('/menu') ? 'page' : undefined}>
-            <IconGrid width={18} height={18} />
-            <span className="sh-menubtn__t">Menu</span>
-          </Link>
           <Wordmark />
           <nav className="sh-nav" aria-label="Primary" ref={navRef}>
             {NAV.map((n, i) => (
@@ -258,7 +287,7 @@ export function Shell({ children }: { children: ReactNode }) {
             </button>
             <button type="button" className="sh-search" onClick={() => setCmdk(true)} aria-label="Search (Ctrl+K)">
               <IconSearch width={17} height={17} />
-              <span className="sh-search__t">Search</span>
+              <span className="sh-search__t">Search races, people, news</span>
               <span className="sh-search__k"><Kbd>⌘K</Kbd></span>
             </button>
           </div>
@@ -270,9 +299,9 @@ export function Shell({ children }: { children: ReactNode }) {
         id="main"
         key={loc.pathname}
         className={`sh-main ${immersive ? 'sh-main--immersive' : ''}`}
-        initial={reduce ? false : { opacity: 0, y: 10 }}
+        initial={reduce ? false : { opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.26, ease: [0.2, 0.8, 0.2, 1] }}
       >
         {children}
       </motion.main>

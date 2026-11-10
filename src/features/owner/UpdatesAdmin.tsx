@@ -4,6 +4,7 @@ import { Button } from '../../components';
 import { askAi, AiError } from '../../lib/ai';
 import { designsFor, renderCard, cardFileName, type CardData } from '../../lib/cards';
 import { getToken } from './auth';
+import { autoDraftUpdate } from './xstudio/autodraft';
 import { CATEGORIES, loadUpdates, PostView, type UpdateCategory, type UpdatePost } from '../updates';
 
 const SITE = 'https://poltok.netlify.app';
@@ -62,7 +63,8 @@ export function UpdatesAdmin() {
       const { source: _s, ...body } = { ...edit, links: textToLinks(linksText) };
       const d = await call(isEditing ? 'PUT' : 'POST', isEditing ? edit.id : undefined, body);
       if (d.post) pick(d.post);
-      setMsg({ ok: true, t: isEditing ? 'Saved.' : 'Published.' });
+      const drafted = d.post && !d.post.draft ? await autoDraftUpdate(d.post).catch(() => null) : null;
+      setMsg({ ok: true, t: (isEditing ? 'Saved.' : 'Published.') + (drafted ? ' X post + card auto-drafted in X Studio → Queue.' : '') });
       refresh();
     } catch (e) {
       setMsg({ ok: false, t: (e as Error).message });

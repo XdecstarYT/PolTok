@@ -13,7 +13,7 @@ export function PartyDot({ party, size = 10 }: { party: Party; size?: number }) 
     <span
       className="pt-partydot"
       title={PARTY_NAME[party]}
-      style={{ width: size, height: size, background: PARTY_COLOR[party], boxShadow: `0 0 ${size}px -2px ${PARTY_COLOR[party]}` }}
+      style={{ width: size, height: size, background: PARTY_COLOR[party] }}
     />
   );
 }
@@ -194,7 +194,7 @@ export function SectionHeader({
           </span>
         )}
         <H id={id} className="pt-sechead__title">{title}</H>
-        {sub && <p className="muted" style={{ fontSize: 14 }}>{sub}</p>}
+        {sub && <p className="pt-sechead__sub">{sub}</p>}
       </div>
       {action && <div className="pt-sechead__action">{action}</div>}
     </header>
@@ -218,10 +218,10 @@ export function Skeleton({
 
 /** Friendly empty/zero state with optional icon and action. */
 export function EmptyState({
-  title, description, icon, action, compact,
-}: { title: ReactNode; description?: ReactNode; icon?: ReactNode; action?: ReactNode; compact?: boolean }) {
+  title, description, icon, action, compact, tone,
+}: { title: ReactNode; description?: ReactNode; icon?: ReactNode; action?: ReactNode; compact?: boolean; tone?: 'error' }) {
   return (
-    <div className={`pt-empty ${compact ? 'pt-empty--compact' : ''}`} role="status">
+    <div className={`pt-empty ${compact ? 'pt-empty--compact' : ''} ${tone === 'error' ? 'pt-empty--error' : ''}`} role={tone === 'error' ? 'alert' : 'status'}>
       <div className="pt-empty__icon" aria-hidden="true">
         {icon ?? (
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -248,7 +248,7 @@ export function ProgressBar({
   return (
     <div className={`pt-progress ${className ?? ''}`}>
       <div className="pt-progress__track" style={{ height }} role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(v)}>
-        <div className="pt-progress__fill" style={{ width: `${v}%`, background: color, boxShadow: `0 0 10px ${color}` }} />
+        <div className="pt-progress__fill" style={{ width: `${v}%`, background: color }} />
       </div>
       {showValue && <span className="num pt-progress__val">{Math.round(v)}%</span>}
     </div>
@@ -273,4 +273,46 @@ export function Tooltip({ content, children, side = 'top' }: { content: ReactNod
 /** Keyboard key hint, e.g. <Kbd>⌘K</Kbd> */
 export function Kbd({ children }: { children: ReactNode }) {
   return <kbd className="pt-kbd">{children}</kbd>;
+}
+
+/** Error state: an EmptyState in the danger tone with an optional retry button. */
+export function ErrorState({
+  title = 'Something went wrong', description, onRetry, compact,
+}: { title?: ReactNode; description?: ReactNode; onRetry?: () => void; compact?: boolean }) {
+  return (
+    <EmptyState
+      tone="error"
+      compact={compact}
+      title={title}
+      description={description}
+      icon={
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <path d="M12 3 2 20h20L12 3z" /><path d="M12 10v4M12 17.5v.01" />
+        </svg>
+      }
+      action={onRetry ? <Button variant="ghost" size="sm" onClick={onRetry}>Try again</Button> : undefined}
+    />
+  );
+}
+
+/** One figure in a stat strip. Wrap several in <StatGroup>. */
+export function StatTile({
+  label, value, sub, tone,
+}: { label: ReactNode; value: ReactNode; sub?: ReactNode; tone?: 'dem' | 'rep' | 'accent' | 'live' }) {
+  return (
+    <div className={`pt-stat ${tone ? `pt-stat--${tone}` : ''}`}>
+      <dt className="pt-stat__label">{label}</dt>
+      <dd className="pt-stat__value" style={{ margin: 0 }}>{value}</dd>
+      {sub != null && <dd className="pt-stat__sub" style={{ margin: 0 }}>{sub}</dd>}
+    </div>
+  );
+}
+
+/** Hairline-divided grid of StatTiles. `min` = minimum tile width in px. */
+export function StatGroup({ children, label, min }: { children: ReactNode; label?: string; min?: number }) {
+  return (
+    <dl className="pt-stats" aria-label={label} style={min ? ({ '--stat-min': `${min}px` } as CSSProperties) : undefined}>
+      {children}
+    </dl>
+  );
 }

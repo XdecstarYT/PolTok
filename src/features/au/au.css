@@ -8,12 +8,10 @@
 .au-kicker a { color: var(--signal); text-decoration: none; }
 .au-sub { color: var(--text-2); margin: 0; font-size: var(--fs-sm); }
 .au-sub a { color: var(--signal); }
-.au-stats { display: flex; gap: 2px; margin: 0; flex-wrap: wrap; }
-.au-stats > div { background: var(--bg-1); border: 1px solid var(--line); padding: 6px 12px; min-width: 76px; }
-.au-stats > div:first-child { border-radius: 8px 0 0 8px; }
-.au-stats > div:last-child { border-radius: 0 8px 8px 0; }
-.au-stats dt { font-size: 9px; letter-spacing: 0.14em; color: var(--text-3); text-transform: uppercase; }
-.au-stats dd { margin: 2px 0 0; font-size: 14px; font-weight: 700; color: var(--terminal); white-space: nowrap; }
+.au-stats { display: flex; gap: 1px; margin: 0; flex-wrap: wrap; background: var(--line-2); border: 1px solid var(--line-2); border-radius: var(--radius); overflow: hidden; }
+.au-stats > div { background: var(--bg-1); padding: 8px 14px; min-width: 84px; flex: 1 1 auto; }
+.au-stats dt { font-size: 10.5px; font-weight: 700; letter-spacing: var(--tracking-caps); color: var(--text-3); text-transform: uppercase; }
+.au-stats dd { margin: 3px 0 0; font-size: 18px; font-weight: 700; color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .au-stats dd.ok { color: var(--accent); }
 .au-seat-h { display: flex; align-items: center; gap: 12px; }
 .au-seat-h i { width: 14px; height: 14px; border-radius: 4px; flex: none; }
@@ -48,7 +46,7 @@
 /* hemicycle */
 .au-hemi-svg { width: 100%; height: auto; display: block; max-height: 300px; }
 .au-hemi-n { font-family: var(--font-display); font-size: 0.2px; font-weight: 700; fill: var(--text); }
-.au-hemi-m { font-family: var(--font-mono); font-size: 0.05px; fill: var(--text-3); letter-spacing: 0.01px; }
+.au-hemi-m { font-family: var(--font-data); font-size: 0.05px; fill: var(--text-3); letter-spacing: 0.01px; }
 .au-legend { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px 12px; font-size: 13px; }
 .au-legend li { display: flex; align-items: center; gap: 8px; padding: 3px 4px; border-radius: 6px; cursor: default; min-width: 0; }
 .au-legend li:hover, .au-legend li:focus { background: var(--bg-3); outline: none; }
@@ -63,7 +61,7 @@
 .au-tally-l { font-size: 11px; color: var(--text-3); margin-bottom: 6px; }
 .au-tally-bar { position: relative; display: flex; height: 28px; border-radius: 6px; overflow: hidden; background: var(--bg-3); }
 .au-tally-bar span { display: flex; align-items: center; justify-content: center; transition: width 0.6s ease; min-width: 0; }
-.au-tally-bar em { font-style: normal; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.au-tally-bar em { font-style: normal; font-family: var(--font-data); font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
 .au-tally-bar b { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--text); box-shadow: 0 0 0 1px var(--bg); }
 .au-tally-foot { position: relative; height: 18px; font-size: 10px; margin-top: 4px; display: flex; justify-content: space-between; }
 .au-tally-foot span:nth-child(2) { position: absolute; transform: translateX(-50%); color: var(--text-2); white-space: nowrap; }
@@ -82,7 +80,7 @@
 .au-pend-track { height: 8px; background: var(--bg-3); border-radius: 4px; overflow: hidden; }
 .au-pend-track i { display: block; height: 100%; border-radius: 4px; }
 .au-pend-m { text-align: right; color: var(--text-2); font-size: 12px; }
-.au-pend-r { font-family: var(--font-mono); font-size: 10px; font-weight: 700; }
+.au-pend-r { font-family: var(--font-data); font-size: 10px; font-weight: 700; }
 .au-pend-col li.is-flip a { background: rgba(245, 197, 24, 0.1); box-shadow: inset 2px 0 0 var(--warn); }
 .au-pend-col li.is-flip .au-pend-name { color: var(--warn); }
 @media (max-width: 640px) { .au-pend-grid { grid-template-columns: 1fr; } }
@@ -91,7 +89,7 @@
 
 /* segmented */
 .au-seg { display: inline-flex; gap: 2px; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 2px; flex-wrap: wrap; }
-.au-seg button { background: none; border: 0; color: var(--text-3); font: 600 11px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: var(--radius-pill); cursor: pointer; }
+.au-seg button { background: none; border: 0; color: var(--text-3); font: 600 11px var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: var(--radius-pill); cursor: pointer; }
 .au-seg button[aria-selected='true'] { background: var(--bg-4); color: var(--text); }
 
 /* polls */
@@ -103,12 +101,12 @@
 .au-poll-tpp span { color: var(--text-3); }
 .au-poll-svg { width: 100%; height: auto; display: block; }
 .au-grid { stroke: var(--line); }
-.au-axis { font: 10px var(--font-mono); fill: var(--text-3); }
+.au-axis { font: 10px var(--font-data); fill: var(--text-3); }
 .au-table-wrap { overflow-x: auto; max-width: 100%; }
 .au-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .au-table th, .au-table td { padding: 5px 6px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .au-table th:nth-child(-n+2), .au-table td:nth-child(-n+2) { text-align: left; }
-.au-table th { font: 600 10px var(--font-mono); color: var(--text-3); letter-spacing: 0.08em; }
+.au-table th { font: 600 10px var(--font-data); color: var(--text-3); letter-spacing: 0.08em; }
 
 /* markets */
 .au-mkts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
@@ -182,7 +180,7 @@
 /* ---- AU section tabs + expansion pages ---- */
 .au-nav { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); margin: 0 0 var(--sp-4); scrollbar-width: none; }
 .au-nav::-webkit-scrollbar { display: none; }
-.au-nav-t { flex: none; padding: 10px 12px; font: 600 12px var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.au-nav-t { flex: none; padding: 10px 12px; font: 600 12px var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
 .au-nav-t:hover { color: var(--text); }
 .au-nav-t.is-on { color: var(--text); border-bottom-color: var(--terminal, var(--accent)); }
 .au-sen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-3); }
@@ -194,17 +192,17 @@
 .au-sen-list li i { width: 10px; height: 10px; border-radius: 3px; }
 .au-sen-list small { grid-column: 2 / -1; color: var(--text-3); font-size: 11px; }
 .au-party-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--sp-4); }
-.au-party-pick a { padding: 5px 10px; border-radius: var(--radius-pill); border: 1px solid var(--line); text-decoration: none; font: 600 12px var(--font-mono); color: var(--text-2); display: inline-flex; gap: 6px; align-items: center; }
+.au-party-pick a { padding: 5px 10px; border-radius: var(--radius-pill); border: 1px solid var(--line); text-decoration: none; font: 600 12px var(--font-data); color: var(--text-2); display: inline-flex; gap: 6px; align-items: center; }
 .au-party-pick a i { width: 9px; height: 9px; border-radius: 50%; }
 .au-party-pick a.is-on { background: var(--bg-3); color: var(--text); border-color: var(--line-3); }
 .au-trend svg { width: 100%; height: auto; display: block; }
-.au-trend text { fill: var(--text-3); font: 10px var(--font-mono); }
+.au-trend text { fill: var(--text-3); font: 10px var(--font-data); }
 .au-swing-ctl { display: flex; flex-direction: column; gap: 10px; }
 .au-swing-ctl input[type='range'] { width: 100%; accent-color: var(--text); }
-.au-swing-read { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-family: var(--font-mono); font-size: 13px; }
+.au-swing-read { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-family: var(--font-data); font-size: 13px; }
 .au-swing-read b { font-size: 22px; font-family: var(--font-display); }
 .au-swing-btns { display: flex; flex-wrap: wrap; gap: 6px; }
-.au-swing-btns button { background: var(--bg-2); border: 1px solid var(--line); color: var(--text-2); border-radius: var(--radius-pill); padding: 4px 10px; font: 600 11px var(--font-mono); cursor: pointer; }
+.au-swing-btns button { background: var(--bg-2); border: 1px solid var(--line); color: var(--text-2); border-radius: var(--radius-pill); padding: 4px 10px; font: 600 11px var(--font-data); cursor: pointer; }
 .au-swing-btns button:hover { color: var(--text); }
 .au-cands { list-style: none; margin: 0; padding: 0; }
 .au-cands li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
@@ -214,7 +212,7 @@
 .au-table td.num, .au-table th.num { text-align: right; }
 
 /* ── Update 3 (agent D): states, history, polls, district data ── */
-.au-h3 { font: 600 11px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin: var(--sp-3) 0 6px; }
+.au-h3 { font: 600 11px var(--font-data); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin: var(--sp-3) 0 6px; }
 .au-big { font-family: var(--font-display); font-size: var(--fs-xl); margin: 0; }
 .au-facts { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 1.5; }
 .au-dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
@@ -231,8 +229,8 @@
 .au-line { width: 100%; height: auto; display: block; }
 .au-line-grid { stroke: var(--line); stroke-width: 1; }
 .au-line-ref { stroke: var(--text-3); stroke-dasharray: 4 4; }
-.au-line-ax { font: 10px var(--font-mono); fill: var(--text-3); }
-.au-line-lab { font: 700 11px var(--font-mono); }
+.au-line-ax { font: 10px var(--font-data); fill: var(--text-3); }
+.au-line-lab { font: 700 11px var(--font-data); }
 .au-stack { position: relative; display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--bg-3); }
 .au-stack i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--text); }
 .au-states-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-3); }
@@ -249,13 +247,13 @@
 .au-hist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .au-hist li { display: grid; grid-template-columns: 40px minmax(0, 1fr) 130px; gap: 10px; align-items: center; }
 .au-hist-bar { position: relative; display: flex; height: 20px; border-radius: 4px; overflow: hidden; }
-.au-hist-bar span { display: flex; align-items: center; justify-content: center; font: 700 11px var(--font-mono); color: #fff; overflow: hidden; }
+.au-hist-bar span { display: flex; align-items: center; justify-content: center; font: 700 11px var(--font-data); color: #fff; overflow: hidden; }
 .au-hist-bar i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--text); }
 .au-hist-pm { font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 560px) { .au-hist li { grid-template-columns: 36px minmax(0, 1fr); } .au-hist-pm { display: none; } }
 .au-pm-tl { position: relative; height: 34px; border-radius: 6px; overflow: hidden; background: var(--bg-3); }
 .au-pm { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--bg-1); overflow: hidden; }
-.au-pm span { font: 700 10px var(--font-mono); color: #fff; white-space: nowrap; }
+.au-pm span { font: 700 10px var(--font-data); color: #fff; white-space: nowrap; }
 .au-pm-axis { position: relative; height: 18px; font-size: 10px; }
 .au-pm-axis span { position: absolute; transform: translateX(-50%); top: 2px; }
 .au-pm-list { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 6px 16px; font-size: 13px; }

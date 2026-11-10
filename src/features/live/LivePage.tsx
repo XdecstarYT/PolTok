@@ -7,7 +7,7 @@ import { useSeo } from '../../lib/seo';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, m as motion } from 'framer-motion';
-import { LiveDot, SimBadge } from '../../components';
+import { PageHeader, SimBadge } from '../../components';
 import { useLive } from '../../lib/live';
 import { raceById } from '../../data';
 import { PARTY_COLOR } from '../../lib/format';
@@ -67,36 +67,38 @@ export default function LivePage() {
       <StickyScore senate={senate} house={house} show={stuck} lastCall={live.calls[0]} />
       <CallAlert calls={live.calls} />
 
-      <header className="lv-top">
-        <div className="lv-top-l">
-          <div className="lv-kicker mono">
-            <LiveDot /> <span>MIDTERMS · NOV 3, 2026</span> <SimBadge />
-          </div>
-          <h1>Election Night Control Room</h1>
-        </div>
-        <dl className="lv-top-stats mono">
-          <div>
-            <dt>{tzAbbr()}</dt>
-            <dd>{fmtEtTimeSec(now)}</dd>
-          </div>
-          <div>
-            <dt>Called</dt>
-            <dd>
-              <AnimNum value={statusCounts.called} />/{statusCounts.total}
-            </dd>
-          </div>
-          <div>
-            <dt>Counting</dt>
-            <dd>
-              <AnimNum value={statusCounts.counting} flash={false} />
-            </dd>
-          </div>
-          <div>
-            <dt>Feed</dt>
-            <dd className={live.connected ? 'ok' : 'muted'}>{modeLabel}</dd>
-          </div>
-        </dl>
-      </header>
+      <PageHeader
+        live
+        kicker="Live results · Midterms, Nov 3, 2026"
+        title="Election night results desk"
+        crumbLabel="Live"
+        sub="Every AP race call as it happens, with the balance of power, the poll-closing clock and the biggest swings."
+        meta={<SimBadge />}
+        aside={
+          <dl className="lv-top-stats mono">
+            <div>
+              <dt>{tzAbbr()}</dt>
+              <dd>{fmtEtTimeSec(now)}</dd>
+            </div>
+            <div>
+              <dt>Called</dt>
+              <dd>
+                <AnimNum value={statusCounts.called} />/{statusCounts.total}
+              </dd>
+            </div>
+            <div>
+              <dt>Counting</dt>
+              <dd>
+                <AnimNum value={statusCounts.counting} flash={false} />
+              </dd>
+            </div>
+            <div>
+              <dt>Feed</dt>
+              <dd className={live.connected ? 'ok' : 'muted'}>{modeLabel}</dd>
+            </div>
+          </dl>
+        }
+      />
 
       <div ref={heroRef} className="lv-hero">
         <ChamberControl s={senate} title="Senate" />

@@ -7,8 +7,8 @@ import { RACES, STATES } from '../../data';
 import { PARTY_HEX, fmtInt, fmtPct, marginColor, timeAgo } from '../../lib/format';
 import type { BalanceOfPower, Candidate, Party, Race, RaceResult } from '../../types';
 import {
-  Avatar, Button, Card, Chip, Countdown, EmptyState, LiveDot, SectionHeader, Skeleton,
-  fmtTime, useNow, useReducedMotion,
+  Avatar, Button, Card, Chip, Countdown, EmptyState, LiveDot, SectionHeader, Skeleton, StatGroup, StatTile,
+  fmtTime, tzAbbr, useNow, useReducedMotion,
 } from '../../components';
 import { useFlipsData, type FlipRace } from '../flips/data';
 import './home.css';
@@ -125,9 +125,9 @@ function Banner() {
   return (
     <section className={`hm-banner ${tone ? `is-${tone}` : 'is-open'}`} aria-labelledby="hm-title">
       <div className="hm-banner__top">
-        <LiveDot label="RESULTS · AP" />
-        <span className="kicker kicker--muted">2026 U.S. Midterms · The morning after</span>
-        {lastUpdate > 0 && <span className="kicker kicker--muted">Updated {fmtTime(lastUpdate)}</span>}
+        <LiveDot label="Results · AP" />
+        <span className="kicker kicker--muted">2026 U.S. Midterms</span>
+        {lastUpdate > 0 && <span className="hm-banner__upd">Updated {fmtTime(lastUpdate)} {tzAbbr(lastUpdate)}</span>}
       </div>
       <div className="hm-banner__main">
         <div className="hm-banner__copy">
@@ -137,7 +137,7 @@ function Banner() {
         <Scoreboard />
       </div>
       <div className="row row-wrap" style={{ gap: 10 }}>
-        <Button variant="accent" size="lg" to="/analysis">Read the analysis →</Button>
+        <Button variant="accent" size="lg" to="/analysis">Read the analysis</Button>
         <Button variant="ghost" size="lg" to="/replay">Replay the night</Button>
         <Button variant="ghost" size="lg" to="/live">Results desk</Button>
       </div>
@@ -156,10 +156,10 @@ function Scoreboard() {
         const d = b!.dem + b!.ind, r = b!.rep;
         return (
           <div key={ch} className="hm-score__ch">
-            <dt className="row spread"><span>{CH_NAME[ch]}</span><span className="faint num">{b!.majority} to win</span></dt>
+            <dt className="row spread"><span>{CH_NAME[ch]}</span><span className="hm-score__maj num">{b!.majority} to win</span></dt>
             <dd className="hm-score__nums num">
               <b style={{ color: 'var(--dem)' }}>{d}</b>
-              <span className="faint">{b!.undecided ? `${b!.undecided} uncalled` : 'all called'}</span>
+              <span className="hm-score__mid">{b!.undecided ? `${b!.undecided} uncalled` : 'All called'}</span>
               <b style={{ color: 'var(--rep)' }}>{r}</b>
             </dd>
             <dd><SeatBar b={b!} /></dd>
@@ -264,16 +264,10 @@ function Numbers({ flipsAll, flips }: { flipsAll: FlipRace[]; flips: FlipRace[] 
   ];
   return (
     <section aria-labelledby="hm-nums" className="hm-nums">
-      <h2 id="hm-nums" className="hm-nums__title">The night in numbers</h2>
-      <dl className="hm-nums__grid">
-        {items.map((i) => (
-          <div key={i.k} className="hm-num">
-            <dt>{i.k}</dt>
-            <dd className="num">{i.v}</dd>
-            <dd className="hm-num__s truncate">{i.s}</dd>
-          </div>
-        ))}
-      </dl>
+      <h2 id="hm-nums" className="sr-only">The night in numbers</h2>
+      <StatGroup label="The night in numbers" min={150}>
+        {items.map((i) => <StatTile key={i.k} label={i.k} value={i.v} sub={i.s} />)}
+      </StatGroup>
     </section>
   );
 }
@@ -459,16 +453,29 @@ const TABS: { id: HomeCountry; flag: string; label: string }[] = [
   { id: 'world', flag: '🌐', label: 'World' },
 ];
 
+function Dateline() {
+  const now = useNow(60000);
+  const d = new Date(now);
+  return (
+    <p className="hm-mast__date">
+      <time dateTime={d.toISOString()}>{d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</time>
+    </p>
+  );
+}
+
 function CountryHero() {
   const [c, setC] = useHomeCountry();
   return (
     <div className="hm-hero-wrap">
-      <div className="hm-cswitch" role="tablist" aria-label="Choose headline country">
-        {TABS.map((t) => (
-          <button key={t.id} role="tab" type="button" aria-selected={c === t.id} className={`hm-cswitch__b ${c === t.id ? 'is-on' : ''}`} onClick={() => setC(t.id)}>
-            <span aria-hidden="true">{t.flag}</span> {t.label}
-          </button>
-        ))}
+      <div className="hm-mast">
+        <Dateline />
+        <div className="hm-cswitch" role="tablist" aria-label="Choose headline country">
+          {TABS.map((t) => (
+            <button key={t.id} role="tab" type="button" aria-selected={c === t.id} className={`hm-cswitch__b ${c === t.id ? 'is-on' : ''}`} onClick={() => setC(t.id)}>
+              <span aria-hidden="true">{t.flag}</span> {t.label}
+            </button>
+          ))}
+        </div>
       </div>
       <Suspense fallback={<section className="hm-banner hm-hero2"><Skeleton height={44} width="70%" /><Skeleton lines={3} /></section>}>
         {c === 'us' ? <Banner /> : c === 'au' ? <AUHero /> : c === 'nz' ? <NZHero /> : <WorldHero />}
@@ -483,27 +490,32 @@ export default function HomePage() {
   return (
     <div className="page hm">
       <CountryHero />
-      <LazySection min={150} eager><S.WorldLive /></LazySection>
-      <LazySection min={56} eager><S.Markets /></LazySection>
-      <Numbers flipsAll={flipsAll} flips={flips} />
-      <Flips flips={flips} loading={flipsLoading} />
-      <Balance flipsAll={flipsAll} />
-      <Marquee />
-      <LazySection min={200}><S.Highlights /></LazySection>
-      <LazySection min={90}><S.Tools /></LazySection>
+      <div className="hm-band">
+        <Numbers flipsAll={flipsAll} flips={flips} />
+        <LazySection min={56} eager><S.Markets /></LazySection>
+      </div>
       <div className="hm-row">
-        <LazySection min={480}><S.TopStories /></LazySection>
-        <div className="hm-side">
+        <LazySection min={480} eager><S.TopStories /></LazySection>
+        <aside className="hm-side" aria-label="Results at a glance">
           <LazySection min={300}><ResultsMap /></LazySection>
           <AUPromo />
-        </div>
+        </aside>
       </div>
+      <Marquee />
+      <Flips flips={flips} loading={flipsLoading} />
+      <Balance flipsAll={flipsAll} />
+      <LazySection min={150}><S.WorldLive /></LazySection>
+      <LazySection min={200}><S.Highlights /></LazySection>
       <LazySection min={260}><S.ForYou /></LazySection>
       <div className="hm-row hm-row--2">
         <LazySection min={300}><S.Today /></LazySection>
         <LazySection min={200}><S.WhatsNew /></LazySection>
       </div>
-      <QuickLinks />
+      <section aria-labelledby="hm-explore" className="hm-explore">
+        <SectionHeader id="hm-explore" kicker="Explore" title="More from PolTok" />
+        <LazySection min={90}><S.Tools /></LazySection>
+        <QuickLinks />
+      </section>
       <SourceFoot />
     </div>
   );

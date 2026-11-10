@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#05070d" />
+    <meta name="theme-color" content="#090b10" />
     <meta name="description" content="Live election results, maps, markets and news." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="PolTok" />
@@ -37,9 +37,11 @@
         var ui = 'command';
         try { ui = (JSON.parse(localStorage.getItem('poltok:settings') || '{}') || {}).ui || 'command'; } catch (e) {}
         var J = 'family=JetBrains+Mono:wght@400;600;700', P = 'family=IBM+Plex+Mono:wght@400;600;700';
-        var C = 'family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&' + J;
+        var I = 'family=Inter:wght@400;500;600;700;800&';
+        var C = 'family=Inter+Tight:wght@500;600;700;800&' + I + 'family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&' + J;
+        var A = 'family=Space+Grotesk:wght@400;500;600;700&' + I + J;
         var F = {
-          command: C, aurora: C,
+          command: C, aurora: A,
           broadcast: 'family=Oswald:wght@500;600;700&family=Roboto+Condensed:wght@400;700;900&' + J,
           paper: 'family=Playfair+Display:wght@600;700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&' + P,
           terminal: P
@@ -55,7 +57,7 @@
         document.head.appendChild(l);
       })();
     </script>
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4355220382723119"
      crossorigin="anonymous"></script>
   </head>

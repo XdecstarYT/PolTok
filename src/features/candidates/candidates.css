@@ -58,7 +58,7 @@
 
 .cd-faceoff { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
 .cd-faceoff__slot { position: relative; min-width: 0; }
-.cd-vs { position: absolute; left: -16px; top: 40px; font: 700 11px var(--font-mono); color: var(--text-3); }
+.cd-vs { position: absolute; left: -16px; top: 40px; font: 700 11px var(--font-data); color: var(--text-3); }
 .cd-face {
   display: grid; justify-items: center; text-align: center; gap: 4px; padding: 14px 10px; border-radius: 14px; height: 100%;
   border: 1px solid var(--line); background: var(--bg-2); color: var(--text); text-decoration: none;
@@ -112,7 +112,7 @@
 .cd-list { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: var(--fs-sm); }
 .cd-votes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: var(--fs-sm); }
 .cd-votes li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; align-items: start; }
-.cd-vote { font: 700 11px var(--font-mono); text-align: center; padding: 3px 0; border-radius: 6px; background: var(--bg-3); color: var(--text-2); }
+.cd-vote { font: 700 11px var(--font-data); text-align: center; padding: 3px 0; border-radius: 6px; background: var(--bg-3); color: var(--text-2); }
 .cd-vote--Y { background: var(--accent-soft); color: var(--text); }
 .cd-vote--N { background: color-mix(in srgb, #d8333f 22%, transparent); color: var(--text); }
 .cd-sources { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: var(--fs-sm); }

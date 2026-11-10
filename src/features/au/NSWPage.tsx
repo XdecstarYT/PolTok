@@ -62,7 +62,7 @@ export default function NSWPage() {
 
       <div className="au-grid-main">
         <Card title="Key seats" kicker="Closest 2023 margins">
-          <table className="au-table">
+          <table className="pt-table au-table">
             <thead><tr><th>Seat</th><th>Held by</th><th className="num">Margin</th></tr></thead>
             <tbody>
               {NSW_2027.keySeats.map((s) => (

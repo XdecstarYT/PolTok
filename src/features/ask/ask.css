@@ -1,10 +1,13 @@
 .ask-fab {
   position: fixed; right: 16px; bottom: calc(var(--shell-bottom, 0px) + 16px); z-index: 60;
-  display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px;
-  border-radius: var(--radius-pill); border: 1px solid var(--line-2);
-  background: var(--grad-accent, var(--accent)); color: var(--accent-ink, #fff);
-  font: 600 var(--fs-sm) var(--font-body); box-shadow: var(--glow-accent, 0 6px 24px rgba(0,0,0,.35)); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 16px;
+  border-radius: var(--radius-pill); border: 1px solid var(--line-3);
+  background: var(--glass-strong); color: var(--text); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  font: 650 var(--fs-sm) var(--font-body); box-shadow: var(--elev-2); cursor: pointer;
+  transition: border-color var(--dur-1), transform var(--dur-1);
 }
+.ask-fab:hover { border-color: var(--text-3); transform: translateY(-1px); }
+@media (max-width: 759px) { .ask-fab { right: 12px; bottom: calc(var(--shell-bottom, 0px) + 12px); height: 36px; padding: 0 13px; } }
 .ask-fab:focus-visible, .ask-panel :focus-visible { outline: 2px solid var(--focus-ring, var(--accent)); outline-offset: 2px; }
 .ask-overlay { position: fixed; inset: 0; z-index: 70; background: rgba(0,0,0,.45); display: flex; justify-content: flex-end; }
 .ask-panel {
@@ -56,7 +59,7 @@
 .ask-md > * + * { margin-top: 8px; }
 .ask-md ul, .ask-md ol { padding-left: 20px; margin: 0; }
 .ask-md h4 { margin: 0; font-size: var(--fs-md); }
-.ask-md code { font-family: var(--font-mono); font-size: .9em; }
+.ask-md code { font-family: var(--font-data); font-size: .9em; }
 .ask-cite { display: inline-block; padding: 0 6px; margin: 0 2px; border-radius: var(--radius-sm, 4px); background: var(--bg-3); font-size: var(--fs-xs); color: var(--text-2, inherit); }
 .ask-ref { font-weight: 600; border-bottom: 1px dotted var(--accent); }
 .ask-sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
@@ -64,7 +67,7 @@
 .ask-ec { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: var(--radius, 10px); border: 1px solid var(--line-2); background: var(--bg-1); color: var(--text); text-decoration: none; animation: ask-pop var(--dur-3, .28s) var(--ease-out, ease-out); transition: border-color var(--dur-1, .12s); }
 a.ask-ec:hover { border-color: var(--accent); }
 .ask-ec--loading { min-height: 64px; background: linear-gradient(90deg, var(--bg-2), var(--bg-3), var(--bg-2)); background-size: 200% 100%; animation: ask-shine 1.4s linear infinite; }
-.ask-ec-kicker { font: 600 10px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3, inherit); }
+.ask-ec-kicker { font: 600 10px var(--font-data); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3, inherit); }
 .ask-ec-q { font-weight: 600; font-size: var(--fs-sm); }
 .ask-ec-rows { display: flex; flex-direction: column; gap: 6px; }
 .ask-ec-cand { display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto 4px; column-gap: 8px; row-gap: 3px; align-items: center; }
@@ -73,7 +76,7 @@ a.ask-ec:hover { border-color: var(--accent); }
 .ask-ec-cand .pt-avatar { grid-row: span 2; }
 .ask-ec-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-sm); }
 .ask-ec-check { color: var(--ok, var(--accent)); }
-.ask-ec-num { font: 600 var(--fs-sm) var(--font-mono); }
+.ask-ec-num { font: 600 var(--fs-sm) var(--font-data); }
 .ask-ec-bar { grid-column: -3 / -1; height: 4px; border-radius: 2px; background: var(--bg-3); overflow: hidden; }
 .ask-ec-cand:has(.pt-avatar) .ask-ec-bar { grid-column: 2 / 4; }
 .ask-ec-bar > span { display: block; height: 100%; border-radius: 2px; transition: width var(--dur-3, .3s) var(--ease-out, ease-out); }

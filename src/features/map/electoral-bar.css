@@ -21,7 +21,6 @@
   color: var(--rep);
 }
 .ebar-side.is-won .ebar-big {
-  text-shadow: 0 0 18px currentColor;
 }
 .ebar-big {
   font-family: var(--font-display);

@@ -128,7 +128,7 @@ export default function MoneyPage() {
                   {state && <button className="mo-chip is-on" onClick={() => setState(null)}>{state} ✕</button>}
                 </div>
                 <div className="mo-tablewrap">
-                  <table className="mo-table">
+                  <table className="pt-table mo-table">
                     <thead>
                       <tr><th>Race</th><th>Total spent*</th><th>Top spender</th><th>Result</th><th>$ / vote</th></tr>
                     </thead>
@@ -163,7 +163,7 @@ export default function MoneyPage() {
 
           {tab === 'leaders' && (
             <section className="mo-card mo-tablewrap">
-              <table className="mo-table">
+              <table className="pt-table mo-table">
                 <thead><tr><th>#</th><th>Candidate</th><th>Seat</th><th>Raised</th><th>Spent</th><th>Cash</th><th>Outside for / against</th></tr></thead>
                 <tbody>
                   {data.leaderboard.map((c, i) => (
