@@ -1,21 +1,39 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, m, useReducedMotion } from 'framer-motion';
 import type { Action, ApplyResult, EraDef, ElectionResult, GameState, LogEntry, NewGameOptions, PartyId } from './engine/types';
-import { api, CONTENT, lawById, partyColor } from './ui/adapter';
-import { clearSave, hasSave, saveIsOver, loadSeenElection, writeSeenElection, loadMeta, loadPrefs, loadSave, resetAll, writeMeta, writePrefs, writeSave, type Meta, type Prefs } from './ui/storage';
+import { api, approvalIndex, CONTENT, lawById, partyColor, projectSeats } from './ui/adapter';
+import { clearSave, hasSave, saveIsOver, loadSeenElection, writeSeenElection, loadMeta, loadPrefs, loadSave, resetAll, writeMeta, writePrefs, writeSave, loadChronicle, recordSnapshot, type Meta, type Prefs, type Snapshot } from './ui/storage';
 import { Confetti, Dialog } from './ui/visuals';
-import { CourtPanel, Dashboard, LawLibrary, LobbyPanel, RegionPanel, TopBar, type Sheet } from './ui/game';
+import { AdvisorCard, CourtPanel, Dashboard, EndBar, LawLibrary, LobbyPanel, RegionPanel, TopBar, ViewTabs, type Sheet, type View } from './ui/game';
+import { advise } from './ui/advisor';
+import { StatsView } from './ui/stats';
+import { AmendPicker, AmendSlot, CabinetView, DailyButton, dailyChallenge, DebateBanner, DebateScene, FactionMeter, GoalsCard, PerksScreen, wingRebelNote } from './ui/v2';
+import { currentEvent, headlines } from './engine';
+import { TipLayer, hideTip } from './ui/fx';
 import { VoteScreen } from './ui/vote';
 import { CoalitionBuilder, ElectionNight } from './ui/election';
-import { Coach, EraInterstitial, EventCard, PauseMenu, TurnSummary, TUTORIAL } from './ui/overlays';
+import { Coach, EraInterstitial, EventCard, fallbackHeadlines, FrontPage, PauseMenu, TUTORIAL, type Head } from './ui/overlays';
 import { EndScreen, HowToPlay, SetupScreen, TitleScreen } from './ui/screens';
-import { setAudio, sfx } from './audio';
+import { music, setAudio, sfx } from './audio';
 import './play.css';
 
 type Overlay =
-  | { kind: 'summary'; prev: GameState; log: LogEntry[] }
+  | { kind: 'summary'; prev: GameState; log: LogEntry[]; heads: Head[] }
   | { kind: 'election'; result: ElectionResult }
   | { kind: 'era'; era: EraDef };
+
+function safeEvent(s: GameState) { try { return currentEvent(s) ?? undefined; } catch { return undefined; } }
+
+const UNDO_LABEL: Partial<Record<Action['type'], (a: Action) => string>> = {
+  campaign: () => 'campaign', court: () => 'courting', draft: (a) => `draft of ${lawById((a as { lawId: string }).lawId)?.name ?? 'a law'}`,
+  repeal: () => 'repeal motion', lobby: () => 'lobbying', setStance: () => 'stance change', whip: () => 'whip',
+  appoint: () => 'appointment', dismiss: () => 'dismissal', amend: () => 'amendment',
+};
+
+/** Engine headlines (v2) when available. */
+function engineHeadlines(s: GameState): Head[] | null {
+  try { const h = headlines(s, 3); return h && h.length ? h : null; } catch { return null; }
+}
 
 const SHEET_TITLE: Record<string, string> = { map: 'Regions · Campaign', court: 'Court a group', laws: 'Law library', lobby: 'Lobby a rival' };
 
@@ -36,8 +54,39 @@ export default function PlayPage() {
   const [coach, setCoach] = useState<number | null>(null);
   const [canContinue, setCanContinue] = useState(hasSave);
   const gsRef = useRef(gs); gsRef.current = gs;
+  const [view, setView] = useState<View>('chamber');
+  const [undo, setUndo] = useState<{ state: GameState; label: string }[]>([]);
+  const [advisorOff, setAdvisorOff] = useState<number | null>(null);
+  const [snaps, setSnaps] = useState<Snapshot[]>([]);
+  const [debate, setDebate] = useState(false);
+  const [perksOpen, setPerksOpen] = useState(false);
 
   useEffect(() => { setAudio({ muted: prefs.muted, volume: prefs.volume }); }, [prefs.muted, prefs.volume]);
+  useEffect(() => { music.set({ enabled: prefs.music, volume: prefs.musicVolume }); }, [prefs.music, prefs.musicVolume]);
+  // music stays silent until the player interacts (autoplay policy + courtesy)
+  useEffect(() => {
+    const go = () => music.unlock();
+    window.addEventListener('pointerdown', go, { once: true }); window.addEventListener('keydown', go, { once: true });
+    return () => { window.removeEventListener('pointerdown', go); window.removeEventListener('keydown', go); music.set({ enabled: false }); };
+  }, []);
+  useEffect(() => { if (gs) music.setEra(gs.era); }, [gs?.era]); // eslint-disable-line react-hooks/exhaustive-deps
+  // game display font (serif), loaded only on this page
+  useEffect(() => {
+    if (document.getElementById('quorum-fonts')) return;
+    const l = document.createElement('link'); l.id = 'quorum-fonts'; l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=IM+Fell+English+SC&display=swap';
+    document.head.appendChild(l);
+  }, []);
+  // per-turn chronicle for the Statistics tab
+  useEffect(() => {
+    if (!gs) return;
+    let projected = gs.seats.player ?? 0; try { projected = projectSeats(gs).player ?? projected; } catch { /* ignore */ }
+    recordSnapshot(gs.seed, { turn: gs.turn, approval: Math.round(approvalIndex(gs) * 10) / 10, seats: gs.seats.player ?? 0, projected, debt: gs.debt, treasury: gs.treasury, pc: gs.politicalCapital, stats: { ...gs.stats }, inGov: gs.government.members.includes('player') });
+    setSnaps(loadChronicle(gs.seed));
+  }, [gs]);
+  // undo is only valid within the same turn and phase
+  useEffect(() => { setUndo((u) => (u.length && gs && (u[u.length - 1].state.turn !== gs.turn || u[u.length - 1].state.phase !== gs.phase) ? [] : u)); }, [gs?.turn, gs?.phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => { document.title = 'QUORUM: The Calderra Ledger · PolTok'; }, []);
   const setPrefs = (p: Prefs) => { setPrefsState(p); writePrefs(p); };
   const say = (text: string, bad?: boolean) => setToast({ id: Date.now(), text, bad });
@@ -48,7 +97,9 @@ export default function PlayPage() {
   const finishGame = useCallback((s: GameState) => {
     try {
       const sc = api.score(s);
-      const m2: Meta = { ...loadMeta(), bestScore: Math.max(loadMeta().bestScore, sc.total), achievements: Array.from(new Set([...loadMeta().achievements, ...sc.achievements])), games: loadMeta().games + 1 };
+      const m0 = loadMeta();
+      const m2: Meta = { ...m0, bestScore: Math.max(m0.bestScore, sc.total), achievements: Array.from(new Set([...m0.achievements, ...(sc.allAchievements ?? sc.achievements)])), games: m0.games + 1,
+        daily: s.daily ? { date: s.daily, score: Math.max(sc.total, m0.daily?.date === s.daily ? m0.daily.score : 0) } : m0.daily ?? null };
       writeMeta(m2); setMeta(m2);
     } catch { /* ignore */ }
     // keep the finished save until the player leaves the end screen, so a reload still shows the results
@@ -60,6 +111,9 @@ export default function PlayPage() {
     try { r = api.apply(s, a); } catch (e) { say(String((e as Error).message ?? e), true); return null; }
     const err = r.log.find((l) => l.kind === 'error');
     if (err) { say(err.text, true); return null; }
+    const label = UNDO_LABEL[a.type]?.(a);
+    if (label && r.state.turn === s.turn && r.state.phase === s.phase) setUndo((u) => [...u.slice(-9), { state: s, label }]);
+    else setUndo([]);
     gsRef.current = r.state;
     commit(r.state);
     const nice: Partial<Record<Action['type'], () => void>> = {
@@ -84,11 +138,12 @@ export default function PlayPage() {
     try { r = api.endTurn(s); } catch (e) { say(String((e as Error).message ?? e), true); return; }
     const err = r.log.find((l) => l.kind === 'error');
     if (err && r.state === s) { say(err.text, true); return; }
-    const q: Overlay[] = [{ kind: 'summary', prev: s, log: r.log }];
+    const heads: Head[] = engineHeadlines(r.state) ?? fallbackHeadlines(r.state, r.log);
+    const q: Overlay[] = [{ kind: 'summary', prev: s, log: r.log, heads }];
     if (r.transitions.electionHeld) q.push({ kind: 'election', result: r.state.elections[r.state.elections.length - 1] });
     if (r.transitions.eraChanged) { const e = CONTENT.eras.find((x) => x.id === r.state.era); if (e) q.push({ kind: 'era', era: e }); }
     if (r.state.treasury > s.treasury) sfx.coin(); else sfx.gavel();
-    setSheet(null); setVoteId(null);
+    setSheet(null); setVoteId(null); setUndo([]); hideTip();
     if (coach !== null) { setCoach(null); const m2 = { ...meta, tutorialDone: true }; writeMeta(m2); setMeta(m2); }
     gsRef.current = r.state; commit(r.state);
     setOverlays(q);
@@ -97,9 +152,9 @@ export default function PlayPage() {
 
   const start = (o: NewGameOptions) => {
     sfx.gavel();
-    const s = api.newGame({ ...o, seed: (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0 });
+    const s = api.newGame({ ...o, seed: o.daily ? o.seed : (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0 });
     writeSeenElection(-1);
-    commit(s); setScreen('game'); setCanContinue(true);
+    commit(s); setScreen('game'); setCanContinue(true); setView('chamber'); setUndo([]);
     setOverlays(s.elections.length ? [{ kind: 'election', result: s.elections[s.elections.length - 1] }] : []);
     setCoach(meta.tutorialDone ? null : 0);
   };
@@ -109,19 +164,29 @@ export default function PlayPage() {
     // reloaded between an election and government formation: replay the count before the talks
     const last = s.elections[s.elections.length - 1];
     setOverlays(last && (s.phase === 'coalition' || last.turn > loadSeenElection()) ? [{ kind: 'election', result: last }] : []);
-    setGs(s); setScreen('game'); sfx.click();
+    setGs(s); setScreen('game'); setView('chamber'); setUndo([]); sfx.click();
   };
   const leaveEnd = (to: 'setup' | 'title') => { clearSave(); setCanContinue(false); if (to === 'setup') setScreen('setup'); else toTitle(); };
   const toTitle = () => { setScreen('title'); setPaused(false); setSheet(null); setVoteId(null); setOverlays([]); setCoach(null); setCanContinue(hasSave()); };
 
   const popOverlay = () => { setOverlays((q) => { const [first, ...rest] = q; if (first?.kind === 'election') writeSeenElection(first.result.turn); if (rest[0]?.kind === 'era') sfx.era(); void first; return rest; }); };
+  const openVote = (id: string) => { sfx.click(); setToast(null); setVoteId(id); if (coach === 2) setCoach(3); };
   const onPassed = (proposer: PartyId) => { if (!rm) setConfetti((c) => ({ n: c.n + 1, colors: [partyColor(gsRef.current, proposer), '#ffffff', '#c6ff3d'] })); sfx.cheer(); };
+
+  const doUndo = useCallback(() => {
+    setUndo((u) => {
+      const last = u[u.length - 1]; if (!last) return u;
+      gsRef.current = last.state; commit(last.state); sfx.click(); say(`Undone: ${last.label}`);
+      return u.slice(0, -1);
+    });
+  }, [commit]);
+  const advice = useMemo(() => (gs && prefs.advisor && advisorOff !== gs.turn && screen === 'game' ? advise(gs) : null), [gs, prefs.advisor, advisorOff, screen]);
 
   // ------------------------------------------------ keyboard
   const s = gs;
   const ov = overlays[0];
-  const eventDef = s?.phase === 'event' && s.pendingEvent ? CONTENT.events.find((e) => e.id === s.pendingEvent) : undefined;
-  const blocking = !!(ov || paused || how || voteId || sheet || (s && (s.phase === 'coalition' || s.phase === 'over')) || eventDef);
+  const eventDef = s?.phase === 'event' && s.pendingEvent ? (safeEvent(s) ?? CONTENT.events.find((e) => e.id === s.pendingEvent)) : undefined;
+  const blocking = !!(ov || paused || how || voteId || sheet || debate || perksOpen || (s && (s.phase === 'coalition' || s.phase === 'over')) || eventDef);
   useEffect(() => {
     if (screen !== 'game' || !s) return;
     const onKey = (e: KeyboardEvent) => {
@@ -132,6 +197,7 @@ export default function PlayPage() {
       if (e.key === 'Escape') { setPaused(true); return; }
       if (s.phase !== 'actions') return;
       const k = e.key.toLowerCase();
+      if (k === 'z' && undo.length) { e.preventDefault(); doUndo(); return; }
       const map: Record<string, () => void> = {
         '1': () => setSheet({ kind: 'map' }), m: () => setSheet({ kind: 'map' }), '2': () => setSheet({ kind: 'court' }),
         '3': () => setSheet({ kind: 'laws', tab: 'draft' }), '4': () => setSheet({ kind: 'lobby' }), '5': () => setSheet({ kind: 'laws', tab: 'repeal' }),
@@ -141,7 +207,7 @@ export default function PlayPage() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [screen, s, blocking, eventDef, ov, paused, act, endTurn]);
+  }, [screen, s, blocking, eventDef, ov, paused, act, endTurn, undo.length, doUndo]);
 
   // ------------------------------------------------ render
   const pauseDlg = (paused || how) && (
@@ -157,31 +223,45 @@ export default function PlayPage() {
   let body: JSX.Element;
   if (screen === 'title' || !s) {
     body = screen === 'setup'
-      ? <SetupScreen onStart={start} onBack={() => setScreen('title')} />
+      ? <SetupScreen onStart={start} onBack={() => setScreen('title')} achievements={meta.achievements} />
       : <TitleScreen canContinue={canContinue} continueLabel={canContinue && saveIsOver() ? 'See final results' : 'Continue'} best={meta.bestScore} muted={prefs.muted} rm={rm} onContinue={cont} onNew={() => { sfx.click(); setScreen('setup'); }}
+          extra={<><DailyButton done={meta.daily ?? null} onStart={() => { const d = dailyChallenge(new Date()); start({ ...d.options, color: undefined }); }} /><button className="btn q-btn-ghost q-btn-lg" onClick={() => { sfx.click(); setPerksOpen(true); }}>Perks &amp; Records</button></>}
           onHow={() => setHow(true)} onToggleMute={() => setPrefs({ ...prefs, muted: !prefs.muted })} onSettings={() => setPaused(true)} />;
   } else if (screen === 'setup') {
-    body = <SetupScreen onStart={start} onBack={() => setScreen('title')} />;
+    body = <SetupScreen onStart={start} onBack={() => setScreen('title')} achievements={meta.achievements} />;
   } else if (s.phase === 'over' && !ov) {
     body = <EndScreen s={s} best={meta.bestScore} onNew={() => leaveEnd('setup')} onTitle={() => leaveEnd('title')} />;
   } else {
     body = (
       <>
         <TopBar s={s} rm={rm} muted={prefs.muted} onPause={() => setPaused(true)} onMute={() => setPrefs({ ...prefs, muted: !prefs.muted })} />
-        <Dashboard s={s} rm={rm} log={s.history ?? []} act={act} onSheet={(x) => { sfx.click(); setToast(null); setSheet(x); }} onOpenVote={(id) => { sfx.click(); setToast(null); setVoteId(id); if (coach === 2) setCoach(3); }} onEndTurn={endTurn} />
-        {ov?.kind === 'summary' && <Dialog label="End of turn summary" rm={rm} variant="center" onClose={popOverlay}><TurnSummary prev={ov.prev} s={s} log={ov.log} onClose={popOverlay} /></Dialog>}
+        <ViewTabs view={view} setView={(v) => { sfx.click(); setView(v); }} tabs={[{ id: 'chamber', label: 'Chamber' }, { id: 'cabinet', label: 'Cabinet & Party', badge: s.wings && Object.values(s.wings).some((w) => w < 35) ? '!' : undefined }, { id: 'stats', label: 'Statistics' }]} />
+        <AnimatePresence mode="wait" initial={false}>
+          <m.div key={view} className="q-viewpane" initial={rm ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={rm ? undefined : { opacity: 0, y: -6 }} transition={{ duration: 0.18 }}>
+            {view === 'chamber' && (
+              <Dashboard s={s} rm={rm} log={s.history ?? []} onSheet={(x) => { sfx.click(); setToast(null); setSheet(x); }} onOpenVote={openVote}
+                advisor={<><DebateBanner s={s} onOpen={() => { sfx.click(); setDebate(true); }} /><AdvisorCard s={s} advice={advice} onDo={(a) => { act(a); }} onOpenVote={openVote} onDismiss={() => setAdvisorOff(s.turn)} /></>}
+                extra={<><FactionMeter s={s} rm={rm} compact /><GoalsCard s={s} /></>} />
+            )}
+            {view === 'stats' && <StatsView s={s} snaps={snaps} />}
+            {view === 'cabinet' && <CabinetView s={s} rm={rm} act={act} />}
+          </m.div>
+        </AnimatePresence>
+        {s.phase === 'actions' && <EndBar s={s} onEndTurn={endTurn} undo={undo[undo.length - 1]?.label ?? null} onUndo={doUndo} />}
+        {ov?.kind === 'summary' && <Dialog label="The morning paper" rm={rm} variant="center" className="q-dlg--paper" onClose={popOverlay}><FrontPage prev={ov.prev} s={s} log={ov.log} heads={ov.heads} rm={rm} onClose={popOverlay} /></Dialog>}
         {ov?.kind === 'election' && <Dialog label="Election night" rm={rm} variant="full" className="q-dlg--elec"><ElectionNight s={s} result={ov.result} rm={rm} onDone={popOverlay} onMajority={(c) => !rm && setConfetti((x) => ({ n: x.n + 1, colors: [c, '#ffffff', c] }))} /></Dialog>}
         {ov?.kind === 'era' && <Dialog label={`New era: ${ov.era.name}`} rm={rm} variant="full"><EraInterstitial era={ov.era} s={s} rm={rm} onClose={popOverlay} /></Dialog>}
         {!ov && s.phase === 'coalition' && <Dialog label="Government formation" rm={rm} variant="center"><CoalitionBuilder s={s} act={act} /></Dialog>}
         {!ov && eventDef && <Dialog label={`Event: ${eventDef.title}`} rm={rm} variant="center" className="q-dlg--event"><EventCard ev={eventDef} s={s} rm={rm} onChoose={(c) => act({ type: 'resolveEvent', choice: c })} /></Dialog>}
-        {!ov && !eventDef && voteId && <Dialog label="Assembly roll call" rm={rm} variant="full" onClose={() => setVoteId(null)}><VoteScreen s={s} itemId={voteId} rm={rm} act={act} onClose={() => setVoteId(null)} onPassed={onPassed} /></Dialog>}
+        {!ov && !eventDef && debate && <Dialog label="Debate" rm={rm} variant="center" className="q-dlg--debate" onClose={() => setDebate(false)}><DebateScene s={s} rm={rm} act={act} onClose={() => setDebate(false)} /></Dialog>}
+        {!ov && !eventDef && voteId && <Dialog label="Assembly roll call" rm={rm} variant="full" onClose={() => setVoteId(null)}><VoteScreen s={s} itemId={voteId} rm={rm} act={act} onClose={() => setVoteId(null)} onPassed={onPassed} amendSlot={<AmendSlot s={s} itemId={voteId} act={act} />} wingNote={wingRebelNote} /></Dialog>}
         {!ov && !eventDef && !voteId && sheet && (
           <Dialog label={SHEET_TITLE[sheet.kind]} rm={rm} onClose={() => setSheet(null)}>
             <div className="q-sheet__head"><h2>{SHEET_TITLE[sheet.kind]}</h2><span className="q-muted q-small">{s.ap} AP left</span><button className="q-iconbtn" onClick={() => setSheet(null)} aria-label="Close">✕</button></div>
             {sheet.kind === 'map' && <RegionPanel s={s} initial={sheet.region} act={act} />}
             {sheet.kind === 'court' && <CourtPanel s={s} act={act} />}
             {sheet.kind === 'lobby' && <LobbyPanel s={s} act={act} />}
-            {sheet.kind === 'laws' && <LawLibrary s={s} initialTab={sheet.tab} act={act} tutorialSuggest={coach !== null && sheet.tab === 'draft'} />}
+            {sheet.kind === 'laws' && <LawLibrary s={s} initialTab={sheet.tab} act={act} tutorialSuggest={coach !== null && sheet.tab === 'draft'} amendPicker={(law, close) => <AmendPicker s={s} law={law} act={act} onBack={close} />} />}
           </Dialog>
         )}
         {coach !== null && !blocking && s.phase === 'actions' && s.turn === 1 && (
@@ -199,8 +279,12 @@ export default function PlayPage() {
 
   return (
     <div className="q-root" data-rm={rm ? '1' : undefined}>
-      {body}
+      <AnimatePresence mode="wait" initial={false}>
+        <m.div key={screen} initial={rm ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={rm ? undefined : { opacity: 0 }} transition={{ duration: 0.3 }}>{body}</m.div>
+      </AnimatePresence>
       {pauseDlg}
+      {perksOpen && <Dialog label="Perks and records" rm={rm} variant="center" onClose={() => setPerksOpen(false)}><PerksScreen achievements={meta.achievements} best={meta.bestScore} daily={meta.daily} onClose={() => setPerksOpen(false)} /></Dialog>}
+      <TipLayer />
       <Confetti fire={confetti.n} colors={confetti.colors.length ? confetti.colors : ['#fff']} />
       <div className="q-toast-wrap" aria-live="polite" role="status">{toast && <div key={toast.id} className={`q-toast${toast.bad ? ' is-bad' : ''}`}>{toast.text}</div>}</div>
     </div>

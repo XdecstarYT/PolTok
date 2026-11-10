@@ -1,15 +1,24 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
+import { sfx } from '../audio';
+import { Num, Tip } from './fx';
+import { Portrait } from './portrait';
+import { ChallengeNote, wingColor } from './v2';
+import { CHARACTERS, WINGS } from '../engine';
 import { m } from 'framer-motion';
 import type { EraDef, EventDef, GameState, LogEntry } from '../engine/types';
-import { CONTENT, groupGlyph, groupName, signed, STAT_ICON, STAT_LABEL, STATS } from './adapter';
+import { CONTENT, groupGlyph, groupName, signed, STAT_ICON, STAT_LABEL, STATS, yearOf } from './adapter';
 import { Delta } from './visuals';
 import type { Prefs } from './storage';
 
 export function EventCard({ ev, s, rm, onChoose }: { ev: EventDef; s: GameState; rm: boolean; onChoose: (c: 0 | 1) => void }) {
   return (
     <m.div className="q-event" initial={rm ? false : { rotateY: 90, opacity: 0 }} animate={{ rotateY: 0, opacity: 1 }} transition={{ duration: 0.45 }}>
-      <p className="q-kicker">Turn {s.turn} · Dispatch</p>
+      <p className="q-kicker">Turn {s.turn} · {ev.character ? 'Party affairs' : 'Dispatch'}{ev.chain && <span className="q-chainbadge">Storyline: {ev.chain}</span>}</p>
+      {ev.character && s.eventContext?.characterId && CHARACTERS[s.eventContext.characterId] && (
+        <div className="q-event__who"><Portrait seed={CHARACTERS[s.eventContext.characterId].name} color={wingColor(CHARACTERS[s.eventContext.characterId].wing)} size={72} label={CHARACTERS[s.eventContext.characterId].name} /><span className="q-small q-muted">{CHARACTERS[s.eventContext.characterId].bio}</span></div>
+      )}
       <h2 className="q-event__t">{ev.title}</h2>
+      <ChallengeNote s={s} />
       <p className="q-event__text">{ev.text}</p>
       <div className="q-event__choices">
         {ev.choices.slice(0, 2).map((c, i) => (
@@ -21,6 +30,8 @@ export function EventCard({ ev, s, rm, onChoose }: { ev: EventDef; s: GameState;
               {Object.entries(c.stats).map(([k, n]) => <span key={k}>{STAT_ICON[k as keyof typeof STAT_ICON]} <Delta n={n ?? 0} /></span>)}
               {c.treasury ? <span>◉ <Delta n={c.treasury} /></span> : null}
               {c.politicalCapital ? <span>★ <Delta n={c.politicalCapital} /></span> : null}
+              {Object.entries(c.wings ?? {}).map(([w, n]) => <Tip key={w} content={`${WINGS[w]?.name ?? w} happiness ${signed(n ?? 0)}`} className="q-wingchip"><i style={{ background: wingColor(w) }} /><Delta n={n ?? 0} /></Tip>)}
+              {c.followUp && <Tip content="This choice may have consequences in a later turn." className="q-muted">⟳ to be continued</Tip>}
             </span>
           </button>
         ))}
@@ -29,24 +40,63 @@ export function EventCard({ ev, s, rm, onChoose }: { ev: EventDef; s: GameState;
   );
 }
 
-export function TurnSummary({ prev, s, log, onClose }: { prev: GameState; s: GameState; log: LogEntry[]; onClose: () => void }) {
+export interface Head { text: string; tone: 'good' | 'bad' | 'neutral'; paper?: string; topic?: string }
+
+/** Headlines from the turn log when the engine provides none. */
+export function fallbackHeadlines(s: GameState, log: LogEntry[]): Head[] {
+  const pick = (k: string[]) => log.filter((l) => k.includes(l.kind));
+  const out: Head[] = [];
+  for (const l of pick(['election'])) out.push({ text: l.text.replace(/^Election: you win/, `${s.player.name} wins`), tone: 'neutral', topic: 'election' });
+  for (const l of pick(['law', 'vote'])) out.push({ text: l.text, tone: /fail|defeat|reject/i.test(l.text) ? 'bad' : 'good', topic: 'law' });
+  for (const l of pick(['event', 'rival', 'coalition', 'stat', 'era'])) out.push({ text: l.text, tone: 'neutral' });
+  for (const l of pick(['budget'])) out.push({ text: l.text, tone: /net -/.test(l.text) ? 'bad' : 'neutral', topic: 'economy' });
+  return out.slice(0, 4);
+}
+
+function headlineCase(t: string) { return t.replace(/\.$/, ''); }
+
+export function FrontPage({ prev, s, log, heads, rm, onClose }: { prev: GameState; s: GameState; log: LogEntry[]; heads: Head[]; rm: boolean; onClose: () => void }) {
   const dT = Math.round(s.treasury - prev.treasury), dD = Math.round(s.debt - prev.debt);
-  const shown = log.filter((l) => l.kind !== 'error' && l.kind !== 'info').slice(0, 14);
+  const used = new Set(heads.map((h) => h.text));
+  const brief = log.filter((l) => l.kind !== 'error' && l.kind !== 'info' && !used.has(l.text)).slice(0, 8);
+  const lead = heads[0] ?? { text: `Quiet week in the Assembly`, tone: 'neutral' as const };
+  const paper = lead.paper ?? (CONTENT as { papers?: string[] }).papers?.[prev.turn % Math.max(1, (CONTENT as { papers?: string[] }).papers?.length ?? 1)] ?? 'The Calderra Ledger';
+  useEffect(() => { sfx.paper(); }, []);
   return (
-    <div className="q-sum">
-      <p className="q-kicker">End of turn {prev.turn}</p>
-      <h2>The Ledger</h2>
-      <div className="q-sum__grid">
-        <div className="q-stat"><span>Treasury</span><b className="q-num">{Math.round(s.treasury)}</b><Delta n={dT} /></div>
-        <div className="q-stat"><span>Debt</span><b className="q-num">{Math.round(s.debt)}</b><Delta n={-dD} /></div>
-        <div className="q-stat"><span>Pol. capital</span><b className="q-num">{s.politicalCapital}</b><Delta n={s.politicalCapital - prev.politicalCapital} /></div>
-        <div className="q-stat"><span>Seats</span><b className="q-num">{s.seats.player ?? 0}</b><Delta n={(s.seats.player ?? 0) - (prev.seats.player ?? 0)} /></div>
+    <m.article className="q-paper" aria-label={`${paper}, turn ${prev.turn}`}
+      initial={rm ? false : { rotate: -400, scale: 0.15, opacity: 0 }} animate={{ rotate: -1.2, scale: 1, opacity: 1 }} transition={{ duration: 0.85, ease: [0.2, 0.9, 0.3, 1] }}>
+      <header className="q-paper__mast">
+        <p className="q-paper__ears"><span>Vol. {CONTENT.eras.findIndex((e) => e.id === prev.era) + 1}</span><span>No. {prev.turn}</span></p>
+        <h2 className="q-paper__name">{paper}</h2>
+        <p className="q-paper__date"><span>{yearOf(prev.turn)}</span><span>Calderra’s paper of record</span><span>Two pennies</span></p>
+      </header>
+      <h3 className={`q-paper__lead is-${lead.tone}`}>{headlineCase(lead.text)}</h3>
+      {heads.slice(1, 3).map((h, i) => <p key={i} className={`q-paper__sub is-${h.tone}`}>{headlineCase(h.text)}</p>)}
+      <div className="q-paper__cols">
+        <section className="q-paper__box" aria-label="The ledger">
+          <h4>The Ledger</h4>
+          <dl className="q-paper__dl">
+            <dt>Treasury</dt><dd><Num value={s.treasury} rm={rm} /> {(dT) !== 0 && <Delta n={dT} />}</dd>
+            <dt>Debt</dt><dd><Num value={s.debt} rm={rm} /> {(-dD) !== 0 && <Delta n={-dD} />}</dd>
+            <dt>Pol. capital</dt><dd><Num value={s.politicalCapital} rm={rm} /> {(s.politicalCapital - prev.politicalCapital) !== 0 && <Delta n={s.politicalCapital - prev.politicalCapital} />}</dd>
+            <dt>Your seats</dt><dd><Num value={s.seats.player ?? 0} rm={rm} /> {((s.seats.player ?? 0) - (prev.seats.player ?? 0)) !== 0 && <Delta n={(s.seats.player ?? 0) - (prev.seats.player ?? 0)} />}</dd>
+          </dl>
+        </section>
+        <section aria-label="Opinion">
+          <h4>Opinion</h4>
+          <SumChanges label="" items={CONTENT.groups.map((g) => ({ k: g.id, icon: groupGlyph(g.id), name: g.name.split(' ').pop() ?? g.name, full: g.name, n: Math.round((s.approval[g.id] ?? 0) - (prev.approval[g.id] ?? 0)) }))} />
+          <h4>The Nation</h4>
+          <SumChanges label="" items={STATS.map((k) => ({ k, icon: STAT_ICON[k], name: STAT_LABEL[k], full: STAT_LABEL[k], n: Math.round(s.stats[k] - prev.stats[k]) }))} />
+        </section>
+        {brief.length > 0 && (
+          <section className="q-paper__brief" aria-label="In brief">
+            <h4>In Brief</h4>
+            <ul>{brief.map((l, i) => <li key={i}>{l.text}</li>)}</ul>
+          </section>
+        )}
       </div>
-      <SumChanges label="Approval" items={CONTENT.groups.map((g) => ({ k: g.id, icon: groupGlyph(g.id), name: g.name.split(' ').pop() ?? g.name, full: g.name, n: Math.round((s.approval[g.id] ?? 0) - (prev.approval[g.id] ?? 0)) }))} />
-      <SumChanges label="Nation" items={STATS.map((k) => ({ k, icon: STAT_ICON[k], name: STAT_LABEL[k], full: STAT_LABEL[k], n: Math.round(s.stats[k] - prev.stats[k]) }))} />
-      {shown.length > 0 && <ul className="q-sum__log">{shown.map((l, i) => <li key={i} className={`q-news__${l.kind}`}>{l.kind === 'event' && !String(l.text).includes(':') ? `Dispatch: ${l.text}` : l.text}</li>)}</ul>}
-      <button className="btn btn--accent q-btn-lg q-wide" onClick={onClose} data-autofocus>Continue</button>
-    </div>
+      <button className="btn btn--accent q-btn-lg q-wide q-paper__go" onClick={onClose} data-autofocus>Turn the page</button>
+    </m.article>
   );
 }
 
@@ -54,7 +104,7 @@ function SumChanges({ label, items }: { label: string; items: { k: string; icon:
   const moved = items.filter((x) => x.n !== 0);
   return (
     <div className="q-sum__row">
-      <span className="q-label">{label}</span>
+      {label && <span className="q-label">{label}</span>}
       {moved.length ? (
         <span className="q-effects">{moved.map((x) => <span key={x.k} title={x.full}><span aria-hidden="true">{x.icon}</span> {x.name} <Delta n={x.n} /></span>)}</span>
       ) : <span className="q-muted q-small">No change</span>}
@@ -86,10 +136,14 @@ export function PauseMenu({ prefs, setPrefs, onResume, onSaveQuit, onReset, onHo
   return (
     <div className="q-pause">
       <h2>{inGame ? 'Paused' : 'Settings'}</h2>
-      <label className="q-toggle"><input type="checkbox" checked={!prefs.muted} onChange={(e) => setPrefs({ ...prefs, muted: !e.target.checked })} /> Sound effects</label>
-      <label className="q-field"><span className="q-label">Volume {Math.round(prefs.volume * 100)}%</span>
+      <label className="q-toggle"><input type="checkbox" checked={!prefs.muted} onChange={(e) => setPrefs({ ...prefs, muted: !e.target.checked })} /> Sound (all audio)</label>
+      <label className="q-field"><span className="q-label">Effects volume {Math.round(prefs.volume * 100)}%</span>
         <input type="range" min={0} max={1} step={0.05} value={prefs.volume} onChange={(e) => setPrefs({ ...prefs, volume: Number(e.target.value) })} disabled={prefs.muted} /></label>
+      <label className="q-toggle"><input type="checkbox" checked={prefs.music} onChange={(e) => setPrefs({ ...prefs, music: e.target.checked })} disabled={prefs.muted} /> Music (adaptive score for each era)</label>
+      <label className="q-field"><span className="q-label">Music volume {Math.round(prefs.musicVolume * 100)}%</span>
+        <input type="range" min={0} max={1} step={0.05} value={prefs.musicVolume} onChange={(e) => setPrefs({ ...prefs, musicVolume: Number(e.target.value) })} disabled={prefs.muted || !prefs.music} /></label>
       <label className="q-toggle"><input type="checkbox" checked={prefs.reduceMotion} onChange={(e) => setPrefs({ ...prefs, reduceMotion: e.target.checked })} /> Reduce motion</label>
+      <label className="q-toggle"><input type="checkbox" checked={prefs.advisor} onChange={(e) => setPrefs({ ...prefs, advisor: e.target.checked })} /> Show the Advisor's hints</label>
       <div className="q-pause__btns">
         <button className="btn btn--accent q-btn-lg" onClick={onResume} data-autofocus>{inGame ? 'Resume' : 'Done'}</button>
         <button className="btn q-btn-ghost q-btn-lg" onClick={onHow}>How to Play</button>

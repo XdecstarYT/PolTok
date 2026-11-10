@@ -13,3 +13,21 @@ export const REGIONS: Record<string, RegionDef> = Object.fromEntries(CONTENT.reg
 export const GROUP_IDS = CONTENT.groups.map((g) => g.id);
 export const REGION_IDS = CONTENT.regions.map((r) => r.id);
 export const RIVAL_IDS = CONTENT.rivals.map((r) => r.id);
+
+// ---- v2 content lookups
+import type {
+  WingDef, PostDef, TraitDef, CharacterDef, DebateDef, AmendmentDef, ScenarioDef, DifficultyDef, PerkDef, AchievementDef, PostId,
+} from './types';
+export const WINGS: Record<string, WingDef> = Object.fromEntries(CONTENT.wings.map((w) => [w.id, w]));
+export const POSTS: Record<string, PostDef> = Object.fromEntries(CONTENT.posts.map((p) => [p.id, p]));
+export const TRAITS: Record<string, TraitDef> = Object.fromEntries(CONTENT.traits.map((t) => [t.id, t]));
+export const CHARACTERS: Record<string, CharacterDef> = Object.fromEntries(CONTENT.characters.map((c) => [c.id, c]));
+export const DEBATES: Record<string, DebateDef> = Object.fromEntries(CONTENT.debates.map((d) => [d.id, d]));
+export const AMENDMENTS: Record<string, AmendmentDef> = Object.fromEntries(CONTENT.amendments.map((a) => [a.id, a]));
+export const SCENARIOS: Record<string, ScenarioDef> = Object.fromEntries(CONTENT.scenarios.map((s) => [s.id, s]));
+export const DIFFICULTIES: Record<string, DifficultyDef> = Object.fromEntries(CONTENT.difficulties.map((d) => [d.id, d]));
+export const PERKS: Record<string, PerkDef> = Object.fromEntries(CONTENT.perks.map((p) => [p.id, p]));
+export const ACHIEVEMENTS: Record<string, AchievementDef> = Object.fromEntries(CONTENT.achievements.map((a) => [a.id, a]));
+export const WING_IDS = CONTENT.wings.map((w) => w.id);
+export const POST_IDS = CONTENT.posts.map((p) => p.id) as PostId[];
+export const CHARACTER_IDS = CONTENT.characters.map((c) => c.id);

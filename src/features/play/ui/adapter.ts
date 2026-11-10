@@ -94,3 +94,40 @@ export function canDo(s: GameState, a: Action): ActionPreview {
   }
 }
 export const signed = (n: number) => (n > 0 ? `+${Math.round(n)}` : `${Math.round(n)}`);
+
+// ---------------------------------------------------------------- v2-aware schedule helpers
+
+/** Last turn of this game (scenarios can shorten it). */
+export const totalTurns = (s: GameState) => s.totalTurns ?? TURNS_TOTAL;
+/** Turns (at the end of which) an election is held. */
+export const electionTurnsOf = (s: GameState): number[] => s.electionTurns ?? Array.from({ length: Math.floor(TURNS_TOTAL / 4) }, (_, i) => (i + 1) * 4);
+/** Turns until the next election (0 = at the end of this turn), or null if none remain. */
+export function nextElectionIn(s: GameState): number | null {
+  const t = electionTurnsOf(s).filter((x) => x >= s.turn).sort((a, b) => a - b)[0];
+  return t === undefined ? null : t - s.turn;
+}
+/** Era-calendar year for a turn (two years per turn inside each era's span). */
+export function yearOf(turn: number): number {
+  const era = CONTENT.eras.find((e) => turn >= e.turns[0] && turn <= e.turns[1]) ?? CONTENT.eras[0];
+  const y0 = Number(era.years.split('-')[0]) || 1871;
+  return y0 + Math.max(0, turn - era.turns[0]) * 2;
+}
+
+export const projectSeats = engine.projectSeats as (s: GameState) => Record<PartyId, number>;
+export const regionSharesNow = (s: GameState, r: RegionId) => engine.regionShares(s, r) as Record<PartyId, number>;
+export const dhondt = engine.dhondt as (v: Record<string, number>, seats: number) => Record<string, number>;
+export const budgetOf = engine.budget;
+
+/** Population-weighted approval of the player (0..100). */
+export function approvalIndex(s: GameState): number {
+  let a = 0, w = 0;
+  for (const g of CONTENT.groups) { const sh = s.shares?.[g.id] ?? g.share; a += (s.approval[g.id] ?? 0) * sh; w += sh; }
+  return w ? a / w : 0;
+}
+
+/** Achievement icon names (content.json) -> text glyphs. */
+const ACH_GLYPH: Record<string, string> = {
+  hand: '✋', crown: '♛', scales: '⚖', leaf: '❦', shield: '⛨', cycle: '↺', sparkle: '✧', infinity: '∞', mic: '❝', broom: '✓',
+  flag: '⚑', chairs: '⑤', bolt: 'ϟ', coin: '◎', fist: '✊', anvil: '⚒', calendar: '☼', star: '★',
+};
+export const achGlyph = (icon: string) => ACH_GLYPH[icon] ?? (icon.length <= 2 ? icon : '★');

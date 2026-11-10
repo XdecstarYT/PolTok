@@ -44,18 +44,131 @@ export interface LawDef {
 export interface EventChoiceDef {
   label: string; groupEffects: Record<GroupId, number>; treasury: number;
   stats: Partial<Record<StatId, number>>; politicalCapital: number;
+  /** v2: party-wing happiness deltas. */
+  wings?: Partial<Record<WingId, number>>;
+  /** v2: relation step deltas with rivals. */
+  relations?: Partial<Record<RivalId, number>>;
+  /** v2: schedule a follow-up event `delay` turns later (multi-turn chains). `chance` defaults to 1;
+   *  when the roll fails and `else` is set, that event is scheduled instead. */
+  followUp?: { event: string; delay: number; chance?: number; else?: string };
 }
 /** Event card. `era` 0 = any era. `condition` like `law:rail_bond`. */
 export interface EventDef {
   id: string; era: 0 | EraId; title: string; text: string; choices: EventChoiceDef[];
   weight: number; condition?: string;
+  /** v2: only fires as a scheduled follow-up (or a character crisis), never from the random draw. */
+  chainOnly?: boolean;
+  /** v2: chain name shared by the events of one storyline (for UI badges). */
+  chain?: string;
+  /** v2: dynamic character event; text/labels contain {name}, {post}, {wing}, {rival}, {odds}
+   *  placeholders. Always render events through currentEvent(s), which fills them in. */
+  character?: boolean;
 }
 /** The whole content.json. */
 export interface Content {
   meta: { game: string; country: string; version: number; seatsTotal: number; majority: number; turnsTotal: number };
   eras: EraDef[]; groups: GroupDef[]; regions: RegionDef[]; ideologies: IdeologyDef[];
   rivals: RivalDef[]; laws: LawDef[]; events: EventDef[];
+  // ---- v2 content
+  wings: WingDef[]; posts: PostDef[]; traits: TraitDef[]; characters: CharacterDef[];
+  debates: DebateDef[]; amendments: AmendmentDef[]; scenarios: ScenarioDef[];
+  difficulties: DifficultyDef[]; perks: PerkDef[]; achievements: AchievementDef[];
+  /** Newspaper mastheads used by headlines(). */
+  papers: string[];
 }
+
+// ---------------------------------------------------------------- v2 content types
+
+/** Party wing id: 'reformers' | 'pragmatists' | 'traditionalists'. */
+export type WingId = string;
+/** Cabinet post id. */
+export type PostId = 'purse' | 'interior' | 'commons' | 'whip' | 'herald';
+/** Politician id (12 in content.json). */
+export type CharacterId = string;
+/** Politician trait id. */
+export type TraitId = 'orator' | 'bean_counter' | 'enforcer' | 'idealist' | 'fixer' | 'diplomat' | 'firebrand' | 'schemer' | 'veteran' | 'reformer';
+/** Starting scenario. */
+export type ScenarioId = 'sandbox' | 'snap_election' | 'debt_crisis' | 'insurgent';
+/** Difficulty level. */
+export type DifficultyId = 'story' | 'normal' | 'hard' | 'ironclad';
+/** Party perk id (meta progression). */
+export type PerkId = string;
+
+/** A wing of the player's own party. Its position is the party's position + `offset` (clamped). */
+export interface WingDef {
+  id: WingId; name: string; blurb: string; offset: [number, number];
+  /** Share of the player's seats this wing controls (sums to 1 across wings). */
+  size: number;
+  /** Law categories the wing loves / hates. */
+  likes: string[]; dislikes: string[];
+  /** Groups the wing speaks for (flavour + debate targeting). */
+  groups: GroupId[];
+}
+/** Cabinet post. */
+export interface PostDef { id: PostId; name: string; short: string; desc: string }
+/** Politician trait. `fit` = competence per post (missing = 0.25). */
+export interface TraitDef { id: TraitId; name: string; desc: string; fit: Partial<Record<PostId, number>>; scandalRisk: number }
+/** A named politician in the player's party. loyalty/ambition 0..100 (jittered per game). */
+export interface CharacterDef { id: CharacterId; name: string; wing: WingId; trait: TraitId; loyalty: number; ambition: number; bio: string }
+/** One rhetorical option in a debate / press conference. */
+export interface DebateChoiceDef {
+  label: string; tone: 'rousing' | 'measured' | 'combative';
+  groupEffects: Record<GroupId, number>;
+  wings?: Partial<Record<WingId, number>>;
+  politicalCapital: number;
+  /** Chance (0..1) the line backfires: positive group effects turn into half-size losses and PC -1. */
+  risk?: number;
+  relations?: Partial<Record<RivalId, number>>;
+  /** Approval change for one rival party (attacks). */
+  rivalApproval?: { rival: RivalId; groupEffects: Record<GroupId, number> };
+}
+/** Optional Assembly debate or press conference offered during the actions phase. */
+export interface DebateDef {
+  id: string; era: 0 | EraId; kind: 'debate' | 'press'; title: string; prompt: string;
+  choices: DebateChoiceDef[]; weight: number; condition?: string;
+}
+/** Amendment template attached to a player bill to win over a bloc. */
+export interface AmendmentDef {
+  id: string; name: string; desc: string;
+  /** Rival bloc it courts ('any' = small boost to every rival). */
+  target: RivalId | 'any';
+  /** Added to the target bloc's support (0.55 = YES, 0.35 = NO line). */
+  support: number;
+  /** Applied when the amended law is enacted. */
+  groupEffects: Record<GroupId, number>;
+  wings?: Partial<Record<WingId, number>>;
+  stats?: Partial<Record<StatId, number>>;
+  /** Extra per-turn upkeep while the law is in force. */
+  upkeep: number;
+  /** Treasury paid when attached (negative = cost). */
+  oneOff?: number;
+  /** Political Capital paid when attached. */
+  politicalCapital?: number;
+  /** Law categories it fits (empty/missing = any). */
+  categories?: string[];
+}
+/** Starting scenario. */
+export interface ScenarioDef {
+  id: ScenarioId; name: string; blurb: string;
+  /** One-line headline goal shown on the setup screen. */
+  goal: string;
+  goals: { id: string; text: string; bonus: number }[];
+  startTurn: number; electionTurns: number[]; totalTurns: number;
+}
+/** Difficulty level. */
+export interface DifficultyDef {
+  id: DifficultyId; name: string; blurb: string;
+  /** Added to every rival's approval with every group (and to its drift target). */
+  rivalApproval: number;
+  treasury: number; politicalCapital: number;
+  /** Multiplier on negative event / scandal effects. */
+  eventSeverity: number;
+  pactChance: number;
+  /** Final score multiplier. */
+  scoreMult: number;
+}
+/** Party perk unlocked by an achievement; up to MAX_PERKS chosen at newGame. */
+export interface PerkDef { id: PerkId; name: string; desc: string; unlockedBy: AnyAchievementId }
 
 // ---------------------------------------------------------------- state
 
@@ -82,6 +195,8 @@ export interface DocketItem {
   playerStance: Stance;
   /** Parties whipped on this bill (1 PC each). */
   whips: PartyId[];
+  /** v2: amendment id attached to a player bill (see amendmentsFor). */
+  amendment?: string;
 }
 
 /** A temporary per-turn effect (foreign loan, silver seam royalties, retraining fund...). */
@@ -142,6 +257,8 @@ export interface VoteTally {
     /** `support` normalised for display: 0..100 (rival blocs: raw support clamped; the player's
      *  own bloc: 100 YES, 50 ABSTAIN, 0 NO). YES at 55+, NO at 35 or less, otherwise ABSTAIN. */
     supportPct: number;
+    /** v2, player bloc only: rebels per unhappy party wing (included in `rebels`). */
+    wingRebels?: Partial<Record<WingId, number>>;
   }[];
   /** Actual results only: per-seat votes in roll-call order (party, vote). */
   rollCall?: { party: PartyId; vote: BlocStance }[];
@@ -154,11 +271,21 @@ export interface VoteRecord { turn: number; tally: VoteTally; proposer: PartyId;
 export type AchievementId =
   | 'unanimous' | 'kingmaker' | 'balanced_books' | 'green_republic'
   | 'iron_majority' | 'comeback' | 'clean_hands' | 'long_memory';
+/** v2 achievements (kept out of AchievementId so exhaustive v1 records keep compiling). */
+export type AchievementIdV2 =
+  | 'silver_tongue' | 'clean_cabinet' | 'survivor' | 'full_bench'
+  | 'snap_victory' | 'debt_slayer' | 'insurgent_rise' | 'iron_will' | 'daily_done';
+/** Any achievement, v1 or v2. */
+export type AnyAchievementId = AchievementId | AchievementIdV2;
+/** Display data for an achievement (ACHIEVEMENTS table). */
+export interface AchievementDef { id: AnyAchievementId; name: string; desc: string; icon: string }
 
 /** Game outcome. Wins (in government at the end): 'majority' (37+ alone), 'coalition' (leading a coalition),
  *  'minority' (governing alone without 37), 'junior' (junior coalition partner).
  *  'opposition' = finished out of government. Losses: 'bankrupt' | 'collapse' | 'dissolved'. */
-export type Outcome = 'majority' | 'coalition' | 'minority' | 'junior' | 'opposition' | 'bankrupt' | 'collapse' | 'dissolved';
+export type Outcome = 'majority' | 'coalition' | 'minority' | 'junior' | 'opposition' | 'bankrupt' | 'collapse' | 'dissolved'
+  /** v2 loss: you lost a leadership challenge inside your own party. */
+  | 'ousted';
 
 /** Player party profile. */
 export interface PlayerParty { name: string; color: string; ideologyId: string; economic: number; social: number }
@@ -247,6 +374,96 @@ export interface GameState {
   rivalPacts?: string[];
   /** Free-form log of the whole game (most recent last). */
   history: LogEntry[];
+
+  // ---------------------------------------------------------------- v2 (save version 2)
+  scenarioId: ScenarioId;
+  difficulty: DifficultyId;
+  /** Resolved rule modifiers from scenario + difficulty + perks (persisted so saves are self-contained). */
+  mods: Modifiers;
+  /** Turns at the end of which an election is held. */
+  electionTurns: number[];
+  /** Last turn of the game. */
+  totalTurns: number;
+  characters: Record<CharacterId, CharacterState>;
+  cabinet: Record<PostId, CharacterId | null>;
+  /** Wing happiness 0..100. */
+  wings: Record<WingId, number>;
+  /** Wing happiness at the start of this turn (trend arrows). */
+  wingsStart: Record<WingId, number>;
+  /** Debate / press conference on offer this turn (optional; expires at end of turn). */
+  pendingDebate: string | null;
+  /** Debate id -> turn it was last offered. */
+  debateHistory: Record<string, number>;
+  /** Debates answered without a backfire. */
+  debatesWon: number;
+  /** Follow-up events waiting to fire at the start of `turn`. */
+  scheduledEvents: { event: string; turn: number; context?: EventContext }[];
+  /** Context of the pending event (character crises). */
+  eventContext: EventContext | null;
+  /** Perks equipped this game. */
+  perks: PerkId[];
+  /** Daily challenge date (YYYY-MM-DD) or null. */
+  daily: string | null;
+  /** Amendment attached to each enacted law. */
+  lawAmendments: Record<LawId, string>;
+  /** Extra upkeep per enacted law from amendments. */
+  lawExtraUpkeep: Record<LawId, number>;
+  /** Fractional PC from the Chief Whip, paid out at 1. */
+  pcProgress: number;
+  scandals: number;
+  challengesSurvived: number;
+  defections: number;
+  /** Turns with all five cabinet posts filled. */
+  fullCabinetTurns: number;
+  /** Turn of the last leadership challenge (-99 = never). */
+  lastChallenge: number;
+  /** Scenario goal ids achieved so far. */
+  goalsDone: string[];
+  /** v2: one snapshot per completed turn (plus the starting position), oldest first. For statistics charts.
+   *  (`history` was already taken by the log.) */
+  timeline: TurnSnapshot[];
+}
+
+/** v2: end-of-turn snapshot for charts. `turn` is the turn that just ended (the first entry is the start of the game). */
+export interface TurnSnapshot {
+  turn: number;
+  approval: Record<GroupId, number>;
+  seats: Record<PartyId, number>;
+  debt: number;
+  treasury: number;
+  politicalCapital: number;
+  wings: Record<WingId, number>;
+  stats: Record<StatId, number>;
+}
+
+/** v2: resolved rule modifiers. */
+export interface Modifiers {
+  rivalApproval: number;
+  eventSeverity: number;
+  pactChance: number;
+  campaignMult: number;
+  /** Party dissolves after two consecutive elections below this many seats. */
+  dissolveBelow: number;
+  lobbyPc: number;
+  maxPc: number;
+  scoreMult: number;
+  /** Debate backfire chance reduction. */
+  debateRiskCut: number;
+}
+
+/** v2: who/what a dynamic (character) event is about. */
+export interface EventContext { characterId?: CharacterId; rivalId?: RivalId; post?: PostId }
+
+/** v2: mutable politician state. */
+export interface CharacterState {
+  id: CharacterId;
+  loyalty: number;
+  ambition: number;
+  /** 'active' = in the party (bench or cabinet); 'disgraced' = resigned in scandal; 'defected' = crossed the floor. */
+  status: 'active' | 'disgraced' | 'defected';
+  post: PostId | null;
+  /** Rival joined on defection. */
+  joined?: RivalId;
 }
 
 // ---------------------------------------------------------------- actions
@@ -260,9 +477,18 @@ export type Action =
   /** 1 AP: +5 approval with group, -2 with its rival group. */
   | { type: 'court'; groupId: GroupId }
   /** 1 AP: put an unlocked, un-enacted law on the docket. */
-  | { type: 'draft'; lawId: LawId }
+  | { type: 'draft'; lawId: LawId; amendment?: string }
   /** 1 AP: put a repeal of an enacted, repealable law on the docket. */
   | { type: 'repeal'; lawId: LawId }
+  /** v2: free; appoint an active politician to a cabinet post. Replacing a sitting minister costs 1 PC
+   *  and angers them (loyalty -20). Moving a minister between posts is allowed. */
+  | { type: 'appoint'; post: PostId; characterId: CharacterId }
+  /** v2: free; sack the minister in a post (loyalty -20). */
+  | { type: 'dismiss'; post: PostId }
+  /** v2: free; answer the pending debate/press conference with choice 0, 1 or 2. */
+  | { type: 'debate'; choice: 0 | 1 | 2 }
+  /** v2: free; attach an amendment (one per bill) to one of your own 'enact' docket items; pays its one-off/PC cost. */
+  | { type: 'amend'; itemId: string; amendmentId: string }
   /** 1 AP + 2 PC: +1 relation step with a rival. */
   | { type: 'lobby'; rivalId: RivalId }
   /** Free: set how your bloc votes on a docket item. */
@@ -281,7 +507,9 @@ export type Action =
 /** Log entry kinds for the UI ticker / animations. */
 export type LogKind =
   | 'info' | 'error' | 'event' | 'approval' | 'vote' | 'law' | 'budget' | 'election'
-  | 'coalition' | 'era' | 'rival' | 'stat' | 'gameover' | 'achievement';
+  | 'coalition' | 'era' | 'rival' | 'stat' | 'gameover' | 'achievement'
+  // v2
+  | 'character' | 'debate' | 'wing';
 
 /** One line of narrative plus optional structured data for animations. */
 export interface LogEntry { turn: number; kind: LogKind; text: string; data?: unknown }
@@ -325,6 +553,14 @@ export interface NewGameOptions {
   /** Used when ideologyId = 'custom' (or to override); clamped to -1..1. */
   economic?: number;
   social?: number;
+  /** v2: starting scenario (default 'sandbox'). */
+  scenarioId?: ScenarioId;
+  /** v2: difficulty (default 'normal'). */
+  difficulty?: DifficultyId;
+  /** v2: perks to equip (max MAX_PERKS; unknown ids ignored). The UI checks unlocks via unlockedPerks(). */
+  perks?: PerkId[];
+  /** v2: daily challenge date (YYYY-MM-DD); recorded in state.daily. Use dailyChallenge(date).options. */
+  daily?: string;
 }
 
 /** Preview of an action without committing (all deltas are new - old). */
@@ -338,16 +574,31 @@ export interface ActionPreview {
   treasuryDelta: number;
   /** Relation change for lobby. */
   relationDelta?: Partial<Record<RivalId, number>>;
-  /** For callVote / whip / setStance: the resulting forecast. */
+  /** For callVote / whip / setStance / draft / amend: the resulting forecast. */
   forecast?: VoteTally;
+  /** v2: wing happiness change. */
+  wingsDelta?: Partial<Record<WingId, number>>;
+  /** v2: loyalty change per politician. */
+  loyaltyDelta?: Partial<Record<CharacterId, number>>;
+  /** v2 (debate): backfire chance of the chosen line. */
+  risk?: number;
 }
 
 /** Final score breakdown. */
 export interface ScoreBreakdown {
   laws: number; seats: number; government: number; stats: number; debt: number;
+  /** v2: scenario goal bonuses. */
+  bonus: number;
+  /** v2: difficulty multiplier. total = round((laws+seats+government+stats+debt+bonus) * multiplier). */
+  multiplier: number;
   total: number;
   rank: 'Backbencher' | 'Whip' | 'Minister' | 'First Speaker' | 'Founder of the Republic';
+  /** v1 achievements only (unchanged contract). */
   achievements: AchievementId[];
+  /** v2: every achievement earned, v1 and v2. */
+  allAchievements: AnyAchievementId[];
+  /** v2: scenario goals with status. */
+  goals: ScenarioGoal[];
 }
 
 /** Public engine API (implemented in ./engine.ts, re-exported from ./index.ts). */
@@ -360,3 +611,78 @@ export interface EngineApi {
   listAvailableActions(state: GameState): Action[];
   score(state: GameState): ScoreBreakdown;
 }
+
+// ---------------------------------------------------------------- v2 view helpers (returned by the engine)
+
+/** Wing mood for the party screen (wingMood()). */
+export interface WingMood {
+  id: WingId; name: string; happiness: number;
+  /** Change since the start of the turn. */
+  trend: number;
+  /** content 55+, restless 35-54, rebellious 20-34 (rebels on bills it dislikes), revolt <20 (rebels on everything; whip only halves them). */
+  mood: 'content' | 'restless' | 'rebellious' | 'revolt';
+  /** Seats this wing controls right now. */
+  seats: number;
+  position: [number, number];
+}
+
+/** One cabinet line for the UI (cabinetEffects()). */
+export interface CabinetEffect {
+  post: PostId; characterId: CharacterId | null;
+  /** 0 (empty) .. 1 (perfect fit). Halved in opposition (shadow cabinet). */
+  competence: number;
+  /** Human-readable per-turn effect, e.g. "+5 treasury per turn". */
+  text: string;
+}
+
+/** An amendment offered for a bill (amendmentsFor()). */
+export interface AmendmentOption {
+  amendment: AmendmentDef;
+  /** Bloc(s) whose support rises. */
+  targets: RivalId[];
+  /** Forecast with the amendment attached. */
+  forecast: VoteTally;
+  /** True when the amendment turns a failing forecast into a passing one. */
+  flips: boolean;
+  /** Wing happiness change if the amended law passes (on top of the law itself). */
+  wingsDelta: Partial<Record<WingId, number>>;
+  /** Target blocs whose stance the amendment changes (e.g. abstain -> yes). Empty = it moves no bloc. */
+  stanceChanges: { party: RivalId; from: BlocStance; to: BlocStance }[];
+  /** Extra YES votes in the forecast compared with the unamended bill. */
+  yesGain: number;
+  /** NO votes removed from the forecast compared with the unamended bill. */
+  noDrop: number;
+}
+
+/** Scenario goal status (scenarioGoals()). */
+export interface ScenarioGoal { id: string; text: string; bonus: number; done: boolean }
+
+/** A newspaper headline (headlines()). */
+export interface Headline {
+  paper: string; text: string;
+  tone: 'good' | 'bad' | 'neutral';
+  topic: 'election' | 'law' | 'vote' | 'scandal' | 'party' | 'economy' | 'stat' | 'rival' | 'debate' | 'era' | 'polls';
+}
+
+/** Daily challenge for a date (dailyChallenge()). */
+export interface DailyChallenge {
+  date: string; seed: number; scenarioId: ScenarioId; difficulty: DifficultyId; ideologyId: string;
+  /** Short description, e.g. "Debt Crisis · Hard · Hearth". */
+  label: string;
+  /** Pass straight to newGame(). */
+  options: NewGameOptions;
+}
+
+/** Effective debate choice (debateChoice()). */
+export interface DebateChoicePreview {
+  label: string; tone: DebateChoiceDef['tone'];
+  groupEffects: Record<GroupId, number>;
+  wings: Partial<Record<WingId, number>>;
+  politicalCapital: number;
+  /** Backfire chance after the Herald's skill. */
+  risk: number;
+  relations: Partial<Record<RivalId, number>>;
+}
+
+/** Leadership challenge odds (challengeOdds()). */
+export interface ChallengeOdds { characterId: CharacterId; winChance: number; reasons: string[] }

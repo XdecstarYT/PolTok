@@ -43,16 +43,27 @@ function randomBot(s, r) {
   const pool = acts.filter((a) => a.type !== 'endTurn' && a.type !== 'setStance');
   return (pool.length ? pool : acts)[Math.floor(r() * (pool.length ? pool.length : acts.length))];
 }
+const sumV = (o) => Object.values(o ?? {}).reduce((a, b) => a + (b ?? 0), 0);
 /** A "reasonable player": courts its base, drafts popular affordable laws that will pass,
- *  whips close votes, votes down costly rival bills, campaigns in big regions, takes any government. */
+ *  whips close votes, votes down costly rival bills, campaigns in big regions, takes any government.
+ *  v2: keeps the cabinet filled, answers debates, amends failing bills, handles party crises. */
 function smartBot(s, r) {
   if (s.phase === 'event') {
-    const val = (c) => { const ch = E.eventChoice(s, s.pendingEvent, c); return Object.values(ch.groupEffects).reduce((a, b) => a + b, 0) + ch.treasury * 0.2; };
+    if (s.pendingEvent === 'leadership_challenge') return { type: 'resolveEvent', choice: E.eventChoice(s, s.pendingEvent, 0).winChance >= 0.7 || s.politicalCapital < 2 ? 0 : 1 };
+    if (s.pendingEvent === 'defection_threat') return { type: 'resolveEvent', choice: s.politicalCapital >= 2 ? 1 : 0 };
+    const val = (c) => { const ch = E.eventChoice(s, s.pendingEvent, c); return sumV(ch.groupEffects) + ch.treasury * 0.2 + sumV(ch.wings) * 0.5 + ch.politicalCapital * 2; };
     return { type: 'resolveEvent', choice: val(0) >= val(1) ? 0 : 1 };
   }
   if (s.phase === 'coalition') {
     if (s.pendingCoalition.kind === 'offer') return { type: 'answerOffer', accept: true };
     return E.listAvailableActions(s).reduce((a, b) => (b.partners.length && (!a.partners.length || b.partners.length < a.partners.length) ? b : a));
+  }
+  const sug = E.suggestCabinet(s);
+  for (const p of E.POST_IDS) if (!s.cabinet[p] && sug[p] && !Object.values(s.cabinet).includes(sug[p])) return { type: 'appoint', post: p, characterId: sug[p] };
+  for (const p of E.POST_IDS) if (!s.cabinet[p]) { const id = E.activeCharacters(s).find((c) => !s.characters[c].post); if (id) return { type: 'appoint', post: p, characterId: id }; }
+  if (s.pendingDebate && s.ap > 0) {
+    const val = (i) => { const d = E.debateChoice(s, i); const pos = Object.entries(d.groupEffects).reduce((a, [g, v]) => a + v * (s.approval[g] > 40 ? 1 : 0.5), 0); return pos * (1 - d.risk) - d.risk * 4 + d.politicalCapital * 3 * (1 - d.risk) + sumV(d.wings) * 0.6; };
+    return { type: 'debate', choice: [0, 1, 2].reduce((a, b) => (val(b) > val(a) ? b : a)) };
   }
   for (const d of s.docket) {
     if (d.proposer === 'player' || d.kind !== 'enact') continue;
@@ -62,9 +73,15 @@ function smartBot(s, r) {
   }
   for (const d of s.docket) {
     const f = E.forecastVote(s, d.id);
-    if (d.proposer === 'player' && !f.passes && s.politicalCapital >= 1) {
-      const w = f.blocs.find((b) => (b.stance === 'abstain' || b.rebels > 0) && !b.whipped);
-      if (w) return { type: 'whip', itemId: d.id, party: w.party };
+    if (d.proposer === 'player' && !f.passes) {
+      if (s.politicalCapital >= 1) {
+        const w = f.blocs.find((b) => (b.stance === 'abstain' || b.rebels > 0) && !b.whipped);
+        if (w) return { type: 'whip', itemId: d.id, party: w.party };
+      }
+      if (!d.amendment) {
+        const o = E.amendmentsFor(s, d.id).find((x) => x.flips && E.validate(s, { type: 'amend', itemId: d.id, amendmentId: x.amendment.id }) === null);
+        if (o) return { type: 'amend', itemId: d.id, amendmentId: o.amendment.id };
+      }
     }
   }
   if (s.ap > 0) {
@@ -72,7 +89,7 @@ function smartBot(s, r) {
       const net = E.budget(s).net;
       const laws = E.draftableLaws(s)
         .filter((l) => E.validate(s, { type: 'draft', lawId: l.id }) === null)
-        .map((l) => ({ l, f: E.forecastVote(s, l.id), gain: Object.entries(l.groupEffects).reduce((a, [g, v]) => a + v * (s.approval[g] > 40 ? 1 : 0.5), 0) }))
+        .map((l) => ({ l, f: E.forecastVote(s, l.id), gain: Object.entries(l.groupEffects).reduce((a, [g, v]) => a + v * (s.approval[g] > 40 ? 1 : 0.5), 0) + sumV(E.wingReaction(s, l.id)) * 0.5 }))
         .filter((x) => x.f.passes && x.gain > 0 && (net - x.l.upkeep > 5 || x.l.upkeep < 0));
       if (laws.length) {
         const val = (x) => x.gain - (s.debt > 0 ? x.l.upkeep * 3 : 0);
@@ -91,10 +108,10 @@ function smartBot(s, r) {
   return { type: 'endTurn' };
 }
 /** Plays one game; `govs` (if given) collects every government formed after a real election. */
-function play(seed, bot, check, govs) {
-  let s = E.newGame({ seed, ideologyId: ['commonwealth', 'hearth', 'ledger'][seed % 3] });
+function play(seed, bot, check, govs, opts = {}) {
+  let s = E.newGame({ seed, ideologyId: ['commonwealth', 'hearth', 'ledger'][seed % 3], ...opts });
   const r = rng(seed * 7 + 1);
-  for (let n = 0; s.phase !== 'over' && n < 3000; n++) {
+  for (let n = 0; s.phase !== 'over' && n < 4000; n++) {
     const a = bot(s, r);
     let res = E.apply(s, a);
     if (res.log[0]?.kind === 'error') res = E.endTurn(s);
@@ -179,7 +196,7 @@ test('vote: whipping an abstaining bloc turns it YES and costs 1 PC; supermajori
 
 test('budget: income, upkeep, deficit to debt, interest, central bank, privatized rail, bankruptcy', () => {
   let s = actionsState(4);
-  s = { ...s, docket: [], stats: { ...s.stats, economy: 50 }, enacted: [], treasury: 100, debt: 0, timed: [] };
+  s = { ...s, docket: [], stats: { ...s.stats, economy: 50 }, enacted: [], treasury: 100, debt: 0, timed: [], cabinet: { ...s.cabinet, purse: null } };
   let b = E.budget(s);
   assert.equal(b.income, 60);
   assert.equal(b.net, 30);
@@ -262,7 +279,7 @@ test('full 24-turn game with the smart bot: never crashes, invariants hold, dete
   const a = play(11, smartBot, check);
   assert.equal(a.phase, 'over');
   assert.ok(a.outcome);
-  if (!['bankrupt', 'collapse', 'dissolved'].includes(a.outcome)) {
+  if (!['bankrupt', 'collapse', 'dissolved', 'ousted'].includes(a.outcome)) {
     assert.equal(a.turn, 24);
     assert.equal(a.elections.filter((e) => e.turn > 0).length, 6);
   }
@@ -270,11 +287,11 @@ test('full 24-turn game with the smart bot: never crashes, invariants hold, dete
   assert.equal(JSON.stringify(a), JSON.stringify(b), 'same seed + same actions = same game');
   const back = E.deserialize(E.serialize(a));
   assert.deepEqual(back, a);
-  assert.equal(back.version, 1);
+  assert.equal(back.version, 2);
   assert.equal(E.deserialize('{bad'), null);
   assert.equal(E.migrate({ version: 99 }), null);
   const sc = E.score(a);
-  assert.equal(sc.total, sc.laws + sc.seats + sc.government + sc.stats + sc.debt);
+  assert.equal(sc.total, Math.round((sc.laws + sc.seats + sc.government + sc.stats + sc.debt + sc.bonus) * sc.multiplier));
   assert.ok(typeof sc.rank === 'string' && Array.isArray(sc.achievements));
 });
 
@@ -334,7 +351,7 @@ test('transitions: endTurn reports elections, eras and game over; bloc support i
       }
     }
   }
-  if (s.outcome && !['bankrupt', 'collapse', 'dissolved'].includes(s.outcome)) {
+  if (s.outcome && !['bankrupt', 'collapse', 'dissolved', 'ousted'].includes(s.outcome)) {
     assert.equal(seen.electionHeld, 6);
     assert.equal(seen.eraChanged, 2);
   }
@@ -354,7 +371,7 @@ test('balance smoke: 200 random-bot games + 100 smart-bot games', () => {
       seats += s.seats.player;
     }
     const gov = (c.majority ?? 0) + (c.coalition ?? 0) + (c.minority ?? 0) + (c.junior ?? 0);
-    const lost = (c.bankrupt ?? 0) + (c.collapse ?? 0) + (c.dissolved ?? 0);
+    const lost = (c.bankrupt ?? 0) + (c.collapse ?? 0) + (c.dissolved ?? 0) + (c.ousted ?? 0);
     const coalitionGovs = +(govs.filter((g) => g.members.length > 1).length / govs.length).toFixed(3);
     return { c, win: gov / n, lost: lost / n, coalition: ((c.coalition ?? 0) + (c.junior ?? 0)) / n, coalitionGovs, score: Math.round(score / n), seats: +(seats / n).toFixed(1) };
   };
@@ -363,10 +380,308 @@ test('balance smoke: 200 random-bot games + 100 smart-bot games', () => {
   console.log('random bot x200:', JSON.stringify(rnd));
   console.log('smart bot x100:', JSON.stringify(smart));
   assert.ok(smart.win > rnd.win + 0.2, 'skill matters');
-  assert.ok(smart.win >= 0.5 && smart.win <= 0.78, `smart win rate ${smart.win}`);
-  assert.ok(rnd.win <= 0.3, `random win rate ${rnd.win}`);
+  assert.ok(smart.win >= 0.55 && smart.win <= 0.8, `smart win rate ${smart.win}`);
+  assert.ok(rnd.win <= 0.25, `random win rate ${rnd.win}`);
   // coalitions (any multi-party government) should be a regular sight, not a rarity or the norm
   for (const [name, r] of [['random', rnd], ['smart', smart]]) {
     assert.ok(r.coalitionGovs >= 0.2 && r.coalitionGovs <= 0.5, `${name} coalition share of elections ${r.coalitionGovs}`);
   }
+});
+
+// ---------------------------------------------------------------- v2 systems
+
+test('v2 content: counts, 3-choice debates, chains reference real events, characters and posts', () => {
+  const C = E.CONTENT;
+  assert.ok(C.laws.length >= 50, `laws ${C.laws.length}`);
+  assert.ok(C.events.length >= 48, `events ${C.events.length}`);
+  assert.equal(C.characters.length, 12);
+  assert.equal(C.posts.length, 5);
+  assert.equal(C.wings.length, 3);
+  assert.ok(Math.abs(C.wings.reduce((a, w) => a + w.size, 0) - 1) < 1e-9);
+  assert.equal(C.scenarios.length, 4);
+  assert.equal(C.difficulties.length, 4);
+  for (const d of C.debates) assert.equal(d.choices.length, 3, d.id);
+  for (const e of C.events) {
+    assert.equal(e.choices.length, 2, e.id);
+    for (const ch of e.choices) {
+      if (ch.followUp) {
+        assert.ok(E.EVENTS[ch.followUp.event], `${e.id} -> ${ch.followUp.event}`);
+        if (ch.followUp.else) assert.ok(E.EVENTS[ch.followUp.else], `${e.id} -> ${ch.followUp.else}`);
+      }
+    }
+  }
+  // every chain-only event is reachable from some follow-up or is a character crisis
+  const targets = new Set(C.events.flatMap((e) => e.choices.flatMap((c) => (c.followUp ? [c.followUp.event, c.followUp.else].filter(Boolean) : []))));
+  for (const e of C.events.filter((x) => x.chainOnly && !x.character)) assert.ok(targets.has(e.id), `${e.id} unreachable`);
+  for (const c of C.characters) { assert.ok(E.WINGS[c.wing]); assert.ok(E.TRAITS[c.trait]); }
+  for (const p of C.perks) assert.ok(E.ACHIEVEMENTS[p.unlockedBy], p.id);
+  for (const a of C.amendments) assert.ok(a.target === 'any' || E.RIVALS[a.target], a.id);
+});
+
+test('v2 migration: a v1 save loads as v2 with a cabinet, wings and politicians, and keeps playing', () => {
+  const v2 = actionsState(8);
+  const v1 = JSON.parse(JSON.stringify(v2));
+  for (const k of ['scenarioId', 'difficulty', 'mods', 'electionTurns', 'totalTurns', 'characters', 'cabinet', 'wings', 'wingsStart', 'pendingDebate',
+    'debateHistory', 'debatesWon', 'scheduledEvents', 'eventContext', 'perks', 'daily', 'lawAmendments', 'lawExtraUpkeep', 'pcProgress', 'scandals',
+    'challengesSurvived', 'defections', 'fullCabinetTurns', 'lastChallenge', 'goalsDone', 'timeline']) delete v1[k];
+  v1.version = 1;
+  const s = E.deserialize(JSON.stringify(v1));
+  assert.ok(s);
+  assert.equal(s.version, 2);
+  assert.equal(s.scenarioId, 'sandbox');
+  assert.deepEqual(s.electionTurns, [4, 8, 12, 16, 20, 24]);
+  assert.equal(Object.keys(s.characters).length, 12);
+  assert.equal(E.POST_IDS.filter((p) => s.cabinet[p]).length, 5);
+  for (const w of E.WING_IDS) assert.equal(s.wings[w], 60);
+  assert.equal(s.rng, v2.rng, 'migration consumes no RNG');
+  const after = E.endTurn(s).state;
+  assert.equal(after.turn, s.turn + (after.phase === 'over' ? 0 : 1));
+  assert.equal(after.timeline.length, 1);
+});
+
+test('v2 cabinet: appoint, replace (1 PC, loyalty -20), dismiss, purse income in the budget, shadow cabinet', () => {
+  let s = actionsState(9);
+  assert.equal(E.POST_IDS.filter((p) => s.cabinet[p]).length, 5, 'new games seat a cabinet');
+  assert.equal(new Set(Object.values(s.cabinet)).size, 5);
+  const purse = s.cabinet.purse;
+  const bench = E.activeCharacters(s).find((id) => !s.characters[id].post);
+  s = { ...s, politicalCapital: 3 };
+  const s2 = step(s, { type: 'appoint', post: 'purse', characterId: bench });
+  assert.equal(s2.cabinet.purse, bench);
+  assert.equal(s2.politicalCapital, 2);
+  assert.equal(s2.characters[purse].post, null);
+  assert.equal(s2.characters[purse].loyalty, Math.max(0, s.characters[purse].loyalty - 20));
+  assert.equal(s2.characters[bench].loyalty, Math.min(100, s.characters[bench].loyalty + 12));
+  assert.equal(E.apply({ ...s, politicalCapital: 0 }, { type: 'appoint', post: 'purse', characterId: bench }).log[0].kind, 'error');
+  const s3 = step(s2, { type: 'dismiss', post: 'purse' });
+  assert.equal(s3.cabinet.purse, null);
+  assert.equal(E.budget(s3).cabinet, 0);
+  // filling an empty post is free; a perfect fit pays PURSE_INCOME in government, half in opposition
+  const s4 = step({ ...s3, politicalCapital: 0 }, { type: 'appoint', post: 'purse', characterId: 'corin_ashby' });
+  assert.equal(E.competence('corin_ashby', 'purse'), 1);
+  const gov = { ...s4, government: { leader: 'player', members: ['player'], minority: true } };
+  const opp = { ...s4, government: { leader: 'iron_crown', members: ['iron_crown'], minority: true } };
+  assert.equal(E.budget(gov).cabinet, E.CONSTANTS.PURSE_INCOME);
+  assert.equal(E.budget(opp).cabinet, Math.round(E.CONSTANTS.PURSE_INCOME * E.CONSTANTS.SHADOW_FACTOR));
+  assert.equal(E.cabinetEffects(gov).length, 5);
+  assert.ok(E.cabinetEffects(gov).every((l) => typeof l.text === 'string' && l.text.length > 0));
+});
+
+test('v2 wings: reactions to laws, rebels when unhappy, whipping, revolt halves', () => {
+  let s = actionsState(10, { ideologyId: 'commonwealth' });
+  s = { ...s, docket: [], seats: { player: 30, iron_crown: 14, harbor_left: 14, glass_circle: 14 }, politicalCapital: 5 };
+  const r = E.wingReaction(s, 'press_freedom');
+  assert.ok(r.reformers > r.traditionalists, 'reformers love a rights law more than traditionalists');
+  // content wings: no rebels
+  s = step(s, { type: 'draft', lawId: 'chapel_tithe' });
+  const item = s.docket.at(-1);
+  const calm = E.forecastVote(s, item.id).blocs.find((b) => b.party === 'player');
+  assert.ok(!calm.wingRebels);
+  // an unhappy reformer wing rebels against a faith law it dislikes
+  const angry = { ...s, wings: { ...s.wings, reformers: 25 } };
+  const bloc = E.forecastVote(angry, item.id).blocs.find((b) => b.party === 'player');
+  assert.ok(bloc.wingRebels?.reformers > 0, JSON.stringify(bloc));
+  assert.ok(bloc.rebels >= bloc.wingRebels.reformers);
+  const whipped = step(angry, { type: 'whip', itemId: item.id, party: 'player' });
+  assert.equal(E.forecastVote(whipped, item.id).blocs.find((b) => b.party === 'player').rebels, 0);
+  // in revolt: rebels on everything, whipping only halves them
+  const revolt = { ...s, wings: { ...s.wings, reformers: 5 } };
+  const rb = E.forecastVote(revolt, item.id).blocs.find((b) => b.party === 'player').wingRebels.reformers;
+  const rw = E.forecastVote(step(revolt, { type: 'whip', itemId: item.id, party: 'player' }), item.id).blocs.find((b) => b.party === 'player').wingRebels?.reformers ?? 0;
+  assert.equal(rw, Math.floor(rb / 2));
+  assert.equal(E.wingMood(revolt).find((w) => w.id === 'reformers').mood, 'revolt');
+  assert.equal(E.wingMood(revolt).reduce((a, w) => a + w.seats, 0), 30);
+});
+
+test('v2 debates: cost 1 AP, preview shows risk without rolling, effects match debateChoice', () => {
+  let s = actionsState(12);
+  s = { ...s, pendingDebate: 'budget_question', ap: 3, politicalCapital: 2 };
+  const d = E.currentDebate(s);
+  assert.equal(d.choices.length, 3);
+  const measured = E.debateChoice(s, 1);
+  assert.equal(measured.risk, 0);
+  assert.equal(E.consumesRng(s, { type: 'debate', choice: 1 }), false);
+  const after = step(s, { type: 'debate', choice: 1 });
+  assert.equal(after.ap, 2);
+  assert.equal(after.pendingDebate, null);
+  assert.equal(after.debatesWon, 1);
+  for (const [g, v] of Object.entries(measured.groupEffects)) assert.equal(after.approval[g], Math.round(Math.min(100, Math.max(0, s.approval[g] + v)) * 10) / 10);
+  const p = E.previewAction(s, { type: 'debate', choice: 2 });
+  assert.ok(p.valid && p.risk > 0 && p.cost.ap === 1);
+  assert.equal(E.apply(after, { type: 'debate', choice: 0 }).log[0].kind, 'error', 'one debate per turn');
+  // a risky line backfires with roughly its stated chance
+  let backfires = 0;
+  for (let i = 0; i < 200; i++) if (E.apply({ ...s, rng: (s.rng + i * 7919) >>> 0 }, { type: 'debate', choice: 2 }).state.debatesWon === 0) backfires++;
+  const risk = E.debateChoice(s, 2).risk;
+  assert.ok(Math.abs(backfires / 200 - risk) < 0.1, `backfire ${backfires / 200} vs ${risk}`);
+});
+
+test('v2 amendments: two options, raise the target bloc, cost paid, upkeep tracked on enactment', () => {
+  let s = actionsState(13, { ideologyId: 'commonwealth' });
+  s = { ...s, docket: [], treasury: 100, politicalCapital: 4, seats: { player: 24, iron_crown: 16, harbor_left: 16, glass_circle: 16 } };
+  const opts = E.amendmentsFor(s, 'union_rights');
+  assert.ok(opts.length >= 1 && opts.length <= 2);
+  s = { ...s, era: 2 };
+  s = step(s, { type: 'draft', lawId: 'union_rights' });
+  const item = s.docket.at(-1);
+  const offer = E.amendmentsFor(s, item.id);
+  assert.equal(offer.length, 2);
+  assert.notEqual(offer[0].amendment.id, offer[1].amendment.id);
+  for (const o of offer) {
+    assert.ok(Array.isArray(o.stanceChanges) && typeof o.yesGain === 'number');
+    assert.ok(o.forecast.yes >= E.forecastVote(s, item.id).yes - 1);
+  }
+  const a = offer[0].amendment;
+  const before = E.forecastVote(s, item.id);
+  const s2 = step(s, { type: 'amend', itemId: item.id, amendmentId: a.id });
+  assert.equal(s2.docket.at(-1).amendment, a.id);
+  assert.equal(s2.politicalCapital, s.politicalCapital - (a.politicalCapital ?? 0));
+  assert.equal(s2.treasury, s.treasury + (a.oneOff ?? 0));
+  const target = a.target === 'any' ? E.RIVAL_IDS[0] : a.target;
+  const sup = (f) => f.blocs.find((b) => b.party === target)?.support ?? 0;
+  assert.ok(sup(E.forecastVote(s2, item.id)) > sup(before));
+  assert.equal(E.apply(s2, { type: 'amend', itemId: item.id, amendmentId: offer[1].amendment.id }).log[0].kind, 'error', 'one amendment per bill');
+  assert.equal(E.apply(s, { type: 'amend', itemId: item.id, amendmentId: 'nope' }).log[0].kind, 'error');
+  // force a pass by giving the player the whole chamber, then check upkeep bookkeeping
+  const big = { ...s2, seats: { player: 72, iron_crown: 0, harbor_left: 0, glass_circle: 0 } };
+  const passed = step(big, { type: 'callVote', itemId: item.id });
+  assert.ok(passed.enacted.includes('union_rights'));
+  assert.equal(passed.lawAmendments.union_rights, a.id);
+  assert.equal(passed.lawExtraUpkeep.union_rights ?? 0, a.upkeep || 0);
+});
+
+test('v2 character crises: scandal resignation, defection moves seats, challenge deal or ballot', () => {
+  const base = actionsState(14);
+  const minister = base.cabinet.whip;
+  const ev = (id, ctx) => ({ ...base, phase: 'event', pendingEvent: id, eventContext: ctx, docket: [], politicalCapital: 4 });
+  // the card is rendered with names filled in
+  const card = E.currentEvent(ev('minister_scandal', { characterId: minister, post: 'whip' }));
+  assert.ok(!/[{}]/.test(card.title + card.text + card.choices.map((c) => c.label).join('')), card.text);
+  assert.ok(card.text.includes(E.CHARACTERS[minister].name));
+  // demand the resignation: disgraced, post vacant
+  let s = step(ev('minister_scandal', { characterId: minister, post: 'whip' }), { type: 'resolveEvent', choice: 1 });
+  assert.equal(s.characters[minister].status, 'disgraced');
+  assert.equal(s.cabinet.whip, null);
+  assert.equal(s.scandals, 1);
+  // stand by them: maybe a follow-up later, loyalty up
+  s = step(ev('minister_scandal', { characterId: minister, post: 'whip' }), { type: 'resolveEvent', choice: 0 });
+  assert.equal(s.characters[minister].status, 'active');
+  assert.ok(s.scheduledEvents.every((x) => x.event === 'scandal_deepens' && x.context.characterId === minister));
+  // defection: let them go -> seats move to the rival, total stays 72
+  const d = E.activeCharacters(base)[0];
+  const rival = E.defectionTarget(base, d);
+  s = step({ ...ev('defection_threat', { characterId: d, rivalId: rival }), seats: { ...base.seats, player: Math.max(base.seats.player, 10) } }, { type: 'resolveEvent', choice: 0 });
+  assert.equal(s.characters[d].status, 'defected');
+  assert.equal(sumSeats(s.seats), sumSeats({ ...base.seats, player: Math.max(base.seats.player, 10) }));
+  assert.ok(s.seats[rival] > base.seats[rival]);
+  assert.equal(s.defections, 1);
+  // challenge: the deal hands the challenger a post; the ballot is won or lost (ousted) by the stated odds
+  const ch = E.activeCharacters(base).find((id) => !base.characters[id].post);
+  s = step(ev('leadership_challenge', { characterId: ch }), { type: 'resolveEvent', choice: 1 });
+  assert.ok(s.characters[ch].post);
+  assert.equal(s.politicalCapital, 2);
+  const odds = E.challengeOdds(ev('leadership_challenge', { characterId: ch }), ch);
+  assert.ok(odds.winChance > 0 && odds.winChance < 1 && odds.reasons.length >= 3);
+  let ousted = 0;
+  for (let i = 0; i < 100; i++) {
+    const r = E.apply({ ...ev('leadership_challenge', { characterId: ch }), rng: (base.rng + i * 104729) >>> 0 }, { type: 'resolveEvent', choice: 0 }).state;
+    if (r.outcome === 'ousted') { ousted++; assert.equal(r.phase, 'over'); } else assert.equal(r.challengesSurvived, 1);
+  }
+  assert.ok(Math.abs(ousted / 100 - (1 - odds.winChance)) < 0.15, `ousted ${ousted}% vs ${1 - odds.winChance}`);
+});
+
+test('v2 event chains: a choice schedules its follow-up, which fires on time', () => {
+  const base = { ...actionsState(15), phase: 'event', pendingEvent: 'ledger_whisper', docket: [] };
+  let s = step(base, { type: 'resolveEvent', choice: 0 });
+  assert.deepEqual(s.scheduledEvents.map((e) => [e.event, e.turn]), [['ledger_trial', base.turn + 2]]);
+  for (let i = 0; i < 2; i++) {
+    s = E.endTurn(s).state;
+    if (s.phase === 'coalition') s = step(s, s.pendingCoalition.kind === 'form' ? { type: 'formCoalition', partners: [] } : { type: 'answerOffer', accept: false });
+    if (s.phase === 'event' && s.pendingEvent !== 'ledger_trial') s = step(s, { type: 'resolveEvent', choice: 0 });
+  }
+  assert.equal(s.pendingEvent, 'ledger_trial');
+  assert.ok(E.EVENTS.ledger_trial.chainOnly);
+});
+
+test('v2 scenarios and difficulties: setups differ and every scenario plays to the end', () => {
+  const snap = E.newGame({ seed: 3, scenarioId: 'snap_election' });
+  assert.equal(snap.turn, 9);
+  assert.equal(snap.era, 2);
+  assert.ok(E.playerInGovernment(snap));
+  assert.equal(E.isElectionTurn(snap, 10), true);
+  assert.equal(E.turnsToElection(snap), 1);
+  const debt = E.newGame({ seed: 3, scenarioId: 'debt_crisis' });
+  assert.equal(debt.debt, 170);
+  assert.ok(E.playerInGovernment(debt));
+  const ins = E.newGame({ seed: 3, scenarioId: 'insurgent' });
+  assert.ok(ins.seats.player <= 8, `insurgent seats ${ins.seats.player}`);
+  assert.equal(ins.mods.dissolveBelow, 5);
+  assert.equal(E.scenarioGoals(ins).length, 2);
+  const story = E.newGame({ seed: 3, difficulty: 'story' }), iron = E.newGame({ seed: 3, difficulty: 'ironclad' });
+  assert.ok(story.treasury > iron.treasury);
+  assert.ok(iron.rivals.iron_crown.approval.scholars > story.rivals.iron_crown.approval.scholars);
+  for (const scenarioId of ['sandbox', 'snap_election', 'debt_crisis', 'insurgent']) {
+    for (const difficulty of ['story', 'ironclad']) {
+      const s = play(21, smartBot, (x) => assert.equal(sumSeats(x.seats), 72), undefined, { scenarioId, difficulty });
+      assert.equal(s.phase, 'over', `${scenarioId}/${difficulty}`);
+      const sc = E.score(s);
+      assert.equal(sc.multiplier, E.DIFFICULTIES[difficulty].scoreMult);
+      assert.equal(sc.goals.length, E.SCENARIOS[scenarioId].goals.length);
+    }
+  }
+});
+
+test('v2 meta: perks, daily challenge, headlines, rng helper, per-turn timeline', () => {
+  assert.deepEqual(E.unlockedPerks([]), []);
+  assert.deepEqual(E.unlockedPerks(['balanced_books']).map((p) => p.id), ['war_chest']);
+  const plain = E.newGame({ seed: 5 });
+  const perked = E.newGame({ seed: 5, perks: ['war_chest', 'second_wind', 'deep_bench'] });
+  assert.deepEqual(perked.perks, ['war_chest', 'second_wind'], 'max 2 perks');
+  assert.equal(perked.partyFunds, plain.partyFunds + 40);
+  assert.equal(perked.mods.maxPc, plain.mods.maxPc + 1);
+  const d1 = E.dailyChallenge('2026-11-09'), d2 = E.dailyChallenge('2026-11-09'), d3 = E.dailyChallenge('2026-11-10');
+  assert.deepEqual(d1, d2);
+  assert.notEqual(d1.seed, d3.seed);
+  assert.equal(E.dailyChallenge(new Date('2026-11-09T23:00:00Z')).seed, d1.seed);
+  const daily = E.newGame({ ...d1.options, perks: ['war_chest'] });
+  assert.equal(daily.daily, '2026-11-09');
+  assert.deepEqual(daily.perks, [], 'perks are off in the daily challenge');
+  assert.equal(daily.scenarioId, d1.scenarioId);
+  // headlines: deterministic, no RNG, at most `max`
+  const s = play(31, smartBot);
+  const h = E.headlines(s, 3);
+  assert.ok(h.length >= 1 && h.length <= 3);
+  assert.deepEqual(E.headlines(s, 3), h);
+  for (const x of h) assert.ok(E.CONTENT.papers.includes(x.paper) && x.text.length > 5);
+  const mid = actionsState(31);
+  const rngBefore = mid.rng;
+  E.headlines(mid);
+  assert.equal(mid.rng, rngBefore);
+  // rng helper
+  assert.equal(E.consumesRng(mid, { type: 'court', groupId: 'elders' }), false);
+  assert.equal(E.isDeterministic(mid, { type: 'court', groupId: 'elders' }), true);
+  assert.equal(E.consumesRng(mid, { type: 'endTurn' }), true);
+  // timeline: start + one snapshot per completed turn
+  assert.equal(mid.timeline.length, 1);
+  assert.equal(s.timeline[0].turn, 1);
+  assert.ok(s.timeline.length >= 20);
+  for (const snap of s.timeline) { assert.equal(sumSeats(snap.seats), 72); assert.equal(Object.keys(snap.approval).length, 8); }
+  // v2 achievements live alongside v1 ones
+  const sc = E.score(s);
+  for (const a of sc.achievements) assert.ok(sc.allAchievements.includes(a));
+  for (const a of sc.allAchievements) assert.ok(E.ACHIEVEMENTS[a]);
+});
+
+test('v2 scenario goals: the snap-election goal needs the government formed after the vote', () => {
+  const s = E.newGame({ seed: 4, scenarioId: 'snap_election' });
+  assert.deepEqual(s.goalsDone, []);
+  let x = E.endTurn(s).state; // turn 9 -> 10
+  if (x.phase === 'event') x = step(x, { type: 'resolveEvent', choice: 0 });
+  // force a crushing defeat at the turn-10 election: the player cannot stay in power
+  x = { ...x, phase: 'actions', docket: [], approval: Object.fromEntries(E.GROUP_IDS.map((g) => [g, 5])) };
+  const after = E.endTurn(x).state;
+  assert.ok(after.elections.some((e) => e.turn === 10));
+  assert.equal(E.playerInGovernment(after), false);
+  assert.ok(!after.goalsDone.includes('win_snap'));
+  assert.equal(E.scenarioGoals(after).find((g) => g.id === 'win_snap').done, false);
 });

@@ -269,3 +269,87 @@ Approximate size: engine ~900 LOC, UI ~1500 LOC.
 - A design tuned for 20 to 40 minute phone sessions.
 
 Nothing here reproduces Lawgivers II's map, countries, UI, text or systems detail. No gerrymandering editor, no electoral-system switching, no real-world countries.
+
+---
+
+# Part II: QUORUM v2 (save version 2)
+v2 makes the game deeper, more replayable and more dramatic. Everything in Part I still holds unless a v2 rule
+overrides it. The engine API additions are listed in `docs/game/v2-api.md`; tuning is in `balance.md`.
+v2 also retunes some Part I numbers: rival default approval 52 (was 46), player coalition tolerance `0.4 + 0.35 x relation` (was 0.7), rivals blame you after losing 1 seat (was 2), and the rival pact chance on Normal is 0.14 (was 0.16).
+
+## 19. Your own party: three wings
+Your party is not a monolith. It has three wings, each positioned relative to your ideology (`wings` in content.json):
+
+| Wing | Offset (econ, social) | Seats | Loves | Hates |
+|---|---|---|---|---|
+| The Lamplighters (reformers) | -0.3, +0.45 | 32% | rights, education, environment, welfare | security, faith |
+| The Ledger Bench (pragmatists) | +0.25, 0 | 38% | economy, infrastructure, trade, tax | none |
+| The Hearthguard (traditionalists) | +0.05, -0.5 | 30% | faith, security, agriculture | rights |
+
+Happiness runs 0..100 and starts at 60.
+- **Laws:** when a law you voted for passes, each wing moves by `round((support - 0.5) * 14)` plus or minus 3 for a liked or hated category, capped at +-8. Here `support = 1 - dist(wing, law.axis) / 1.4`. Your own bill failing pleases its fans by half ("you tried"). Voting NO on a law a wing loves (+4 or more) that passes anyway costs -2.
+- **Stances:** debates and event choices carry wing effects.
+- **Per turn:** pragmatists +1 in government and -1 in opposition, -2 when debt is above 100, -1 on a deficit. Reformers +1 when liberty or environment is 60 or more, -1 when liberty is below 40. Traditionalists +1 when order is 60 or more, -1 below 40. The Chief Whip soothes the unhappiest wing. Then every wing drifts 6% toward 55.
+- **Elections:** every wing moves by half a point per seat gained or lost, capped at +-6. Entering government gives pragmatists +4.
+- **Rebellion:** a wing below 35 is *rebellious*. Its deputies vote against bills it dislikes (support below 0.5 on a YES, above 0.6 on a NO): `round(wingSeats * (35 - h) / 35 * 1.2)` of them. Below 20 it is *in revolt*: it rebels on everything, and whipping only halves its rebels (a normal whip clears them all). The forecast shows `wingRebels` per wing.
+
+## 20. Politicians and the cabinet
+Twelve original politicians (four per wing), each with a **trait**, **loyalty** and **ambition** (both 0..100, jittered +-8 per game).
+Five **cabinet posts**:
+
+| Post | Effect at full strength (halved in opposition: the shadow cabinet) |
+|---|---|
+| Chancellor of the Purse | +5 treasury per turn (shown in `budget().cabinet`) |
+| Warden of the Interior | +1 order per turn while below 65 (strength 0.5+), +0.25 Watch & Guard approval |
+| Minister of the Commons | +1 health per turn while below 65 (strength 0.5+), +0.25 Elders / +0.125 Laborers approval |
+| Chief Whip | +0.34 PC per turn (accumulated), +1.5 happiness for the unhappiest wing; a Diplomat whip makes lobbying 1 PC cheaper |
+| Herald of the Press | debate gains x1.25, backfire -10%, campaigns +20% |
+
+Strength is the trait's fit for the post: 1 for a perfect fit, 0.75 or 0.5 for a decent one, 0.25 otherwise.
+The ten traits are Silver Tongue, Bean Counter, Iron Fist, Idealist, Backroom Fixer, Diplomat, Firebrand, Schemer, Old Hand and Reformer.
+- New games seat a best-fit cabinet. **Appointing** to an empty post is free and gives +12 loyalty. **Replacing** a minister costs 1 PC and sends them back bitter (loyalty -20, ambition +3). **Dismissing** is free (loyalty -20).
+- **Loyalty per turn:** ministers +1. Benched politicians with ambition 60+ lose 1 ("passed over"). Everyone gains or loses `(wing happiness - 50) / 25`, capped at +-2. Schemers in office grow more ambitious.
+
+### Party crises (checked at the start of each turn; a crisis replaces the random event)
+1. **Leadership challenge:** possible when party mood (seat-weighted wing happiness) is below 48 and a politician has ambition 65+ and loyalty below 40. The chance is 30% per turn, with an 8-turn cooldown. Your choices: *call the ballot*, where `win = 0.4 + (mood - 50)/100 + 0.03 * PC + 0.1 if in government - (ambition - 65)/200`, clamped to 10..95% (lose and you are **ousted**, a loss); or *cut a deal* (-2 PC; the challenger takes the post they fit best; their wing +6, the others -4).
+2. **Defection threat:** a politician below 15 loyalty may threaten to cross the floor (40% per turn) to the rival nearest their wing. *Let them go* and they take 1 seat, or 2 if their ambition is 70+. *Make an offer*: -2 PC, loyalty +30.
+3. **Scandal:** each minister rolls `trait.scandalRisk` per turn (Fixer 3%, Schemer 2.5%, Firebrand 2.2%, Iron Fist 2%, others about 1%; x1.3 if ambition is above 70). *Stand by them*: all groups -2, -1 PC, and a 50% chance that the affair deepens 2 turns later. *Demand the resignation*: the minister is disgraced, their wing -6 and the other wings +1.
+
+## 21. Debates and press conferences
+On about 60% of turns (from turn 2), one of 18 debates or press conferences is on offer (era-specific ones weigh 1.5x; there is an 8-turn cooldown). Answering costs **1 AP** and is optional: it expires at the end of the turn. There are three rhetorical choices:
+- **Rousing**: big gains with your side, losses with the other; usually moves wings.
+- **Measured**: small, safe gains.
+- **Combative**: gains plus often +1 PC, but with a 20-35% **backfire** chance. Many combative lines attack a named rival (relation -1, and that rival loses approval with its groups). On a backfire, positive effects become half-size losses, positive wing effects flip, and PC -1.
+The Herald boosts gains and cuts risk; a Firebrand Herald adds +5% risk.
+
+## 22. Amendments
+When you draft (or afterwards, on your own `enact` bill) you may attach **one** of two amendments on offer, picked from 11 templates. Each courts a rival bloc (Iron Crown: Watch Oversight, Chapel Exemption, Public Order Rider; Harbor Labor: Wage Guarantee, Pension Top-Up, Local Hiring; Glass Circle: Sunset Review, Fiscal Offset, Open Books; any bloc: Valley Carve-Out, Named for a Founder). An amendment adds +0.16 to +0.30 to the target bloc's support. Its price is paid in extra upkeep, an up-front treasury cost, PC, approval with some group and/or wing happiness. The two on offer are the ones that best flip the forecast or move a bloc near the YES line.
+
+## 23. Scenarios and difficulty
+| Scenario | Setup | Calendar | Goals (score bonus) |
+|---|---|---|---|
+| Founding Assembly (sandbox) | as Part I | elections 4, 8, ... 24 | none |
+| Snap Election | starts turn 9 in the Smokestack Era; 4 Lamp laws already in force; you lead a caretaker government; treasury 80, debt 30; incumbency (+8 with your top 3 groups, one campaign in every region) | elections 10, 14, 18, 22; ends after 24 | stay in government after the turn-10 election (+60); win 30+ seats (+40) |
+| Debt Crisis | debt 170, empty treasury, economy 45; you lead a caretaker government | standard | debt below 100 by turn 12 (+50); no debt at the end (+80) |
+| Insurgent Party | you start tiny (founding factor 0.3); rivals one step colder and +2 approval everywhere; party funds 90, +2 PC; campaigns x1.25; you dissolve only below 5 seats | standard | win 20+ seats (+60); enter government (+60) |
+
+| Difficulty | Rival approval | Treasury | PC | Bad-event severity | Rival pact chance | Score x |
+|---|---|---|---|---|---|---|
+| Story | -4 | +50 | +2 | x0.75 | 0.10 | 0.8 |
+| Normal | 0 | 0 | 0 | x1 | 0.14 | 1 |
+| Hard | +2 | -25 | -1 | x1.15 | 0.17 | 1.25 |
+| Ironclad | +4 | -50 | -1 | x1.3 | 0.20 | 1.5 |
+
+## 24. More content
+- **Laws:** 52 (17 new: Night Lamp Ordinance, Republic Post Act, Sallow Fishery Quotas, Debtors' Relief Act, Coastal Militia Act, Factory Inspectorate, People's Savings Bank, Temperance Act, Grand Canal Works, Stamp Duty, Public Baths and Wells, Signal Privacy Charter, Fen Rewilding Act, One-Fare Transit Pass, Luxury Levy, Veterans' Care Act, Four-Day Week Act).
+- **Events:** 57 (29 new). There are 7 multi-turn **storylines**, where a choice schedules a follow-up 2-4 turns later (sometimes on a dice roll, with an `else` branch): the Ledger Affair, the Brassport Yards, the Lantern Schism, the Northern Survey, the Undersea Cable, the Fen Fever Serum and the Lowmere Reservoir. There are also 6 new standalone events and 4 character crises. Follow-ups take priority over party crises, which take priority over the random draw.
+- **Headlines:** `headlines(s)` writes up to three front-page lines from five mastheads (The Calderra Courier, Brassport Bellows, The Quillon Lamp, Lowmere Almanac, Glasswick Ticker). They react to elections, laws, failed bills, scandals, defections, challenges, gaffes, eras, wing revolts, debt, the economy, stat extremes and the polls. The text is deterministic per seed and turn.
+
+## 25. Meta progression
+- **Achievements:** the 8 from v1 plus 9 new ones: Silver Tongue, Clean Cabinet, Survivor, Full Bench, Snap Victory, Debt Slayer, Insurgent Rise, Iron Will and Daily Dispatch.
+- **Perks:** 12 perks, each unlocked by one achievement. Up to 2 are equipped per game. They are War Chest, Grassroots, Party Machine, Deep Bench, Green Roots, Underdog, Iron Discipline, Old Friends, Golden Throat, Fiscal Hawk, Spin Room and Second Wind. Unlocks are stored by the UI (meta save) and checked with `unlockedPerks()`.
+- **Daily challenge:** `dailyChallenge(date)` hashes the UTC date into a seed, scenario, difficulty (Saturday is Hard, Sunday is Ironclad, other days are Normal with a 1-in-3 chance of Hard) and ideology. Perks are off, so everyone plays the same game.
+
+## 26. Score (v2)
+`total = round((laws + seats + government + stats + debt + scenario goal bonuses) * difficulty multiplier)`.
+The new outcome `ousted` (you lost a leadership challenge) is a loss.

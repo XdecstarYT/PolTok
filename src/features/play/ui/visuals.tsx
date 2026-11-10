@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { m } from 'framer-motion';
-import type { GameState, RegionId } from '../engine/types';
-import { CONTENT, partyColor, SEATS_TOTAL } from './adapter';
+import { SEATS_TOTAL } from './adapter';
+import { tip } from './fx';
 
 // ---------------------------------------------------------------- hemicycle
 
-interface SeatPos { x: number; y: number; r: number }
+interface SeatPos { x: number; y: number; r: number; row: number }
 function hemiLayout(n: number, rows = 6): SeatPos[] {
-  const radii = Array.from({ length: rows }, (_, i) => 0.42 + (0.58 * i) / (rows - 1));
+  const radii = Array.from({ length: rows }, (_, i) => 0.4 + (0.6 * i) / (rows - 1));
   const tot = radii.reduce((a, b) => a + b, 0);
   const per = radii.map((r) => Math.round((n * r) / tot));
   per[rows - 1] += n - per.reduce((a, b) => a + b, 0);
@@ -15,99 +15,45 @@ function hemiLayout(n: number, rows = 6): SeatPos[] {
   radii.forEach((r, i) => {
     for (let k = 0; k < per[i]; k++) {
       const a = Math.PI - (Math.PI * (k + 0.5)) / per[i];
-      pts.push({ a, x: 100 + Math.cos(a) * r * 92, y: 100 - Math.sin(a) * r * 92, r: 3.6 });
+      pts.push({ a, x: 100 + Math.cos(a) * r * 92, y: 100 - Math.sin(a) * r * 92, r: 3.9, row: i });
     }
   });
-  return pts.sort((p, q) => q.a - p.a || 0);
+  return pts.sort((p, q) => q.a - p.a || p.row - q.row);
 }
 const LAYOUT = hemiLayout(SEATS_TOTAL);
 
-/** 72-seat hemicycle. `colors[i]` fills seat i (left-to-right). */
-export function Hemicycle({ colors, label, rm, popKey, center, className }: {
-  colors: (string | null)[]; label: string; rm: boolean; popKey?: string | number; center?: ReactNode; className?: string;
+export interface SeatView { color: string | null; flip?: boolean; dim?: boolean; ring?: string }
+
+/** 72-seat hemicycle. `colors[i]` (or `seats[i]`) fills seat i (left-to-right). Seats show a tooltip from `seatTip`. */
+export function Hemicycle({ colors, seats, label, rm, popKey, center, className, seatTip }: {
+  colors?: (string | null)[]; seats?: SeatView[]; label: string; rm: boolean; popKey?: string | number; center?: ReactNode; className?: string;
+  seatTip?: (i: number) => ReactNode;
 }) {
+  const view: SeatView[] = seats ?? (colors ?? []).map((c) => ({ color: c }));
   return (
     <div className={`q-hemi ${className ?? ''}`}>
-      <svg viewBox="0 -4 200 108" role="img" aria-label={label}>
-        <line x1="100" y1="2" x2="100" y2="100" className="q-hemi__maj" />
+      <svg viewBox="-4 -6 208 112" role="img" aria-label={label}>
+        <path d="M0,100 A100,100 0 0 1 200,100 L176,100 A76,76 0 0 0 24,100 Z" className="q-hemi__floor2" />
+        <path d="M2,100 A98,98 0 0 1 198,100 L160,100 A60,60 0 0 0 40,100 Z" className="q-hemi__floor" />
+        <line x1="100" y1="-2" x2="100" y2="100" className="q-hemi__maj" />
+        <rect x="92" y="99" width="16" height="3" rx="1.5" className="q-hemi__dais" />
         {LAYOUT.map((p, i) => {
-          const fill = colors[i] ?? 'var(--bg-3)';
-          return rm ? (
-            <circle key={i} cx={p.x} cy={p.y} r={p.r} fill={fill} className="q-seat" />
+          const sv = view[i] ?? { color: null };
+          const fill = sv.color ?? 'var(--q-seat-empty)';
+          const tp = seatTip ? tip(() => seatTip(i)) : {};
+          const cls = `q-seat${sv.flip ? ' is-flip' : ''}${sv.dim ? ' is-dim' : ''}`;
+          const common = { cx: p.x, cy: p.y, r: p.r, fill, className: cls, style: { transformOrigin: `${p.x}px ${p.y}px`, transformBox: 'view-box', ...(sv.ring ? { stroke: sv.ring, strokeWidth: 1 } : {}) } as React.CSSProperties };
+          return rm || popKey === undefined ? (
+            <circle key={i} {...common} {...tp} />
           ) : (
-            <m.circle key={`${popKey ?? ''}-${i}`} cx={p.x} cy={p.y} r={p.r} fill={fill} className="q-seat"
+            <m.circle key={`${popKey}-${i}`} {...common} {...tp}
               initial={{ scale: 0 }} animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 520, damping: 14, delay: i * 0.006 }}
-              style={{ transformOrigin: `${p.x}px ${p.y}px`, transformBox: 'view-box' } as React.CSSProperties} />
+              transition={{ type: 'spring', stiffness: 520, damping: 14, delay: i * 0.006 }} />
           );
         })}
       </svg>
       {center && <div className="q-hemi__center">{center}</div>}
     </div>
-  );
-}
-
-// ---------------------------------------------------------------- region map (original stylised hex map)
-
-const GRID = [
-  '  CCCAAA  ',
-  ' CCCAAAAG ',
-  'TTTCAAGGG.',
-  'TTTTQQGGG.',
-  'TTLLQQQBB.',
-  ' LLLQQBBB.',
-  ' LLLSSSBB.',
-  '  ..SSS...',
-];
-const CODE: Record<string, RegionId> = { B: 'brassport', L: 'lowmere', A: 'ardent', S: 'sallow', Q: 'quillon', T: 'tamsfield', C: 'corvane', G: 'glasswick' };
-const HR = 13;
-const HW = Math.sqrt(3) * HR;
-function hexPath(cx: number, cy: number) {
-  let d = '';
-  for (let i = 0; i < 6; i++) { const a = (Math.PI / 3) * i - Math.PI / 6; d += `${i ? 'L' : 'M'}${(cx + HR * Math.cos(a)).toFixed(1)},${(cy + HR * Math.sin(a)).toFixed(1)}`; }
-  return d + 'Z';
-}
-const CELLS = GRID.flatMap((row, y) => row.split('').map((ch, x) => ({ ch, cx: 14 + x * HW + (y % 2 ? HW / 2 : 0), cy: 15 + y * HR * 1.5 }))).filter((c) => c.ch !== ' ');
-const CENTROIDS: Record<string, { x: number; y: number }> = {};
-for (const code of Object.keys(CODE)) {
-  const cs = CELLS.filter((c) => c.ch === code);
-  CENTROIDS[CODE[code]] = { x: cs.reduce((a, c) => a + c.cx, 0) / cs.length, y: cs.reduce((a, c) => a + c.cy, 0) / cs.length };
-}
-
-export function regionLeader(s: GameState, id: RegionId): { party: string | null; seats: Record<string, number> | null } {
-  const last = s.elections[s.elections.length - 1];
-  const r = last?.regions.find((x) => x.regionId === id);
-  if (!r) return { party: null, seats: null };
-  const party = Object.entries(r.seats).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
-  return { party, seats: r.seats };
-}
-
-export function RegionMap({ s, selected, onSelect, flash }: {
-  s: GameState; selected?: RegionId | null; onSelect?: (id: RegionId) => void; flash?: Record<RegionId, string>;
-}) {
-  return (
-    <svg className="q-map" viewBox="0 0 262 172" role="group" aria-label="Map of Calderra's 8 regions">
-      {CELLS.filter((c) => c.ch === '.').map((c, i) => <path key={`s${i}`} d={hexPath(c.cx, c.cy)} className="q-map__sea" />)}
-      {CONTENT.regions.map((reg) => {
-        const lead = regionLeader(s, reg.id).party;
-        const fill = flash?.[reg.id] ?? (lead ? partyColor(s, lead) : null);
-        const camp = s.campaign[reg.id] ?? 0;
-        const code = Object.keys(CODE).find((k) => CODE[k] === reg.id)!;
-        const sel = selected === reg.id;
-        return (
-          <g key={reg.id} className={`q-map__reg${sel ? ' is-sel' : ''}`} role="button" tabIndex={onSelect ? 0 : -1}
-            aria-label={`${reg.name}, ${reg.seats} seats${lead ? `, led by ${lead === 'player' ? s.player.name : CONTENT.rivals.find((r) => r.id === lead)?.name}` : ''}${camp ? `, campaigned ${camp} times` : ''}`}
-            onClick={() => onSelect?.(reg.id)}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect?.(reg.id); } }}>
-            {CELLS.filter((c) => c.ch === code).map((c, i) => (
-              <path key={i} d={hexPath(c.cx, c.cy)} className="q-map__hex" style={fill ? { fill, fillOpacity: 0.78 } : undefined} />
-            ))}
-            <text x={CENTROIDS[reg.id].x} y={CENTROIDS[reg.id].y - 2} className="q-map__lbl">{reg.name.split(' ')[0]}</text>
-            <text x={CENTROIDS[reg.id].x} y={CENTROIDS[reg.id].y + 8} className="q-map__seats">{reg.seats}{camp ? ` · ${'▲'.repeat(Math.min(camp, 3))}` : ''}</text>
-          </g>
-        );
-      })}
-    </svg>
   );
 }
 

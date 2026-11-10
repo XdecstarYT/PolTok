@@ -2,7 +2,7 @@
  "meta": {
   "game": "Quorum: The Calderra Ledger",
   "country": "Republic of Calderra",
-  "version": 1,
+  "version": 2,
   "seatsTotal": 72,
   "majority": 37,
   "turnsTotal": 24
@@ -72,7 +72,7 @@
    "name": "Lantern Chapels",
    "icon": "lantern",
    "share": 0.13,
-   "economic": 0.0,
+   "economic": 0,
    "social": -0.8,
    "wants": "tradition, family support, charity"
   },
@@ -1060,6 +1060,377 @@
    ],
    "desc": "Breaks up the largest estates.",
    "repealable": true
+  },
+  {
+   "id": "night_lamps",
+   "name": "Night Lamp Ordinance",
+   "era": 1,
+   "category": "infrastructure",
+   "upkeep": 4,
+   "groupEffects": {
+    "elders": 5,
+    "merchants": 4,
+    "guardians": 3,
+    "greenward": -3
+   },
+   "stats": {
+    "order": 2
+   },
+   "axis": [
+    0.1,
+    0
+   ],
+   "desc": "Gas lamps on every Brassport street corner.",
+   "repealable": true
+  },
+  {
+   "id": "post_office",
+   "name": "Republic Post Act",
+   "era": 1,
+   "category": "infrastructure",
+   "upkeep": 5,
+   "groupEffects": {
+    "merchants": 6,
+    "growers": 4,
+    "scholars": 3,
+    "chapel": -2
+   },
+   "stats": {
+    "economy": 2
+   },
+   "axis": [
+    0.2,
+    0.2
+   ],
+   "desc": "A post office in every market town.",
+   "repealable": true
+  },
+  {
+   "id": "fishery_quota",
+   "name": "Sallow Fishery Quotas",
+   "era": 1,
+   "category": "environment",
+   "upkeep": 2,
+   "groupEffects": {
+    "greenward": 10,
+    "elders": -3,
+    "laborers": -4
+   },
+   "stats": {
+    "environment": 3,
+    "economy": -1
+   },
+   "axis": [
+    -0.3,
+    0.2
+   ],
+   "desc": "Caps the herring catch so the shoals come back.",
+   "repealable": true
+  },
+  {
+   "id": "debtors_relief",
+   "name": "Debtors' Relief Act",
+   "era": 1,
+   "category": "welfare",
+   "upkeep": 5,
+   "groupEffects": {
+    "laborers": 8,
+    "growers": 6,
+    "merchants": -10
+   },
+   "stats": {},
+   "axis": [
+    -0.6,
+    0.1
+   ],
+   "desc": "Ends prison for small debts.",
+   "repealable": true
+  },
+  {
+   "id": "militia_act",
+   "name": "Coastal Militia Act",
+   "era": 1,
+   "category": "security",
+   "upkeep": 6,
+   "groupEffects": {
+    "guardians": 10,
+    "growers": 3,
+    "scholars": -6,
+    "merchants": -2
+   },
+   "stats": {
+    "order": 3
+   },
+   "axis": [
+    0.3,
+    -0.6
+   ],
+   "desc": "Drills a volunteer militia in every harbor town.",
+   "repealable": true
+  },
+  {
+   "id": "factory_inspect",
+   "name": "Factory Inspectorate",
+   "era": 2,
+   "category": "labor",
+   "upkeep": 5,
+   "groupEffects": {
+    "laborers": 10,
+    "elders": 3,
+    "merchants": -8
+   },
+   "stats": {
+    "health": 3,
+    "economy": -1
+   },
+   "axis": [
+    -0.5,
+    0.3
+   ],
+   "desc": "Inspectors with the right to stop the line.",
+   "repealable": true
+  },
+  {
+   "id": "savings_bank",
+   "name": "People's Savings Bank",
+   "era": 2,
+   "category": "economy",
+   "upkeep": -3,
+   "groupEffects": {
+    "elders": 6,
+    "laborers": 4,
+    "merchants": -3
+   },
+   "stats": {
+    "economy": 2
+   },
+   "axis": [
+    -0.1,
+    0
+   ],
+   "desc": "Penny accounts backed by the republic.",
+   "repealable": true
+  },
+  {
+   "id": "temperance",
+   "name": "Temperance Act",
+   "era": 2,
+   "category": "faith",
+   "upkeep": 0,
+   "groupEffects": {
+    "chapel": 10,
+    "elders": 3,
+    "laborers": -8,
+    "merchants": -4
+   },
+   "stats": {
+    "order": 2,
+    "health": 2,
+    "liberty": -2
+   },
+   "axis": [
+    0.1,
+    -0.7
+   ],
+   "desc": "Closes the gin houses on chapel days.",
+   "repealable": true
+  },
+  {
+   "id": "canal_works",
+   "name": "Grand Canal Works",
+   "era": 2,
+   "category": "infrastructure",
+   "upkeep": 6,
+   "groupEffects": {
+    "growers": 8,
+    "merchants": 8,
+    "laborers": 4,
+    "greenward": -6
+   },
+   "stats": {
+    "economy": 4,
+    "environment": -2
+   },
+   "axis": [
+    0.3,
+    -0.1
+   ],
+   "desc": "A barge canal from Tamsfield to the sea.",
+   "repealable": true,
+   "oneOff": -30
+  },
+  {
+   "id": "stamp_duty",
+   "name": "Stamp Duty",
+   "era": 2,
+   "category": "tax",
+   "upkeep": -10,
+   "groupEffects": {
+    "merchants": -8,
+    "scholars": -3,
+    "elders": 1
+   },
+   "stats": {
+    "economy": -1
+   },
+   "axis": [
+    -0.2,
+    0
+   ],
+   "desc": "A small tax on every contract and newspaper.",
+   "repealable": true
+  },
+  {
+   "id": "public_baths",
+   "name": "Public Baths and Wells",
+   "era": 2,
+   "category": "health",
+   "upkeep": 6,
+   "groupEffects": {
+    "laborers": 6,
+    "elders": 6,
+    "chapel": 2
+   },
+   "stats": {
+    "health": 4
+   },
+   "axis": [
+    -0.4,
+    -0.1
+   ],
+   "desc": "Clean water and hot baths for a copper.",
+   "repealable": true
+  },
+  {
+   "id": "data_charter",
+   "name": "Signal Privacy Charter",
+   "era": 3,
+   "category": "rights",
+   "upkeep": 2,
+   "groupEffects": {
+    "scholars": 10,
+    "merchants": -4,
+    "guardians": -6
+   },
+   "stats": {
+    "liberty": 4,
+    "order": -1
+   },
+   "axis": [
+    0.2,
+    0.8
+   ],
+   "desc": "Your letters and signals are yours alone.",
+   "repealable": true
+  },
+  {
+   "id": "rewilding",
+   "name": "Fen Rewilding Act",
+   "era": 3,
+   "category": "environment",
+   "upkeep": 5,
+   "groupEffects": {
+    "greenward": 14,
+    "growers": -8,
+    "scholars": 3
+   },
+   "stats": {
+    "environment": 6
+   },
+   "axis": [
+    -0.3,
+    0.6
+   ],
+   "desc": "Returns drained fenland to marsh and heron.",
+   "repealable": true
+  },
+  {
+   "id": "transit_pass",
+   "name": "One-Fare Transit Pass",
+   "era": 3,
+   "category": "infrastructure",
+   "upkeep": 10,
+   "groupEffects": {
+    "laborers": 8,
+    "scholars": 6,
+    "greenward": 6,
+    "merchants": -4
+   },
+   "stats": {
+    "environment": 3,
+    "economy": 1
+   },
+   "axis": [
+    -0.5,
+    0.4
+   ],
+   "desc": "One copper rides any tram, ferry or train.",
+   "repealable": true
+  },
+  {
+   "id": "luxury_levy",
+   "name": "Luxury Levy",
+   "era": 3,
+   "category": "tax",
+   "upkeep": -14,
+   "groupEffects": {
+    "laborers": 5,
+    "merchants": -12,
+    "elders": 2
+   },
+   "stats": {
+    "economy": -1
+   },
+   "axis": [
+    -0.6,
+    0
+   ],
+   "desc": "Taxes yachts, furs and private airships.",
+   "repealable": true
+  },
+  {
+   "id": "veterans_care",
+   "name": "Veterans' Care Act",
+   "era": 3,
+   "category": "welfare",
+   "upkeep": 8,
+   "groupEffects": {
+    "guardians": 10,
+    "elders": 6,
+    "chapel": 3
+   },
+   "stats": {
+    "health": 2
+   },
+   "axis": [
+    0.1,
+    -0.5
+   ],
+   "desc": "Pensions and clinics for those who served.",
+   "repealable": true
+  },
+  {
+   "id": "four_day_week",
+   "name": "Four-Day Week Act",
+   "era": 3,
+   "category": "labor",
+   "upkeep": 0,
+   "groupEffects": {
+    "laborers": 12,
+    "scholars": 6,
+    "merchants": -14,
+    "growers": -4
+   },
+   "stats": {
+    "economy": -3,
+    "health": 2
+   },
+   "axis": [
+    -0.7,
+    0.4
+   ],
+   "desc": "Thirty-two hours, same pay.",
+   "repealable": true
   }
  ],
  "events": [
@@ -1882,6 +2253,2761 @@
     }
    ],
    "weight": 1
+  },
+  {
+   "id": "ledger_whisper",
+   "era": 0,
+   "title": "A Clerk's Bundle",
+   "text": "A Glass Circle clerk slips your office a bundle of receipts: shipping bribes, signed and dated.",
+   "choices": [
+    {
+     "label": "Publish the receipts",
+     "groupEffects": {
+      "merchants": -4,
+      "scholars": 4
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 1,
+     "relations": {
+      "glass_circle": -1
+     },
+     "followUp": {
+      "event": "ledger_trial",
+      "delay": 2
+     }
+    },
+    {
+     "label": "Lock them in a drawer",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 1,
+     "wings": {
+      "pragmatists": 2,
+      "reformers": -2
+     },
+     "followUp": {
+      "event": "ledger_blackmail",
+      "delay": 3,
+      "chance": 0.6
+     }
+    }
+   ],
+   "weight": 1,
+   "chain": "ledger_affair"
+  },
+  {
+   "id": "ledger_trial",
+   "era": 0,
+   "title": "The Receipts Trial",
+   "text": "The courts summon Glass Circle officers. Calloway-Rhee asks you, privately, to call off the hounds.",
+   "choices": [
+    {
+     "label": "Let justice run",
+     "groupEffects": {
+      "scholars": 5,
+      "merchants": -4
+     },
+     "treasury": 0,
+     "stats": {
+      "liberty": 2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 4
+     },
+     "relations": {
+      "glass_circle": -1
+     }
+    },
+    {
+     "label": "Broker a quiet settlement",
+     "groupEffects": {
+      "scholars": -6
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 2,
+     "wings": {
+      "reformers": -5
+     },
+     "relations": {
+      "glass_circle": 2
+     }
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "ledger_affair"
+  },
+  {
+   "id": "ledger_blackmail",
+   "era": 0,
+   "title": "The Clerk Comes Back",
+   "text": "The clerk wants 25 crowns, or the press learns you sat on the receipts.",
+   "choices": [
+    {
+     "label": "Pay him off",
+     "groupEffects": {},
+     "treasury": -25,
+     "stats": {},
+     "politicalCapital": -1
+    },
+    {
+     "label": "Call his bluff",
+     "groupEffects": {
+      "scholars": -6,
+      "merchants": -3,
+      "elders": -3
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": -3
+     }
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "ledger_affair"
+  },
+  {
+   "id": "shipyard_bid",
+   "era": 1,
+   "title": "Bid for the Brassport Yards",
+   "text": "Ostmark shipwrights offer 50 crowns for the republic shipyards.",
+   "choices": [
+    {
+     "label": "Sell the yards",
+     "groupEffects": {
+      "laborers": -8,
+      "merchants": 6
+     },
+     "treasury": 50,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 3,
+      "reformers": -3
+     },
+     "followUp": {
+      "event": "shipyard_layoffs",
+      "delay": 3
+     }
+    },
+    {
+     "label": "Keep them public",
+     "groupEffects": {
+      "laborers": 6
+     },
+     "treasury": -10,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 2
+     },
+     "followUp": {
+      "event": "shipyard_orders",
+      "delay": 2,
+      "chance": 0.7
+     }
+    }
+   ],
+   "weight": 1,
+   "chain": "brassport_yards"
+  },
+  {
+   "id": "shipyard_layoffs",
+   "era": 1,
+   "title": "Layoffs at the Yards",
+   "text": "The new owners cut a third of the crews. Wives picket the gates.",
+   "choices": [
+    {
+     "label": "Fund a retraining hall",
+     "groupEffects": {
+      "laborers": 6
+     },
+     "treasury": -20,
+     "stats": {
+      "economy": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "The market's business, not ours",
+     "groupEffects": {
+      "laborers": -8,
+      "merchants": 3
+     },
+     "treasury": 0,
+     "stats": {
+      "economy": 1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": -3
+     }
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "brassport_yards"
+  },
+  {
+   "id": "shipyard_orders",
+   "era": 1,
+   "title": "Hulls on the Slipway",
+   "text": "An order for new hulls lands at the public yards. Gunboats or ferries?",
+   "choices": [
+    {
+     "label": "Build gunboats",
+     "groupEffects": {
+      "guardians": 6,
+      "laborers": 5
+     },
+     "treasury": -15,
+     "stats": {
+      "order": 2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 3
+     }
+    },
+    {
+     "label": "Build ferries",
+     "groupEffects": {
+      "laborers": 5,
+      "merchants": 3,
+      "greenward": 2
+     },
+     "treasury": -10,
+     "stats": {
+      "economy": 2
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "brassport_yards"
+  },
+  {
+   "id": "chapel_schism",
+   "era": 1,
+   "title": "The Lantern Schism",
+   "text": "Sister Amsel, a young preacher, breaks with the Synod and preaches open doors for all.",
+   "choices": [
+    {
+     "label": "Back the Old Synod",
+     "groupEffects": {
+      "chapel": 6,
+      "scholars": -4
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 4,
+      "reformers": -3
+     },
+     "followUp": {
+      "event": "schism_riots",
+      "delay": 2,
+      "chance": 0.6
+     }
+    },
+    {
+     "label": "Back the New Light",
+     "groupEffects": {
+      "scholars": 5,
+      "chapel": -7
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 4,
+      "traditionalists": -4
+     },
+     "followUp": {
+      "event": "new_light",
+      "delay": 3
+     }
+    }
+   ],
+   "weight": 1,
+   "chain": "lantern_schism"
+  },
+  {
+   "id": "schism_riots",
+   "era": 1,
+   "title": "Riot at the Synod Steps",
+   "text": "Sister Amsel's followers and the Synod's wardens fight in the square.",
+   "choices": [
+    {
+     "label": "Send the Watch",
+     "groupEffects": {
+      "guardians": 5,
+      "scholars": -5
+     },
+     "treasury": 0,
+     "stats": {
+      "order": 2,
+      "liberty": -2
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Call a council of both",
+     "groupEffects": {
+      "chapel": 3,
+      "scholars": 3
+     },
+     "treasury": -10,
+     "stats": {},
+     "politicalCapital": -1
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "lantern_schism"
+  },
+  {
+   "id": "new_light",
+   "era": 1,
+   "title": "The New Light Spreads",
+   "text": "Sister Amsel's meeting halls fill the Fens. She asks for a public charter.",
+   "choices": [
+    {
+     "label": "Grant the charter",
+     "groupEffects": {
+      "chapel": -4,
+      "scholars": 4,
+      "elders": 2
+     },
+     "treasury": 0,
+     "stats": {
+      "liberty": 2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3
+     }
+    },
+    {
+     "label": "Keep your distance",
+     "groupEffects": {
+      "chapel": 3
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": -2
+     }
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "lantern_schism"
+  },
+  {
+   "id": "survey_funding",
+   "era": 2,
+   "title": "The Northern Survey",
+   "text": "Cartographers ask for 20 crowns to chart the Corvane hills.",
+   "choices": [
+    {
+     "label": "Fund the survey",
+     "groupEffects": {
+      "scholars": 3
+     },
+     "treasury": -20,
+     "stats": {},
+     "politicalCapital": 0,
+     "followUp": {
+      "event": "survey_find",
+      "delay": 2
+     }
+    },
+    {
+     "label": "Not this year",
+     "groupEffects": {
+      "scholars": -2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chain": "northern_survey"
+  },
+  {
+   "id": "survey_find",
+   "era": 2,
+   "title": "Coal Under Corvane",
+   "text": "The survey finds a deep coal seam under old-growth forest.",
+   "choices": [
+    {
+     "label": "Open the mines",
+     "groupEffects": {
+      "laborers": 6,
+      "greenward": -8
+     },
+     "treasury": 30,
+     "stats": {
+      "economy": 3,
+      "environment": -4
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 3,
+      "reformers": -3
+     }
+    },
+    {
+     "label": "Declare a forest reserve",
+     "groupEffects": {
+      "greenward": 8,
+      "growers": -2,
+      "laborers": -3
+     },
+     "treasury": 0,
+     "stats": {
+      "environment": 4
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3
+     }
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "northern_survey"
+  },
+  {
+   "id": "cable_proposal",
+   "era": 2,
+   "title": "The Undersea Cable",
+   "text": "A consortium will lay a telegraph cable to Ostmark if the republic guarantees its bonds.",
+   "choices": [
+    {
+     "label": "Guarantee the bonds",
+     "groupEffects": {
+      "merchants": 6
+     },
+     "treasury": -15,
+     "stats": {},
+     "politicalCapital": 0,
+     "followUp": {
+      "event": "cable_boom",
+      "delay": 3,
+      "chance": 0.6,
+      "else": "cable_storm"
+     }
+    },
+    {
+     "label": "Let private money carry it",
+     "groupEffects": {
+      "merchants": 2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chain": "undersea_cable"
+  },
+  {
+   "id": "cable_boom",
+   "era": 2,
+   "title": "Ticker Tape Boom",
+   "text": "Prices from Ostmark arrive in minutes. Glasswick merchants are giddy.",
+   "choices": [
+    {
+     "label": "Tax the windfall",
+     "groupEffects": {
+      "merchants": -4,
+      "laborers": 2
+     },
+     "treasury": 25,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Let it ride",
+     "groupEffects": {
+      "merchants": 6
+     },
+     "treasury": 0,
+     "stats": {
+      "economy": 3
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "undersea_cable"
+  },
+  {
+   "id": "cable_storm",
+   "era": 2,
+   "title": "The Cable Snaps",
+   "text": "A winter storm severs the line. The bondholders look to you.",
+   "choices": [
+    {
+     "label": "Honor the bonds",
+     "groupEffects": {
+      "merchants": 4
+     },
+     "treasury": -30,
+     "stats": {},
+     "politicalCapital": 1
+    },
+    {
+     "label": "Default on the guarantee",
+     "groupEffects": {
+      "merchants": -10
+     },
+     "treasury": 0,
+     "stats": {
+      "economy": -2
+     },
+     "politicalCapital": 0,
+     "relations": {
+      "glass_circle": -1
+     }
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "undersea_cable"
+  },
+  {
+   "id": "vaccine_trial",
+   "era": 3,
+   "title": "The Fen Fever Serum",
+   "text": "Quillon doctors have a serum. Proper trials take a season; the fever will not wait.",
+   "choices": [
+    {
+     "label": "Fast-track it",
+     "groupEffects": {
+      "elders": 4
+     },
+     "treasury": -15,
+     "stats": {},
+     "politicalCapital": 0,
+     "followUp": {
+      "event": "vaccine_side",
+      "delay": 2,
+      "chance": 0.4,
+      "else": "vaccine_success"
+     }
+    },
+    {
+     "label": "Full trials first",
+     "groupEffects": {
+      "scholars": 3,
+      "elders": -3
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "followUp": {
+      "event": "vaccine_success",
+      "delay": 4
+     }
+    }
+   ],
+   "weight": 1,
+   "chain": "fever_serum"
+  },
+  {
+   "id": "vaccine_success",
+   "era": 3,
+   "title": "The Fever Breaks",
+   "text": "The serum works. Every clinic in the Fens wants a crate.",
+   "choices": [
+    {
+     "label": "Free serum for all",
+     "groupEffects": {
+      "elders": 6,
+      "laborers": 4
+     },
+     "treasury": -20,
+     "stats": {
+      "health": 5
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Sell it at cost",
+     "groupEffects": {
+      "elders": 3,
+      "merchants": 2
+     },
+     "treasury": -5,
+     "stats": {
+      "health": 3
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "fever_serum"
+  },
+  {
+   "id": "vaccine_side",
+   "era": 3,
+   "title": "Serum Sickness",
+   "text": "A handful of patients fall ill after the serum. Pamphlets call it poison.",
+   "choices": [
+    {
+     "label": "Pause and compensate",
+     "groupEffects": {
+      "elders": 2,
+      "scholars": 2
+     },
+     "treasury": -15,
+     "stats": {
+      "health": -1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Press on",
+     "groupEffects": {
+      "elders": -6
+     },
+     "treasury": 0,
+     "stats": {
+      "health": 3
+     },
+     "politicalCapital": -1
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "fever_serum"
+  },
+  {
+   "id": "reservoir_plan",
+   "era": 0,
+   "title": "The Lowmere Reservoir",
+   "text": "Engineers want to flood a farming valley to give Brassport clean water.",
+   "choices": [
+    {
+     "label": "Flood the valley",
+     "groupEffects": {
+      "laborers": 4,
+      "elders": 3,
+      "growers": -8
+     },
+     "treasury": -20,
+     "stats": {
+      "health": 3
+     },
+     "politicalCapital": 0,
+     "followUp": {
+      "event": "valley_protest",
+      "delay": 2,
+      "chance": 0.7
+     }
+    },
+    {
+     "label": "Pipe it from the hills",
+     "groupEffects": {
+      "growers": 2
+     },
+     "treasury": -35,
+     "stats": {
+      "health": 2
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chain": "lowmere_reservoir"
+  },
+  {
+   "id": "valley_protest",
+   "era": 0,
+   "title": "The Drowned Farms March",
+   "text": "Displaced growers march on the Assembly with their plough horses.",
+   "choices": [
+    {
+     "label": "Pay generous compensation",
+     "groupEffects": {
+      "growers": 8
+     },
+     "treasury": -20,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Hold the line",
+     "groupEffects": {
+      "growers": -6,
+      "guardians": 3
+     },
+     "treasury": 0,
+     "stats": {
+      "order": 1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": -3
+     }
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "lowmere_reservoir"
+  },
+  {
+   "id": "assembly_brawl",
+   "era": 0,
+   "title": "Brawl in the Assembly",
+   "text": "Two deputies trade punches over the fishing bill. The gallery cheers.",
+   "choices": [
+    {
+     "label": "Demand a censure",
+     "groupEffects": {
+      "elders": 2,
+      "guardians": 2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 1
+    },
+    {
+     "label": "Laugh it off in the press",
+     "groupEffects": {
+      "scholars": 2,
+      "chapel": -2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": -2
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "comet_year",
+   "era": 1,
+   "title": "The Comet Year",
+   "text": "A bright comet hangs over Calderra. Preachers call it a warning.",
+   "choices": [
+    {
+     "label": "Fund an observatory",
+     "groupEffects": {
+      "scholars": 6,
+      "chapel": -3
+     },
+     "treasury": -10,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Declare a day of prayer",
+     "groupEffects": {
+      "chapel": 6,
+      "scholars": -3
+     },
+     "treasury": 0,
+     "stats": {
+      "economy": -1
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "match_girls",
+   "era": 2,
+   "title": "The Match Girls' Strike",
+   "text": "Girls at the Glasswick match works walk out over phossy jaw.",
+   "choices": [
+    {
+     "label": "Ban white phosphorus",
+     "groupEffects": {
+      "laborers": 8,
+      "merchants": -6
+     },
+     "treasury": 0,
+     "stats": {
+      "health": 2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3
+     }
+    },
+    {
+     "label": "Leave it to the owners",
+     "groupEffects": {
+      "laborers": -8,
+      "merchants": 4
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": -4
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "airship_mail",
+   "era": 3,
+   "title": "Airship Mail",
+   "text": "An airship line offers mail to every valley in a day, with a subsidy.",
+   "choices": [
+    {
+     "label": "Subsidize the route",
+     "groupEffects": {
+      "merchants": 5,
+      "scholars": 2
+     },
+     "treasury": -15,
+     "stats": {
+      "economy": 2
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Let it fly unaided",
+     "groupEffects": {
+      "merchants": 1
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "rival_split",
+   "era": 0,
+   "title": "Split in the Iron Crown",
+   "text": "A faction of Iron Crown deputies quarrels openly with Marshal Venn.",
+   "choices": [
+    {
+     "label": "Court the splitters",
+     "groupEffects": {
+      "guardians": 4,
+      "scholars": -2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 1,
+     "relations": {
+      "iron_crown": -1
+     }
+    },
+    {
+     "label": "Stay out of it",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0,
+     "relations": {
+      "iron_crown": 1
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "stock_crash",
+   "era": 3,
+   "title": "Signal Exchange Crash",
+   "text": "Shares in signal companies lose half their value overnight.",
+   "choices": [
+    {
+     "label": "Bail out the exchange",
+     "groupEffects": {
+      "merchants": 8,
+      "laborers": -4
+     },
+     "treasury": -35,
+     "stats": {
+      "economy": 3
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "Let them fail",
+     "groupEffects": {
+      "merchants": -8,
+      "laborers": 2
+     },
+     "treasury": 0,
+     "stats": {
+      "economy": -4
+     },
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "minister_scandal",
+   "era": 0,
+   "title": "Scandal: {name}",
+   "text": "The Courier prints letters showing that {name}, your {post}, steered contracts to friends. The {wing} wants you to stand firm. Everyone else wants a resignation.",
+   "choices": [
+    {
+     "label": "Stand by {name}",
+     "groupEffects": {
+      "laborers": -2,
+      "growers": -2,
+      "merchants": -2,
+      "chapel": -2,
+      "scholars": -2,
+      "elders": -2,
+      "greenward": -2,
+      "guardians": -2
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": -1,
+     "followUp": {
+      "event": "scandal_deepens",
+      "delay": 2,
+      "chance": 0.5
+     }
+    },
+    {
+     "label": "Demand the resignation",
+     "groupEffects": {
+      "scholars": 2,
+      "elders": 1
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "scandal",
+   "character": true
+  },
+  {
+   "id": "scandal_deepens",
+   "era": 0,
+   "title": "The {name} Affair Deepens",
+   "text": "New letters surface. The press smells blood, and {name} still holds a seat at your table.",
+   "choices": [
+    {
+     "label": "Weather the storm",
+     "groupEffects": {
+      "laborers": -3,
+      "growers": -3,
+      "merchants": -3,
+      "chapel": -3,
+      "scholars": -3,
+      "elders": -3,
+      "greenward": -3,
+      "guardians": -3
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": -1
+    },
+    {
+     "label": "Cut {name} loose",
+     "groupEffects": {
+      "laborers": -1,
+      "growers": -1,
+      "merchants": -1,
+      "chapel": -1,
+      "scholars": -1,
+      "elders": -1,
+      "greenward": -1,
+      "guardians": -1
+     },
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "scandal",
+   "character": true
+  },
+  {
+   "id": "defection_threat",
+   "era": 0,
+   "title": "{name} Eyes the Exit",
+   "text": "{name} has been seen dining with the {rival}. Word is they will cross the floor and take deputies with them.",
+   "choices": [
+    {
+     "label": "Let them go",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Make them an offer",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": -2
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "defection",
+   "character": true
+  },
+  {
+   "id": "leadership_challenge",
+   "era": 0,
+   "title": "Leadership Challenge",
+   "text": "{name} of the {wing} demands a confidence ballot on your leadership. The party room is restless.",
+   "choices": [
+    {
+     "label": "Call the ballot ({odds} to win)",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": 0
+    },
+    {
+     "label": "Cut a deal with {name}",
+     "groupEffects": {},
+     "treasury": 0,
+     "stats": {},
+     "politicalCapital": -2
+    }
+   ],
+   "weight": 1,
+   "chainOnly": true,
+   "chain": "challenge",
+   "character": true
   }
+ ],
+ "wings": [
+  {
+   "id": "reformers",
+   "name": "The Lamplighters",
+   "blurb": "Reformers who want bold laws on rights, schools and the environment.",
+   "offset": [
+    -0.3,
+    0.45
+   ],
+   "size": 0.32,
+   "likes": [
+    "rights",
+    "education",
+    "environment",
+    "welfare"
+   ],
+   "dislikes": [
+    "security",
+    "faith"
+   ],
+   "groups": [
+    "scholars",
+    "greenward",
+    "laborers"
+   ]
+  },
+  {
+   "id": "pragmatists",
+   "name": "The Ledger Bench",
+   "blurb": "Pragmatists who care about balanced books, growth and staying in power.",
+   "offset": [
+    0.25,
+    0
+   ],
+   "size": 0.38,
+   "likes": [
+    "economy",
+    "infrastructure",
+    "trade",
+    "tax"
+   ],
+   "dislikes": [],
+   "groups": [
+    "merchants",
+    "elders"
+   ]
+  },
+  {
+   "id": "traditionalists",
+   "name": "The Hearthguard",
+   "blurb": "Traditionalists who want order, chapel and the countryside respected.",
+   "offset": [
+    0.05,
+    -0.5
+   ],
+   "size": 0.3,
+   "likes": [
+    "faith",
+    "security",
+    "agriculture"
+   ],
+   "dislikes": [
+    "rights"
+   ],
+   "groups": [
+    "chapel",
+    "guardians",
+    "growers"
+   ]
+  }
+ ],
+ "posts": [
+  {
+   "id": "purse",
+   "name": "Chancellor of the Purse",
+   "short": "Purse",
+   "desc": "Runs the treasury. A steady hand adds income every turn."
+  },
+  {
+   "id": "interior",
+   "name": "Warden of the Interior",
+   "short": "Interior",
+   "desc": "Keeps the peace. Raises order and reassures the Watch."
+  },
+  {
+   "id": "commons",
+   "name": "Minister of the Commons",
+   "short": "Commons",
+   "desc": "Clinics, schools and relief. Raises health and wins elders and laborers."
+  },
+  {
+   "id": "whip",
+   "name": "Chief Whip",
+   "short": "Whip",
+   "desc": "Counts the votes. Earns Political Capital and soothes the unhappiest wing."
+  },
+  {
+   "id": "herald",
+   "name": "Herald of the Press",
+   "short": "Herald",
+   "desc": "Speaks for the party. Strengthens debates and campaigns."
+  }
+ ],
+ "traits": [
+  {
+   "id": "orator",
+   "name": "Silver Tongue",
+   "desc": "Born for the dispatch box. Best as Herald.",
+   "fit": {
+    "herald": 1,
+    "whip": 0.5
+   },
+   "scandalRisk": 0.01
+  },
+  {
+   "id": "bean_counter",
+   "name": "Bean Counter",
+   "desc": "Counts every crown twice. Best at the Purse.",
+   "fit": {
+    "purse": 1,
+    "commons": 0.5
+   },
+   "scandalRisk": 0.008
+  },
+  {
+   "id": "enforcer",
+   "name": "Iron Fist",
+   "desc": "Order first, questions after. Best at the Interior.",
+   "fit": {
+    "interior": 1,
+    "whip": 0.5
+   },
+   "scandalRisk": 0.02
+  },
+  {
+   "id": "idealist",
+   "name": "Idealist",
+   "desc": "Believes every law is a lesson. Best at the Commons.",
+   "fit": {
+    "commons": 1,
+    "herald": 0.5
+   },
+   "scandalRisk": 0.006
+  },
+  {
+   "id": "fixer",
+   "name": "Backroom Fixer",
+   "desc": "Gets votes, does not ask how. Best as Chief Whip; prone to scandal.",
+   "fit": {
+    "whip": 1,
+    "purse": 0.5
+   },
+   "scandalRisk": 0.03
+  },
+  {
+   "id": "diplomat",
+   "name": "Diplomat",
+   "desc": "Knows every rival by name. As Chief Whip, lobbying costs 1 PC less.",
+   "fit": {
+    "whip": 0.75,
+    "herald": 0.75
+   },
+   "scandalRisk": 0.008
+  },
+  {
+   "id": "firebrand",
+   "name": "Firebrand",
+   "desc": "Electrifying and reckless. Strong Herald, riskier debates.",
+   "fit": {
+    "herald": 1,
+    "interior": 0.5
+   },
+   "scandalRisk": 0.022
+  },
+  {
+   "id": "schemer",
+   "name": "Schemer",
+   "desc": "Competent anywhere, loyal nowhere. Ambition grows in office.",
+   "fit": {
+    "purse": 0.5,
+    "interior": 0.5,
+    "commons": 0.5,
+    "whip": 0.75,
+    "herald": 0.5
+   },
+   "scandalRisk": 0.025
+  },
+  {
+   "id": "veteran",
+   "name": "Old Hand",
+   "desc": "Twenty years in the chamber. Solid in any post.",
+   "fit": {
+    "purse": 0.75,
+    "interior": 0.75,
+    "commons": 0.75,
+    "whip": 0.75,
+    "herald": 0.75
+   },
+   "scandalRisk": 0.008
+  },
+  {
+   "id": "reformer",
+   "name": "Reformer",
+   "desc": "Talks in pipes and percentages. Good at the Commons or the Purse.",
+   "fit": {
+    "commons": 0.75,
+    "purse": 0.75
+   },
+   "scandalRisk": 0.012
+  }
+ ],
+ "characters": [
+  {
+   "id": "mira_quell",
+   "name": "Mira Quell",
+   "wing": "reformers",
+   "trait": "idealist",
+   "loyalty": 70,
+   "ambition": 45,
+   "bio": "A Quillon schoolteacher who founded the free reading rooms."
+  },
+  {
+   "id": "jory_renn",
+   "name": "Jory Renn",
+   "wing": "reformers",
+   "trait": "firebrand",
+   "loyalty": 55,
+   "ambition": 75,
+   "bio": "Dockside agitator whose voice carries over the cranes. Wants your job, eventually."
+  },
+  {
+   "id": "ada_fenwick",
+   "name": "Ada Fenwick",
+   "wing": "reformers",
+   "trait": "reformer",
+   "loyalty": 65,
+   "ambition": 50,
+   "bio": "Sanitary engineer from Brassport who rebuilt the harbor sewers."
+  },
+  {
+   "id": "lio_varga",
+   "name": "Lio Varga",
+   "wing": "reformers",
+   "trait": "orator",
+   "loyalty": 60,
+   "ambition": 60,
+   "bio": "Poet turned pamphleteer; the darling of the Quillon lecture halls."
+  },
+  {
+   "id": "corin_ashby",
+   "name": "Corin Ashby",
+   "wing": "pragmatists",
+   "trait": "bean_counter",
+   "loyalty": 75,
+   "ambition": 30,
+   "bio": "Former guild auditor who has never once been surprised by a number."
+  },
+  {
+   "id": "helene_marsh",
+   "name": "Helene Marsh",
+   "wing": "pragmatists",
+   "trait": "diplomat",
+   "loyalty": 65,
+   "ambition": 55,
+   "bio": "Brokered the Lowmere water truce and remembers every rival birthday."
+  },
+  {
+   "id": "osric_pell",
+   "name": "Osric Pell",
+   "wing": "pragmatists",
+   "trait": "schemer",
+   "loyalty": 45,
+   "ambition": 85,
+   "bio": "Charming, tireless, and always three moves ahead of his own party."
+  },
+  {
+   "id": "bess_tanner",
+   "name": "Bess Tanner",
+   "wing": "pragmatists",
+   "trait": "veteran",
+   "loyalty": 80,
+   "ambition": 25,
+   "bio": "Sat on the old harbor council for twenty years. Nothing rattles her."
+  },
+  {
+   "id": "gideon_hale",
+   "name": "Gideon Hale",
+   "wing": "traditionalists",
+   "trait": "enforcer",
+   "loyalty": 60,
+   "ambition": 65,
+   "bio": "Former Watch captain from Corvane March. Keeps a truncheon on his desk."
+  },
+  {
+   "id": "ruth_ambry",
+   "name": "Ruth Ambry",
+   "wing": "traditionalists",
+   "trait": "orator",
+   "loyalty": 70,
+   "ambition": 40,
+   "bio": "Lay preacher whose sermons fill the Lowmere chapels every week."
+  },
+  {
+   "id": "edric_stone",
+   "name": "Edric Stone",
+   "wing": "traditionalists",
+   "trait": "fixer",
+   "loyalty": 50,
+   "ambition": 70,
+   "bio": "Tamsfield grain broker. Gets things done and never says how."
+  },
+  {
+   "id": "wren_hollis",
+   "name": "Wren Hollis",
+   "wing": "traditionalists",
+   "trait": "diplomat",
+   "loyalty": 70,
+   "ambition": 45,
+   "bio": "Spokeswoman of the valley growers; mends fences, sometimes literally."
+  }
+ ],
+ "debates": [
+  {
+   "id": "budget_question",
+   "era": 0,
+   "kind": "debate",
+   "title": "Question Time: The Budget",
+   "prompt": "The opposition benches demand to know where the money goes.",
+   "choices": [
+    {
+     "label": "\"Every crown builds a school.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "scholars": 3,
+      "laborers": 2,
+      "merchants": -2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3,
+      "pragmatists": -2
+     }
+    },
+    {
+     "label": "Read the ledger, line by line.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 3,
+      "elders": 1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 3
+     }
+    },
+    {
+     "label": "\"Ask who emptied it last time.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "laborers": 2,
+      "guardians": 1
+     },
+     "politicalCapital": 1,
+     "risk": 0.3,
+     "relations": {
+      "glass_circle": -1
+     },
+     "rivalApproval": {
+      "rival": "glass_circle",
+      "groupEffects": {
+       "merchants": -4
+      }
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "harbor_press",
+   "era": 0,
+   "kind": "press",
+   "title": "Press Conference at the Harbor Steps",
+   "prompt": "Reporters ask what you will do about wages on the docks.",
+   "choices": [
+    {
+     "label": "\"A fair day's pay, guaranteed.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "laborers": 5,
+      "merchants": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 2,
+      "pragmatists": -1
+     }
+    },
+    {
+     "label": "\"Growth first; wages follow.\"",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 3,
+      "laborers": -1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 2
+     }
+    },
+    {
+     "label": "\"Achterberg promises and never delivers.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "laborers": 2,
+      "elders": 1
+     },
+     "politicalCapital": 1,
+     "risk": 0.3,
+     "relations": {
+      "harbor_left": -1
+     },
+     "rivalApproval": {
+      "rival": "harbor_left",
+      "groupEffects": {
+       "laborers": -4
+      }
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "faith_schools",
+   "era": 0,
+   "kind": "debate",
+   "title": "Debate: Chapels and Schools",
+   "prompt": "Should chapel schools receive public money?",
+   "choices": [
+    {
+     "label": "\"Faith built this republic.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "chapel": 5,
+      "scholars": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 4,
+      "reformers": -3
+     }
+    },
+    {
+     "label": "\"Fund the lessons, not the pulpit.\"",
+     "tone": "measured",
+     "groupEffects": {
+      "scholars": 2,
+      "chapel": 1,
+      "elders": 1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 1
+     }
+    },
+    {
+     "label": "\"No public crown for any creed.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "scholars": 5,
+      "chapel": -5
+     },
+     "politicalCapital": 1,
+     "wings": {
+      "reformers": 4,
+      "traditionalists": -4
+     },
+     "risk": 0.2
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "watch_brutality",
+   "era": 0,
+   "kind": "press",
+   "title": "The Watch Under Fire",
+   "prompt": "A Watch sergeant beat a student in Quillon. Cameras flash.",
+   "choices": [
+    {
+     "label": "\"Stand with the Watch.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "guardians": 5,
+      "scholars": -4
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 3,
+      "reformers": -3
+     }
+    },
+    {
+     "label": "Promise a fair inquiry.",
+     "tone": "measured",
+     "groupEffects": {
+      "scholars": 2,
+      "guardians": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"Sack the sergeant today.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "scholars": 5,
+      "guardians": -5
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3,
+      "traditionalists": -3
+     },
+     "risk": 0.2
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "rail_fares",
+   "era": 0,
+   "kind": "debate",
+   "title": "Debate: Rail Fares",
+   "prompt": "Growers say the fares to market are robbery.",
+   "choices": [
+    {
+     "label": "\"Cheap rails for the valleys.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "growers": 5,
+      "merchants": -2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 2
+     }
+    },
+    {
+     "label": "Index fares to grain prices.",
+     "tone": "measured",
+     "groupEffects": {
+      "growers": 2,
+      "merchants": 2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 2
+     }
+    },
+    {
+     "label": "\"The rail barons have fleeced you.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "growers": 4,
+      "laborers": 2,
+      "merchants": -5
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 2,
+      "pragmatists": -2
+     },
+     "risk": 0.25
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "foreign_trade",
+   "era": 0,
+   "kind": "debate",
+   "title": "Debate: The Ostmark Trade Talks",
+   "prompt": "Ostmark offers a trade treaty. The chamber is split.",
+   "choices": [
+    {
+     "label": "\"Open the harbor to the world.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "merchants": 5,
+      "growers": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 3,
+      "traditionalists": -2
+     }
+    },
+    {
+     "label": "Negotiate clause by clause.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 2,
+      "growers": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"Calderran goods for Calderran hands.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "growers": 4,
+      "laborers": 3,
+      "merchants": -4
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 3,
+      "pragmatists": -3
+     },
+     "risk": 0.2
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "venn_accusation",
+   "era": 0,
+   "kind": "press",
+   "title": "Venn's Accusation",
+   "prompt": "Marshal Venn calls your party soft on crime. The press wants a reply.",
+   "choices": [
+    {
+     "label": "\"Safe streets are our first promise.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "guardians": 4,
+      "elders": 2,
+      "scholars": -2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 3
+     }
+    },
+    {
+     "label": "Quote the falling crime numbers.",
+     "tone": "measured",
+     "groupEffects": {
+      "elders": 2,
+      "merchants": 1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 2
+     }
+    },
+    {
+     "label": "\"The Marshal wants a barracks, not a republic.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "scholars": 4,
+      "greenward": 2
+     },
+     "politicalCapital": 1,
+     "risk": 0.3,
+     "relations": {
+      "iron_crown": -1
+     },
+     "rivalApproval": {
+      "rival": "iron_crown",
+      "groupEffects": {
+       "guardians": -3,
+       "chapel": -2
+      }
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "achterberg_banker",
+   "era": 0,
+   "kind": "debate",
+   "title": "Achterberg's Jibe",
+   "prompt": "Tobin Achterberg calls you \"the bankers' errand boy\" on the floor.",
+   "choices": [
+    {
+     "label": "\"I answer to the docks, not the banks.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "laborers": 4,
+      "merchants": -2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 2
+     }
+    },
+    {
+     "label": "Let the record speak; list your votes.",
+     "tone": "measured",
+     "groupEffects": {
+      "elders": 2,
+      "laborers": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"His friends empty the treasury.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "merchants": 4,
+      "elders": 2
+     },
+     "politicalCapital": 1,
+     "risk": 0.3,
+     "relations": {
+      "harbor_left": -1
+     },
+     "rivalApproval": {
+      "rival": "harbor_left",
+      "groupEffects": {
+       "elders": -3,
+       "laborers": -2
+      }
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "calloway_numbers",
+   "era": 0,
+   "kind": "debate",
+   "title": "Calloway-Rhee's Spreadsheet",
+   "prompt": "Ines Calloway-Rhee waves a column of figures: your budget does not add up.",
+   "choices": [
+    {
+     "label": "\"People are not columns.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "laborers": 3,
+      "chapel": 2,
+      "merchants": -2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 2,
+      "pragmatists": -2
+     }
+    },
+    {
+     "label": "Correct her figures, calmly.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 3,
+      "scholars": 1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 3
+     }
+    },
+    {
+     "label": "\"Her sums leave out the poor.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "laborers": 3,
+      "elders": 2
+     },
+     "politicalCapital": 0,
+     "risk": 0.3,
+     "relations": {
+      "glass_circle": -1
+     },
+     "rivalApproval": {
+      "rival": "glass_circle",
+      "groupEffects": {
+       "scholars": -3,
+       "merchants": -2
+      }
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "lamp_oath",
+   "era": 1,
+   "kind": "debate",
+   "title": "The Founding Oath",
+   "prompt": "The young Assembly debates the words of its oath of office.",
+   "choices": [
+    {
+     "label": "\"By lamp and law.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "chapel": 3,
+      "elders": 3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 3
+     }
+    },
+    {
+     "label": "A plain oath to the constitution.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 2,
+      "scholars": 2
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"No oath to any god or crown.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "scholars": 5,
+      "chapel": -5
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 4,
+      "traditionalists": -4
+     },
+     "risk": 0.25
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "grain_prices",
+   "era": 1,
+   "kind": "press",
+   "title": "Grain Prices at Tamsfield Market",
+   "prompt": "Bread is dear, and the market crowd wants to hear from you.",
+   "choices": [
+    {
+     "label": "\"No family goes hungry.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "laborers": 3,
+      "elders": 3,
+      "merchants": -2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 2
+     }
+    },
+    {
+     "label": "Promise better roads to market.",
+     "tone": "measured",
+     "groupEffects": {
+      "growers": 3,
+      "merchants": 2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 2
+     }
+    },
+    {
+     "label": "\"Hoarders will answer for this.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "laborers": 4,
+      "growers": -3,
+      "merchants": -3
+     },
+     "politicalCapital": 1,
+     "risk": 0.25
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "mill_children",
+   "era": 2,
+   "kind": "debate",
+   "title": "Children in the Mills",
+   "prompt": "A report counts nine-year-olds at the Ardent looms.",
+   "choices": [
+    {
+     "label": "\"Not one more child at a loom.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "laborers": 3,
+      "scholars": 4,
+      "merchants": -4
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 4,
+      "pragmatists": -2
+     }
+    },
+    {
+     "label": "Phase it out with the owners.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 2,
+      "laborers": 2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 2
+     }
+    },
+    {
+     "label": "\"Mill owners grow fat on small hands.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "laborers": 5,
+      "merchants": -6
+     },
+     "politicalCapital": 1,
+     "wings": {
+      "reformers": 3
+     },
+     "risk": 0.25
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "votes_for_all",
+   "era": 2,
+   "kind": "debate",
+   "title": "Votes for All?",
+   "prompt": "The gallery is full of bonnets. Should every adult vote?",
+   "choices": [
+    {
+     "label": "\"Every voice, every vote.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "scholars": 5,
+      "greenward": 2,
+      "chapel": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 4,
+      "traditionalists": -3
+     }
+    },
+    {
+     "label": "Extend it in stages.",
+     "tone": "measured",
+     "groupEffects": {
+      "scholars": 2,
+      "elders": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"Hearth and home come first.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "chapel": 5,
+      "scholars": -5
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 4,
+      "reformers": -4
+     },
+     "risk": 0.25
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "union_hall",
+   "era": 2,
+   "kind": "press",
+   "title": "Address at the Union Hall",
+   "prompt": "Ten thousand laborers wait for your speech.",
+   "choices": [
+    {
+     "label": "\"The union makes us strong.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "laborers": 6,
+      "merchants": -4
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3,
+      "pragmatists": -2
+     }
+    },
+    {
+     "label": "Talk about skills and new trades.",
+     "tone": "measured",
+     "groupEffects": {
+      "laborers": 2,
+      "merchants": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"Achterberg sold you out.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "laborers": 3
+     },
+     "politicalCapital": 1,
+     "risk": 0.35,
+     "relations": {
+      "harbor_left": -1
+     },
+     "rivalApproval": {
+      "rival": "harbor_left",
+      "groupEffects": {
+       "laborers": -5
+      }
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "black_fog",
+   "era": 2,
+   "kind": "press",
+   "title": "Questions on the Black Fog",
+   "prompt": "The smog is back. Reporters ask whose fault it is.",
+   "choices": [
+    {
+     "label": "\"Clean air is a right.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "greenward": 5,
+      "elders": 2,
+      "merchants": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3
+     }
+    },
+    {
+     "label": "Announce a chimney study.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 2,
+      "greenward": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"Glasswick foundries poison us.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "greenward": 4,
+      "laborers": 2,
+      "merchants": -5
+     },
+     "politicalCapital": 0,
+     "risk": 0.25,
+     "relations": {
+      "glass_circle": -1
+     }
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "signal_owners",
+   "era": 3,
+   "kind": "debate",
+   "title": "Who Owns the Signal?",
+   "prompt": "The Assembly debates control of the new signal network.",
+   "choices": [
+    {
+     "label": "\"The signal belongs to the people.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "scholars": 5,
+      "laborers": 2,
+      "merchants": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 3,
+      "pragmatists": -2
+     }
+    },
+    {
+     "label": "Licensed private carriers.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 3,
+      "scholars": 1
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 2
+     }
+    },
+    {
+     "label": "\"Watch the wires for traitors.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "guardians": 5,
+      "scholars": -5
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 3,
+      "reformers": -3
+     },
+     "risk": 0.25
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "young_greenwards",
+   "era": 3,
+   "kind": "press",
+   "title": "The Young Greenwards",
+   "prompt": "Students block the Assembly doors demanding climate action.",
+   "choices": [
+    {
+     "label": "\"They are right, and we will act.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "greenward": 6,
+      "scholars": 3,
+      "growers": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 4,
+      "traditionalists": -2
+     }
+    },
+    {
+     "label": "Meet their leaders privately.",
+     "tone": "measured",
+     "groupEffects": {
+      "greenward": 2,
+      "elders": 1
+     },
+     "politicalCapital": 0
+    },
+    {
+     "label": "\"Lawbreakers will be cleared.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "guardians": 4,
+      "elders": 2,
+      "scholars": -5,
+      "greenward": -4
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "traditionalists": 3,
+      "reformers": -4
+     },
+     "risk": 0.2
+    }
+   ],
+   "weight": 1
+  },
+  {
+   "id": "pension_math",
+   "era": 3,
+   "kind": "debate",
+   "title": "The Pension Arithmetic",
+   "prompt": "Elders live longer. Someone has to pay.",
+   "choices": [
+    {
+     "label": "\"A promise made is a promise kept.\"",
+     "tone": "rousing",
+     "groupEffects": {
+      "elders": 6,
+      "merchants": -3
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "reformers": 1,
+      "pragmatists": -2
+     }
+    },
+    {
+     "label": "Show the numbers, raise the age slowly.",
+     "tone": "measured",
+     "groupEffects": {
+      "merchants": 3,
+      "elders": -2
+     },
+     "politicalCapital": 0,
+     "wings": {
+      "pragmatists": 3
+     }
+    },
+    {
+     "label": "\"Glass Circle wants your pension.\"",
+     "tone": "combative",
+     "groupEffects": {
+      "elders": 4,
+      "laborers": 2
+     },
+     "politicalCapital": 1,
+     "risk": 0.3,
+     "relations": {
+      "glass_circle": -1
+     },
+     "rivalApproval": {
+      "rival": "glass_circle",
+      "groupEffects": {
+       "elders": -4
+      }
+     }
+    }
+   ],
+   "weight": 1
+  }
+ ],
+ "amendments": [
+  {
+   "id": "watch_oversight",
+   "name": "Watch Oversight Clause",
+   "desc": "Gives the Watch a seat on the board that runs it.",
+   "target": "iron_crown",
+   "support": 0.3,
+   "groupEffects": {
+    "guardians": 3,
+    "scholars": -2
+   },
+   "upkeep": 2,
+   "wings": {
+    "traditionalists": 2,
+    "reformers": -2
+   }
+  },
+  {
+   "id": "chapel_exemption",
+   "name": "Chapel Exemption",
+   "desc": "Chapels and their schools are exempt.",
+   "target": "iron_crown",
+   "support": 0.28,
+   "groupEffects": {
+    "chapel": 3,
+    "scholars": -3
+   },
+   "upkeep": 0,
+   "stats": {
+    "liberty": -1
+   },
+   "politicalCapital": 1
+  },
+  {
+   "id": "order_rider",
+   "name": "Public Order Rider",
+   "desc": "Adds fines for disorder to the bill.",
+   "target": "iron_crown",
+   "support": 0.23,
+   "groupEffects": {
+    "guardians": 2
+   },
+   "upkeep": 0,
+   "stats": {
+    "order": 1,
+    "liberty": -1
+   }
+  },
+  {
+   "id": "wage_rider",
+   "name": "Wage Guarantee Rider",
+   "desc": "No worker loses pay because of this law.",
+   "target": "harbor_left",
+   "support": 0.3,
+   "groupEffects": {
+    "laborers": 3,
+    "merchants": -3
+   },
+   "upkeep": 3
+  },
+  {
+   "id": "pension_topup",
+   "name": "Pension Top-Up",
+   "desc": "Adds a small rise to the widow and elder purses.",
+   "target": "harbor_left",
+   "support": 0.28,
+   "groupEffects": {
+    "elders": 3
+   },
+   "upkeep": 4,
+   "wings": {
+    "reformers": 1
+   }
+  },
+  {
+   "id": "local_hiring",
+   "name": "Local Hiring Pledge",
+   "desc": "Contracts go to Calderran crews first.",
+   "target": "harbor_left",
+   "support": 0.23,
+   "groupEffects": {
+    "laborers": 2
+   },
+   "upkeep": 0,
+   "oneOff": -10
+  },
+  {
+   "id": "sunset_review",
+   "name": "Sunset Review",
+   "desc": "The law must be re-justified with figures in ten years.",
+   "target": "glass_circle",
+   "support": 0.28,
+   "groupEffects": {
+    "merchants": 2
+   },
+   "upkeep": -1,
+   "wings": {
+    "pragmatists": 2,
+    "reformers": -1
+   },
+   "politicalCapital": 1
+  },
+  {
+   "id": "fiscal_offset",
+   "name": "Fiscal Offset Clause",
+   "desc": "The first year is paid for up front from reserves.",
+   "target": "glass_circle",
+   "support": 0.3,
+   "groupEffects": {
+    "merchants": 2,
+    "laborers": -1
+   },
+   "upkeep": 0,
+   "oneOff": -15
+  },
+  {
+   "id": "open_books",
+   "name": "Open Books Clause",
+   "desc": "Every crown spent under this law is published.",
+   "target": "glass_circle",
+   "support": 0.23,
+   "groupEffects": {
+    "scholars": 2
+   },
+   "upkeep": 0,
+   "oneOff": -8
+  },
+  {
+   "id": "valley_carveout",
+   "name": "Valley Carve-Out",
+   "desc": "Rural districts get a softer, slower version.",
+   "target": "any",
+   "support": 0.18,
+   "groupEffects": {
+    "growers": 3
+   },
+   "upkeep": 2
+  },
+  {
+   "id": "founders_name",
+   "name": "Named for a Founder",
+   "desc": "Renames the bill after a beloved founder of the republic.",
+   "target": "any",
+   "support": 0.16,
+   "groupEffects": {},
+   "upkeep": 0,
+   "politicalCapital": 2
+  }
+ ],
+ "scenarios": [
+  {
+   "id": "sandbox",
+   "name": "Founding Assembly",
+   "blurb": "Found a new party in the first Assembly of the republic and lead it through three eras.",
+   "goal": "Be in government after the final election.",
+   "goals": [],
+   "startTurn": 1,
+   "electionTurns": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24
+   ],
+   "totalTurns": 24
+  },
+  {
+   "id": "snap_election",
+   "name": "Snap Election",
+   "blurb": "The Smokestack Era opens with the old coalition in pieces. You lead a shaky minority government, and the Assembly has been dissolved: Calderra votes at the end of next turn.",
+   "goal": "Survive the snap election and hold power to the end.",
+   "goals": [
+    {
+     "id": "win_snap",
+     "text": "Stay in government after the snap election (turn 10)",
+     "bonus": 60
+    },
+    {
+     "id": "thirty_seats",
+     "text": "Win 30 or more seats at any election",
+     "bonus": 40
+    }
+   ],
+   "startTurn": 9,
+   "electionTurns": [
+    10,
+    14,
+    18,
+    22
+   ],
+   "totalTurns": 24
+  },
+  {
+   "id": "debt_crisis",
+   "name": "Debt Crisis",
+   "blurb": "The Ostmark Bank has called in its loans. You inherit a caretaker government, an empty treasury and a debt of 170. Above 150, debt drags the economy down every turn.",
+   "goal": "Pay down the debt without losing power.",
+   "goals": [
+    {
+     "id": "debt_under_100",
+     "text": "Bring the debt below 100 by the end of turn 12",
+     "bonus": 50
+    },
+    {
+     "id": "debt_free",
+     "text": "Finish the game with no debt",
+     "bonus": 80
+    }
+   ],
+   "startTurn": 1,
+   "electionTurns": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24
+   ],
+   "totalTurns": 24
+  },
+  {
+   "id": "insurgent",
+   "name": "Insurgent Party",
+   "blurb": "Nobody takes your movement seriously. You start with a handful of seats and cold rivals, but a war chest of party funds and a fired-up base.",
+   "goal": "Rise from the fringe to government.",
+   "goals": [
+    {
+     "id": "twenty_seats",
+     "text": "Win 20 or more seats at an election",
+     "bonus": 60
+    },
+    {
+     "id": "enter_government",
+     "text": "Enter government at any point",
+     "bonus": 60
+    }
+   ],
+   "startTurn": 1,
+   "electionTurns": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24
+   ],
+   "totalTurns": 24
+  }
+ ],
+ "difficulties": [
+  {
+   "id": "story",
+   "name": "Story",
+   "blurb": "Softer rivals, a fuller treasury and milder crises. For learning the ropes.",
+   "rivalApproval": -4,
+   "treasury": 50,
+   "politicalCapital": 2,
+   "eventSeverity": 0.75,
+   "pactChance": 0.1,
+   "scoreMult": 0.8
+  },
+  {
+   "id": "normal",
+   "name": "Normal",
+   "blurb": "The republic as designed.",
+   "rivalApproval": 0,
+   "treasury": 0,
+   "politicalCapital": 0,
+   "eventSeverity": 1,
+   "pactChance": 0.14,
+   "scoreMult": 1
+  },
+  {
+   "id": "hard",
+   "name": "Hard",
+   "blurb": "Sharper rivals, a thinner treasury and harsher crises.",
+   "rivalApproval": 2,
+   "treasury": -25,
+   "politicalCapital": -1,
+   "eventSeverity": 1.15,
+   "pactChance": 0.17,
+   "scoreMult": 1.25
+  },
+  {
+   "id": "ironclad",
+   "name": "Ironclad",
+   "blurb": "Every rival at full strength and every crisis at its worst.",
+   "rivalApproval": 4,
+   "treasury": -50,
+   "politicalCapital": -1,
+   "eventSeverity": 1.3,
+   "pactChance": 0.2,
+   "scoreMult": 1.5
+  }
+ ],
+ "perks": [
+  {
+   "id": "war_chest",
+   "name": "War Chest",
+   "desc": "+40 party funds and +20 treasury at the start.",
+   "unlockedBy": "balanced_books"
+  },
+  {
+   "id": "grassroots",
+   "name": "Grassroots",
+   "desc": "+4 approval with your three closest groups at the start.",
+   "unlockedBy": "unanimous"
+  },
+  {
+   "id": "party_machine",
+   "name": "Party Machine",
+   "desc": "Campaigns are 25% stronger.",
+   "unlockedBy": "iron_majority"
+  },
+  {
+   "id": "deep_bench",
+   "name": "Deep Bench",
+   "desc": "Every politician starts with +10 loyalty.",
+   "unlockedBy": "kingmaker"
+  },
+  {
+   "id": "green_roots",
+   "name": "Green Roots",
+   "desc": "+5 approval with the Greenward Circle and Young Scholars at the start.",
+   "unlockedBy": "green_republic"
+  },
+  {
+   "id": "underdog",
+   "name": "Underdog",
+   "desc": "Campaigning is free while you hold fewer than 12 seats.",
+   "unlockedBy": "comeback"
+  },
+  {
+   "id": "iron_discipline",
+   "name": "Iron Discipline",
+   "desc": "All three wings start at 75 happiness.",
+   "unlockedBy": "clean_hands"
+  },
+  {
+   "id": "old_friends",
+   "name": "Old Friends",
+   "desc": "+1 relation with your nearest rival at the start.",
+   "unlockedBy": "long_memory"
+  },
+  {
+   "id": "golden_throat",
+   "name": "Golden Throat",
+   "desc": "Debate lines are 10% less likely to backfire.",
+   "unlockedBy": "silver_tongue"
+  },
+  {
+   "id": "fiscal_hawk",
+   "name": "Fiscal Hawk",
+   "desc": "Debt interest is 1 point lower.",
+   "unlockedBy": "debt_slayer"
+  },
+  {
+   "id": "spin_room",
+   "name": "Spin Room",
+   "desc": "Scandals cost half as much approval.",
+   "unlockedBy": "clean_cabinet"
+  },
+  {
+   "id": "second_wind",
+   "name": "Second Wind",
+   "desc": "+1 maximum and +1 starting Political Capital.",
+   "unlockedBy": "survivor"
+  }
+ ],
+ "achievements": [
+  {
+   "id": "unanimous",
+   "name": "Unanimous",
+   "desc": "Pass one of your bills with 0 NO votes.",
+   "icon": "hand"
+  },
+  {
+   "id": "kingmaker",
+   "name": "Kingmaker",
+   "desc": "Sit in a coalition government for 3 terms.",
+   "icon": "crown"
+  },
+  {
+   "id": "balanced_books",
+   "name": "Balanced Books",
+   "desc": "Finish with no debt.",
+   "icon": "scales"
+  },
+  {
+   "id": "green_republic",
+   "name": "Green Republic",
+   "desc": "Push the environment above 80.",
+   "icon": "leaf"
+  },
+  {
+   "id": "iron_majority",
+   "name": "Iron Majority",
+   "desc": "Win 40 or more seats.",
+   "icon": "shield"
+  },
+  {
+   "id": "comeback",
+   "name": "Comeback",
+   "desc": "Reach government after falling below 10 seats.",
+   "icon": "cycle"
+  },
+  {
+   "id": "clean_hands",
+   "name": "Clean Hands",
+   "desc": "Finish without ever whipping.",
+   "icon": "sparkle"
+  },
+  {
+   "id": "long_memory",
+   "name": "Long Memory",
+   "desc": "Finish without ever repealing a law.",
+   "icon": "infinity"
+  },
+  {
+   "id": "silver_tongue",
+   "name": "Silver Tongue",
+   "desc": "Win 8 debates in one game without a backfire.",
+   "icon": "mic"
+  },
+  {
+   "id": "clean_cabinet",
+   "name": "Clean Cabinet",
+   "desc": "Finish a full game without a single scandal.",
+   "icon": "broom"
+  },
+  {
+   "id": "survivor",
+   "name": "Survivor",
+   "desc": "Win a leadership challenge.",
+   "icon": "flag"
+  },
+  {
+   "id": "full_bench",
+   "name": "Full Bench",
+   "desc": "Keep all five cabinet posts filled for 20 turns.",
+   "icon": "chairs"
+  },
+  {
+   "id": "snap_victory",
+   "name": "Snap Victory",
+   "desc": "Complete every goal of the Snap Election.",
+   "icon": "bolt"
+  },
+  {
+   "id": "debt_slayer",
+   "name": "Debt Slayer",
+   "desc": "Complete every goal of the Debt Crisis.",
+   "icon": "coin"
+  },
+  {
+   "id": "insurgent_rise",
+   "name": "Insurgent Rise",
+   "desc": "Complete every goal of the Insurgent Party.",
+   "icon": "fist"
+  },
+  {
+   "id": "iron_will",
+   "name": "Iron Will",
+   "desc": "Finish in government on Hard or Ironclad.",
+   "icon": "anvil"
+  },
+  {
+   "id": "daily_done",
+   "name": "Daily Dispatch",
+   "desc": "Finish a daily challenge in government.",
+   "icon": "calendar"
+  }
+ ],
+ "papers": [
+  "The Calderra Courier",
+  "Brassport Bellows",
+  "The Quillon Lamp",
+  "Lowmere Almanac",
+  "Glasswick Ticker"
  ]
 }

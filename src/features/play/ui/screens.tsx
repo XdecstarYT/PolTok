@@ -1,35 +1,108 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { m } from 'framer-motion';
 import type { AchievementId, GameState, NewGameOptions } from '../engine/types';
-import { api, CONTENT, groupGlyph, lawById, PARTY_SWATCHES, partyColor, partyName, SEATS_TOTAL } from './adapter';
-import { Hemicycle } from './visuals';
+import { achGlyph, api, CONTENT, groupGlyph, lawById, PARTY_SWATCHES, partyColor, partyName, SEATS_TOTAL } from './adapter';
+import { seeded } from './fx';
+import { Portrait } from './portrait';
+import { ScenarioPicker, type V2Options } from './v2';
 import { sfx } from '../audio';
 
 // ---------------------------------------------------------------- Title
 
-export function TitleScreen({ canContinue, continueLabel = 'Continue', best, muted, rm, onContinue, onNew, onHow, onToggleMute, onSettings }: {
+const STARS = (() => { const r = seeded('quorum-sky'); return Array.from({ length: 70 }, () => ({ x: r.range(0, 1200), y: r.range(0, 380), s: r.range(0.4, 1.6), d: r.range(0, 4) })); })();
+const WINDOWS = (() => { const r = seeded('quorum-windows'); const out: { x: number; y: number; on: boolean; d: number }[] = []; for (let row = 0; row < 2; row++) for (let c = 0; c < 14; c++) out.push({ x: 404 + c * 28, y: 468 + row * 44, on: r.next() < 0.7, d: r.range(0, 6) }); return out; })();
+
+function TitleScene({ rm }: { rm: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (rm) return;
+    const el = ref.current; if (!el) return;
+    const mv = (e: PointerEvent) => { if (e.pointerType !== 'mouse') return; const x = e.clientX / window.innerWidth - 0.5, y = e.clientY / window.innerHeight - 0.5; el.style.setProperty('--px', x.toFixed(3)); el.style.setProperty('--py', y.toFixed(3)); };
+    window.addEventListener('pointermove', mv);
+    return () => window.removeEventListener('pointermove', mv);
+  }, [rm]);
+  return (
+    <div ref={ref} className={`q-scene${rm ? '' : ' is-anim'}`} aria-hidden="true">
+      <svg className="q-scene__sky q-par q-par--1" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <radialGradient id="q-moon" cx="50%" cy="50%" r="50%"><stop offset="0%" className="q-scene__glow0" /><stop offset="100%" className="q-scene__glow1" /></radialGradient>
+        </defs>
+        {STARS.map((t, i) => <circle key={i} cx={t.x} cy={t.y} r={t.s} className="q-scene__star" style={{ animationDelay: `${t.d}s` }} />)}
+        <circle cx="1010" cy="120" r="190" fill="url(#q-moon)" />
+        <circle cx="1010" cy="120" r="40" className="q-scene__moon" />
+      </svg>
+      <svg className="q-scene__hills q-par q-par--2" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice">
+        <path d="M0,520 C140,470 260,500 380,470 C520,430 640,480 760,455 C900,425 1040,470 1200,440 L1200,700 L0,700 Z" className="q-scene__hill1" />
+        <path d="M0,590 C200,560 320,585 480,570 C640,555 760,590 940,575 C1060,565 1140,580 1200,575 L1200,700 L0,700 Z" className="q-scene__hill2" />
+      </svg>
+      <svg className="q-scene__hall q-par q-par--3" viewBox="0 -60 1200 760" preserveAspectRatio="xMidYMax slice">
+        {/* The Assembly of Calderra (original illustration) */}
+        <g className="q-scene__bldg">
+          <rect x="470" y="300" width="260" height="40" />
+          <path d="M500,300 Q600,180 700,300 Z" />
+          <rect x="590" y="160" width="20" height="40" />
+          <path d="M600,120 L604,160 L596,160 Z" />
+          <rect x="380" y="380" width="440" height="160" />
+          <path d="M370,384 L600,318 L830,384 Z" />
+          <rect x="360" y="540" width="480" height="18" />
+          <rect x="340" y="558" width="520" height="16" />
+          <rect x="320" y="574" width="560" height="16" />
+        </g>
+        <circle cx="600" cy="356" r="16" className="q-scene__clock" />
+        <path d="M600,356 L600,346 M600,356 L607,360" className="q-scene__hands" />
+        {Array.from({ length: 9 }, (_, i) => <rect key={i} x={392 + i * 50} y="392" width="14" height="148" className="q-scene__col" />)}
+        {WINDOWS.map((w, i) => w.on && <rect key={i} x={w.x} y={w.y} width="9" height="18" rx="4" className="q-scene__win" style={{ animationDelay: `${w.d}s` }} />)}
+        <g className="q-scene__flag"><line x1="600" y1="120" x2="600" y2="70" /><path d="M600,72 Q626,66 650,76 Q626,86 600,90 Z" className="q-scene__banner" /></g>
+        {[250, 950].map((x) => <g key={x} className="q-scene__lamp"><rect x={x - 3} y="470" width="6" height="120" /><circle cx={x} cy="466" r="9" className="q-scene__lampglow" /><circle cx={x} cy="466" r="44" className="q-scene__lamphalo" /></g>)}
+      </svg>
+      <div className="q-scene__fog q-par q-par--4" />
+      <div className="q-scene__vignette" />
+    </div>
+  );
+}
+
+function Seal() {
+  return (
+    <svg className="q-seal" viewBox="-50 -50 100 100" aria-hidden="true">
+      <path d={Array.from({ length: 24 }, (_, i) => { const a = (i / 24) * Math.PI * 2; const r = i % 2 ? 44 : 48; return `${i ? 'L' : 'M'}${(Math.cos(a) * r).toFixed(1)},${(Math.sin(a) * r).toFixed(1)}`; }).join('') + 'Z'} className="q-seal__wax" />
+      <circle r="34" className="q-seal__ring" />
+      {Array.from({ length: 9 }, (_, i) => { const a = Math.PI * 0.62 + (i / 8) * Math.PI * 0.76; return <g key={i}><ellipse cx={Math.cos(a) * 26} cy={Math.sin(a) * 26} rx="5" ry="2.2" transform={`rotate(${(a * 180) / Math.PI + 70} ${Math.cos(a) * 26} ${Math.sin(a) * 26})`} className="q-seal__leaf" /><ellipse cx={-Math.cos(a) * 26} cy={Math.sin(a) * 26} rx="5" ry="2.2" transform={`rotate(${-(a * 180) / Math.PI - 70} ${-Math.cos(a) * 26} ${Math.sin(a) * 26})`} className="q-seal__leaf" /></g>; })}
+      <text y="12" textAnchor="middle" className="q-seal__q">Q</text>
+    </svg>
+  );
+}
+
+export function TitleScreen({ canContinue, continueLabel = 'Continue', best, muted, rm, onContinue, onNew, onHow, onToggleMute, onSettings, extra }: {
   canContinue: boolean; continueLabel?: string; best: number; muted: boolean; rm: boolean;
-  onContinue: () => void; onNew: () => void; onHow: () => void; onToggleMute: () => void; onSettings: () => void;
+  onContinue: () => void; onNew: () => void; onHow: () => void; onToggleMute: () => void; onSettings: () => void; extra?: ReactNode;
 }) {
-  const colors = useMemo(() => Array.from({ length: SEATS_TOTAL }, (_, i) => [CONTENT.rivals[0].color, PARTY_SWATCHES[0], CONTENT.rivals[1].color, CONTENT.rivals[2].color][Math.floor((i / SEATS_TOTAL) * 4)]), []);
+  const word = 'QUORUM';
   return (
     <section className="q-title" aria-labelledby="q-logo">
-      <div className={`q-title__bg${rm ? '' : ' is-anim'}`} aria-hidden="true"><Hemicycle colors={colors} label="" rm={rm} /></div>
+      <TitleScene rm={rm} />
       <div className="q-title__body">
-        <p className="q-kicker">A PolTok original strategy game</p>
-        <h1 id="q-logo" className="q-logo">QUORUM</h1>
-        <p className="q-logo__sub">The Calderra Ledger</p>
-        <p className="q-title__pitch">Found a party in a newborn harbor republic. 24 turns. 72 seats. 37 to pass anything.</p>
-        <div className="q-title__btns">
-          {canContinue && <button className="btn btn--accent q-btn-lg" onClick={onContinue} data-autofocus>{continueLabel}</button>}
-          <button className={`btn q-btn-lg${canContinue ? ' q-btn-ghost' : ' btn--accent'}`} onClick={onNew}>New Game</button>
-          <button className="btn q-btn-ghost q-btn-lg" onClick={onHow}>How to Play</button>
-        </div>
-        <div className="q-title__foot">
-          <button className="q-iconbtn" onClick={onToggleMute} aria-pressed={!muted} aria-label={muted ? 'Sound off. Turn sound on' : 'Sound on. Mute'}>{muted ? '🔇' : '🔊'}</button>
-          <button className="q-iconbtn" onClick={onSettings} aria-label="Settings">⚙</button>
-          {best > 0 && <span className="q-muted">Best score <b className="q-num">{best}</b></span>}
-        </div>
+        <m.div initial={rm ? false : { scale: 0.4, opacity: 0, rotate: -30 }} animate={{ scale: 1, opacity: 1, rotate: 0 }} transition={{ delay: 0.2, type: 'spring', stiffness: 160, damping: 14 }}><Seal /></m.div>
+        <p className="q-kicker q-title__kick">A PolTok original strategy game</p>
+        <h1 id="q-logo" className="q-logo" aria-label={word}>
+          {word.split('').map((ch, i) => (
+            <m.span key={i} aria-hidden="true" initial={rm ? false : { opacity: 0, y: 30, filter: 'blur(8px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ delay: 0.45 + i * 0.09, duration: 0.6, ease: [0.2, 0.9, 0.3, 1] }}>{ch}</m.span>
+          ))}
+        </h1>
+        <m.p className="q-logo__sub" initial={rm ? false : { opacity: 0, letterSpacing: '0.9em' }} animate={{ opacity: 1, letterSpacing: '0.32em' }} transition={{ delay: 1.1, duration: 1 }}>The Calderra Ledger</m.p>
+        <m.div initial={rm ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.5 }}>
+          <p className="q-title__pitch">Found a party in a newborn harbor republic. Three eras, 1871 to 1918. Seventy-two seats. Thirty-seven to pass anything.</p>
+          <div className="q-title__btns">
+            {canContinue && <button className="btn btn--accent q-btn-lg" onClick={onContinue} data-autofocus>{continueLabel}</button>}
+            <button className={`btn q-btn-lg${canContinue ? ' q-btn-ghost' : ' btn--accent'}`} onClick={onNew} {...(canContinue ? {} : { 'data-autofocus': true })}>New Game</button>
+            {extra}
+            <button className="btn q-btn-ghost q-btn-lg" onClick={onHow}>How to Play</button>
+          </div>
+          <div className="q-title__foot">
+            <button className="q-iconbtn" onClick={onToggleMute} aria-pressed={!muted} aria-label={muted ? 'Sound off. Turn sound on' : 'Sound on. Mute'}>{muted ? '🔇' : '🔊'}</button>
+            <button className="q-iconbtn" onClick={onSettings} aria-label="Settings">⚙</button>
+            {best > 0 && <span className="q-muted">Best score <b className="q-num">{best}</b></span>}
+          </div>
+        </m.div>
       </div>
     </section>
   );
@@ -46,21 +119,22 @@ export function HowToPlay() {
         <li>Every 4 turns there's an <b>election</b>. 37 of 72 seats governs alone; otherwise build a coalition.</li>
         <li>Watch the <b>budget</b>: debt over 300 bankrupts the republic.</li>
       </ol>
-      <p className="q-muted">Keys: <kbd>1</kbd>–<kbd>5</kbd> actions, <kbd>E</kbd> end turn, <kbd>M</kbd> map, <kbd>Esc</kbd> pause.</p>
+      <p className="q-muted">Keys: <kbd>1</kbd>–<kbd>5</kbd> actions, <kbd>E</kbd> end turn, <kbd>Z</kbd> undo, <kbd>M</kbd> map, <kbd>Esc</kbd> pause. Hover, focus or long-press any number for details.</p>
     </div>
   );
 }
 
 // ---------------------------------------------------------------- Party founding
 
-export function SetupScreen({ onStart, onBack }: { onStart: (o: NewGameOptions) => void; onBack: () => void }) {
+export function SetupScreen({ onStart, onBack, achievements = [] }: { onStart: (o: NewGameOptions) => void; onBack: () => void; achievements?: string[] }) {
+  const [v2, setV2] = useState<V2Options>({ scenarioId: 'sandbox', difficulty: 'normal', perks: [] });
   const [name, setName] = useState('Lantern Union');
   const [color, setColor] = useState(PARTY_SWATCHES[0]);
   const [ideo, setIdeo] = useState('commonwealth');
   const [custom, setCustom] = useState<[number, number]>([0, 0]);
   const pad = useRef<HTMLDivElement>(null);
   const axes = ideo === 'custom' ? custom : (() => { const d = CONTENT.ideologies.find((i) => i.id === ideo)!; return [d.economic ?? 0, d.social ?? 0] as [number, number]; })();
-  const opts: NewGameOptions = { partyName: name.trim() || 'Unnamed Party', color, ideologyId: ideo, economic: axes[0], social: axes[1] };
+  const opts: NewGameOptions = { partyName: name.trim() || 'Unnamed Party', color, ideologyId: ideo, economic: axes[0], social: axes[1], ...v2 };
   const preview = useMemo(() => { try { return api.newGame({ ...opts, seed: 1 }).approval; } catch { return null; } }, [ideo, axes[0], axes[1]]); // eslint-disable-line react-hooks/exhaustive-deps
   const setFromPointer = (e: React.PointerEvent) => {
     const r = pad.current!.getBoundingClientRect();
@@ -76,6 +150,7 @@ export function SetupScreen({ onStart, onBack }: { onStart: (o: NewGameOptions) 
       </header>
       <div className="q-setup__grid">
         <div className="q-card">
+          <div className="q-setup__leader"><Portrait seed={`${name.trim() || 'Unnamed Party'}·leader`} color={color} size={64} label="Your party leader" /><p className="q-small q-muted">Your party leader. The face follows the name you choose.</p></div>
           <label className="q-field">
             <span className="q-label">Party name</span>
             <input className="q-input" value={name} maxLength={24} onChange={(e) => setName(e.target.value)} />
@@ -118,6 +193,7 @@ export function SetupScreen({ onStart, onBack }: { onStart: (o: NewGameOptions) 
             </div>
           )}
         </div>
+        <ScenarioPicker value={v2} onChange={setV2} achievements={achievements} />
         <div className="q-card">
           <div className="q-label">Starting approval</div>
           <ul className="q-bars" aria-label="Starting approval by group">
@@ -155,7 +231,7 @@ export const ACHIEVEMENTS: Record<AchievementId, { name: string; desc: string; i
 const OUTCOME: Record<string, string> = {
   majority: 'Governing majority', coalition: 'Leading a coalition government', minority: 'Governing as a minority',
   junior: 'Junior partner in government', opposition: 'In opposition',
-  bankrupt: 'The Republic went bankrupt', collapse: 'National collapse', dissolved: 'Party dissolved',
+  bankrupt: 'The Republic went bankrupt', collapse: 'National collapse', dissolved: 'Party dissolved', ousted: 'Ousted by your own party',
 };
 
 export function EndScreen({ s, best, onNew, onTitle }: { s: GameState; best: number; onNew: () => void; onTitle: () => void }) {
@@ -164,7 +240,7 @@ export function EndScreen({ s, best, onNew, onTitle }: { s: GameState; best: num
   const seatsSeries = s.elections.map((e) => e.seats.player ?? 0);
   const laws = s.votes.filter((v) => v.tally.passes);
   const share = async () => {
-    const txt = `QUORUM: The Calderra Ledger — ${s.player.name}\n${sc.rank} · ${sc.total} pts · ${OUTCOME[s.outcome ?? ''] ?? ''}\nSeats by election: ${seatsSeries.join(' → ') || '—'}\nLaws enacted: ${s.enacted.length}\nAchievements: ${sc.achievements.map((a) => ACHIEVEMENTS[a].name).join(', ') || 'none'}`;
+    const txt = `QUORUM: The Calderra Ledger — ${s.player.name}${s.daily ? ` · Daily ${s.daily}` : ''}\n${sc.rank} · ${sc.total} pts · ${OUTCOME[s.outcome ?? ''] ?? ''}\nSeats by election: ${seatsSeries.join(' → ') || '—'}\nLaws enacted: ${s.enacted.length}\nAchievements: ${(sc.allAchievements ?? sc.achievements).map((a) => CONTENT.achievements.find((x) => x.id === a)?.name ?? a).join(', ') || 'none'}`;
     try { await navigator.clipboard.writeText(txt); setCopied(true); } catch { setCopied(false); }
   };
   const W = 240, H = 56, max = 72;
@@ -183,7 +259,10 @@ export function EndScreen({ s, best, onNew, onTitle }: { s: GameState; best: num
             <dt>Time in government</dt><dd className="q-num">{sc.government}</dd>
             <dt>State of the nation</dt><dd className="q-num">{sc.stats}</dd>
             <dt>Debt</dt><dd className="q-num">{sc.debt > 0 ? -sc.debt : sc.debt}</dd>
+            {sc.bonus ? <><dt>Scenario goals</dt><dd className="q-num">+{sc.bonus}</dd></> : null}
+            {sc.multiplier && sc.multiplier !== 1 ? <><dt>Difficulty</dt><dd className="q-num">×{sc.multiplier}</dd></> : null}
           </dl>
+          {sc.goals?.length ? <><div className="q-label">Goals</div><ul className="q-goals__list">{sc.goals.map((g) => <li key={g.id} className={g.done ? 'is-done' : ''}><span aria-hidden="true">{g.done ? '✔' : '○'}</span> {g.text} <small className="q-muted">+{g.bonus}</small></li>)}</ul></> : null}
           <div className="q-label">Seats over time</div>
           <svg viewBox={`-4 -4 ${W + 8} ${H + 8}`} className="q-spark" role="img" aria-label={`Seats by election: ${seatsSeries.join(', ') || 'no elections'}`}>
             <line x1="0" x2={W} y1={H - (37 / max) * H} y2={H - (37 / max) * H} className="q-spark__maj" />
@@ -194,9 +273,9 @@ export function EndScreen({ s, best, onNew, onTitle }: { s: GameState; best: num
         <div className="q-card">
           <div className="q-label">Achievements</div>
           <ul className="q-ach">
-            {(Object.keys(ACHIEVEMENTS) as AchievementId[]).map((a) => {
-              const on = sc.achievements.includes(a);
-              return <li key={a} className={on ? 'is-on' : ''}><span aria-hidden="true">{ACHIEVEMENTS[a].icon}</span><b>{ACHIEVEMENTS[a].name}</b><small>{ACHIEVEMENTS[a].desc}</small><span className="q-sr">{on ? 'earned' : 'not earned'}</span></li>;
+            {CONTENT.achievements.map((a) => {
+              const on = (sc.allAchievements ?? sc.achievements).includes(a.id);
+              return <li key={a.id} className={on ? 'is-on' : ''}><span aria-hidden="true">{achGlyph(a.icon)}</span><b>{a.name}</b><small>{a.desc}</small><span className="q-sr">{on ? 'earned' : 'not earned'}</span></li>;
             })}
           </ul>
         </div>
