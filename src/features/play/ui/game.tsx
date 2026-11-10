@@ -7,13 +7,14 @@ import {
 } from './adapter';
 import { Delta, Hemicycle } from './visuals';
 import { CalderraMap, regionLeader } from './map';
+import { MapView } from '../world';
 import { Num, Tip, tip } from './fx';
 import { Portrait } from './portrait';
 import type { Advice } from './advisor';
 import { WingChips } from './v2';
 
 export type Sheet = null | { kind: 'map'; region?: RegionId } | { kind: 'court' } | { kind: 'laws'; tab?: 'draft' | 'repeal' } | { kind: 'lobby' };
-export type View = 'chamber' | 'stats' | 'cabinet';
+export type View = 'chamber' | 'map' | 'stats' | 'cabinet';
 
 export const leaderSeed = (s: GameState) => `${s.player.name}·leader·${s.seed}`;
 
@@ -262,7 +263,7 @@ export function Dashboard({ s, rm, log, onSheet, onOpenVote, advisor, extra }: {
         <Chamber s={s} rm={rm} />
         <section className="q-card q-mapcard" aria-labelledby="q-map-h">
           <h3 id="q-map-h" className="q-h3">Calderra <span className="q-muted q-small">tap a region to campaign</span></h3>
-          <CalderraMap s={s} onSelect={(id) => onSheet({ kind: 'map', region: id })} />
+          <MapView s={s} toggle onSelect={(id) => onSheet({ kind: 'map', region: id })} />
         </section>
         <section className="q-card" aria-labelledby="q-appr-h">
           <h3 id="q-appr-h" className="q-h3">Interest groups <span className="q-muted q-small">approval of you</span></h3>

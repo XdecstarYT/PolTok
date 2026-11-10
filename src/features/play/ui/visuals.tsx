@@ -21,6 +21,8 @@ function hemiLayout(n: number, rows = 6): SeatPos[] {
   return pts.sort((p, q) => q.a - p.a || p.row - q.row);
 }
 const LAYOUT = hemiLayout(SEATS_TOTAL);
+/** Seat positions of the 72-seat hemicycle (viewBox 0..200 x 0..100), seat 0 leftmost. Shared with the 3D chamber. */
+export const HEMI_LAYOUT: readonly { x: number; y: number; row: number }[] = LAYOUT;
 
 export interface SeatView { color: string | null; flip?: boolean; dim?: boolean; ring?: string }
 

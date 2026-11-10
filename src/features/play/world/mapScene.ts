@@ -178,7 +178,9 @@ const SMOKE_VERT = /* glsl */`
   }`;
 const SMOKE_FRAG = /* glsl */`
   uniform vec3 uColor; varying float vA;
-  void main(){ vec2 c = gl_PointCoord - 0.5; float d = length(c); if (d > 0.5) discard; gl_FragColor = vec4(uColor, vA * 0.55 * smoothstep(0.5, 0.15, d)); #include <colorspace_fragment> }`;
+  void main(){ vec2 c = gl_PointCoord - 0.5; float d = length(c); if (d > 0.5) discard; gl_FragColor = vec4(uColor, vA * 0.55 * smoothstep(0.5, 0.15, d));
+#include <colorspace_fragment>
+}`;
 const GLOW_VERT = /* glsl */`
   attribute vec3 aColor; attribute float aSize; attribute float aKind; uniform float uTime; uniform float uNight; uniform float uScale; varying vec3 vC; varying float vA;
   void main(){
@@ -194,10 +196,14 @@ const GLOW_VERT = /* glsl */`
   }`;
 const GLOW_FRAG = /* glsl */`
   varying vec3 vC; varying float vA;
-  void main(){ float d = length(gl_PointCoord - 0.5); if (d > 0.5 || vA < 0.01) discard; float g = smoothstep(0.5, 0.0, d); gl_FragColor = vec4(vC * (g * g + g * 0.4), g * vA); #include <colorspace_fragment> }`;
+  void main(){ float d = length(gl_PointCoord - 0.5); if (d > 0.5 || vA < 0.01) discard; float g = smoothstep(0.5, 0.0, d); gl_FragColor = vec4(vC * (g * g + g * 0.4), g * vA);
+#include <colorspace_fragment>
+}`;
 const BEAM_VERT = /* glsl */`varying float vY; void main(){ vY = uv.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
 const BEAM_FRAG = /* glsl */`uniform vec3 uColor; uniform float uA; uniform float uTime; varying float vY;
-  void main(){ float a = (1.0 - vY) * (1.0 - vY) * uA * (0.75 + 0.25 * sin(uTime * 5.0 + vY * 9.0)); gl_FragColor = vec4(uColor * 1.6, a); #include <colorspace_fragment> }`;
+  void main(){ float a = (1.0 - vY) * (1.0 - vY) * uA * (0.75 + 0.25 * sin(uTime * 5.0 + vY * 9.0)); gl_FragColor = vec4(uColor * 1.6, a);
+#include <colorspace_fragment>
+}`;
 
 // ---------------------------------------------------------------- the scene
 
@@ -292,7 +298,7 @@ export class MapScene {
     this.controls = new MapControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = !opts.rm;
     this.controls.dampingFactor = 0.09;
-    this.controls.minDistance = 6; this.controls.maxDistance = 62;
+    this.controls.minDistance = 6; this.controls.maxDistance = 76;
     this.controls.minPolarAngle = 0.18; this.controls.maxPolarAngle = 1.22;
     this.controls.screenSpacePanning = false;
     this.controls.zoomToCursor = !opts.compact;
@@ -362,7 +368,7 @@ uniform vec3 uTint[8]; uniform float uAmt[8]; uniform float uGlow[8]; uniform fl
         .replace('#include <color_fragment>', `#include <color_fragment>
 vec3 rTint = vec3(0.0); float rAmt = 0.0; float rGlow = 0.0;
 if (vRegion > -0.5) { int ri = int(vRegion + 0.5); rTint = uTint[ri]; rAmt = uAmt[ri]; rGlow = uGlow[ri]; }
-diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * 0.45 + rTint * 0.62, rAmt);
+diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * 0.55 + rTint * 0.55, rAmt);
 float hov = (vRegion > -0.5 && abs(vRegion - uHover) < 0.5) ? 1.0 : 0.0;
 float sel = (vRegion > -0.5 && abs(vRegion - uSel) < 0.5) ? 1.0 : 0.0;
 diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * 1.22 + 0.05, max(hov * 0.85, sel * (0.6 + 0.3 * sin(uTime * 3.0))));`)
@@ -714,11 +720,12 @@ transformed.z += sin(uTime * 4.0 + position.x * 16.0 + ph) * 0.045 * (position.x
 
   setState(s: MapSceneState) {
     const prev = this.st; this.st = s;
+    if (!prev && s.autoOrbit) this.resetView(true);
     this.layoutTowns(s.era, s.turn, s.totalTurns);
     if (!prev || JSON.stringify(prev.campaigns) !== JSON.stringify(s.campaigns) || prev.flagColor !== s.flagColor) this.layoutFlags(s.campaigns, s.flagColor);
     REGION_ORDER.forEach((id, i) => {
       const css = s.tints[id];
-      if (css) { this.terrainU.uTint.value[i].copy(cssColor(this.host, css)); this.terrainU.uAmt.value[i] = s.flash ? 0.8 : 0.5; }
+      if (css) { this.terrainU.uTint.value[i].copy(cssColor(this.host, css)); this.terrainU.uAmt.value[i] = s.flash ? 0.8 : 0.34; }
       else this.terrainU.uAmt.value[i] = 0;
       this.terrainU.uGlow.value[i] = s.glow[id] ?? 0;
     });
@@ -765,12 +772,14 @@ transformed.z += sin(uTime * 4.0 + position.x * 16.0 + ph) * 0.045 * (position.x
   private fitDistance() {
     const aspect = this.size.x / Math.max(1, this.size.y);
     const v = Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
-    const W = this.opts.compact ? 33 : 35, D = 27;
-    return Math.min(60, Math.max((W / 2) / (v * aspect), (D / 2) / v * 0.85) * 1.02);
+    // with auto-orbit (election night) fit the land's circle, else its width and depth
+    const W = this.st?.autoOrbit ? 40 : 39, D = this.st?.autoOrbit ? 40 : 30;
+    return Math.min(74, Math.max((W / 2) / (v * aspect), (D / 2) / v));
   }
   private home() {
-    const d = this.fitDistance(), pol = 0.78;
-    const target = V(-0.4, 0, 0.6);
+    const aspect = this.size.x / Math.max(1, this.size.y);
+    const d = this.fitDistance(), pol = aspect < 1.15 ? 0.5 : 0.72; // narrower views look more top-down
+    const target = V(-0.4, 0, aspect < 1.15 ? 1.2 : 2.2);
     return { target, pos: target.clone().add(V(0, Math.cos(pol) * d, Math.sin(pol) * d)) };
   }
   resetView(instant = false) {

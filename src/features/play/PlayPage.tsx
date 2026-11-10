@@ -2,19 +2,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m, useReducedMotion } from 'framer-motion';
 import type { Action, ApplyResult, EraDef, ElectionResult, GameState, LogEntry, NewGameOptions, PartyId } from './engine/types';
 import { api, approvalIndex, CONTENT, lawById, partyColor, projectSeats } from './ui/adapter';
-import { clearSave, hasSave, saveIsOver, loadSeenElection, writeSeenElection, loadMeta, loadPrefs, loadSave, resetAll, writeMeta, writePrefs, writeSave, loadChronicle, recordSnapshot, type Meta, type Prefs, type Snapshot } from './ui/storage';
+import { clearSave, hasSave, saveIsOver, loadSeenElection, writeSeenElection, loadMeta, loadPrefs, loadSave, resetAll, writeMeta, writePrefs, writeSave, type Meta, type Prefs } from './ui/storage';
 import { Confetti, Dialog } from './ui/visuals';
 import { AdvisorCard, CourtPanel, Dashboard, EndBar, LawLibrary, LobbyPanel, RegionPanel, TopBar, ViewTabs, type Sheet, type View } from './ui/game';
 import { advise } from './ui/advisor';
 import { StatsView } from './ui/stats';
 import { AmendPicker, AmendSlot, CabinetView, DailyButton, dailyChallenge, DebateBanner, DebateScene, FactionMeter, GoalsCard, PerksScreen, wingRebelNote } from './ui/v2';
-import { currentEvent, headlines } from './engine';
+import { consumesRng, currentEvent, headlines } from './engine';
 import { TipLayer, hideTip } from './ui/fx';
 import { VoteScreen } from './ui/vote';
 import { CoalitionBuilder, ElectionNight } from './ui/election';
 import { Coach, EraInterstitial, EventCard, fallbackHeadlines, FrontPage, PauseMenu, TUTORIAL, type Head } from './ui/overlays';
 import { EndScreen, HowToPlay, SetupScreen, TitleScreen } from './ui/screens';
 import { music, setAudio, sfx } from './audio';
+import { Gfx3DContext, MapView, hasWebGL, preload3D } from './world';
 import './play.css';
 
 type Overlay =
@@ -24,6 +25,7 @@ type Overlay =
 
 function safeEvent(s: GameState) { try { return currentEvent(s) ?? undefined; } catch { return undefined; } }
 
+/** Friendly names for undoable actions (which actions are undoable is decided by consumesRng). */
 const UNDO_LABEL: Partial<Record<Action['type'], (a: Action) => string>> = {
   campaign: () => 'campaign', court: () => 'courting', draft: (a) => `draft of ${lawById((a as { lawId: string }).lawId)?.name ?? 'a law'}`,
   repeal: () => 'repeal motion', lobby: () => 'lobbying', setStance: () => 'stance change', whip: () => 'whip',
@@ -57,7 +59,6 @@ export default function PlayPage() {
   const [view, setView] = useState<View>('chamber');
   const [undo, setUndo] = useState<{ state: GameState; label: string }[]>([]);
   const [advisorOff, setAdvisorOff] = useState<number | null>(null);
-  const [snaps, setSnaps] = useState<Snapshot[]>([]);
   const [debate, setDebate] = useState(false);
   const [perksOpen, setPerksOpen] = useState(false);
 
@@ -77,17 +78,12 @@ export default function PlayPage() {
     l.href = 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=IM+Fell+English+SC&display=swap';
     document.head.appendChild(l);
   }, []);
-  // per-turn chronicle for the Statistics tab
-  useEffect(() => {
-    if (!gs) return;
-    let projected = gs.seats.player ?? 0; try { projected = projectSeats(gs).player ?? projected; } catch { /* ignore */ }
-    recordSnapshot(gs.seed, { turn: gs.turn, approval: Math.round(approvalIndex(gs) * 10) / 10, seats: gs.seats.player ?? 0, projected, debt: gs.debt, treasury: gs.treasury, pc: gs.politicalCapital, stats: { ...gs.stats }, inGov: gs.government.members.includes('player') });
-    setSnaps(loadChronicle(gs.seed));
-  }, [gs]);
   // undo is only valid within the same turn and phase
   useEffect(() => { setUndo((u) => (u.length && gs && (u[u.length - 1].state.turn !== gs.turn || u[u.length - 1].state.phase !== gs.phase) ? [] : u)); }, [gs?.turn, gs?.phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { document.title = 'QUORUM: The Calderra Ledger · PolTok'; }, []);
+  // fetch the 3D chunk once a game is on screen (it is only ever loaded on /play)
+  useEffect(() => { if (screen === 'game' && prefs.map3d) preload3D(); }, [screen, prefs.map3d]);
   const setPrefs = (p: Prefs) => { setPrefsState(p); writePrefs(p); };
   const say = (text: string, bad?: boolean) => setToast({ id: Date.now(), text, bad });
   useEffect(() => { if (!toast) return; const t = window.setTimeout(() => setToast(null), 2600); return () => window.clearTimeout(t); }, [toast]);
@@ -107,11 +103,13 @@ export default function PlayPage() {
 
   const act = useCallback((a: Action): ApplyResult | null => {
     const s = gsRef.current; if (!s) return null;
+    // undo only actions that draw nothing from the seeded RNG (otherwise undo would let a player re-roll)
+    let rolls = true; try { rolls = consumesRng(s, a); } catch { /* keep undo off */ }
     let r: ApplyResult;
     try { r = api.apply(s, a); } catch (e) { say(String((e as Error).message ?? e), true); return null; }
     const err = r.log.find((l) => l.kind === 'error');
     if (err) { say(err.text, true); return null; }
-    const label = UNDO_LABEL[a.type]?.(a);
+    const label = rolls ? null : UNDO_LABEL[a.type]?.(a) ?? a.type.replace(/([A-Z])/g, ' $1').toLowerCase();
     if (label && r.state.turn === s.turn && r.state.phase === s.phase) setUndo((u) => [...u.slice(-9), { state: s, label }]);
     else setUndo([]);
     gsRef.current = r.state;
@@ -235,7 +233,7 @@ export default function PlayPage() {
     body = (
       <>
         <TopBar s={s} rm={rm} muted={prefs.muted} onPause={() => setPaused(true)} onMute={() => setPrefs({ ...prefs, muted: !prefs.muted })} />
-        <ViewTabs view={view} setView={(v) => { sfx.click(); setView(v); }} tabs={[{ id: 'chamber', label: 'Chamber' }, { id: 'cabinet', label: 'Cabinet & Party', badge: s.wings && Object.values(s.wings).some((w) => w < 35) ? '!' : undefined }, { id: 'stats', label: 'Statistics' }]} />
+        <ViewTabs view={view} setView={(v) => { sfx.click(); setView(v); }} tabs={[{ id: 'chamber', label: 'Chamber' }, { id: 'map', label: 'Map' }, { id: 'cabinet', label: 'Cabinet & Party', badge: s.wings && Object.values(s.wings).some((w) => w < 35) ? '!' : undefined }, { id: 'stats', label: 'Statistics' }]} />
         <AnimatePresence mode="wait" initial={false}>
           <m.div key={view} className="q-viewpane" initial={rm ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={rm ? undefined : { opacity: 0, y: -6 }} transition={{ duration: 0.18 }}>
             {view === 'chamber' && (
@@ -243,7 +241,14 @@ export default function PlayPage() {
                 advisor={<><DebateBanner s={s} onOpen={() => { sfx.click(); setDebate(true); }} /><AdvisorCard s={s} advice={advice} onDo={(a) => { act(a); }} onOpenVote={openVote} onDismiss={() => setAdvisorOff(s.turn)} /></>}
                 extra={<><FactionMeter s={s} rm={rm} compact /><GoalsCard s={s} /></>} />
             )}
-            {view === 'stats' && <StatsView s={s} snaps={snaps} />}
+            {view === 'map' && (
+              <section className="q-card q-maptab" aria-labelledby="q-maptab-h">
+                <h3 id="q-maptab-h" className="q-h3">The Republic of Calderra <span className="q-muted q-small">{s.phase === 'actions' && s.ap > 0 ? 'tap a region to campaign' : 'tap a region for its seats'}</span></h3>
+                <MapView s={s} toggle tall onSelect={(id) => { sfx.click(); setToast(null); setSheet({ kind: 'map', region: id }); }} />
+                <p className="q-small q-muted q-maptab__help">{hasWebGL() && prefs.map3d ? 'Drag to pan · pinch or scroll to zoom · two fingers or right-drag to rotate · arrows, +/−, R on the keyboard' : 'Tap or press Enter on a region to open it.'}</p>
+              </section>
+            )}
+            {view === 'stats' && <StatsView s={s} />}
             {view === 'cabinet' && <CabinetView s={s} rm={rm} act={act} />}
           </m.div>
         </AnimatePresence>
@@ -277,7 +282,9 @@ export default function PlayPage() {
     );
   }
 
+  const gfx = useMemo(() => ({ enabled: prefs.map3d, quality: prefs.quality3d, rm, setEnabled: (on: boolean) => setPrefs({ ...prefs, map3d: on }) }), [prefs, rm]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
+    <Gfx3DContext.Provider value={gfx}>
     <div className="q-root" data-rm={rm ? '1' : undefined}>
       <AnimatePresence mode="wait" initial={false}>
         <m.div key={screen} initial={rm ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={rm ? undefined : { opacity: 0 }} transition={{ duration: 0.3 }}>{body}</m.div>
@@ -288,5 +295,6 @@ export default function PlayPage() {
       <Confetti fire={confetti.n} colors={confetti.colors.length ? confetti.colors : ['#fff']} />
       <div className="q-toast-wrap" aria-live="polite" role="status">{toast && <div key={toast.id} className={`q-toast${toast.bad ? ' is-bad' : ''}`}>{toast.text}</div>}</div>
     </div>
+    </Gfx3DContext.Provider>
   );
 }

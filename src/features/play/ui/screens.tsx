@@ -234,6 +234,14 @@ const OUTCOME: Record<string, string> = {
   bankrupt: 'The Republic went bankrupt', collapse: 'National collapse', dissolved: 'Party dissolved', ousted: 'Ousted by your own party',
 };
 
+/** Outcomes that end the game early, with a line on what happened. */
+const LOSS_NOTE: Record<string, (s: GameState) => string> = {
+  bankrupt: () => 'Debt passed the limit and the Treasury defaulted. Creditors took the Republic\'s accounts out of your hands.',
+  collapse: () => 'The state of the nation fell apart. The Assembly was suspended.',
+  dissolved: () => 'Two elections in a row below the threshold. Your party was wound up.',
+  ousted: (s) => `Your own party voted you out as leader in turn ${s.lastChallenge || s.turn}${s.challengesSurvived ? `, after surviving ${s.challengesSurvived} earlier challenge${s.challengesSurvived > 1 ? 's' : ''}` : ''}. The score counts up to that day.`,
+};
+
 export function EndScreen({ s, best, onNew, onTitle }: { s: GameState; best: number; onNew: () => void; onTitle: () => void }) {
   const sc = api.score(s);
   const [copied, setCopied] = useState(false);
@@ -246,9 +254,10 @@ export function EndScreen({ s, best, onNew, onTitle }: { s: GameState; best: num
   const W = 240, H = 56, max = 72;
   const path = seatsSeries.map((v, i) => `${i ? 'L' : 'M'}${(seatsSeries.length < 2 ? W / 2 : (i * W) / (seatsSeries.length - 1)).toFixed(1)},${(H - (v / max) * H).toFixed(1)}`).join('');
   return (
-    <section className="q-end" aria-labelledby="q-end-h">
+    <section className={`q-end${s.outcome && LOSS_NOTE[s.outcome] ? ' is-loss' : ''}`} aria-labelledby="q-end-h" data-outcome={s.outcome ?? undefined}>
       <p className="q-kicker">{OUTCOME[s.outcome ?? ''] ?? 'Game over'}</p>
       <h2 id="q-end-h" className="q-end__rank">{sc.rank}</h2>
+      {s.outcome && LOSS_NOTE[s.outcome] && <p className="q-end__loss" role="status">{LOSS_NOTE[s.outcome](s)}</p>}
       <div className="q-end__score"><span className="q-num">{sc.total}</span> points {sc.total >= best && sc.total > 0 && <span className="q-pill">New best</span>}</div>
       <div className="q-end__grid">
         <div className="q-card">

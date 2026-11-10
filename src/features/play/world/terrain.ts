@@ -169,7 +169,7 @@ export function buildTerrain(quality: Quality = 'medium'): Terrain {
     const ramp = smoothstep(0, 16, dist[k]);
     let v = 0.06 + ramp * h[k] + (dist[k] < 2.5 ? -0.04 : 0);
     const dr = Math.min(distToPolyline(x, y, RIVER), distToPolyline(x, y, RIVER2) + 0.6);
-    if (dr < 7) v = -0.1 + (v + 0.1) * smoothstep(1.6, 7, dr);
+    if (dr < 5) v = -0.09 + (v + 0.09) * smoothstep(1.1, 5, dr);
     if (REGION_ORDER[region[k]] === 'lowmere' || REGION_ORDER[region[k]] === 'tamsfield') {
       for (const [px, py] of PONDS) { const d = Math.hypot(px - x, (py - y) * 1.6); if (d < 9) v = Math.min(v, -0.12 + (d / 9) * 0.3); }
     }
@@ -300,7 +300,7 @@ export function townLots(t: Terrain, key: RegionKey, max: number, spacing = 3.4)
     const x = cx + Math.cos(a) * rad + r.range(-1, 1), y = cy + Math.sin(a) * rad * 0.85 + r.range(-1, 1);
     const reg = regionAtMap(t, x, y), h = heightAtMap(t, x, y);
     if (reg !== slot || h < 0.1 || slopeAtMap(t, x, y) > 0.9) continue;
-    if (key === 'quillon' && Math.hypot(x - CAPITAL[0], y - CAPITAL[1]) < 9) continue; // leave the Assembly square clear
+    if (key === 'quillon' && Math.hypot(x - CAPITAL[0], y - CAPITAL[1]) < 17) continue; // leave the Assembly square clear
     out.push({ x, y, h, rot: Math.round(a / (Math.PI / 2)) * (Math.PI / 2) + r.range(-0.15, 0.15), rnd: r.next() });
   }
   return out;

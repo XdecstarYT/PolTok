@@ -8,6 +8,7 @@ import { m } from 'framer-motion';
 import type { EraDef, EventDef, GameState, LogEntry } from '../engine/types';
 import { CONTENT, groupGlyph, groupName, signed, STAT_ICON, STAT_LABEL, STATS, yearOf } from './adapter';
 import { Delta } from './visuals';
+import { defaultQuality, hasWebGL } from '../world/support';
 import type { Prefs } from './storage';
 
 export function EventCard({ ev, s, rm, onChoose }: { ev: EventDef; s: GameState; rm: boolean; onChoose: (c: 0 | 1) => void }) {
@@ -144,6 +145,13 @@ export function PauseMenu({ prefs, setPrefs, onResume, onSaveQuit, onReset, onHo
         <input type="range" min={0} max={1} step={0.05} value={prefs.musicVolume} onChange={(e) => setPrefs({ ...prefs, musicVolume: Number(e.target.value) })} disabled={prefs.muted || !prefs.music} /></label>
       <label className="q-toggle"><input type="checkbox" checked={prefs.reduceMotion} onChange={(e) => setPrefs({ ...prefs, reduceMotion: e.target.checked })} /> Reduce motion</label>
       <label className="q-toggle"><input type="checkbox" checked={prefs.advisor} onChange={(e) => setPrefs({ ...prefs, advisor: e.target.checked })} /> Show the Advisor's hints</label>
+      {hasWebGL() ? <>
+        <label className="q-toggle"><input type="checkbox" checked={prefs.map3d} onChange={(e) => setPrefs({ ...prefs, map3d: e.target.checked })} /> 3D map and Assembly chamber</label>
+        <label className="q-field"><span className="q-label">3D quality{prefs.quality3d === 'auto' ? ` (auto: ${defaultQuality()})` : ''}</span>
+          <select className="q-select" value={prefs.quality3d} disabled={!prefs.map3d} onChange={(e) => setPrefs({ ...prefs, quality3d: e.target.value as Prefs['quality3d'] })}>
+            <option value="auto">Auto (by device)</option><option value="low">Low: fastest, no shadows</option><option value="medium">Medium</option><option value="high">High: soft shadows, dense forests</option>
+          </select></label>
+      </> : <p className="q-small q-muted">3D views need WebGL2, which this browser does not offer. The illustrated 2D map is used instead.</p>}
       <div className="q-pause__btns">
         <button className="btn btn--accent q-btn-lg" onClick={onResume} data-autofocus>{inGame ? 'Resume' : 'Done'}</button>
         <button className="btn q-btn-ghost q-btn-lg" onClick={onHow}>How to Play</button>

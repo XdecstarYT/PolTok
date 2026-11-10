@@ -49,7 +49,7 @@ export function atmosphere(era: number, phase: number, night = 0): Atmosphere {
   const nightA: Atmosphere = {
     skyTop: 0x070b1c, skyHorizon: 0x1c2550, skyBottom: 0x0b0f20, fog: 0x121a38, fogNear: 50, fogFar: 140,
     sun: 0x9fb4ff, sunIntensity: 0.55, sunElev: 40, sunAzim: -130,
-    hemiSky: 0x3a4a8a, hemiGround: 0x101018, hemiIntensity: 0.45, exposure: 1.05, night: 1, stars: 1, water: 0x1a3550,
+    hemiSky: 0x4a5a9a, hemiGround: 0x15151f, hemiIntensity: 0.75, exposure: 1.05, night: 1, stars: 1, water: 0x1a3550,
   };
   const out = { ...day };
   (Object.keys(out) as (keyof Atmosphere)[]).forEach((k) => {

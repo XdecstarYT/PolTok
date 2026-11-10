@@ -232,10 +232,11 @@ export function DebateScene({ s, rm, act, onClose }: { s: GameState; rm: boolean
 
 // ---------------------------------------------------------------- amendments
 
+const STANCE_WORD: Record<string, string> = { yes: 'YES', no: 'NO', abstain: 'abstain' };
+
 function AmendOptions({ s, target, onPick, check }: { s: GameState; target: string; onPick: (amendmentId: string) => void; check: (amendmentId: string) => { valid: boolean; reason?: string } }) {
   let opts: ReturnType<typeof amendmentsFor> = []; try { opts = amendmentsFor(s, target); } catch { /* ignore */ }
   if (!opts.length) return <p className="q-small q-muted">No amendment fits this bill.</p>;
-  let baseYes = 0; try { baseYes = (s.docket.find((d) => d.id === target) ? canDo(s, { type: 'setStance', itemId: target, stance: s.docket.find((d) => d.id === target)!.playerStance }).forecast?.yes : canDo(s, { type: 'draft', lawId: target }).forecast?.yes) ?? 0; } catch { /* ignore */ }
   return (
     <ul className="q-amends">
       {opts.map((o) => {
@@ -246,7 +247,14 @@ function AmendOptions({ s, target, onPick, check }: { s: GameState; target: stri
             <div className="q-amend__h"><b>{a.name}</b>{o.flips && <span className="q-amend__badge">Turns it into a PASS</span>}</div>
             <p className="q-small q-muted">{a.desc}</p>
             <p className="q-small">Courts {o.targets.map((t) => <span key={t} className="q-pill"><i className="q-dot" style={{ background: partyColor(s, t) }} /> {partyName(s, t)}</span>)}
-              <span className="q-num"> Forecast <b className={o.forecast.passes ? 'q-ok' : 'q-warn'}>{o.forecast.yes}–{o.forecast.no} {o.forecast.passes ? 'PASS' : 'FAIL'}</b>{baseYes ? <small className="q-muted"> ({signed(o.forecast.yes - baseYes)} YES)</small> : null}</span></p>
+              <span className="q-num"> Forecast <b className={o.forecast.passes ? 'q-ok' : 'q-warn'}>{o.forecast.yes}–{o.forecast.no} {o.forecast.passes ? 'PASS' : 'FAIL'}</b></span></p>
+            <p className="q-small q-amend__moves">
+              {(o.yesGain ?? 0) > 0 && <span className="q-pill q-ok">+{o.yesGain} YES</span>}
+              {(o.noDrop ?? 0) > 0 && <span className="q-pill q-ok">−{o.noDrop} NO</span>}
+              {!(o.yesGain ?? 0) && !(o.noDrop ?? 0) && <span className="q-muted">No change to the tally</span>}
+              {(o.stanceChanges ?? []).map((c) => <span key={c.party} className="q-pill"><i className="q-dot" style={{ background: partyColor(s, c.party) }} /> {partyName(s, c.party)}: {STANCE_WORD[c.from]} → <b>{STANCE_WORD[c.to]}</b></span>)}
+              {o.stanceChanges && !o.stanceChanges.length && (o.yesGain ?? 0) > 0 && <span className="q-muted">softens the bloc, no stance moves</span>}
+            </p>
             <div className="q-effects">
               {Object.entries(a.groupEffects).map(([g, n]) => <Tip key={g} content={`${groupName(g)} ${signed(n)} if enacted`}>{groupGlyph(g)} <Delta n={n} /></Tip>)}
               {Object.entries(o.wingsDelta).map(([w, n]) => <Tip key={w} content={`${WINGS[w]?.name} ${signed(n ?? 0)}`} className="q-wingchip"><i style={{ background: wingColor(w) }} /><Delta n={n ?? 0} /></Tip>)}

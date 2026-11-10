@@ -76,8 +76,8 @@ export const RELATION_LABEL: Record<number, string> = { [-2]: 'Hostile', [-1]: '
 
 export const inGovernment = (s: GameState) => s.government.members.includes('player');
 export const eraDef = (s: GameState) => CONTENT.eras.find((e) => e.id === s.era) ?? CONTENT.eras[0];
-export const isElectionTurn = (t: number) => t % 4 === 0;
-export const turnsToElection = (t: number) => (4 - (t % 4)) % 4;
+/** Election calendar comes from the engine (scenarios have their own); never assume every 4th turn. */
+export const isElectionTurn = (s: GameState, turn = s.turn) => engine.isElectionTurn(s, turn);
 
 /** Highest-fit unlocked law for the player (tutorial suggestion). */
 export function suggestedLaw(s: GameState): LawDef | undefined {
@@ -99,12 +99,12 @@ export const signed = (n: number) => (n > 0 ? `+${Math.round(n)}` : `${Math.roun
 
 /** Last turn of this game (scenarios can shorten it). */
 export const totalTurns = (s: GameState) => s.totalTurns ?? TURNS_TOTAL;
-/** Turns (at the end of which) an election is held. */
-export const electionTurnsOf = (s: GameState): number[] => s.electionTurns ?? Array.from({ length: Math.floor(TURNS_TOTAL / 4) }, (_, i) => (i + 1) * 4);
+/** Turns (at the end of which) an election is held: the scenario's calendar. */
+export const electionTurnsOf = (s: GameState): number[] => s.electionTurns ?? [];
 /** Turns until the next election (0 = at the end of this turn), or null if none remain. */
 export function nextElectionIn(s: GameState): number | null {
-  const t = electionTurnsOf(s).filter((x) => x >= s.turn).sort((a, b) => a - b)[0];
-  return t === undefined ? null : t - s.turn;
+  const n = engine.turnsToElection(s);
+  return n < 0 ? null : n;
 }
 /** Era-calendar year for a turn (two years per turn inside each era's span). */
 export function yearOf(turn: number): number {

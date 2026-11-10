@@ -29,7 +29,6 @@ export class Loop {
   private running = false;
   private dirty = true;
   private last = 0;
-  private acc = 0;
   private frames = 0;
   private fpsT = 0;
   fps = 0;
@@ -50,18 +49,33 @@ export class Loop {
     const want = this.visible && this.onscreen;
     if (want === this.running) return;
     this.running = want;
-    this.last = 0;
+    this.last = 0; this.fpsT = 0; this.frames = 0;
     this.renderer.setAnimationLoop(want ? (t) => this.tick(t) : null);
     this.host.dataset.paused = want ? '' : '1';
   }
+  private coveredAt = 0;
+  private covered = false;
+  /** A modal dialog that does not contain this view is open on top of it (the view is behind a scrim). */
+  private isCovered(now: number) {
+    if (now - this.coveredAt < 400) return this.covered;
+    this.coveredAt = now;
+    const ds = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+    const top = ds[ds.length - 1];
+    const was = this.covered;
+    this.covered = !!top && !top.contains(this.host);
+    if (was && !this.covered) this.dirty = true;
+    this.host.dataset.covered = this.covered ? '1' : '';
+    return this.covered;
+  }
   private tick(now: number) {
+    if (this.isCovered(now)) { this.last = 0; return; }
     const dt = this.last ? Math.min(0.1, (now - this.last) / 1000) : 1 / 60;
     if (this.minFrameMs && this.last && now - this.last < this.minFrameMs - 1) return; // frame cap (low quality)
     this.last = now;
     const moving = this.frame(dt, now / 1000) === true;
     if (this.continuous || moving || this.dirty) { this.dirty = false; this.frames++; this.render(); }
-    this.acc += dt; this.fpsT += dt;
-    if (this.fpsT >= 1) { this.fps = Math.round(this.frames / this.fpsT); this.frames = 0; this.fpsT = 0; this.host.dataset.fps = String(this.fps); this.host.dataset.calls = String(this.renderer.info.render.calls); }
+    if (!this.fpsT) this.fpsT = now;
+    if (now - this.fpsT >= 1000) { this.fps = Math.round((this.frames * 1000) / (now - this.fpsT)); this.frames = 0; this.fpsT = now; this.host.dataset.fps = String(this.fps); this.host.dataset.calls = String(this.renderer.info.render.calls); }
   }
   render = () => {};
   dispose() {

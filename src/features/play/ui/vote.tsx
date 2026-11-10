@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { m, useAnimationControls } from 'framer-motion';
 import type { Action, ApplyResult, BlocStance, GameState, PartyId, Stance, VoteTally } from '../engine/types';
 import { canDo, groupGlyph, groupName, lawById, MAJORITY, partiesLeftToRight, partyColor, partyName, rivalDef, SEATS_TOTAL, signed } from './adapter';
-import { Delta, Hemicycle, type SeatView } from './visuals';
+import { Delta, type SeatView } from './visuals';
+import { ChamberView } from '../world';
 import { safeForecast, leaderSeed } from './game';
 import { Num, Tip, tip } from './fx';
 import { Portrait } from './portrait';
@@ -135,7 +136,7 @@ export function VoteScreen({ s, itemId, rm, act, onClose, onPassed, amendSlot, w
 
       <div className="q-vote__chamber">
         {stage === 'call' && <m.div className="q-vote__banner" initial={{ opacity: 0, scale: 1.2 }} animate={{ opacity: 1, scale: 1 }}>Order! The Speaker calls the roll.</m.div>}
-        <Hemicycle seats={view} rm label={`${counting ? 'Roll call' : 'Forecast'}: ${cnt.yes} yes, ${cnt.no} no, ${cnt.abstain} abstain`} seatTip={seatTip}
+        <ChamberView seats={view} rm={rm} era={s.era ?? 1} partyOf={(i) => (seats[i] ? partyColor(s, seats[i].party) : null)} label={`${counting ? 'Roll call' : 'Forecast'}: ${cnt.yes} yes, ${cnt.no} no, ${cnt.abstain} abstain`} seatTip={seatTip}
           center={<div className="q-tallynum" aria-live="polite"><b className="is-yes"><Num value={cnt.yes} rm dur={0} /></b><span>–</span><b className="is-no"><Num value={cnt.no} rm dur={0} /></b></div>} />
         {stage === 'done' && result && (
           <m.div className={`q-stamp ${result.tally.passes ? 'is-pass' : 'is-fail'}`} role="status"

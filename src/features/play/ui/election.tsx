@@ -3,7 +3,7 @@ import { m } from 'framer-motion';
 import type { Action, ElectionResult, GameState, PartyId, RegionId, RivalId } from '../engine/types';
 import { api, CONTENT, dhondt, MAJORITY, partiesLeftToRight, partyColor, partyName, regionName, regionSharesNow, RELATION_LABEL, rivalDef, SEATS_TOTAL, yearOf } from './adapter';
 import { Hemicycle } from './visuals';
-import { CalderraMap } from './map';
+import { MapView } from '../world';
 import { Num, tip } from './fx';
 import { Portrait } from './portrait';
 import { music, sfx, startBed, stopBed } from '../audio';
@@ -97,7 +97,7 @@ export function ElectionNight({ s, result, rm, onDone, onMajority }: {
       <div className="q-elec__ticker" aria-live="polite">{latest ? <><b>{regionName(latest.regionId)}</b> declares: {Object.entries(latest.seats).filter(([, v]) => v).sort((a, b) => b[1] - a[1]).map(([p, v]) => `${partyName(s, p)} ${v}`).join(' · ')}</> : 'Polls have closed. Counting begins…'}</div>
       <div className="q-elec__grid">
         <div className="q-elec__mapwrap">
-          <CalderraMap s={{ ...s, elections: [], campaign: {} as GameState['campaign'] }} flash={flash} pulse={latest?.regionId ?? null} compact
+          <MapView night s={{ ...s, elections: [], campaign: {} as GameState['campaign'] }} flash={flash} pulse={latest?.regionId ?? null} compact
             info={(id) => { const r = declared.find((x) => x.regionId === id); return r ? <span className="q-tip__row">Declared: {Object.entries(r.seats).filter(([, v]) => v).map(([p, v]) => `${partyName(s, p).split(' ')[0]} ${v}`).join(', ')}</span> : <span className="q-tip__row q-muted">Still counting</span>; }} />
         </div>
         <div className="q-elec__side">
