@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { Modal, useReducedMotion } from '../../components';
+import { Modal, PageHeader, useReducedMotion } from '../../components';
 import { useLive } from '../../lib/live';
 import { renderCard, cardFileName, type CardData } from '../../lib/cards';
 import { stateShape } from '../map/geometry';
@@ -29,11 +29,13 @@ export default function QuizPage() {
   useEffect(() => { document.title = 'Quiz · PolTok'; }, []);
   return (
     <div className="page page--narrow qz">
-      <header className="qz-head">
-        <p className="qz-kicker">PolTok Quiz</p>
-        <h1>Test your politics</h1>
-        <p className="qz-sub">Compare your views with party platforms, play today’s trivia, and call the map.</p>
-      </header>
+      <PageHeader
+        className="qz-head"
+        kicker="PolTok quiz"
+        title="Test your politics"
+        crumbLabel="Quiz"
+        sub="Compare your views with party platforms, play today’s trivia, and call the map."
+      />
       <div className="qz-tabs" role="tablist" aria-label="Quiz modes">
         {TABS.map((t) => (
           <button key={t.id} role="tab" type="button" id={`qz-tab-${t.id}`} aria-selected={tab === t.id} aria-controls={`qz-panel-${t.id}`}

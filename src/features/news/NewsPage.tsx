@@ -327,7 +327,7 @@ export default function NewsPage() {
       )}
 
       <div className={`nw-layout ${selCluster ? 'has-pane' : ''}`}>
-        <main className="nw-main">
+        <div className="nw-main">
           {loading ? (
             <Skeletons />
           ) : filtered.length === 0 ? (
@@ -357,7 +357,7 @@ export default function NewsPage() {
           ) : (
             <Wall items={filtered} now={now} onOpen={(id) => setSelected(id)} clusterOf={clusterOf} />
           )}
-        </main>
+        </div>
 
         <aside className="nw-aside" aria-label={selCluster ? 'Full coverage' : 'Sources'}>
           {selCluster ? (

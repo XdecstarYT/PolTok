@@ -131,7 +131,8 @@ export function fmtNum(p: ParsedNum, k: number): string {
 
 type C = CanvasRenderingContext2D;
 const SANS = `Inter, 'Segoe UI', system-ui, sans-serif`;
-const DISP = `'Space Grotesk', Inter, system-ui, sans-serif`;
+/** Ledger type: Inter Tight for headings, captions and figures (matches the site). */
+const DISP = `'Inter Tight', Inter, system-ui, sans-serif`;
 const COND = `Oswald, 'Roboto Condensed', 'Arial Narrow', Impact, sans-serif`;
 const f = (px: number, w = 700, fam = SANS) => `${w} ${Math.max(1, Math.round(px))}px ${fam}`;
 function rrect(c: C, x: number, y: number, w: number, h: number, r: number) {
@@ -298,7 +299,7 @@ function stripText(c: C, b: Box, text: string, p: number, mode: 'word' | 'type',
   if (!words.length || p <= 0) return;
   let px = b.h * 0.34, lines: string[][] = [];
   for (let k = 0; k < 14; k++) {
-    c.font = f(px, 800, SANS);
+    c.font = f(px, 800, DISP);
     lines = wrapWords(c, words, b.w);
     if (lines.length * px * 1.2 <= b.h * 0.86 && lines.every((l) => c.measureText(l.join(' ')).width <= b.w)) break;
     px *= 0.9;

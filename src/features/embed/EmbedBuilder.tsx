@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { PageHeader } from '../../components';
 import { RACES } from '../../data';
 import { ShareCardButton } from './ShareCardButton';
 import './embed.css';
@@ -31,10 +32,13 @@ export default function EmbedBuilder() {
 
   return (
     <div className="page embb">
-      <header className="embb__head">
-        <h1>Embed live results</h1>
-        <p>Drop a live, auto-updating PolTok widget on any site. Results: AP via NYT.</p>
-      </header>
+      <PageHeader
+        className="embb__head"
+        kicker="Tools · Embed"
+        title="Embed live results"
+        crumbLabel="Embed"
+        sub="Drop a live, auto-updating PolTok widget on any site. Results: AP via NYT."
+      />
       <div className="embb__grid">
         <form className="embb__opts card" onSubmit={(e) => e.preventDefault()}>
           <fieldset>

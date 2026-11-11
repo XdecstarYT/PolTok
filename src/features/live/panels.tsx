@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Market, RaceCallEvent, StateInfo } from '../../types';
 import { raceById, STATES } from '../../data';
-import { PARTY_COLOR, PARTY_HEX, marginColor, mixHex, timeAgo } from '../../lib/format';
+import { PARTY_COLOR, PARTY_HEX, marginColor, mixHex, timeAgo, ink } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import type { ChamberSummary, RaceView } from './model';
 import { closeMinutes, etNowMinutes, fmtClock, fmtEtTime, isDSide, mainRaceByState } from './model';
@@ -54,7 +54,7 @@ export function ChamberControl({ s, title }: { s: ChamberSummary; title: string 
               <li><span className="lv-skel lv-skel-line" style={{ width: '70%' }} /></li>
             </>
           ) : decided ? (
-            <li className="lv-path-done" style={{ color: PARTY_COLOR[decided] }}>
+            <li className="lv-path-done" style={{ color: ink(PARTY_COLOR[decided]) }}>
               ✓ {partyWord[decided]} win control of the {s.chamber === 'senate' ? 'Senate' : 'House'}
             </li>
           ) : (
@@ -360,7 +360,7 @@ export function Swings({ views }: { views: RaceView[] }) {
                   <span className="lv-sw-bar" aria-hidden>
                     <i style={{ width: `${w}%`, background: PARTY_HEX[p], [p === 'D' ? 'right' : 'left']: '50%' }} />
                   </span>
-                  <span className="lv-sw-v mono" style={{ color: PARTY_COLOR[p] }}>
+                  <span className="lv-sw-v mono" style={{ color: ink(PARTY_COLOR[p]) }}>
                     {p}+{Math.abs(swing).toFixed(1)}
                   </span>
                   <span className="lv-sw-d mono muted">

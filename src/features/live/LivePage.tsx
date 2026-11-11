@@ -10,7 +10,7 @@ import { AnimatePresence, m as motion } from 'framer-motion';
 import { PageHeader, SimBadge } from '../../components';
 import { useLive } from '../../lib/live';
 import { raceById } from '../../data';
-import { PARTY_COLOR } from '../../lib/format';
+import { PARTY_COLOR, ink } from '../../lib/format';
 import type { RaceCallEvent } from '../../types';
 import { buildViews, fmtEtTimeSec, summarizeChamber, type ChamberSummary } from './model';
 import { CallFeed, ChamberControl, LiveMap, Markets, PollTimeline, Swings } from './panels';
@@ -136,7 +136,7 @@ function StickyScore({ senate, house, show, lastCall }: { senate: ChamberSummary
         <MiniChamber s={house} label="House" />
         {lastCall && race && (
           <Link to={`/race/${race.id}`} className="lv-sticky-call mono" tabIndex={show ? 0 : -1}>
-            <span className="muted">LAST CALL</span> <b style={{ color: PARTY_COLOR[lastCall.party] }}>{race.state} {race.chamber === 'senate' ? 'SEN' : race.chamber === 'governor' ? 'GOV' : race.id.split('-')[1]}</b> → {lastCall.party}
+            <span className="muted">LAST CALL</span> <b style={{ color: ink(PARTY_COLOR[lastCall.party]) }}>{race.state} {race.chamber === 'senate' ? 'SEN' : race.chamber === 'governor' ? 'GOV' : race.id.split('-')[1]}</b> → {lastCall.party}
             {lastCall.flip && <span className="lv-gain">GAIN</span>}
           </Link>
         )}
@@ -151,7 +151,7 @@ function MiniChamber({ s, label }: { s: ChamberSummary; label: string }) {
   return (
     <div className="lv-mini">
       <span className="lv-mini-l">{label}</span>
-      <b className="mono" style={{ color: PARTY_COLOR.D }}>
+      <b className="mono" style={{ color: ink(PARTY_COLOR.D) }}>
         <AnimNum value={s.dSeats} />
       </b>
       <span className="lv-mini-bar" aria-hidden>
@@ -159,7 +159,7 @@ function MiniChamber({ s, label }: { s: ChamberSummary; label: string }) {
         <i className="r" style={{ width: pc(s.rSeats) }} />
         <em style={{ left: pc(s.majority) }} />
       </span>
-      <b className="mono" style={{ color: PARTY_COLOR.R }}>
+      <b className="mono" style={{ color: ink(PARTY_COLOR.R) }}>
         <AnimNum value={s.rSeats} />
       </b>
       <span className="lv-mini-p mono muted">{s.ready ? `${Math.round(Math.max(s.probD, 1 - s.probD) * 100)}% ${s.probD >= 0.5 ? 'D' : 'R'}` : ''}</span>

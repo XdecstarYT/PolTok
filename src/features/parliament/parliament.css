@@ -15,7 +15,11 @@
 .pa-main, .pa-side { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 @media (max-width: 900px) { .pa-grid { grid-template-columns: minmax(0, 1fr); } }
 
-.pa-tabs { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.pa-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.pa-head { margin-bottom: 0; }
+.pa-head .pa-bill__top { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; text-transform: none; letter-spacing: 0; }
+.pa-head-meta { display: grid; gap: 4px; }
+.pa-head-meta p { margin: 0; }
 .pa-tabs button, .pa-funnel button { background: var(--bg-1); border: 1px solid var(--line); color: var(--text-2); font: inherit; font-size: 14px; padding: 7px 14px; border-radius: var(--radius-pill, 999px); cursor: pointer; min-height: 40px; }
 .pa-tabs button.on { background: var(--bg-3); color: var(--text); border-color: var(--line-3); }
 .pa-tabs button:focus-visible, .pa-funnel button:focus-visible, .pa-filters :focus-visible, .pa-bill__a:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
@@ -24,7 +28,7 @@
 .pa-funnel button { border-radius: var(--radius-sm); display: flex; flex-direction: column; align-items: flex-start; padding: 8px; text-align: left; font-size: 11px; min-width: 0; }
 .pa-funnel button b { font-family: var(--font-display); font-size: 22px; color: var(--text); }
 .pa-funnel button span { overflow-wrap: anywhere; }
-.pa-funnel button.on { border-color: var(--accent); background: var(--accent-soft); }
+.pa-funnel button.on { border-color: var(--text); background: var(--bg-3); }
 @media (max-width: 520px) { .pa-funnel { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 .pa-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
@@ -36,7 +40,7 @@
 .pa-bill:hover { border-color: var(--line-3); }
 .pa-bill__a { display: flex; flex-direction: column; gap: 6px; padding: 12px; color: var(--text) !important; text-decoration: none; border-radius: var(--radius); }
 .pa-bill__top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12px; }
-.pa-bill__num { font-family: var(--font-data); color: var(--terminal); }
+.pa-bill__num { font-family: var(--font-data); color: var(--text); }
 .pa-bill__ch { color: var(--text-3); }
 .pa-bill__title { font-size: var(--fs-md); margin: 0; line-height: 1.3; overflow-wrap: anywhere; }
 .pa-bill__sp { margin: 0; font-size: 13px; color: var(--text-2); }
@@ -55,7 +59,7 @@
 .pa-stages li { display: flex; flex-direction: column; gap: 6px; font-size: 11px; color: var(--text-3); min-width: 0; }
 .pa-stages li i { display: block; height: 6px; border-radius: 3px; background: var(--bg-4); }
 .pa-stages li.done i { background: var(--signal); opacity: .7; }
-.pa-stages li.now i { background: var(--accent); }
+.pa-stages li.now i { background: var(--text); }
 .pa-stages li.now { color: var(--text); font-weight: 600; }
 .pa-stages li span { overflow-wrap: anywhere; }
 .pa-stages.is-compact ol { max-width: 220px; }
@@ -80,7 +84,7 @@
 .pa-connect { border: 1px dashed var(--warn); background: var(--tossup-soft); border-radius: var(--radius); padding: 12px; font-size: 13px; }
 .pa-connect p { margin: 6px 0; color: var(--text-2); }
 .pa-connect ul { margin: 0; padding-left: 18px; }
-.pa-connect code { font-family: var(--font-data); color: var(--terminal); }
+.pa-connect code { font-family: var(--font-data); color: var(--text); }
 .pa-notes li { font-size: 12px; color: var(--text-3); border-left: 2px solid var(--line-3); padding-left: 8px; }
 
 .pa-floor { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }

@@ -4,8 +4,8 @@ import { m as motion } from 'framer-motion';
 import { RACES, raceById, racesByState, stateByAbbr } from '../../data';
 import { POLL_SERIES } from '../../data/polls';
 import { useLive } from '../../lib/live';
-import { AnimatedNumber, Avatar, RatingBadge, SimBadge } from '../../components';
-import { PARTY_HEX, PARTY_NAME, RATING_HEX } from '../../lib/format';
+import { AnimatedNumber, Avatar, PageHeader, RatingBadge, SimBadge } from '../../components';
+import { PARTY_HEX, PARTY_NAME, RATING_HEX, ink } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import { CallBanner, ExpectedMeter, NewsList, Needle, NotFound, PollPanel, PresBar, RaceCard, ResultRows, ShareButton, AnimatedNum } from './parts';
 import { demMargin, fmtCloseET, headlinePair, longTitle, relatedNews, sortRacesForState, totalVotes } from './util';
@@ -49,15 +49,26 @@ export default function RacePage() {
 
   return (
     <div className="page rx-page">
-      <nav className="rx-crumbs" aria-label="Breadcrumb">
-        <Link to="/races">Races</Link>
-        <span aria-hidden>/</span>
-        {st ? <Link to={`/state/${st.abbr}`}>{st.name}</Link> : <span>{race.state}</span>}
-        <span aria-hidden>/</span>
-        <span aria-current="page" className="mono">
-          {race.id}
-        </span>
-      </nav>
+      <PageHeader
+        className="rx-pagehead"
+        crumbs={[
+          { to: '/', label: 'Home' },
+          { to: '/races', label: 'Races' },
+          st ? { to: `/state/${st.abbr}`, label: st.name } : { label: race.state },
+          { label: race.id },
+        ]}
+        kicker={`${chamberLabel}${race.open ? ' · Open seat' : ''}${race.key ? ' · Key race' : ''}`}
+        title={longTitle(race)}
+        aside={
+          <div className="rx-hero-actions">
+            <RatingBadge rating={race.rating} />
+            <SimBadge />
+            <ShareButton title={longTitle(race)} />
+            <WatchStar raceId={race.id} label={longTitle(race)} />
+            <ShareCardButton kind="race" id={race.id} />
+          </div>
+        }
+      />
 
       {/* ---------- HERO ---------- */}
       <motion.section
@@ -70,24 +81,6 @@ export default function RacePage() {
         <div className="rx-hero-bg" aria-hidden>
           <span className="rx-hero-abbr">{race.state}</span>
         </div>
-        <div className="rx-hero-top">
-          <div>
-            <span className="rx-eyebrow">
-              {chamberLabel}
-              {race.open ? ' · Open seat' : ''}
-              {race.key ? ' · Key race' : ''}
-            </span>
-            <h1 className="rx-h1">{longTitle(race)}</h1>
-          </div>
-          <div className="rx-hero-actions">
-            <RatingBadge rating={race.rating} />
-            <SimBadge />
-            <ShareButton title={longTitle(race)} />
-            <WatchStar raceId={race.id} label={longTitle(race)} />
-            <ShareCardButton kind="race" id={race.id} />
-          </div>
-        </div>
-
         <div className="rx-faceoff">
           {[a, b].map((c, i) =>
             c ? (
@@ -104,7 +97,7 @@ export default function RacePage() {
                   {winnerId === c.id && <span className="rx-fighter-check">✓</span>}
                 </div>
                 <div className="rx-fighter-txt">
-                  <span className="rx-party" style={{ color: PARTY_HEX[c.party] }}>
+                  <span className="rx-party" style={{ color: ink(PARTY_HEX[c.party]) }}>
                     {PARTY_NAME[c.party]}
                   </span>
                   <h2>{c.name}</h2>

@@ -117,3 +117,14 @@ Each theme overrides tokens and adds a small set of chrome rules:
 - **Paper**: newsprint with Playfair, double rules, an ink CTA and Plex Mono data.
 - **Terminal**: black and amber with Plex Mono, square corners and an inverted active nav.
 - **Aurora**: a glass mesh with Space Grotesk, a gradient nav marker and gradient page titles.
+
+## 7. Rollout notes (part A, Nov 2026)
+
+- **Every route uses `PageHeader`** with breadcrumbs: Map, Polls, Forecast, Races, race and state pages, Feed (in the desktop side panel), Parliament and bills, Money, Calendar, Quiz, Compare, Flips, Ballot measures, Watchlist, Analysis, Replay, Search, Your area, Embed, story/topic/source pages, Australian sub-pages, NZ electorates, governor states, country pages and the 404. Profile pages (candidate, member) keep their photo hero under shared `Breadcrumbs`.
+- `.pt-pagehead .pt-pagehead__title` guards family, size and margin, so page-level `.x-page h1` rules can no longer restyle the title.
+- Pages render a `<div>` root: the Shell owns the only `<main>`.
+- **Accent cleanup:** page CSS no longer uses `--accent`/`--terminal` for kickers, links, focus rings, progress bars or status text. Links and focus use `--signal`, kickers use `--kicker`, status and checks use `--text`, segmented "on" states use `--bg-3` plus a `--line-3` ring. `--accent` remains only on the primary CTA in a view.
+- **Party colour as small text:** use `ink(hex)` from `lib/format`, which returns `color-mix(in srgb, hex 55%, var(--text))`. It lifts contrast on dark themes and darkens on Paper. Fills keep the raw hue. White labels on party fills sit on a 36 to 50% black scrim.
+- **Theme contrast (WCAG AA):** Broadcast `--live` is now #ff707c and `--danger` #ff7a88. Aurora `--live` is #ff6ec4, `--accent-ink` #12062b, and the accent button uses a deeper gradient under white text. Paper `--tossup`/`--warn` is #735800. The feed keeps dark-surface tokens in Paper.
+- **Share cards and video:** the card `display` family is Inter Tight (was Space Grotesk), and there is a new `news` family (Newsreader). It is used for headlines in the house designs (map spotlight, big number, story results, swing dial, head-to-head, poll trend, carousel, data table). There is also a "Ledger (site)" font pair. Brand-system font overrides still apply through `RT.display`/`RT.body`. Motion headings and strip text use Inter Tight.
+- **Home:** `<LatestUpdateCard compact />` is a "What's new" strip under the hero. It replaces the old hard-coded list and keeps the Share on X and owner-only Publish to X actions.

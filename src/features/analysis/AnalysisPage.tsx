@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, EmptyState, SectionHeader, Skeleton, Tabs, fmtTime, tzAbbr } from '../../components';
+import { Card, EmptyState, ErrorState, PageHeader, SectionHeader, Skeleton, Tabs, fmtTime, tzAbbr } from '../../components';
 import { stateByAbbr } from '../../data';
 import { POLL_SERIES } from '../../data/polls';
 import { PARTY_HEX, fmtInt } from '../../lib/format';
@@ -20,8 +20,8 @@ export default function AnalysisPage() {
   useEffect(() => {
     loadOverview().then(setOv, (e) => setErr(String(e?.message ?? e)));
   }, []);
-  if (err) return <div className="page"><EmptyState title="Couldn’t load the NYT results feed" description={err} /></div>;
-  if (!ov) return <div className="page an"><Skeleton height={40} width={320} /><Skeleton height={300} style={{ marginTop: 16 }} /></div>;
+  if (err) return <div className="page an"><PageHeader kicker="2026 midterms · the morning after" title="What happened" crumbLabel="Analysis" /><ErrorState title="Couldn’t load the NYT results feed" description={err} onRetry={() => location.reload()} /></div>;
+  if (!ov) return <div className="page an" aria-busy="true"><PageHeader kicker="2026 midterms · the morning after" title="What happened" crumbLabel="Analysis" /><Skeleton height={110} radius={12} /><Skeleton height={300} radius={12} style={{ marginTop: 16 }} /></div>;
   return <Analysis ov={ov} />;
 }
 
@@ -128,12 +128,13 @@ function Analysis({ ov }: { ov: Overview }) {
 
   return (
     <div className="page an">
-      <h1 className="sr-only">Election analysis</h1>
-      <SectionHeader
+      <PageHeader
         kicker="2026 midterms · the morning after"
         title="What happened"
-        sub={<>Data-driven takeaways computed from AP vote counts as published by The New York Times (updated {fmtTime(ov.updated)} {z}). Counts are still coming in; numbers will move.</>}
-        action={<Link to="/replay" className="an-link">Relive the night →</Link>}
+        crumbLabel="Analysis"
+        sub="Data-driven takeaways computed from AP vote counts as published by The New York Times. Counts are still coming in; numbers will move."
+        meta={<span>Updated {fmtTime(ov.updated)} {z}</span>}
+        aside={<Link to="/replay" className="an-link">Relive the night</Link>}
       />
 
       <div className="an-stats">

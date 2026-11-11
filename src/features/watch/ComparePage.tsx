@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Button, EmptyState, SectionHeader, SimBadge } from '../../components';
+import { Button, EmptyState, PageHeader, SectionHeader, SimBadge } from '../../components';
 import { RACES, raceById } from '../../data';
 import { POLL_SERIES } from '../../data/polls';
 import { useLive } from '../../lib/live';
@@ -10,6 +10,7 @@ import { WatchStar } from './WatchStar';
 import { useWatchlist, isAuWatchId } from '../../lib/watchlist';
 import { demMarginOf, fmtMargin, marketFor, pollAverage, presMarginOf, shares, statusLabel } from './model';
 import './watch.css';
+import { ink } from '../../lib/format';
 
 const MAX = 4;
 const CHAMBERS: { id: Race['chamber']; label: string }[] = [
@@ -97,7 +98,7 @@ function MissBoard() {
   const avg = rows.reduce((s, x) => s + x.miss!, 0) / rows.length;
   return (
     <>
-      <p className="wt-sub">Average miss across {rows.length} polled races: <b className="num" style={{ color: PARTY_HEX[avg >= 0 ? 'D' : 'R'] }}>{signed(avg)} D</b> ({avg >= 0 ? 'Democrats beat their polls' : 'Republicans beat their polls'}).</p>
+      <p className="wt-sub">Average miss across {rows.length} polled races: <b className="num" style={{ color: ink(PARTY_HEX[avg >= 0 ? 'D' : 'R']) }}>{signed(avg)} D</b> ({avg >= 0 ? 'Democrats beat their polls' : 'Republicans beat their polls'}).</p>
       <ul className="cp-board">
         {rows.map((x) => (
           <li key={x.race.id}>
@@ -133,14 +134,14 @@ export default function ComparePage() {
 
   return (
     <div className="page wt">
-      <header className="wt-head">
-        <div>
-          <span className="wt-kick mono">COMPARE</span>
-          <h1 className="wt-h1">Side by side</h1>
-          <p className="wt-sub">Pick 2–4 races: vote shares, margins vs. the 2024 presidential result, polls vs. result and markets.</p>
-        </div>
-        <div className="wt-head__acts"><SimBadge /></div>
-      </header>
+      <PageHeader
+        className="wt-head"
+        kicker="Compare"
+        title="Side by side"
+        crumbLabel="Compare"
+        sub="Pick 2 to 4 races: vote shares, margins vs. the 2024 presidential result, polls vs. result and markets."
+        aside={<SimBadge />}
+      />
 
       <div className="cp-pick">
         {ids.length < MAX && (

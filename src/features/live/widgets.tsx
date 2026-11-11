@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { arc as d3arc, line as d3line, curveMonotoneX } from 'd3-shape';
 import type { Party } from '../../types';
-import { PARTY_COLOR, PARTY_HEX } from '../../lib/format';
+import { PARTY_COLOR, PARTY_HEX, ink } from '../../lib/format';
 import type { RaceView } from './model';
 import { zoneLabel } from './model';
 
@@ -199,7 +199,7 @@ export function ControlNeedle({
               {z.text}
             </span>
             <span className="lv-needle-pct mono">
-              {lead ? <b style={{ color: PARTY_COLOR[lead] }}>{lead === 'D' ? 'DEM' : 'GOP'}</b> : <b>EVEN</b>}{' '}
+              {lead ? <b style={{ color: ink(PARTY_COLOR[lead]) }}>{lead === 'D' ? 'DEM' : 'GOP'}</b> : <b>EVEN</b>}{' '}
               <AnimNum value={pct} format={(n) => `${Math.round(n)}%`} />
             </span>
           </>

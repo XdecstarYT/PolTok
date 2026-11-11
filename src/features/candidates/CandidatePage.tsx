@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Avatar, RatingBadge, SimBadge } from '../../components';
+import { Avatar, RatingBadge, SimBadge, Breadcrumbs, PageHeader, Skeleton, EmptyState } from '../../components';
 import { stateByAbbr } from '../../data';
 import { pollSeriesById } from '../../data/polls';
 import { useLive } from '../../lib/live';
@@ -54,9 +54,7 @@ function AuCandidatePage({ c }: { c: AuCand }) {
   ];
   return (
     <div className="page cd-page">
-      <nav className="cd-crumbs" aria-label="Breadcrumb">
-        <Link to="/candidates?country=au">Candidates · Australia</Link> / <span>{c.seat}</span>
-      </nav>
+      <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/candidates?country=au', label: 'Candidates · Australia' }, { label: c.name }]} />
       <section className="cd-hero" style={{ ['--pc' as string]: c.color }}>
         <HeroPhoto name={c.name} color={c.color} profile={p} free={auPhoto(c.name)} />
         <div className="cd-hero__info">
@@ -110,11 +108,14 @@ function UsCandidatePage({ id }: { id: string }) {
     const loading = live.mode === 'connecting';
     return (
       <div className="page cd-page">
-        <h1>{loading ? 'Loading candidate…' : 'Candidate not found'}</h1>
-        {!loading && (
-          <p className="cd-muted">
-            No candidate with id <code>{id}</code>. <Link to={`/candidates?q=${encodeURIComponent(id.split('-')[0] ?? '')}`}>Browse all candidates</Link>.
-          </p>
+        <PageHeader kicker="Candidate" title={loading ? <Skeleton width="min(420px, 80%)" height={36} /> : 'Candidate not found'} crumbLabel={loading ? 'Loading' : 'Not found'} />
+        {loading ? (
+          <Skeleton height={260} radius={16} />
+        ) : (
+          <EmptyState
+            title="We couldn't find that candidate"
+            description={<>No candidate with id <code>{id}</code>. <Link to={`/candidates?q=${encodeURIComponent(id.split('-')[0] ?? '')}`}>Browse all candidates</Link>.</>}
+          />
         )}
       </div>
     );
@@ -143,9 +144,7 @@ function UsCandidatePage({ id }: { id: string }) {
 
   return (
     <div className="page cd-page">
-      <nav className="cd-crumbs" aria-label="Breadcrumb">
-        <Link to="/candidates">Candidates</Link> / <Link to={`/race/${race.id}`}>{race.title}</Link>
-      </nav>
+      <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/candidates', label: 'Candidates' }, { to: `/race/${race.id}`, label: race.title }, { label: cand.name }]} />
 
       <section className={`cd-hero cd-card--${e.outcome}`} style={{ ['--pc' as string]: PARTY_HEX[cand.party] }}>
         <HeroPhoto name={cand.name} color={PARTY_HEX[cand.party]} profile={p} fallback={cand.photo} />

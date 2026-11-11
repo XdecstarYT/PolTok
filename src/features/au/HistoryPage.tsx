@@ -1,6 +1,6 @@
 /** /au/history — federal House results 1996–2025 and prime ministers timeline. */
 import { Link } from 'react-router-dom';
-import { Card } from '../../components';
+import { Card, PageHeader } from '../../components';
 import { useSeo } from '../../lib/seo';
 import { AU_PMS, AU_PMS_SOURCE, FED_HISTORY, FED_HISTORY_SOURCE } from '../../data/au-states';
 import { AuNav } from './AuNav';
@@ -17,14 +17,15 @@ export default function HistoryPage() {
   const years = Array.from({ length: Math.floor((new Date(t1).getUTCFullYear() - 1996) / 5) + 1 }, (_, i) => 1996 + i * 5);
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono"><Link to="/au">AUSTRALIA</Link> / HISTORY</div>
-          <h1>Federal elections since 1996</h1>
-          <p className="au-sub">Eleven elections, eight prime ministers.</p>
-        </div>
-      </header>
+      <PageHeader
+        className="au-pagehead"
+        kicker="Australia · History"
+        title="Federal elections since 1996"
+        crumbLabel="History"
+        sub="Eleven elections, eight prime ministers."
+      >
+        <AuNav />
+      </PageHeader>
 
       <Card title="Two-party-preferred vote" kicker="Labor v Coalition, national %">
         <LineChart

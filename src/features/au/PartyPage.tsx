@@ -1,7 +1,7 @@
 /** /au/party/:id — party profile: leaders, seats (federal, Senate, Victoria), polling trend, key seats, news. */
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Card, EmptyState } from '../../components';
+import { Card, EmptyState, PageHeader } from '../../components';
 import { AU_PARTY_PROFILES, NSW_2027, SENATORS } from '../../data/au';
 import { relatedNews, useAuNews } from './api';
 import { AuNav } from './AuNav';
@@ -41,19 +41,23 @@ export default function PartyPage() {
           <Link key={k} to={`/au/party/${k}`} className={k === id ? 'is-on' : ''} aria-current={k === id ? 'page' : undefined}><i style={{ background: pColor(k) }} />{party(k).short}</Link>
         ))}
       </nav>
-      <header className="au-head" style={{ ['--pc' as string]: p.color }}>
-        <div>
-          <div className="au-kicker mono">AUSTRALIA · PARTY</div>
-          <h1 className="au-seat-h"><i style={{ background: p.color }} />{p.name}</h1>
-          {prof?.blurb && <p className="au-sub">{prof.blurb}</p>}
-        </div>
-        <dl className="au-stats mono">
-          <div><dt>House (fed)</dt><dd>{fedHouse ?? 0}/150</dd></div>
-          <div><dt>Senate</dt><dd>{senators.length}/76</dd></div>
-          <div><dt>Vic Assembly</dt><dd>{vicSeats.length}/88</dd></div>
-          {nsw != null && <div><dt>NSW Assembly</dt><dd>{nsw}/93</dd></div>}
-        </dl>
-      </header>
+      <div className="au-head-wrap" style={{ ['--pc' as string]: p.color }}>
+        <PageHeader
+          className="au-pagehead"
+          kicker="Australia · Party"
+          title={<span className="au-seat-h"><i style={{ background: p.color }} aria-hidden="true" />{p.name}</span>}
+          crumbs={[{ to: '/', label: 'Home' }, { to: '/au', label: 'Australia' }, { label: p.name }]}
+          sub={prof?.blurb}
+          aside={
+            <dl className="au-stats mono">
+            <div><dt>House (fed)</dt><dd>{fedHouse ?? 0}/150</dd></div>
+            <div><dt>Senate</dt><dd>{senators.length}/76</dd></div>
+            <div><dt>Vic Assembly</dt><dd>{vicSeats.length}/88</dd></div>
+            {nsw != null && <div><dt>NSW Assembly</dt><dd>{nsw}/93</dd></div>}
+            </dl>
+          }
+        />
+      </div>
 
       {prof && (prof.federalLeader || prof.vicLeader || prof.nswLeader) && (
         <div className="au-vic-hero">

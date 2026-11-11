@@ -3,7 +3,7 @@ import type { NewsItem, RaceResult } from '../../types';
 import type { AuSeat } from '../../data/au';
 import type { SeatResult } from '../au/api';
 import { Needle, ProgressBar, RatingBadge, fmtTime } from '../../components';
-import { PARTY_HEX, fmtInt } from '../../lib/format';
+import { PARTY_HEX, fmtInt, ink } from '../../lib/format';
 import { party as auParty, pColor } from '../au/model';
 import type { Race } from '../../types';
 import { WatchStar } from './WatchStar';
@@ -44,7 +44,7 @@ export function UsWatchCard({ race, result, news, ...ctl }: { race: Race; result
       <div className="wt-card__meta">
         <span className={`wt-status wt-status--${st}`}>{called ? '✓ ' : ''}{statusLabel(result)}</span>
         <RatingBadge rating={race.rating} />
-        {m != null && <span className="wt-margin num" style={{ color: PARTY_HEX[m >= 0 ? 'D' : 'R'] }}>{fmtMargin(m)}</span>}
+        {m != null && <span className="wt-margin num" style={{ color: ink(PARTY_HEX[m >= 0 ? 'D' : 'R']) }}>{fmtMargin(m)}</span>}
       </div>
       <div className="wt-card__body">
         <ul className="wt-rows">

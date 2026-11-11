@@ -3,7 +3,7 @@ import { memo, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Chamber } from '../../types';
 import { Avatar } from '../../components';
-import { PARTY_COLOR, PARTY_HEX, fmtInt, timeAgo } from '../../lib/format';
+import { PARTY_COLOR, PARTY_HEX, fmtInt, timeAgo, ink } from '../../lib/format';
 import type { FilterKey, RaceView, SortKey } from './model';
 import { filterViews, fmtClock, sortViews } from './model';
 import { AnimNum, StatusChip } from './widgets';
@@ -182,7 +182,7 @@ export const RaceCard = memo(function RaceCard({ v, now }: { v: RaceView; now: n
           </span>
         </span>
         {!v.winner && fav && fav.prob > 0 && (
-          <span className="lv-prob" style={{ color: PARTY_COLOR[fav.c.party] }} title="Model win probability">
+          <span className="lv-prob" style={{ color: ink(PARTY_COLOR[fav.c.party]) }} title="Model win probability">
             {fav.c.party} {Math.round(fav.prob * 100)}%
           </span>
         )}

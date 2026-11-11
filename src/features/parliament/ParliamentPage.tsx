@@ -5,7 +5,7 @@
 import { useSeo } from '../../lib/seo';
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fmtTime, tzAbbr } from '../../components';
+import { PageHeader, fmtTime, tzAbbr } from '../../components';
 import { api, useAsync, type Bill, type Country } from './api';
 import { BillRow, MissingKeys, Notes, VoteCard } from './parts';
 import './parliament.css';
@@ -44,14 +44,17 @@ export default function ParliamentPage() {
 
   return (
     <div className="page pa-page">
-      <header>
-        <div className="pa-kicker">PARLIAMENT · LIVE BILL TRACKER</div>
-        <h1>{country === 'us' ? '119th U.S. Congress' : 'Parliament of Australia'}</h1>
-        <p className="pa-sub">
-          {country === 'us'
+      <PageHeader
+        className="pa-head"
+        kicker="Parliament · Live bill tracker"
+        title={country === 'us' ? '119th U.S. Congress' : 'Parliament of Australia'}
+        crumbLabel="Parliament"
+        sub={
+          country === 'us'
             ? 'Bills with the most recent official activity, straight from the Library of Congress Bill Status data, plus House roll calls with party breakdowns.'
-            : 'Federal bills from the Parliament of Australia and Acts that have received Royal Assent, via an open-data mirror of aph.gov.au bill status and the official Federal Register of Legislation.'}
-        </p>
+            : 'Federal bills from the Parliament of Australia and Acts that have received Royal Assent, via an open-data mirror of aph.gov.au bill status and the official Federal Register of Legislation.'
+        }
+      >
         <div className="pa-tabs" role="tablist" aria-label="Legislature">
           {(['us', 'au'] as const).map((c) => (
             <button key={c} role="tab" aria-selected={country === c} className={country === c ? 'on' : ''} onClick={() => { setCountry(c); setStage('all'); setChamber('all'); setParty('all'); setLookup(''); setQ(''); }}>
@@ -59,7 +62,7 @@ export default function ParliamentPage() {
             </button>
           ))}
         </div>
-      </header>
+      </PageHeader>
 
       {country === 'us' && (
         <section className="pa-panel" aria-labelledby="pa-floor">

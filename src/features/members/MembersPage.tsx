@@ -9,6 +9,7 @@ import { AU_MEMBERS, US_PARTY, initials, usDir, useJson, withAuPhoto, type DirMe
 import { PageHeader, PersonAvatar } from '../../components';
 import { photoFromUrl, usePhotoIndex } from '../../data/photos';
 import './members.css';
+import { ink } from '../../lib/format';
 
 export function Avatar({ m, size = 56 }: { m: { name: string; photo?: string; color: string; photoCredit?: string }; size?: number }) {
   const ph = photoFromUrl(m.photo);
@@ -66,7 +67,7 @@ export default function MembersPage() {
   const label = (p: string) => (country === 'US' ? US_PARTY[p] || p : p);
 
   return (
-    <main className="page mb-page">
+    <div className="page mb-page">
       <PageHeader
         kicker={<>MEMBERS · {country === 'US' ? '119TH US CONGRESS' : '48TH AUSTRALIAN PARLIAMENT'}</>}
         title="Who represents you"
@@ -104,7 +105,7 @@ export default function MembersPage() {
             <Avatar m={m} size={48} />
             <div className="mb-cbody">
               <b>{m.name}</b>
-              <span style={{ color: m.color }}>{m.partyLabel}</span>
+              <span style={{ color: ink(m.color) }}>{m.partyLabel}</span>
               <small>{m.seat}{m.margin != null ? ` · margin ${m.margin.toFixed(1)}%` : ''}</small>
               {m.unity != null && <small>Votes with party {m.unity}%</small>}
             </div>
@@ -117,6 +118,6 @@ export default function MembersPage() {
           ? <>Sources: {us.data?.sources.map((s, i) => <span key={s.url}>{i ? ' · ' : ''}<a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></span>)}{us.data?.voteview && <> · Voteview roll calls through {us.data.voteview.latest.House}</>}{us.data && <> · fetched {new Date(us.data.at).toISOString().slice(0, 10)}</>}</>
           : <>Source: PolTok research compilation (src/data/au.ts, compiled 2026-11-04) from AEC/APH public records.</>}
       </footer>
-    </main>
+    </div>
   );
 }

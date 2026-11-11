@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import { PageHeader } from '../../components';
 import { timeAgo } from '../../lib/format';
 import { useSeo } from '../../lib/seo';
 import { CoverageBar } from './BiasBar';
@@ -15,11 +16,8 @@ export default function TopicPage() {
   useSeo({ title: `${label} news`, description: `Live ${label} headlines from outlets across the spectrum, top stories and 48-hour coverage trend.` });
 
   return (
-    <main className="container n2">
-      <nav className="n2-crumb" aria-label="Breadcrumb">
-        <Link to="/news">News</Link> <span aria-hidden="true">/</span> <span>Topics</span>
-      </nav>
-      <h1>{label}</h1>
+    <div className="container n2">
+      <PageHeader className="n2-head" kicker="Topic" title={label} crumbLabel={label} sub={`Live ${label} headlines from outlets across the spectrum, top stories and the 48-hour coverage trend.`} />
       <div className="n2-chips">
         <div>
           {TOPIC_LIST.map((t) => (
@@ -81,7 +79,7 @@ export default function TopicPage() {
           </aside>
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

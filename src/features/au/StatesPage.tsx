@@ -1,6 +1,6 @@
 /** /au/states — all eight state & territory parliaments at a glance; /au/state/:code — one parliament. */
 import { Link, useParams } from 'react-router-dom';
-import { Card, EmptyState } from '../../components';
+import { Card, EmptyState, PageHeader } from '../../components';
 import { useSeo } from '../../lib/seo';
 import { AU_STATES, auStateByCode, type AuChamber, type AuState } from '../../data/au-states';
 import { AuNav } from './AuNav';
@@ -24,14 +24,14 @@ export function StatesHub() {
   const upcoming = [...AU_STATES].sort((a, b) => a.nextElection.date.localeCompare(b.nextElection.date));
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono"><Link to="/au">AUSTRALIA</Link> / STATES & TERRITORIES</div>
-          <h1>States & territories</h1>
-          <p className="au-sub">Six state and two territory parliaments. Lower-house seats by party, with the majority line marked.</p>
-        </div>
-      </header>
+      <PageHeader
+        className="au-pagehead"
+        kicker="Australia · States & territories"
+        title="States & territories"
+        sub="Six state and two territory parliaments. Lower-house seats by party, with the majority line marked."
+      >
+        <AuNav />
+      </PageHeader>
       <Card title="Next elections" kicker="Fixed-term dates where set by law">
         <ol className="au-next">
           {upcoming.map((s) => (
@@ -70,20 +70,25 @@ export function StatePage() {
   const d = daysUntil(s.nextElection.date);
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head" style={{ ['--pc' as string]: pColor(s.head.party) }}>
-        <div>
-          <div className="au-kicker mono"><Link to="/au">AUSTRALIA</Link> / <Link to="/au/states">STATES</Link> / {s.code.toUpperCase()}</div>
-          <h1>{s.name}</h1>
-          <p className="au-sub">{s.parliament}</p>
-        </div>
-        <dl className="au-stats mono">
-          <div><dt>Government</dt><dd style={{ color: pColor(s.head.party) }}>{govOf(s)}</dd></div>
-          <div><dt>Lower house</dt><dd>{s.lower.seats}</dd></div>
-          <div><dt>Majority</dt><dd>{s.lower.majority}</dd></div>
-          <div><dt>Next election</dt><dd>{s.nextElection.exact && d > 0 ? `${d} days` : s.nextElection.date}</dd></div>
-        </dl>
-      </header>
+      <div className="au-head-wrap" style={{ ['--pc' as string]: pColor(s.head.party) }}>
+        <PageHeader
+          className="au-pagehead"
+          kicker="Australia · State parliament"
+          title={s.name}
+          crumbs={[{ to: '/', label: 'Home' }, { to: '/au', label: 'Australia' }, { to: '/au/states', label: 'States' }, { label: s.name }]}
+          sub={s.parliament}
+          aside={
+            <dl className="au-stats mono">
+            <div><dt>Government</dt><dd style={{ color: pColor(s.head.party) }}>{govOf(s)}</dd></div>
+            <div><dt>Lower house</dt><dd>{s.lower.seats}</dd></div>
+            <div><dt>Majority</dt><dd>{s.lower.majority}</dd></div>
+            <div><dt>Next election</dt><dd>{s.nextElection.exact && d > 0 ? `${d} days` : s.nextElection.date}</dd></div>
+            </dl>
+          }
+        >
+          <AuNav />
+        </PageHeader>
+      </div>
       <div className="au-leaders" style={{ gridTemplateColumns: '1fr 1fr' }}>
         <LeaderCard role={s.head.title} name={s.head.name} partyCode={s.head.party} seat={s.head.seat} extra={s.head.since ? <span className="muted">since {s.head.since}</span> : undefined} />
         <LeaderCard role="Leader of the Opposition" name={s.opposition.name} partyCode={s.opposition.party} seat={s.opposition.seat} extra={s.opposition.since ? <span className="muted">since {s.opposition.since}</span> : undefined} />

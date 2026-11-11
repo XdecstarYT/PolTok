@@ -4,8 +4,8 @@
  */
 import { useMemo, useState } from 'react';
 import { AnimatePresence, m } from 'framer-motion';
-import { LiveDot, fmtTime, tzAbbr, useReducedMotion } from '../../components';
-import { PARTY_HEX } from '../../lib/format';
+import { EmptyState, ErrorState, PageHeader, Skeleton, fmtTime, tzAbbr, useReducedMotion } from '../../components';
+import { PARTY_HEX, ink } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import { stateShape } from '../map/geometry';
 import { ATTRIBUTION, useFlipsData, type FlipRace, type Office, type P } from './data';
@@ -86,20 +86,20 @@ export default function FlipsPage() {
 
   return (
     <div className="page fl-page">
-      <header className="fl-head">
-        <div className="fl-kicker mono">
-          <LiveDot /> <span>MIDTERMS 2026 · REAL AP CALLS</span>
-        </div>
-        <h1>Seats that changed hands</h1>
-        <p className="fl-sub">
-          Every Senate, governor and House race where AP has called a winner from a different party than the one that held
-          the seat. {ATTRIBUTION}.{' '}
-          <span className="mono fl-upd">
+      <PageHeader
+        className="fl-head"
+        live
+        kicker="Midterms 2026 · Real AP calls"
+        title="Seats that changed hands"
+        crumbLabel="Flips"
+        sub={<>Every Senate, governor and House race where AP has called a winner from a different party than the one that held the seat. {ATTRIBUTION}.</>}
+        meta={
+          <span className="fl-upd">
             {loading ? 'Loading…' : data ? `Updated ${fmtTime(data.updatedAt, true)} ${tzAbbr()} · refreshes every 60s` : ''}
             {data?.errors.length ? ` · ${data.errors.join(', ')} feed unavailable` : ''}
           </span>
-        </p>
-      </header>
+        }
+      />
 
       <section className="fl-tally" aria-label="Net gains by chamber">
         {OFFICES.map((o) => {
@@ -138,8 +138,12 @@ export default function FlipsPage() {
             {shown.length} flip{shown.length === 1 ? '' : 's'}
             {state ? ` in ${state}` : ''}
           </h2>
-          {loading && !data && <div className="fl-empty">Loading AP results…</div>}
-          {data && shown.length === 0 && <div className="fl-empty">No called flips match these filters yet.</div>}
+          {loading && !data && <div className="fl-cardgrid" aria-busy="true" aria-label="Loading AP results">{[0, 1, 2, 3].map((i) => <Skeleton key={i} height={120} radius={12} />)}</div>}
+          {data && data.errors.length === 3 && data.races.length === 0 ? (
+            <ErrorState title="AP results are unavailable right now" description="The results feeds did not respond. This page retries every 60 seconds." onRetry={() => location.reload()} />
+          ) : data && shown.length === 0 ? (
+            <EmptyState compact title="No called flips match these filters yet" description="Flips appear here as soon as AP calls a seat for a different party." />
+          ) : null}
           <div className="fl-cardgrid">
             <AnimatePresence initial={false}>
               {shown.map((r, i) => (
@@ -183,7 +187,7 @@ export default function FlipsPage() {
                       <small className="mono">{r.status === 'runoff' ? 'Runoff' : `${Math.round(r.eevp)}% in`}</small>
                     </span>
                     {lead && lead.votes > 0 ? (
-                      <span className="fl-wr mono" style={{ color: HEX[lead.party] }}>
+                      <span className="fl-wr mono" style={{ color: ink(HEX[lead.party]) }}>
                         {lead.name.split(' ').slice(-1)[0]} +{margin.toFixed(1)}
                       </span>
                     ) : (
@@ -254,7 +258,7 @@ function FlipCard({ r, i }: { r: FlipRace; i: number }) {
         <div className="fl-ctop">
           <b>{r.label}</b>
           <span className="fl-swap mono">
-            <i style={{ background: from }}>{pshort(r.before)}</i>→<i style={{ background: to }}>{pshort(w.party)}</i>
+            <i style={{ background: `color-mix(in srgb, ${from} 64%, #000)` }}>{pshort(r.before)}</i>→<i style={{ background: `color-mix(in srgb, ${to} 64%, #000)` }}>{pshort(w.party)}</i>
           </span>
         </div>
         <div className="fl-cwin">

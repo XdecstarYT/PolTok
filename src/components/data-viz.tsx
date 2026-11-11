@@ -337,7 +337,7 @@ export function BiasBar({
         <div className="pt-bias__legend num" aria-hidden="true">
           {segs.map((s) =>
             s.n ? (
-              <span key={s.key} style={{ color: s.color }}>
+              <span key={s.key} style={{ color: `color-mix(in srgb, ${s.color} 50%, var(--text))` }}>
                 {s.short} {Math.round((s.n / total) * 100)}%
               </span>
             ) : null,

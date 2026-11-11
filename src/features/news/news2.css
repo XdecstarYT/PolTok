@@ -1,6 +1,6 @@
 /* News 2.0 (story / topic / source pages). Classes prefixed .n2- */
 .n2 { padding-top: 24px; padding-bottom: 40px; }
-.n2 a:focus-visible, .n2 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.n2 a:focus-visible, .n2 button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 .n2-crumb { font-size: 12px; color: var(--text-3); margin-bottom: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
 .n2-crumb a { color: var(--text-2); }
 .n2 h1 { font-size: clamp(24px, 3.6vw, 38px); line-height: 1.1; letter-spacing: -0.03em; margin: 6px 0 10px; color: var(--text); }
@@ -30,12 +30,12 @@
 .n2-chips { margin-bottom: 12px; }
 .n2-chips > div { display: flex; flex-wrap: wrap; gap: 6px; }
 .n2-chip { font-size: 12px; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--text); text-decoration: none; background: var(--bg-1); }
-.n2-chip:hover, .n2-chip[aria-current='page'] { border-color: var(--accent); }
+.n2-chip:hover, .n2-chip[aria-current='page'] { border-color: var(--text); }
 .n2-ai { border: 1px dashed var(--line-2, var(--line)); }
 .n2-ai-label { font-size: 11px; color: var(--text-3); margin: 0 0 8px; }
 .n2-ai-text { font-size: 14px; line-height: 1.5; color: var(--text); white-space: pre-wrap; margin: 0; }
 .n2-btn { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-1); color: var(--text); cursor: pointer; }
-.n2-btn:hover { border-color: var(--accent); }
+.n2-btn:hover { border-color: var(--line-3); }
 .n2-spark { margin: 0; }
 .n2-spark figcaption { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-3); margin-top: 4px; }
 .n2-stats { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }

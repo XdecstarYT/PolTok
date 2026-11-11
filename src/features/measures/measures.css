@@ -2,7 +2,7 @@
 .bm-page { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; min-width: 0; }
 .bm-page .muted { color: var(--text-3); }
 .bm-kicker { display: flex; gap: 8px; align-items: center; font-size: 11px; letter-spacing: .12em; color: var(--text-3); }
-.bm-page h1 { font-size: clamp(24px, 3.4vw, 38px); line-height: 1.05; margin: 6px 0; }
+.bm-head { margin-bottom: 0; }
 .bm-page h2 { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); margin-bottom: 10px; }
 .bm-sub { color: var(--text-2); font-size: var(--fs-sm); max-width: 780px; }
 .bm-upd { display: block; color: var(--text-3); font-size: 11px; margin-top: 4px; }

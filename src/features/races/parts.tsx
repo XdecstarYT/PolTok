@@ -5,7 +5,7 @@ import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { line as d3line, curveMonotoneX } from 'd3-shape';
 import type { NewsItem, PollSeries, Race, RaceResult, StateInfo } from '../../types';
 import { AnimatedNumber, Avatar, PartyDot, RatingBadge, SimBadge } from '../../components';
-import { fmtInt, LEAN_HEX, PARTY_COLOR, PARTY_HEX, PARTY_NAME, RATING_HEX, timeAgo } from '../../lib/format';
+import { fmtInt, LEAN_HEX, PARTY_COLOR, PARTY_HEX, PARTY_NAME, RATING_HEX, timeAgo, ink } from '../../lib/format';
 import { RACES, stateByAbbr } from '../../data';
 import {
   demMargin,
@@ -123,12 +123,12 @@ export function Needle({
         <circle cx={cx} cy={cy} r={11} fill="var(--bg-2)" stroke="var(--text)" strokeWidth={2} />
       </svg>
       <div className="rx-needle-legend">
-        <div style={{ color: leftColor }} className={fav === 'left' ? 'is-fav' : ''}>
+        <div style={{ color: ink(leftColor) }} className={fav === 'left' ? 'is-fav' : ''}>
           <b className="mono">{right === undefined ? '—' : `${leftPct}%`}</b>
           <span>{leftLabel}</span>
         </div>
         <div className="rx-needle-mid">{right === undefined ? 'Model warms up when votes arrive' : zoneLabel(p)}</div>
-        <div style={{ color: rightColor }} className={fav === 'right' ? 'is-fav' : ''}>
+        <div style={{ color: ink(rightColor) }} className={fav === 'right' ? 'is-fav' : ''}>
           <b className="mono">{right === undefined ? '—' : `${rightPct}%`}</b>
           <span>{rightLabel}</span>
         </div>
@@ -409,7 +409,7 @@ export function PollPanel({ series }: { series: PollSeries }) {
                       {p.values[k.key] ?? '—'}
                     </td>
                   ))}
-                  <td className="mono num" style={{ color: net === undefined ? undefined : net >= 0 ? keys[0]?.color : keys[1]?.color }}>
+                  <td className="mono num" style={{ color: net === undefined ? undefined : ink(net >= 0 ? keys[0]?.color : keys[1]?.color) }}>
                     {net === undefined ? '—' : net === 0 ? 'Tie' : `${net > 0 ? keys[0].label.split(' ').pop() : keys[1].label.split(' ').pop()} +${Math.abs(net)}`}
                   </td>
                 </tr>

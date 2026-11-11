@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { m as motion } from 'framer-motion';
 import type { Party, RaceResult } from '../../types';
 import type { LiveState } from '../../lib/live';
-import { LEAN_HEX, PARTY_HEX, PARTY_NAME, fmtInt, mixHex, timeAgo } from '../../lib/format';
+import { LEAN_HEX, PARTY_HEX, PARTY_NAME, fmtInt, mixHex, timeAgo, ink } from '../../lib/format';
 import { raceById, stateByAbbr, racesByState } from '../../data';
 import { Avatar, SimBadge, Sparkline } from '../../components';
 import { BlindspotBadge, CoverageBar, LeanDot } from '../news/BiasBar';
@@ -424,7 +424,7 @@ export function PollCard({ id, meta, active, reduced }: { id: string; meta: Card
         </Rise>
         {leader && (
           <Rise active={active} reduced={reduced} delay={0.26} className="fd-spread">
-            <span className="fd-spread-chip mono" style={{ background: leader.color }}>
+            <span className="fd-spread-chip mono" style={{ background: `color-mix(in srgb, ${leader.color} 64%, #000)` }}>
               {leader.label} +{Math.abs(spread).toFixed(1)}
             </span>
             <span className="fd-note">average of the last {recent.length} polls</span>
@@ -471,7 +471,7 @@ export function FactCard({ abbr, meta, active, reduced }: { abbr: string; meta: 
         </Rise>
         <Kinetic text={`${s.name} was decided by ${margin.toFixed(1)} points in 2024.`} active={active} reduced={reduced} />
         <Rise active={active} reduced={reduced} delay={0.22} className="fd-fact">
-          <div className="fd-fact-big mono" style={{ color: PARTY_HEX[w] }}>
+          <div className="fd-fact-big mono" style={{ color: ink(PARTY_HEX[w]) }}>
             {w}+{margin.toFixed(1)}
           </div>
           <p>

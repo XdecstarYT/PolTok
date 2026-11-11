@@ -1,6 +1,6 @@
 /** /au/polls — weighted polling averages (federal + Victoria). */
 import { Link } from 'react-router-dom';
-import { Card } from '../../components';
+import { Card, PageHeader } from '../../components';
 import { useSeo } from '../../lib/seo';
 import { AU_POLLS, type AuPoll } from '../../data/au';
 import { FED2025_NATIONAL_PRIMARY } from '../../data/au-fed2025';
@@ -9,6 +9,7 @@ import { LineChart } from './charts';
 import { pColor } from './model';
 import { average, HALF_LIFE, pollTs, pollVal, SERIES, sponsored, trend, weights, WINDOW, type Series } from './pollavg';
 import './au.css';
+import { ink } from '../../lib/format';
 
 const NAME: Record<Series, string> = { ALP: 'Labor', LNP: 'Coalition', ONP: 'One Nation', GRN: 'Greens', OTH: 'Others', TPP: 'ALP 2PP' };
 const COL = (k: Series) => (k === 'LNP' ? pColor('LIB') : k === 'TPP' ? pColor('ALP') : pColor(k));
@@ -38,7 +39,7 @@ function Block({ title, polls, baseline }: { title: string; polls: AuPoll[]; bas
         )}
         {prim.map(({ k, a }) => a && (
           <div key={k} className="au-poll-stat">
-            <span className="mono" style={{ color: COL(k) }}>{NAME[k]}</span>
+            <span className="mono" style={{ color: ink(COL(k)) }}>{NAME[k]}</span>
             <b className="num">{a.v.toFixed(1)}</b>
             {baseline?.prim?.[k] != null && <span className="mono muted">{(a.v - baseline.prim[k]) >= 0 ? '+' : ''}{(a.v - baseline.prim[k]).toFixed(1)}</span>}
           </div>
@@ -80,14 +81,15 @@ export default function PollAvgPage() {
   useSeo({ title: 'Australian polling average', description: 'Weighted average of federal and Victorian voting-intention polls: two-party-preferred and primary votes.' });
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono"><Link to="/au">AUSTRALIA</Link> / POLLING AVERAGE</div>
-          <h1>Polling average</h1>
-          <p className="au-sub">A transparent weighted mean of published polls — not a forecast.</p>
-        </div>
-      </header>
+      <PageHeader
+        className="au-pagehead"
+        kicker="Australia · Polling average"
+        title="Polling average"
+        crumbLabel="Polling average"
+        sub="A transparent weighted mean of published polls, not a forecast."
+      >
+        <AuNav />
+      </PageHeader>
       <Block title="Federal" polls={AU_POLLS.federal} baseline={{ label: '2025 election', tpp: 55.2, prim: { ALP: FED2025_NATIONAL_PRIMARY.ALP, GRN: FED2025_NATIONAL_PRIMARY.GRN, ONP: FED2025_NATIONAL_PRIMARY.ONP, LNP: +((FED2025_NATIONAL_PRIMARY.LIB ?? 0) + (FED2025_NATIONAL_PRIMARY.LNP ?? 0) + (FED2025_NATIONAL_PRIMARY.NAT ?? 0)).toFixed(1) } }} />
       <Block title="Victoria" polls={AU_POLLS.victoria} baseline={{ label: '2022 election', tpp: 55.0 }} />
       <Card title="Method">

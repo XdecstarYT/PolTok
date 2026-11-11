@@ -1,6 +1,6 @@
 /** /parliament/bill/:id — bill detail: stage tracker, timeline, text versions, roll calls. */
 import { Link, useParams } from 'react-router-dom';
-import { fmtTime, tzAbbr } from '../../components';
+import { ErrorState, PageHeader, Skeleton, fmtTime, tzAbbr } from '../../components';
 import { api, countryOf, fmtDate, useAsync } from './api';
 import { StageTracker, VoteCard, partyColor } from './parts';
 import './parliament.css';
@@ -9,29 +9,46 @@ export default function BillPage() {
   const { id = '' } = useParams();
   const c = countryOf(id);
   const { data: b, error, loading } = useAsync(() => api.bill(c, id), [id]);
-  const back = <Link to={c === 'au' ? '/parliament?c=au' : '/parliament'}>← {c === 'au' ? 'Australian Parliament' : 'US Congress'} bills</Link>;
+  const crumbs = [
+    { to: '/', label: 'Home' },
+    { to: c === 'au' ? '/parliament?c=au' : '/parliament', label: c === 'au' ? 'Australian Parliament' : 'Parliament' },
+    { label: id },
+  ];
 
-  if (loading && !b) return <div className="page pa-page"><div className="pa-kicker">{back}</div><p className="pa-muted">Loading bill…</p></div>;
+  if (loading && !b)
+    return (
+      <div className="page pa-page">
+        <PageHeader crumbs={crumbs} kicker="Bill" title={<Skeleton width="min(520px, 80%)" height={36} />} crumbLabel={id} />
+        <Skeleton lines={4} />
+      </div>
+    );
   if (error || !b)
     return (
       <div className="page pa-page">
-        <div className="pa-kicker">{back}</div>
-        <div className="pa-connect"><b>Bill not available</b><p>{error || 'Not found'} — the live parliament API could not return this bill.</p></div>
+        <PageHeader crumbs={crumbs} kicker="Bill" title="Bill not available" />
+        <ErrorState title="We couldn't load this bill" description={`${error || 'Not found'}. The live parliament API did not return it.`} onRetry={() => location.reload()} />
+        <p><Link to={c === 'au' ? '/parliament?c=au' : '/parliament'}>Back to all bills</Link></p>
       </div>
     );
 
   const updatedTs = b.updated && /(Z|[+-]\d\d:?\d\d)$/.test(b.updated) ? Date.parse(b.updated) : NaN; // zone-less stamps (FRL) are not shown
   return (
     <div className="page pa-page">
-      <div className="pa-kicker">{back}</div>
-      <header>
-        <div className="pa-bill__top">
-          <b className="pa-bill__num">{b.label}</b>
-          <span className="pa-bill__ch">{b.chamber}</span>
-          {b.policyArea && <span className="pa-tag">{b.policyArea}</span>}
-        </div>
-        <h1>{b.shortTitle || b.title}</h1>
-        {b.shortTitle && b.shortTitle !== b.title && <p className="pa-sub">{b.title}</p>}
+      <PageHeader
+        className="pa-head"
+        crumbs={crumbs}
+        title={b.shortTitle || b.title}
+        kicker={
+          <span className="pa-bill__top">
+            <b className="pa-bill__num">{b.label}</b>
+            <span className="pa-bill__ch">{b.chamber}</span>
+            {b.policyArea && <span className="pa-tag">{b.policyArea}</span>}
+          </span>
+        }
+        sub={b.shortTitle && b.shortTitle !== b.title ? b.title : undefined}
+        meta={
+          <div className="pa-head-meta">
+
         {b.sponsor && (
           <p className="pa-bill__sp">
             <i className="pa-dot" style={{ background: partyColor(b.sponsor.party) }} aria-hidden />
@@ -44,7 +61,9 @@ export default function BillPage() {
           {Number.isFinite(updatedTs) && <>Record updated {fmtDate(new Date(updatedTs).toISOString())} {fmtTime(updatedTs)} {tzAbbr(updatedTs)} · </>}
           <a href={b.url} target="_blank" rel="noreferrer">Official page ↗</a>
         </p>
-      </header>
+          </div>
+        }
+      />
 
       <section className="pa-panel">
         <h2>Progress — {b.stageLabel}</h2>

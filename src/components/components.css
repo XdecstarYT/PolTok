@@ -184,6 +184,9 @@
   font-family: var(--font-serif); font-size: var(--fs-3xl); font-weight: 600; line-height: 1.02; letter-spacing: -0.025em;
   overflow-wrap: anywhere;
 }
+/* Guard against page-level `.x-page h1` rules: family, size and rhythm always come from the system. */
+.pt-pagehead .pt-pagehead__title { font-family: var(--font-serif); font-size: var(--fs-3xl); line-height: 1.02; margin: 0; }
+.pt-pagehead .pt-pagehead__sub { margin: 0; }
 .pt-pagehead__sub { font-size: clamp(15px, 1.4vw, 17px); line-height: 1.5; color: var(--text-2); max-width: 70ch; }
 .pt-pagehead__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 12.5px; color: var(--text-3); }
 .pt-pagehead__meta a { color: var(--signal); }

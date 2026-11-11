@@ -10,6 +10,12 @@ export const PARTY_COLOR: Record<Party, string> = {
 };
 
 /** Raw hex values for canvas / d3 where CSS vars can't be used. */
+/**
+ * Theme-aware text colour for a party/series hue: mixes the hue toward the theme's --text, so small
+ * coloured text stays readable (WCAG AA) on dark themes and on Paper alike. Fills keep the raw hue.
+ */
+export const ink = (c?: string, pct = 55): string | undefined => (c ? `color-mix(in srgb, ${c} ${pct}%, var(--text))` : undefined);
+
 export const PARTY_HEX: Record<Party, string> = {
   D: '#3d7bff',
   R: '#ff3d55',

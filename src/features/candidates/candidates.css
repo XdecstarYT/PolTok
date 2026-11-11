@@ -1,6 +1,6 @@
 /* Candidates feature (agent 1). Tokens only, so it follows the Broadcast theme too. */
 .cd-page { display: grid; gap: 16px; }
-.cd-page h1 { font-family: var(--font-display); font-size: var(--fs-2xl); line-height: 1.05; margin: 4px 0; overflow-wrap: anywhere; }
+.cd-page h1 { font-family: var(--font-serif); font-size: var(--fs-3xl); font-weight: 600; line-height: 1.02; letter-spacing: -0.02em; margin: 4px 0; overflow-wrap: anywhere; }
 .cd-muted { color: var(--text-2); font-size: var(--fs-sm); }
 .cd-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .cd-head p { max-width: 640px; margin: 0; }
@@ -15,7 +15,7 @@
 .cd-seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 10px; overflow: hidden; }
 .cd-seg button { background: var(--bg-2); color: var(--text-2); border: 0; padding: 9px 12px; font: inherit; font-size: var(--fs-sm); cursor: pointer; min-height: 40px; }
 .cd-seg button + button { border-left: 1px solid var(--line-2); }
-.cd-seg button.is-on { background: var(--accent-soft); color: var(--text); }
+.cd-seg button.is-on { background: var(--bg-3); color: var(--text); box-shadow: inset 0 0 0 1px var(--line-3); }
 .cd-count { margin: 0; }
 .cd-empty { color: var(--text-2); padding: 32px 0; text-align: center; }
 
@@ -36,7 +36,7 @@
 .cd-inc { border: 1px solid var(--line-3); border-radius: 999px; padding: 0 6px; }
 
 .cd-tag { justify-self: start; font-size: var(--fs-xs); font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--bg-3); color: var(--text-2); }
-.cd-tag--won { background: var(--accent); color: var(--accent-ink); }
+.cd-tag--won { background: var(--text); color: var(--bg); }
 .cd-tag--lost { background: var(--bg-3); color: var(--text-3); }
 .cd-tag--leading { background: var(--signal-soft); color: var(--text); }
 
@@ -103,7 +103,7 @@
 .cd-tl { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line-2); display: grid; gap: 10px; }
 .cd-tl li { position: relative; display: grid; gap: 2px; font-size: var(--fs-sm); }
 .cd-tl li::before { content: ''; position: absolute; left: -20px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg-3); border: 2px solid var(--line-3); }
-.cd-tl li.is-now::before { background: var(--accent); border-color: var(--accent); }
+.cd-tl li.is-now::before { background: var(--text); border-color: var(--text); }
 .cd-tl__when { font-size: var(--fs-xs); color: var(--text-3); }
 .cd-ideo__bar { position: relative; height: 14px; border-radius: 7px; background: linear-gradient(90deg, #2f6fdf, var(--bg-3) 50%, #d8333f); margin: 8px 0 6px; }
 .cd-ideo__mid { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--text-3); }
@@ -113,7 +113,7 @@
 .cd-votes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: var(--fs-sm); }
 .cd-votes li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; align-items: start; }
 .cd-vote { font: 700 11px var(--font-data); text-align: center; padding: 3px 0; border-radius: 6px; background: var(--bg-3); color: var(--text-2); }
-.cd-vote--Y { background: var(--accent-soft); color: var(--text); }
+.cd-vote--Y { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--text); }
 .cd-vote--N { background: color-mix(in srgb, #d8333f 22%, transparent); color: var(--text); }
 .cd-sources { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: var(--fs-sm); }
 .cd-card__meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: var(--fs-xs); color: var(--text-2); }

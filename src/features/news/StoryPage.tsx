@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { PageHeader, Skeleton, ErrorState } from '../../components';
 import type { NewsItem } from '../../types';
 import { timeAgo, LEAN_HEX } from '../../lib/format';
 import { useSeo } from '../../lib/seo';
@@ -32,23 +33,24 @@ export default function StoryPage() {
   const topics = useMemo(() => TOPIC_LIST.filter((t) => (t.region === 'both' || t.region === data?.region) && items.some((i) => topicMatchClient(i, t.slug))), [items, data]);
 
   return (
-    <main className="container n2">
-      <nav className="n2-crumb" aria-label="Breadcrumb">
-        <Link to="/news">News</Link> <span aria-hidden="true">/</span> <span>Story</span>
-      </nav>
-      {loading && !data && <p className="n2-muted">Loading coverage…</p>}
+    <div className="container n2">
+      <PageHeader
+        className="n2-head"
+        kicker="Story · coverage across the spectrum"
+        crumbLabel="Story"
+        title={data && lead ? cleanText(lead.title) : error && !data ? 'Story unavailable' : <Skeleton width="min(640px, 90%)" height={36} />}
+        sub={
+          data && lead ? (
+            <>Headline from {lead.source}. Covered by <b>{data.coverage.total}</b> outlet{data.coverage.total === 1 ? '' : 's'} · first seen {timeAgo(items[0].publishedAt, now)} · latest {timeAgo(items[items.length - 1].publishedAt, now)}</>
+          ) : undefined
+        }
+      />
+      {loading && !data && <Skeleton lines={6} />}
       {error && !data && (
-        <div className="n2-panel">
-          <p>Couldn't load this story: {error}.</p>
-          <Link to="/news">Back to News</Link>
-        </div>
+        <ErrorState title="Couldn't load this story" description={<>{error}. <Link to="/news">Back to News</Link></>} onRetry={() => location.reload()} />
       )}
       {data && lead && (
         <>
-          <h1>{cleanText(lead.title)}</h1>
-          <p className="n2-sub">
-            Headline from {lead.source}. Covered by <b>{data.coverage.total}</b> outlet{data.coverage.total === 1 ? '' : 's'} · first seen {timeAgo(items[0].publishedAt, now)} · latest {timeAgo(items[items.length - 1].publishedAt, now)}
-          </p>
           <div className="n2-grid">
             <div>
               <section className="n2-panel" aria-labelledby="n2-cov">
@@ -117,7 +119,7 @@ export default function StoryPage() {
           </div>
         </>
       )}
-    </main>
+    </div>
   );
 }
 

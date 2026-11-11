@@ -7,6 +7,7 @@ import { fmtDay, fmtTime } from '../../components/time';
 import { LEAN_HEX, timeAgo } from '../../lib/format';
 import { party, partyKey, pColor, sortParties, type AuSeat, type PollRow } from './model';
 import { auPhoto, usePhotoIndex } from '../../data/au-photo';
+import { ink } from '../../lib/format';
 
 /* ═════════════ Hemicycle (parliament arc) ═════════════ */
 
@@ -155,7 +156,7 @@ export function Pendulum({ seats, gov = 'ALP', title = 'Seat pendulum', results,
       </div>
       <div className="au-pend-grid">
         <div>
-          <h4 className="mono" style={{ color: pColor('ALP') }}>Labor-held · {govSeats.length}</h4>
+          <h4 className="mono" style={{ color: ink(pColor('ALP')) }}>Labor-held · {govSeats.length}</h4>
           {col(govSeats, 'gov')}
         </div>
         <div>
@@ -231,7 +232,7 @@ export function PollsPanel({ polls, title, kicker }: { polls: PollRow[]; title: 
           const v = avg.reduce((a, p) => a + (p.primary[k] as number), 0) / avg.length;
           return (
             <div key={k} className="au-poll-stat">
-              <span className="mono" style={{ color: pColor(k) }}>{SERIES_NAME[k]}</span>
+              <span className="mono" style={{ color: ink(pColor(k)) }}>{SERIES_NAME[k]}</span>
               <b className="num">{v.toFixed(1)}</b>
             </div>
           );

@@ -2,7 +2,7 @@
  *  marginal-seat arithmetic and Legislative Council regions. Data-only; no predictions. */
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, PersonAvatar } from '../../components';
+import { Card, PersonAvatar, PageHeader } from '../../components';
 import { useSeo } from '../../lib/seo';
 import { CENSUS_VIC } from '../../data/au-census';
 import { VIC_LC_2022, VIC_LC_2022_SOURCE } from '../../data/au-states';
@@ -60,20 +60,22 @@ export default function VicDistrictsPage() {
 
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono"><Link to="/au">AUSTRALIA</Link> / <Link to="/au/victoria">VICTORIA 2026</Link> / DISTRICTS</div>
-          <h1>All 88 districts</h1>
-          <p className="au-sub">Pre-election reference: no 2026 votes have been counted. Results below are from the 2022 election.</p>
-        </div>
-        <dl className="au-stats mono">
+      <PageHeader
+        className="au-pagehead"
+        kicker="Victoria 2026 · Districts"
+        title="All 88 districts"
+        sub="Pre-election reference: no 2026 votes have been counted. Results below are from the 2022 election."
+        aside={
+          <dl className="au-stats mono">
           <div><dt>Districts</dt><dd>88</dd></div>
           <div><dt>Majority</dt><dd>{VICTORIA.majority}</dd></div>
           <div><dt>Nominated</dt><dd>{Object.values(VIC_NOMINATIONS.districts).reduce((a, l) => a + l.length, 0)}</dd></div>
           <div><dt>Early voting centres</dt><dd>~200</dd></div>
-        </dl>
-      </header>
+          </dl>
+        }
+      >
+        <AuNav />
+      </PageHeader>
 
       <div className="au-grid-2">
         <Card title="Uniform-swing arithmetic" kicker="from the 2022-based pendulum">

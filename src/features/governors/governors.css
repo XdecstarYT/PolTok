@@ -25,7 +25,7 @@
 .gv-seg { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .gv-seg button { background: var(--bg-1); border: 1px solid var(--line); color: var(--text-2); font: inherit; font-size: 13px; padding: 5px 11px; border-radius: var(--radius-pill); cursor: pointer; min-height: 32px; }
 .gv-seg button.on { background: var(--bg-3); color: var(--text); border-color: var(--line-2); }
-.gv-seg button:focus-visible { outline: 2px solid var(--accent, #3d7bff); outline-offset: 2px; }
+.gv-seg button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 .gv-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; min-width: 0; }
 .gv-card { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
 .gv-card.big { max-width: 720px; }
@@ -33,8 +33,8 @@
 .gv-st, .gv-off { font-weight: 700; color: var(--text); text-decoration: none; overflow-wrap: anywhere; }
 .gv-badge { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; border-radius: 4px; background: var(--bg-3); color: var(--text-3); white-space: nowrap; flex: none; }
 .gv-badge.called { background: var(--text); color: var(--bg); }
-.gv-badge.yes { background: #1f9d55; color: #fff; }
-.gv-badge.no { background: #c0392b; color: #fff; }
+.gv-badge.yes { background: #17783f; color: #fff; }
+.gv-badge.no { background: #a52f23; color: #fff; }
 .gv-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .gv-lines li { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: 'av nm pct' 'av bar bar' 'av vt vt'; gap: 2px 8px; align-items: center; opacity: .85; }
 .gv-lines li.won { opacity: 1; }

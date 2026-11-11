@@ -5,7 +5,7 @@
  * each state file and keep only statewide measures.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { LiveDot, fmtTime, tzAbbr } from '../../components';
+import { EmptyState, PageHeader, Skeleton, StatGroup, StatTile, fmtTime, tzAbbr } from '../../components';
 import { STATES } from '../../data';
 import { USMap } from '../map/USMap';
 import { ATTRIBUTION, NYT_BASE, fetchJson, type NytRace } from '../flips/data';
@@ -133,30 +133,38 @@ export default function MeasuresPage() {
 
   return (
     <div className="page bm-page">
-      <header>
-        <div className="bm-kicker mono"><LiveDot /> <span>MIDTERMS 2026 · STATEWIDE BALLOT MEASURES</span></div>
-        <h1>Ballot measures</h1>
-        <p className="bm-sub">
-          Every statewide question on the ballot, with real vote counts and AP calls. {ATTRIBUTION}. NYT publishes no single
-          ballot-measure feed, so this page reads each state's results file.{' '}
-          <span className="mono bm-upd">
+      <PageHeader
+        className="bm-head"
+        live
+        kicker="Midterms 2026 · Statewide ballot measures"
+        title="Ballot measures"
+        crumbLabel="Ballot measures"
+        sub={<>Every statewide question on the ballot, with real vote counts and AP calls. {ATTRIBUTION}. NYT publishes no single ballot-measure feed, so this page reads each state's results file.</>}
+        meta={
+          <span className="bm-upd">
             {data ? `Updated ${fmtTime(data.updatedAt, true)} ${tzAbbr()} · ${data.ok} state files · refreshes every 2 min` : 'Loading 50 state files…'}
             {data?.failed.length ? ` · unavailable: ${data.failed.join(', ')}` : ''}
           </span>
-        </p>
-      </header>
+        }
+      />
 
       {data && list.length === 0 && (
-        <div className="bm-empty">No statewide ballot-measure results were found in the NYT state files. Nothing is shown rather than guessing.</div>
+        <EmptyState title="No ballot-measure results found" description="No statewide ballot-measure results were found in the NYT state files. Nothing is shown rather than guessing." />
       )}
 
-      <section className="bm-stats mono" aria-label="Summary">
-        <div><b>{counts.total}</b>measures</div>
-        <div><b>{counts.states}</b>states</div>
-        <div><b style={{ color: C_YES }}>{counts.passed}</b>passed</div>
-        <div><b style={{ color: C_NO }}>{counts.failed}</b>failed</div>
-        <div><b>{counts.total - counts.passed - counts.failed}</b>uncalled</div>
-      </section>
+      <StatGroup label="Summary" min={120}>
+        {(
+          [
+            ['Measures', counts.total, undefined],
+            ['States', counts.states, undefined],
+            ['Passed', counts.passed, C_YES],
+            ['Failed', counts.failed, C_NO],
+            ['Uncalled', counts.total - counts.passed - counts.failed, undefined],
+          ] as [string, number, string | undefined][]
+        ).map(([label, n, color]) => (
+          <StatTile key={label} label={label} value={data ? <span style={{ color }}>{n}</span> : <Skeleton width={48} height={28} />} />
+        ))}
+      </StatGroup>
 
       <div className="bm-filters">
         <div className="bm-topics" role="toolbar" aria-label="Topic">
@@ -176,7 +184,7 @@ export default function MeasuresPage() {
 
       <div className="bm-grid">
         <section className="bm-list" aria-label="Measures">
-          {data && shown.length === 0 && list.length > 0 && <div className="bm-empty">No measures match these filters.</div>}
+          {data && shown.length === 0 && list.length > 0 && <EmptyState compact title="No measures match these filters" />}
           {shown.map((m) => <MeasureCard key={m.id} m={m} />)}
         </section>
         <aside className="bm-side">

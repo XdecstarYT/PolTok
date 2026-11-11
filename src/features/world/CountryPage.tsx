@@ -7,7 +7,7 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { COUNTRY_CODES, daysUntil, fmtDate, relDays, todayUTC, useCountryProfile, useWorldElections, useWorldNews, type Party } from './data';
-import { PersonAvatar } from '../../components';
+import { PersonAvatar, PageHeader, EmptyState, Skeleton } from '../../components';
 import './world.css';
 
 const PALETTE = ['#6b7280', '#9ca3af', '#4b5563', '#a1a1aa', '#71717a'];
@@ -84,17 +84,17 @@ export default function CountryPage() {
   const majority = total ? Math.floor(total / 2) + 1 : 0;
 
   return (
-    <div className="wd cp">
-      <div className="wd-head">
-        <div>
-          <div className="wd-kicker"><Link to="/world">World</Link> · {code}</div>
-          <h1 className="wd-title">{name}</h1>
-          <p className="wd-sub">Government, parliament, elections, news &amp; markets</p>
-        </div>
-      </div>
+    <div className="page wd cp">
+      <PageHeader
+        className="wd-pagehead"
+        kicker={`World · ${code}`}
+        title={name}
+        crumbLabel={name}
+        sub="Government, parliament, elections, news & markets"
+      />
 
-      {prof.err && <div className="wd-note">Country profile unavailable ({prof.err}). {prof.err.includes('404') ? 'Not one of the ~40 profiled countries.' : ''}</div>}
-      {prof.loading && <div className="wd-muted">Loading Wikidata &amp; Wikipedia…</div>}
+      {prof.err && <EmptyState compact title="Country profile unavailable" description={`${prof.err}. ${prof.err.includes('404') ? 'Not one of the ~40 profiled countries.' : ''}`} />}
+      {prof.loading && <div className="cp-grid" aria-busy="true" aria-label="Loading Wikidata and Wikipedia"><Skeleton height={180} radius={12} /><Skeleton height={180} radius={12} /></div>}
 
       {p && (
         <section className="cp-grid">

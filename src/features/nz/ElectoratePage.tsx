@@ -1,6 +1,6 @@
 /** /nz/electorate/:id — one electorate: candidates, live count (Electoral Commission), 2023 result. */
 import { Link, useParams } from 'react-router-dom';
-import { Card, PersonAvatar, fmtTime } from '../../components';
+import { Card, PersonAvatar, fmtTime, PageHeader, EmptyState } from '../../components';
 import { NZ_ELECTORATES, callOf, partyMeta, useNzDetail } from './data';
 import './nz.css';
 
@@ -9,19 +9,17 @@ export default function NzElectoratePage() {
   const info = NZ_ELECTORATES.find((e) => e.id === id);
   const d = useNzDetail(id);
   const e = d?.electorate;
-  if (!info) return <div className="nz page"><p>Unknown electorate. <Link to="/nz">Back to NZ election</Link></p></div>;
+  if (!info) return <div className="nz page"><PageHeader kicker="New Zealand" title="Unknown electorate" crumbs={[{ to: '/', label: 'Home' }, { to: '/nz', label: 'New Zealand' }, { label: 'Not found' }]} /><EmptyState title="We don't recognise that electorate" description={<Link to="/nz">Back to the NZ election</Link>} /></div>;
   const total = e?.candidates.reduce((a, c) => a + c.votes, 0) || 0;
   const call = e && e.margin != null ? callOf({ margin: e.margin, countedPct: e.countedPct }, d!.status as 'counting' | 'final', null) : null;
   return (
     <div className="nz page">
-      <Link to="/nz" className="nz-back">← NZ election 2026</Link>
-      <header className="nz-hero">
-        <div>
-          <span className="kicker">{info.type === 'maori' ? 'Māori electorate' : 'General electorate'} · 2026</span>
-          <h1>{info.name}</h1>
-          {info.r2023 ? <p className="nz-sub">2023: {info.r2023.winner} ({info.r2023.party}) by {info.r2023.margin.toLocaleString()} — boundaries changed in 2025.</p> : <p className="nz-sub">New or substantially redrawn electorate for 2026.</p>}
-        </div>
-      </header>
+      <PageHeader
+        kicker={`${info.type === 'maori' ? 'Māori electorate' : 'General electorate'} · 2026`}
+        title={info.name}
+        crumbs={[{ to: '/', label: 'Home' }, { to: '/nz', label: 'New Zealand' }, { label: info.name }]}
+        sub={info.r2023 ? `2023: ${info.r2023.winner} (${info.r2023.party}) by ${info.r2023.margin.toLocaleString()}. Boundaries changed in 2025.` : 'New or substantially redrawn electorate for 2026.'}
+      />
       <Card title={e ? `Count — ${e.countedPct ?? '?'}% counted` : 'Live count'} kicker={e ? `${d!.status === 'final' ? 'Official' : 'Preliminary'} · Electoral Commission · ${fmtTime(d!.updatedAt)}` : 'Electoral Commission'} live={!!e && d?.status !== 'final'}>
         {!e ? (
           <p className="nz-note">{d?.error || 'Checking…'} Results stream from 7:00pm NZDT, Sat 7 Nov.</p>

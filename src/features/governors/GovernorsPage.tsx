@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Avatar, PageHeader, fmtTime, tzAbbr } from '../../components';
 import { STATES, raceById } from '../../data';
-import { PARTY_HEX } from '../../lib/format';
+import { PARTY_HEX, ink } from '../../lib/format';
 import type { Party } from '../../types';
 import { USMap } from '../map/USMap';
 import { ATTRIBUTION, NOT_UP, pres24, signed, stateName, useGovernorRaces, type Contest } from './data';
@@ -62,7 +62,7 @@ export default function GovernorsPage() {
   });
 
   return (
-    <main className="page gv-page">
+    <div className="page gv-page">
       <PageHeader
         live
         kicker="Governors · 2026 · AP live"
@@ -122,7 +122,7 @@ export default function GovernorsPage() {
           </ol>
           <h2 style={{ marginTop: 16 }}>Flips</h2>
           <ul className="gv-flips">
-            {flips.map((s) => <li key={s.abbr}><Link to={`/governors/${s.abbr}`}>{stateName(s.abbr)}: {s.prior} → <b style={{ color: PARTY_HEX[s.party === 'O' ? 'I' : s.party] }}>{s.party}</b></Link></li>)}
+            {flips.map((s) => <li key={s.abbr}><Link to={`/governors/${s.abbr}`}>{stateName(s.abbr)}: {s.prior} → <b style={{ color: ink(PARTY_HEX[s.party === 'O' ? 'I' : s.party]) }}>{s.party}</b></Link></li>)}
             {!flips.length && <li className="gv-muted">No called flips yet.</li>}
           </ul>
           <h2 style={{ marginTop: 16 }}>Trifectas</h2>
@@ -143,7 +143,7 @@ export default function GovernorsPage() {
           {!races.length && <p className="gv-muted">{error ? 'Could not load results.' : 'Loading results…'}</p>}
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 

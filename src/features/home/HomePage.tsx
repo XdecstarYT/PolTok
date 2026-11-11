@@ -11,6 +11,7 @@ import {
   fmtTime, tzAbbr, useNow, useReducedMotion,
 } from '../../components';
 import { useFlipsData, type FlipRace } from '../flips/data';
+import { LatestUpdateCard } from '../updates/LatestUpdateCard';
 import './home.css';
 import { useHomeCountry, type HomeCountry } from './prefs';
 
@@ -28,7 +29,6 @@ const S = {
   TopStories: lazy(() => secs().then((m) => ({ default: m.TopStories }))),
   Today: lazy(() => secs().then((m) => ({ default: m.Today }))),
   Highlights: lazy(() => secs().then((m) => ({ default: m.Highlights }))),
-  WhatsNew: lazy(() => secs().then((m) => ({ default: m.WhatsNew }))),
 };
 
 /** Mounts children only once scrolled near the viewport (or immediately without IntersectionObserver). */
@@ -490,6 +490,7 @@ export default function HomePage() {
   return (
     <div className="page hm">
       <CountryHero />
+      <LatestUpdateCard compact className="hm-whatsnew" />
       <div className="hm-band">
         <Numbers flipsAll={flipsAll} flips={flips} />
         <LazySection min={56} eager><S.Markets /></LazySection>
@@ -507,10 +508,7 @@ export default function HomePage() {
       <LazySection min={150}><S.WorldLive /></LazySection>
       <LazySection min={200}><S.Highlights /></LazySection>
       <LazySection min={260}><S.ForYou /></LazySection>
-      <div className="hm-row hm-row--2">
-        <LazySection min={300}><S.Today /></LazySection>
-        <LazySection min={200}><S.WhatsNew /></LazySection>
-      </div>
+      <LazySection min={300}><S.Today /></LazySection>
       <section aria-labelledby="hm-explore" className="hm-explore">
         <SectionHeader id="hm-explore" kicker="Explore" title="More from PolTok" />
         <LazySection min={90}><S.Tools /></LazySection>

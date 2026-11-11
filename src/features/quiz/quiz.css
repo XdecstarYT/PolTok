@@ -1,13 +1,11 @@
 .qz-head { margin-bottom: var(--sp-5); }
-.qz-kicker { color: var(--accent); font: 700 var(--fs-xs)/1 var(--font-data); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 var(--sp-2); }
-.qz-head h1 { font-size: var(--fs-2xl); margin: 0; color: var(--text); }
 .qz-sub { color: var(--text-2); margin: var(--sp-2) 0 0; }
 .qz-tabs { display: flex; gap: var(--sp-1); padding: 4px; background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius-pill); margin-bottom: var(--sp-4); overflow-x: auto; }
 .qz-tab { flex: 1; white-space: nowrap; min-height: 40px; padding: 0 var(--sp-3); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text-2); font-weight: 600; cursor: pointer; transition: background var(--dur-2), color var(--dur-2); }
-.qz-tab.is-on { background: var(--accent); color: var(--accent-ink); }
+.qz-tab.is-on { background: var(--text); color: var(--bg); }
 .qz-tab:focus-visible, .qz button:focus-visible, .qz a:focus-visible, .qz summary:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .qz-card { background: var(--bg-2); border: 1px solid var(--line-2); border-radius: var(--radius-lg); padding: var(--sp-5); color: var(--text); }
-.qz-disc { background: var(--bg-1); border-left: 3px solid var(--accent); border-radius: var(--radius-sm); padding: var(--sp-3); color: var(--text-2); font-size: var(--fs-sm); margin: 0 0 var(--sp-4); }
+.qz-disc { background: var(--bg-1); border-left: 3px solid var(--line-3); border-radius: var(--radius-sm); padding: var(--sp-3); color: var(--text-2); font-size: var(--fs-sm); margin: 0 0 var(--sp-4); }
 .qz-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-3); margin: var(--sp-3) 0; }
 .qz-label { color: var(--text-2); font-size: var(--fs-sm); }
 .qz-seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line-2); border-radius: var(--radius-pill); overflow: hidden; }
@@ -21,7 +19,7 @@
 .qz-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-2); }
 .qz-opt, .qz-ans { min-height: 48px; padding: var(--sp-2); border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--bg-1); color: var(--text); font-weight: 600; font-size: var(--fs-sm); cursor: pointer; transition: transform var(--dur-1), background var(--dur-2), border-color var(--dur-2); }
 .qz-opt:hover, .qz-ans:hover:not(:disabled) { border-color: var(--line-3); transform: translateY(-1px); }
-.qz-opt.is-on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.qz-opt.is-on { background: var(--text); color: var(--bg); border-color: var(--text); }
 .qz-answers { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
 .qz-ans { text-align: left; font-size: var(--fs-md); }
 .qz-answers--2 .qz-ans { text-align: center; }
@@ -34,7 +32,7 @@
 @keyframes qz-shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 .qz-explain { margin-top: var(--sp-4); padding: var(--sp-3); border-radius: var(--radius); background: var(--bg-1); border: 1px solid var(--line-2); color: var(--text-2); }
 .qz-explain b { color: var(--text); }
-.qz-explain a, .qz-review a, .qz-fine a, .qz-bars a { color: var(--signal, var(--accent)); }
+.qz-explain a, .qz-review a, .qz-fine a, .qz-bars a { color: var(--signal); }
 .qz-nav { display: flex; flex-wrap: wrap; gap: var(--sp-2); justify-content: flex-end; align-items: center; margin-top: var(--sp-4); }
 .qz-fine { color: var(--text-3); font-size: var(--fs-xs); margin: var(--sp-3) 0 0; line-height: 1.5; }
 .qz-link { background: none; border: 0; padding: 0; color: var(--text-2); text-decoration: underline; cursor: pointer; font: inherit; }
@@ -56,7 +54,7 @@
 .qz-chips b { color: var(--text); }
 .qz-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); margin-bottom: var(--sp-4); }
 .qz-stats div { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp-2) var(--sp-3); text-align: center; }
-.qz-stats b { display: block; font: 700 var(--fs-xl)/1.1 var(--font-data); color: var(--accent); }
+.qz-stats b { display: block; font: 700 var(--fs-xl)/1.1 var(--font-data); color: var(--text); }
 .qz-stats span { color: var(--text-3); font-size: var(--fs-xs); }
 .qz-review { padding-left: var(--sp-5); display: grid; gap: var(--sp-3); }
 .qz-review li span { display: inline-block; margin-left: var(--sp-1); font-weight: 700; }

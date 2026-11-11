@@ -1,5 +1,5 @@
 /* Search: ⌘K palette groups + /search page (SEARCH agent). */
-.srch-hl { background: color-mix(in srgb, var(--accent) 26%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+.srch-hl { background: color-mix(in srgb, var(--signal) 24%, transparent); color: var(--text); border-radius: 3px; padding: 0 1px; }
 .cmdk__group { list-style: none; padding: 10px 10px 4px; font-family: var(--font-data); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); display: flex; justify-content: space-between; align-items: center; }
 .cmdk__group button { font: inherit; letter-spacing: 0.06em; color: var(--text-3); background: none; border: 0; cursor: pointer; padding: 2px 4px; }
 .cmdk__group button:hover { color: var(--text); }
@@ -7,15 +7,15 @@
 .cmdk__kind--candidate { color: var(--text-2); }
 .cmdk__kind--news { color: var(--text-3); }
 .cmdk__kind { width: 58px; }
-.cmdk__item--all .cmdk__label { color: var(--accent); }
+.cmdk__item--all .cmdk__label { color: var(--signal); }
 @media (max-width: 600px) { .cmdk__kind { width: 46px; font-size: 8.5px; } }
 /* make sure the header search button never collapses away on phones */
 @media (max-width: 759px) { .sh-search { display: inline-flex !important; flex: none; width: 34px; height: 34px; } }
 
 .srch { max-width: 920px; margin: 0 auto; padding: 24px var(--gutter, 16px) 64px; display: grid; gap: 16px; min-width: 0; }
-.srch__title { font-size: clamp(24px, 4vw, 34px); font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+.srch__head { margin-bottom: 0; }
 .srch__box { display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 50px; border-radius: 14px; border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text-3); }
-.srch__box:focus-within { border-color: var(--accent); color: var(--signal); }
+.srch__box:focus-within { border-color: var(--signal); color: var(--signal); }
 .srch__box input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; font-size: 17px; color: var(--text); }
 .srch__filters { display: flex; gap: 6px; flex-wrap: wrap; }
 .srch__chip { display: inline-flex; gap: 6px; align-items: center; height: 30px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line-2); background: transparent; color: var(--text-2); font-size: 12.5px; font-weight: 600; cursor: pointer; }

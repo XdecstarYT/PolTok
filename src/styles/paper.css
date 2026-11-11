@@ -29,7 +29,7 @@
   --lib: #8a6a00;
   --grn: #2d6a3e;
   --oth: #5f5a50;
-  --tossup: #8a6a00;
+  --tossup: #735800;   /* a11y: 5.3:1 on --bg-3 (was 4.0) */
   --tossup-soft: rgba(138, 106, 0, 0.14);
   --accent: #141210;
   --accent-soft: rgba(20, 18, 16, 0.08);
@@ -40,7 +40,7 @@
   --signal-soft: rgba(31, 79, 138, 0.1);
   --terminal: #7a4a00;
   --ok: #2d6a3e;
-  --warn: #8a6a00;
+  --warn: #735800;
   --danger: #a3302a;
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -131,10 +131,20 @@
 [data-ui='paper'] .usmap, [data-ui='paper'] .aumap svg { filter: saturate(0.75) brightness(0.95); }
 /* Text on --accent (black in Paper) must flip to newsprint */
 [data-ui='paper'] .mp-tab.is-on, [data-ui='paper'] .mp-tab.is-on *, [data-ui='paper'] .mp-cta, [data-ui='paper'] .mp-buildpick button.is-on,
-[data-ui='paper'] .nw-chip.on, [data-ui='paper'] .nw-read-btn, [data-ui='paper'] .lv-seg-b.is-on, [data-ui='paper'] .fd-icon.on,
-[data-ui='paper'] .fd-cta { color: var(--accent-ink); }
+[data-ui='paper'] .nw-chip.on, [data-ui='paper'] .nw-read-btn, [data-ui='paper'] .fd-icon.on { color: var(--accent-ink); }
 [data-ui='paper'] .mp-tab.is-on .mp-livedot { background: var(--accent-ink); }
 [data-ui='paper'] .mp-flip, [data-ui='paper'] .fd-flip, [data-ui='paper'] .fd-chip.amber { color: #fff; }
 [data-ui='paper'] .ct { background: rgba(246, 241, 230, 0.97) !important; }
 :root[data-ui='paper'] .pt-simbadge--live { color: #a3122f; border-color: rgba(163, 18, 47, 0.45); background: rgba(163, 18, 47, 0.06); } /* a11y: AA contrast on newsprint */
 [data-ui='paper'] .pt-rating { color: #2a2416 !important; }
+
+/* The feed stays a dark, full-bleed surface in every theme: give it dark-surface tokens. */
+[data-ui='paper'] .fd-root {
+  color-scheme: dark; color: var(--text);
+  --text: #f3f5f9; --text-2: #b7bfcd; --text-3: #8f98a8; --text-4: #5d6576; --kicker: #ff8394; --signal: #7cc0ff;
+  --dem: #3d7bff; --dem-glow: #7da7ff; --rep: #ff3d55; --rep-glow: #ff8394; --tossup: #e9b949; --warn: #e9b949; --live: #ff4560; --ok: #34c27a;
+  --line: rgba(220, 228, 255, 0.075); --line-2: rgba(220, 228, 255, 0.13); --line-3: rgba(220, 228, 255, 0.24);
+  --accent: #cdf25a; --accent-ink: #0d1200;
+  --bg-1: #0f1218; --bg-2: #141820; --bg-3: #1b2029; --card-bg: #0f1218; --card-bd: rgba(220, 228, 255, 0.13);
+}
+:root[data-ui='paper'] .fd-root .pt-simbadge--live { color: #ff8394; border-color: rgba(255, 131, 148, 0.45); background: transparent; }

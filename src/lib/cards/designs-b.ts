@@ -250,7 +250,7 @@ const storyResults: Design = {
     ctx.fillStyle = fade; ctx.fillRect(0, hh - 300, W, 300);
     wordmark(ctx, 80, 150, 56);
     tag(k, k.kicker, 80, 190, 24, 'rgba(0,0,0,0.45)', '#fff');
-    const tb = fitBlock(ctx, d.title, W - 160, 280, 130, 'display', 700, 1.0, 2, 40);
+    const tb = fitBlock(ctx, d.title, W - 160, 280, 130, 'news', 700, 1.0, 2, 40);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
     let y = drawLines(ctx, tb.lines, 80, hh + tb.px * 0.6, tb.lh);
     ctx.font = font('sans', 36, 500); ctx.fillStyle = 'rgba(255,255,255,0.7)';

@@ -1,7 +1,7 @@
 /** /search?q=&type= — full global search results with type filters and highlighted matches. */
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { RatingBadge } from '../../components';
+import { RatingBadge, PageHeader } from '../../components';
 import { IconSearch } from '../../app/shell/icons';
 import { KINDS, KIND_PLURAL, pushRecent, search, useSearchIndex, type Entry, type Kind } from './searchIndex';
 import { Highlight } from './Highlight';
@@ -54,8 +54,8 @@ export default function SearchPage() {
   const remember = (e: Entry) => pushRecent({ id: e.id, kind: e.kind, label: e.label, to: e.to, href: e.href });
 
   return (
-    <main className="srch">
-      <h1 className="srch__title">Search</h1>
+    <div className="srch">
+      <PageHeader className="srch__head" kicker="Find anything" title="Search" sub="Races, candidates, states, Australian seats, parties and news." />
       <form className="srch__box" role="search" onSubmit={(ev) => { ev.preventDefault(); setParams(draft.trim() ? { q: draft } : {}); }}>
         <IconSearch />
         <input
@@ -121,6 +121,6 @@ export default function SearchPage() {
           )}
         </>
       )}
-    </main>
+    </div>
   );
 }

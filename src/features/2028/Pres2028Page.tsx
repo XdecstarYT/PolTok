@@ -6,6 +6,7 @@ import { ElectoralBar } from '../map/ElectoralBar';
 import { ALL_ABBRS, pres2024, stateEV, stateName } from '../map/stateTable';
 import { timeAgo } from '../../lib/format';
 import './pres2028.css';
+import { ink } from '../../lib/format';
 
 interface Outcome { label: string; prob: number; change1w?: number; volume?: number; history?: { t: number; p: number }[] }
 interface Mkt { id: string; title: string; url: string; volume?: number; outcomes: Outcome[] }
@@ -89,7 +90,7 @@ export default function Pres2028Page() {
   const party = get('party');
 
   return (
-    <main className="page p28-page">
+    <div className="page p28-page">
       <PageHeader
         kicker="Road to 2028 · Election day Nov 7, 2028"
         title="2028 Presidential Race"
@@ -108,9 +109,9 @@ export default function Pres2028Page() {
             const r = party.outcomes.find((o) => /republican/i.test(o.label))?.prob ?? 0;
             return (
               <div className="p28-party">
-                <span style={{ color: DEM }}><b>{pct(d)}</b> Democrats</span>
+                <span style={{ color: ink(DEM) }}><b>{pct(d)}</b> Democrats</span>
                 <div className="p28-track"><i style={{ width: `${(d / (d + r || 1)) * 100}%`, background: DEM }} /><i style={{ flex: 1, background: REP }} /></div>
-                <span style={{ color: REP }}>Republicans <b>{pct(r)}</b></span>
+                <span style={{ color: ink(REP) }}>Republicans <b>{pct(r)}</b></span>
               </div>
             );
           })()}
@@ -158,6 +159,6 @@ export default function Pres2028Page() {
           renderTooltip={(a) => { const p = pres2024(a); return <div><b>{stateName(a)}</b> · {stateEV(a)} EV<br />2024: {p.margin > 0 ? 'Harris' : 'Trump'} +{Math.abs(p.margin).toFixed(1)}</div>; }}
           describe={(a) => `${stateEV(a)} electoral votes, currently ${picks[a] === 'U' ? 'toss-up' : picks[a]}`} />
       </section>
-    </main>
+    </div>
   );
 }

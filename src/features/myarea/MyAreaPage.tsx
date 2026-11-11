@@ -6,6 +6,7 @@
  * Owned by src/features/myarea/**.
  */
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { PageHeader } from '../../components';
 import { Link } from 'react-router-dom';
 import { useSeo } from '../../lib/seo';
 import { RACES, stateByAbbr } from '../../data';
@@ -49,11 +50,12 @@ export default function MyAreaPage() {
 
   return (
     <div className="ma-page container">
-      <header>
-        <div className="ma-kicker">YOUR AREA</div>
-        <h1>Your representatives &amp; races</h1>
-        <p className="ma-sub">Find the districts you vote in, who represents you now, and how your 2026 races are going.</p>
-      </header>
+      <PageHeader
+        kicker="Your area"
+        title="Your representatives & races"
+        crumbLabel="Your area"
+        sub="Find the districts you vote in, who represents you now, and how your 2026 races are going."
+      />
       <form className="ma-form" onSubmit={go}>
         <div className="ma-seg" role="radiogroup" aria-label="Country">
           {(['US', 'AU'] as Country[]).map((c) => (

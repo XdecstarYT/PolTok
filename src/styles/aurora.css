@@ -20,11 +20,11 @@
   --rep-glow: #ff85a8;
   --accent: #ff3cac;
   --accent-soft: rgba(255, 60, 172, 0.18);
-  --accent-ink: #ffffff;
+  --accent-ink: #12062b; /* a11y: 6.0:1 on --accent (white was 3.2:1) */
   --signal: #2bd9fe;
   --signal-soft: rgba(43, 217, 254, 0.16);
   --terminal: #2bd9fe;
-  --live: #ff3cac;
+  --live: #ff6ec4;      /* a11y: 4.8:1 on --bg-3 */
   --live-fill: #b8126f;
   --breaking: #ff3cac;
   --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
@@ -72,7 +72,7 @@
 [data-ui='aurora'] .pt-stats { background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(18px); }
 [data-ui='aurora'] .pt-stat { background: rgba(40, 22, 90, 0.55); }
 [data-ui='aurora'] .sh-tab.is-active .sh-tab__icon { background: linear-gradient(90deg, rgba(255, 60, 172, 0.35), rgba(43, 217, 254, 0.35)); }
-[data-ui='aurora'] .btn--accent { background: linear-gradient(90deg, #ff3cac, #b04bff); --btn-fg: #fff; }
+[data-ui='aurora'] .btn--accent { background: linear-gradient(90deg, #c0157a, #7b2fd0); --btn-fg: #fff; } /* a11y: white ≥5.8:1 across the gradient */
 [data-ui='aurora'] .tk { background: rgba(20, 10, 50, 0.45); }
 [data-ui='aurora'] .tk__badge { color: #ff8fd0; --pulse-c: #ff3cac; }
 [data-ui='aurora'] .btn--primary, [data-ui='aurora'] .btn.is-primary { background: linear-gradient(90deg, #ff3cac, #2bd9fe); color: #fff; border: 0; }
