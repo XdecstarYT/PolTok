@@ -72,17 +72,24 @@ const geo = {};
 for (const [k, spec] of Object.entries(meta.geo || {})) geo[k] = buildGeo(ROOT, spec);
 
 // ---------- voiceover ----------
+// Kokoro (natural neural voice) wins when REELS_KOKORO_DIR holds the model + a pylib/ pip --target install.
+const kokoroDir = process.env.REELS_KOKORO_DIR;
+const useKokoro = !!(kokoroDir && fs.existsSync(path.join(kokoroDir, 'kokoro-v1.0.onnx')));
 const piperDir = process.env.REELS_PIPER_DIR;
-const useVO = !opt('no-vo', false) && piperDir && fs.existsSync(piperDir) && meta.voice !== false;
+const useVO = !opt('no-vo', false) && meta.voice !== false && (useKokoro || (piperDir && fs.existsSync(piperDir)));
 const voDir = path.join(HERE, '.cache', 'vo');
 fs.mkdirSync(voDir, { recursive: true });
 function synth(text, ls) {
-  const model = fs.readdirSync(piperDir).find((f) => f.endsWith('.onnx') && f.includes(meta.voice?.model || 'cori'));
+  const kVoice = opt('voice', meta.voice?.kokoro || 'af_heart');
+  const kSpeed = meta.voice?.speed ?? 1.05;
+  const model = useKokoro ? `kokoro:${kVoice}:${kSpeed}` : fs.readdirSync(piperDir).find((f) => f.endsWith('.onnx') && f.includes(meta.voice?.model || 'cori'));
   const h = crypto.createHash('sha1').update(text + '|' + ls + '|' + model).digest('hex').slice(0, 16);
   const raw = path.join(voDir, h + '.raw.wav'), wav = path.join(voDir, h + '.wav');
   if (!fs.existsSync(wav)) {
-    const r = spawnSync('python3', ['-m', 'piper', '-m', path.join(piperDir, model), '-f', raw, '--length-scale', String(ls), '--sentence-silence', '0.15'], { input: text, env: { ...process.env, PYTHONPATH: path.join(piperDir, 'pylib') } });
-    if (r.status !== 0) throw new Error('piper failed: ' + r.stderr);
+    const r = useKokoro
+      ? spawnSync('python3', [path.join(HERE, 'engine', 'kokoro_say.py'), kokoroDir, kVoice, String(kSpeed), raw, kVoice[0] === 'b' ? 'en-gb' : 'en-us'], { input: text, env: { ...process.env, PYTHONPATH: path.join(kokoroDir, 'pylib') } })
+      : spawnSync('python3', ['-m', 'piper', '-m', path.join(piperDir, model), '-f', raw, '--length-scale', String(ls), '--sentence-silence', '0.15'], { input: text, env: { ...process.env, PYTHONPATH: path.join(piperDir, 'pylib') } });
+    if (r.status !== 0) throw new Error('tts failed: ' + r.stderr);
     // resample to 48k + gentle broadcast chain
     execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', raw, '-af', 'highpass=f=80,equalizer=f=220:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=4:release=90:makeup=3,aresample=48000', '-ac', '1', '-c:a', 'pcm_s16le', wav]);
   }

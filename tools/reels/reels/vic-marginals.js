@@ -36,19 +36,25 @@ export const meta = {
 
 const pn = (p) => PARTY[p][0];
 
+// spoken forms for the voiceover (Kokoro IPA overrides; captions keep the normal spelling)
+const PRON = { Mildura: 'mɪldʒˈʊəɹə', Pakenham: 'pˈækənəm', Benambra: 'bənˈæmbɹə' };
+const sayName = (n) => (PRON[n] ? `[${n}](/${PRON[n]}/)` : n);
+const sayMargin = (m) => (m < 0.25 ? 'less than a quarter of a point' : m < 0.5 ? 'less than half a point' : `${m} points`);
+
 export const scenes = (d) => [
-  { id: 'hook', beats: 6, energy: 3 },
+  { id: 'hook', beats: 6, energy: 3, voLead: 0.08,
+    say: `This seat was won by ${sayMargin(d.top[0].margin)}.` },
   { id: 'chamber', beats: 12, energy: 2, trans: { type: 'zoom', dur: 0.5 },
-    say: `Eighty-eight seats. But ${d.under2} were decided by less than two points in 2022.`,
+    say: `So Victoria's got eighty-eight seats. And last time, ${d.under2} of them came down to under two points.`,
     cap: `88 seats. But ${d.under2} were won by under 2 points in 2022.` },
   { id: 'list', beats: 14, energy: 2, trans: { type: 'whip', dir: 'left', dur: 0.42 },
-    say: 'These are the closest.',
+    say: "Here's the closest ones.",
     cap: 'The closest seats from 2022:' },
   { id: 'closest', beats: 12, energy: 3, trans: { type: 'flash', dur: 0.36 },
-    say: `${d.top[0].name} was decided by just ${d.top[0].margin} points.`,
+    say: `${sayName(d.top[0].name)}? Decided by just ${sayMargin(d.top[0].margin)}. That's tiny.`,
     cap: `${d.top[0].name}: decided by just ${d.top[0].margin} points.` },
   { id: 'next', beats: 10, energy: 2, trans: { type: 'whip', dir: 'up', dur: 0.42 },
-    say: 'Watch these seats on election night, the twenty-eighth of November.',
+    say: "So on the twenty-eighth of November, keep an eye on these. Follow, and we'll cover it live.",
     cap: 'Watch these seats on election night, Saturday 28 November.' },
   { id: 'end', beats: 6, energy: 0, trans: { type: 'zoom', dur: 0.5 }, noProgress: true },
 ];

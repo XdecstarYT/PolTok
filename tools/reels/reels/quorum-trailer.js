@@ -21,16 +21,17 @@ export const meta = {
 };
 
 export const scenes = (d) => [
-  { id: 'hook', beats: 6, energy: 3 },
+  { id: 'hook', beats: 6, energy: 3, voLead: 0.08,
+    say: 'Could you win thirty-seven votes?' },
   { id: 'found', beats: 10, energy: 2, trans: { type: 'fade', dur: 0.5 },
-    say: 'The Republic of Calderra is new. Its first Assembly has seventy-two seats.',
+    say: "Okay. There's a brand-new country, [Calderra](/kɑːldˈɛɹə/). And its parliament has seventy-two seats.",
     cap: 'The Republic of Calderra is new. Its Assembly has 72 seats.' },
   { id: 'rivals', beats: 10, energy: 2, trans: { type: 'whip', dir: 'left', dur: 0.42 },
-    say: 'Found your party. Outplay three rivals.', cap: 'Found your party. Outplay three rivals.' },
+    say: "You start your own party. And you've got three rivals to beat.", cap: 'Found your party. Outplay three rivals.' },
   { id: 'vote', beats: 14, energy: 3, trans: { type: 'flash', dur: 0.36 },
-    say: 'Whip the votes. Thirty-seven passes a law.', cap: 'Whip the votes. 37 passes a law.' },
+    say: 'Get thirty-seven votes, and your law passes.', cap: 'Whip the votes. 37 passes a law.' },
   { id: 'eras', beats: 10, energy: 2, trans: { type: 'whip', dir: 'up', dur: 0.42 },
-    say: `Three eras. ${d.laws} laws. ${d.events} crises.`, cap: `3 eras · ${d.laws} laws · ${d.events} crises.` },
+    say: `Three eras, ${d.laws} laws, ${d.events} crises. And it's free. Link's in the bio.`, cap: `3 eras · ${d.laws} laws · ${d.events} crises.` },
   { id: 'end', beats: 6, energy: 0, trans: { type: 'zoom', dur: 0.5 }, noProgress: true },
 ];
 

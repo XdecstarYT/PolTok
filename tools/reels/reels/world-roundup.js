@@ -43,15 +43,22 @@ export const meta = {
   music: { prog: ['Am', 'F', 'C', 'G'], arp: 'up', seed: 83, swing: 0.05 },
 };
 
+// spoken forms for the voiceover (Kokoro IPA overrides; captions keep the normal spelling)
+const PRON = { Grenada: 'ɡɹənˈeɪdə', Likud: 'lɪkˈuːd', Yashar: 'jɑːʃˈɑːɹ', 'Iliana Iotova': 'ɪliˈɑːnə joʊtˈoʊvə', 'Andrey Gyurov': 'ˈɑːndɹeɪ ɡjˈuːɹɔv' };
+const sayName = (n) => (PRON[n] ? `[${n}](/${PRON[n]}/)` : n);
+const NUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+const OPENERS = ['First up,', 'Then', 'And'];
+
 export const scenes = (d) => [
-  { id: 'hook', beats: 6, energy: 3 },
+  { id: 'hook', beats: 6, energy: 3, voLead: 0.08,
+    say: `${NUM[d.items.length] ?? d.items.length} countries just voted. Did you catch any of them?` },
   ...d.items.map((it, i) => ({
     id: 'e' + i, beats: 12, energy: 2, trans: { type: i % 2 ? 'whip' : 'zoom', dir: 'left', dur: 0.45 },
-    say: `${it.country}: ${it.rows[0].name} ${it.kind === 'legislative' ? `won the most seats, with ${it.rows[0].value}` : `led with ${it.rows[0].value} percent`}.`,
+    say: `${OPENERS[Math.min(i, 2)]} ${sayName(it.country)}. ${sayName(it.rows[0].name)} ${it.kind === 'legislative' ? `came out on top, with ${it.rows[0].value} seats` : `won it, with about ${Math.round(it.rows[0].value)} percent`}.`,
     cap: `${it.country}: ${it.rows[0].name} ${it.kind === 'legislative' ? `won the most seats (${it.rows[0].value})` : `led with ${it.rows[0].value}%`}.`,
   })),
   { id: 'more', beats: 8, energy: 2, trans: { type: 'flash', dur: 0.36 },
-    say: 'Every national vote, on the PolTok world map.', cap: 'Every national vote, on the PolTok world map.' },
+    say: "Want the rest? Every national election's on the PolTok world map. Link's in the bio.", cap: 'Every national vote, on the PolTok world map.' },
   { id: 'end', beats: 6, energy: 0, trans: { type: 'zoom', dur: 0.5 }, noProgress: true },
 ];
 

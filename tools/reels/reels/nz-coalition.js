@@ -26,18 +26,19 @@ const TOTAL = 131, MAJ = 66;
 const ORDER = ['TPM', 'GRN', 'LAB', 'OPP', 'NZF', 'ACT', 'NAT'];
 
 export const scenes = () => [
-  { id: 'hook', beats: 6, energy: 3 },
+  { id: 'hook', beats: 6, energy: 3, voLead: 0.08,
+    say: "Sixty-seven seats. That's one more than they need." },
   { id: 'house', beats: 12, energy: 2, trans: { type: 'zoom', dur: 0.5 },
-    say: 'On preliminary results, the new Parliament has one hundred and thirty-one seats. Sixty-six is a majority.',
+    say: "So, on the preliminary count, Parliament's got a hundred and thirty-one seats. You need sixty-six to govern.",
     cap: 'Preliminary results: 131 seats. 66 is a majority.' },
   { id: 'build', beats: 16, energy: 3, trans: { type: 'whip', dir: 'left', dur: 0.42 },
-    say: 'National has forty-two. Add ACT, thirteen. Add New Zealand First, twelve. That is sixty-seven.',
+    say: "National's on forty-two. Add ACT's thirteen... then New Zealand First's twelve. And that's sixty-seven.",
     cap: 'National 42 + ACT 13 + NZ First 12 = 67.' },
   { id: 'other', beats: 12, energy: 2, trans: { type: 'whip', dir: 'right', dur: 0.42 },
-    say: 'Labour, the Greens, Opportunity and Te Pāti Māori together have sixty-four.',
+    say: 'On the other side, Labour, the Greens, Opportunity and [Te Pāti Māori](/tˈɛ pˈɑːti mˈɑːoɹi/) add up to sixty-four.',
     cap: 'Labour, Greens, Opportunity and Te Pāti Māori: 64.' },
   { id: 'caveat', beats: 12, energy: 1, trans: { type: 'fade', dur: 0.5 },
-    say: 'These are election-night numbers. Special votes are still to be counted, and the official result can move seats.',
+    say: "Heads up though. These are election-night numbers. Special votes haven't been counted yet, so a seat or two could still move.",
     cap: 'Election-night numbers. Special votes are still to come, and the official count can move seats.' },
   { id: 'end', beats: 6, energy: 0, trans: { type: 'zoom', dur: 0.5 }, noProgress: true },
 ];
