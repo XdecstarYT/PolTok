@@ -95,3 +95,19 @@
 .cp-mk__row { display: flex; justify-content: space-between; gap: 8px; font-size: var(--fs-sm); }
 .wd-cty.is-prof { cursor: pointer; }
 .cp-card__name { display: flex; align-items: center; gap: 10px; }
+
+/* Latest results (live from Wikipedia infoboxes) */
+.wd-results { margin: var(--sp-6, 24px) 0; }
+.wd-results__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: var(--sp-4, 16px); margin-top: var(--sp-3, 12px); }
+.wd-res { background: var(--bg-1, var(--surface)); border: 1px solid var(--line, rgba(255,255,255,.08)); border-radius: var(--radius-md, 12px); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.wd-res__h { display: flex; flex-direction: column; gap: 2px; }
+.wd-res__c { font-weight: 700; font-size: 1.05rem; }
+.wd-res__o { color: var(--text-dim, var(--muted)); font-size: .82rem; }
+.wd-res__rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.wd-res__rows li { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(40px, 1fr) auto; gap: 8px; align-items: center; font-size: .86rem; }
+.wd-res__n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wd-res__bar { height: 8px; background: var(--bg-2, rgba(255,255,255,.06)); border-radius: 4px; overflow: hidden; }
+.wd-res__bar > span { display: block; height: 100%; background: var(--accent, #c8f04a); border-radius: 4px; }
+.wd-res__v { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.wd-res__v small { color: var(--text-dim, var(--muted)); }
+.wd-res__f { font-size: .74rem; color: var(--text-dim, var(--muted)); }

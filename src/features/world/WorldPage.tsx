@@ -4,6 +4,7 @@
  * country drawer with the Wikipedia summary + live headlines. Data: /api/world (Wikipedia).
  */
 import { useEffect, useMemo, useState } from 'react';
+import LatestResults from './LatestResults';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
@@ -106,6 +107,11 @@ export default function WorldPage() {
     return [...g.entries()];
   }, [filtered]);
 
+  const recent = (data?.elections || [])
+    .filter((e) => { const d = daysUntil(e.date, today); return d != null && d <= 0 && d >= -45 && !!e.article && !e.indirect && !e.approx; })
+    .sort((a, b) => (a.date! < b.date! ? 1 : -1))
+    .slice(0, 9);
+
   const upcoming = filtered.filter((e) => (daysUntil(e.date, today) ?? -1) >= 0).length;
   const hov = hover ? byCountry.get(hover) : undefined;
 
@@ -134,6 +140,8 @@ export default function WorldPage() {
         )}
         </>}
       />
+
+      <LatestResults elections={recent} />
 
       <section className="wd-week" aria-label="This week">
         <h2 className="wd-h2">This week</h2>

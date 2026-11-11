@@ -242,6 +242,22 @@ export async function worldApi(sub, params) {
       const prof = await (await import('./countries.js')).countryProfile(code);
       return prof ? { status: 200, body: prof, maxAge: 1800 } : { status: 404, body: { error: 'unknown country code' } };
     }
+    if (sub === '/results') {
+      const title = (params.get('title') || '').slice(0, 200);
+      if (!title) return { status: 400, body: { error: 'title required' } };
+      const { parseElectionInfobox } = await import('../shared/wiki-results.js');
+      const r = await fetch(`https://en.wikipedia.org/w/index.php?title=${encodeURIComponent(title.replace(/ /g, '_'))}&action=raw`, {
+        headers: { 'user-agent': UA },
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!r.ok) return { status: 502, body: { error: `Wikipedia HTTP ${r.status}` } };
+      const res = parseElectionInfobox(await r.text());
+      return {
+        status: 200,
+        maxAge: 300,
+        body: { title, url: wikiUrl(title), fetchedAt: Date.now(), results: res, source: 'Wikipedia (community-edited, unofficial)' },
+      };
+    }
     if (sub === '/summary') {
       const title = (params.get('title') || '').slice(0, 200);
       if (!title) return { status: 400, body: { error: 'title required' } };
