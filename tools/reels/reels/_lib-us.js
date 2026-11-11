@@ -65,7 +65,11 @@ export const PARTY = { D: 'Democrat', R: 'Republican', I: 'Independent' };
 /** Rough, natural spoken size of a vote gap. */
 export function sayVotes(n) {
   if (n < 1000) return `${n} votes`;
-  if (n < 10000) { const k = Math.round(n / 100) / 10; return `${n < k * 1000 ? 'just under' : 'about'} ${k} thousand votes`; }
+  if (n < 10000) {
+    const th = Math.round(n / 1000) * 1000;
+    if (th - n >= 0 && th - n <= 60) return `just under ${th.toLocaleString('en-US')} votes`;
+    return `about ${(Math.round(n / 100) * 100).toLocaleString('en-US')} votes`;
+  }
   return `about ${Math.round(n / 1000)} thousand votes`;
 }
 export const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
