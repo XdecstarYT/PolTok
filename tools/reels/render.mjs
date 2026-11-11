@@ -176,7 +176,15 @@ async function openPage() {
   if (err) throw new Error('page boot failed: ' + err);
   return page;
 }
-const shot = (page, t, file, type = 'jpeg') => page.evaluate((t) => window.__frame(t), t).then(() => page.screenshot({ path: file, type, ...(type === 'jpeg' ? { quality: 93 } : {}) }));
+const shot = async (page, t, file, type = 'jpeg') => {
+  // generous timeouts + retries: software GL is slow, and other jobs may share the CPU
+  for (let a = 0; ; a++) {
+    try {
+      await page.evaluate((t) => window.__frame(t), t);
+      return await page.screenshot({ path: file, type, timeout: 300000, ...(type === 'jpeg' ? { quality: 93 } : {}) });
+    } catch (e) { if (a >= 2) throw e; log(`retry frame t=${t} (${e.name})`); }
+  }
+};
 
 try {
   const page = await openPage();
