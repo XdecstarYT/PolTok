@@ -4,6 +4,7 @@ import { E, initRenderer, buildScenes, renderFrame } from './core.js';
 import * as kit from './kit.js';
 import * as ui from './ui.js';
 import { endCard } from './blocks.js';
+import * as real from './real.js';
 
 const q = new URLSearchParams(location.search);
 const id = q.get('reel');
@@ -18,7 +19,7 @@ try {
   E.svgMark = await (await fetch('/brand/favicon.svg')).text();
   initRenderer(dpr);
   const mod = await import(`/reels/${id}.js`);
-  const api = { E, kit, ui, THREE, endCard };
+  const api = { E, kit, ui, THREE, endCard, real };
   ui.scrims();
   mod.build(api);
   buildScenes();
