@@ -61,8 +61,9 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     S.aperture = 0.3;
     S.update((lt) => light(ch, (i) => [colors[i], 1.2 * ease.inOut(remap(lt, 0.3 + (i / TOTAL) * 1.4, 0.7 + (i / TOTAL) * 1.4))]));
     E.cue(S.t0 + 0.4, 'boom', { g: 0.5 });
-    ui.kicker(S, { t0: 0.05, text: 'New Zealand · after election night', y: 372 });
-    ui.headline(S, { t0: 0.15, html: 'Who gets to <em>66?</em>', y: 428, size: 128, style: 'slam', t1: S.dur + 1 });
+    ui.kicker(S, { t0: 0, text: 'New Zealand · preliminary', y: 372 });
+    ui.headline(S, { t0: 0, html: '<em>67</em> seats. Just one over.', y: 410, size: 100, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
+    ui.block(S, { t0: 0.35, html: 'National + ACT + NZ First clear the 66 line by <b>a single seat</b>. Here\'s the maths.', cls: 'body', y: 690, w: 920, size: 46, t1: S.dur + 1 });
   });
 
   E.defineScene('house', (S) => {
@@ -123,6 +124,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     ui.kicker(S, { t0: 0.05, text: 'Not final yet', y: 372 });
     ui.headline(S, { t0: 0.15, html: 'Special votes are <em>still to come</em>', y: 428, size: 96, style: 'rise' });
     ui.block(S, { t0: 1.2, html: 'The official count can change seats. PolTok will update as results firm up.', cls: 'body', y: 660, w: 900 });
+    ui.block(S, { t0: 2.4, html: '<b style="color:#c8f04a">Follow</b> so you see the final numbers →', cls: 'body', y: 800, w: 900, size: 42 });
   });
 
   E.defineScene('end', (S) => endCard(S, { title: 'Follow it <em>live</em>', sub: 'poltok.netlify.app/nz', sources: 'Seats: election-night preliminary results as listed on Wikipedia (unofficial, community-edited).<br>Official results: electionresults.govt.nz. Seat positions in the chamber are illustrative.' }));

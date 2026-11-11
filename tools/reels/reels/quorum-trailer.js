@@ -51,9 +51,9 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     S.aperture = 0.45;
     S.update((lt) => { for (let i = 0; i < N; i++) ch.set(i, 0xffd9a0, 0.6 * ease.inOut(remap(lt, 0.4 + (i % 9) * 0.08, 1.0 + (i % 9) * 0.08))); ch.commit(); });
     E.cue(S.t0 + 0.5, 'boom', { g: 0.7 });
-    ui.kicker(S, { t0: 0.05, text: 'A PolTok original', y: 372 });
-    ui.headline(S, { t0: 0.2, html: '<em>QUORUM</em>', y: 428, size: 150, style: 'slam', t1: S.dur + 1 });
-    ui.block(S, { t0: 0.9, html: 'The Calderra Ledger', cls: 'body', y: 620, size: 54 });
+    ui.kicker(S, { t0: 0, text: 'Free political strategy game', y: 372 });
+    ui.headline(S, { t0: 0, html: 'Can you win <em>37 votes?</em>', y: 410, size: 100, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
+    ui.block(S, { t0: 0.35, html: '<b>QUORUM</b> · found a party, whip the Assembly, survive 24 turns. Play in your browser.', cls: 'body', y: 690, w: 920, size: 46, t1: S.dur + 1 });
   });
 
   E.defineScene('found', (S) => {
@@ -117,6 +117,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     ui.kicker(S, { t0: 0.05, text: '24 turns · 20–40 minutes', y: 372 });
     ui.headline(S, { t0: 0.15, html: `3 eras · <em>${d.laws} laws</em>`, y: 428, size: 100, style: 'rise' });
     ui.block(S, { t0: 1.0, html: `${d.events} crises · cabinets · coalitions · a 3D map`, cls: 'body', y: 600, w: 900 });
+    ui.block(S, { t0: 2.0, html: '<b style="color:#c8f04a">Link in bio</b> · play free in your browser →', cls: 'body', y: 720, w: 900, size: 42 });
   });
 
   E.defineScene('end', (S) => endCard(S, { title: 'Play <em>free</em>', sub: 'poltok.netlify.app/play', sources: 'QUORUM is an original PolTok game. Calderra and its parties are fictional.' }));

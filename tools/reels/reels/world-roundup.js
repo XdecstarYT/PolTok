@@ -90,8 +90,9 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
       p.rotation.set(-0.2 + Math.sin(i + lt) * 0.3, i * 0.6 + lt, 0.1);
     }));
     E.cue(S.t0 + 0.4, 'boom', { g: 0.5 });
-    ui.kicker(S, { t0: 0.05, text: 'Around the world', y: 372 });
-    ui.headline(S, { t0: 0.15, html: 'Elections you <em>might have missed</em>', y: 428, size: 104, style: 'slam', t1: S.dur + 1 });
+    ui.kicker(S, { t0: 0, text: 'Around the world · last 60 days', y: 372 });
+    ui.headline(S, { t0: 0, html: `<em>${d.items.length} countries</em> just voted`, y: 410, size: 100, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
+    ui.block(S, { t0: 0.35, html: d.items.map((x) => `<b>${x.country}</b>`).join(' · ') + '. Did you catch the results?', cls: 'body', y: 690, w: 920, size: 46, t1: S.dur + 1 });
   });
 
   d.items.forEach((it, idx) => E.defineScene('e' + idx, (S) => {
@@ -134,6 +135,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     S.update((lt) => { globe.rotation.y = lt * 0.5; });
     ui.kicker(S, { t0: 0.05, text: 'On PolTok', y: 372 });
     ui.headline(S, { t0: 0.15, html: 'Every national vote, <em>mapped</em>', y: 428, size: 100, style: 'rise' });
+    ui.block(S, { t0: 1.4, html: '<b style="color:#c8f04a">Follow</b> for a weekly world roundup →', cls: 'body', y: 640, w: 900, size: 42 });
   });
 
   E.defineScene('end', (S) => endCard(S, { title: 'See the <em>world</em>', sub: 'poltok.netlify.app/world', sources: `Results: each election's Wikipedia article (unofficial, community-edited), via PolTok, as of ${d.asOf}.` }));

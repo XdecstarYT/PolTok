@@ -74,8 +74,9 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
       ch.commit();
     });
     E.cue(S.t0 + 0.4, 'boom', { g: 0.5 });
-    ui.kicker(S, { t0: 0.05, text: `Victoria votes in ${d.days} days`, y: 372 });
-    ui.headline(S, { t0: 0.15, html: 'The seats that could <em>decide it</em>', y: 428, size: 104, style: 'slam', stagger: 0.08, t1: S.dur + 1 });
+    ui.kicker(S, { t0: 0, text: `Victoria votes in ${d.days} days`, y: 372 });
+    ui.headline(S, { t0: 0, html: `Won by <em>${d.top[0].margin} points</em>`, y: 410, size: 100, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
+    ui.block(S, { t0: 0.35, html: `<b>${d.top[0].name}</b> was Victoria's closest seat. ${d.under2} more could flip on 28 Nov.`, cls: 'body', y: 690, w: 920, size: 46, t1: S.dur + 1 });
   });
 
   E.defineScene('chamber', (S) => {
@@ -147,6 +148,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     ui.kicker(S, { t0: 0.05, text: 'Election night', y: 372 });
     ui.headline(S, { t0: 0.15, html: 'Saturday <em>28 November</em>', y: 428, size: 104, style: 'rise' });
     ui.block(S, { t0: 0.9, html: 'Every seat, live, on <b>PolTok</b>', cls: 'body', y: 640, w: 900 });
+    ui.block(S, { t0: 1.8, html: '<b style="color:#c8f04a">Follow</b> for a seat-by-seat preview every day →', cls: 'body', y: 760, w: 900, size: 42 });
   });
 
   E.defineScene('end', (S) => endCard(S, { title: 'Follow it <em>live</em>', sub: 'poltok.netlify.app/au/victoria', sources: 'Margins: 2022 Victorian state election, two-candidate results (VEC) via PolTok data.<br>Seats in the chamber scene are illustrative positions, not real seating.' }));
