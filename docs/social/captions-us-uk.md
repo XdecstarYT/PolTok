@@ -55,3 +55,33 @@ Data: AP race calls via PolTok's live feed, as of 11 Nov, 7:58 AM ET. The 2024 b
 > Final D seat count? Drop your guess 👇
 
 **Alt text:** A 3D render of a 435-seat chamber. Seats first show the 2024 split (220 red, 215 blue), then change hands one by one to the 2026 count of 255 Democrats and 167 Republicans, with 13 grey seats still uncalled. A counter shows +37 seats past the 218 majority.
+
+## 4. UK polls: `poltok-uk-polls.mp4` (27.5s)
+
+Data: PolTok averages of GB-wide voting-intention polls listed on Wikipedia. "Now" is the last 15 polls, to 9 November 2026. The monthly lines are simple monthly averages.
+
+**Instagram / TikTok**
+> For over a year, Reform led the polls. Not anymore. 📉📈
+>
+> December 2025: Labour 18% · Reform 29%
+> August 2026: the lines crossed
+> Now: Labour 29% · Tories 22% · Reform 21%
+>
+> Reform's down to third. So what changed? 👇
+>
+> Follow for the polls every week 🇬🇧
+> #ukpolitics #labour #reformuk #polls #starmer #politics
+
+**X**
+> Reform led UK polling for 16 months straight.
+>
+> Not anymore.
+>
+> Last 15 polls:
+> 🔴 Lab 28.9%
+> 🔵 Con 22.3%
+> 🩵 Ref 21.4%
+>
+> Labour's low was 18.1% in Dec 2025. What changed? 👇
+
+**Alt text:** Glowing 3D trend lines for Labour (red), the Conservatives (blue) and Reform UK (cyan) from January 2025 to November 2026. Reform leads until August 2026, when Labour's line crosses above it. A ranking then shows Labour 28.9%, Conservatives 22.3% and Reform 21.4%.
