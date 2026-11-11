@@ -1,7 +1,7 @@
 /** /au/swingometer — Victoria 2026 uniform-swing tool: drag 2PP swing, watch the AUMap and majority tracker. */
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card } from '../../components';
+import { Card, PageHeader } from '../../components';
 import { VIC_2022_TPP_ALP } from '../../data/au';
 import { AuNav } from './AuNav';
 import { MapPanel, VIC_ZOOMS } from './MapPanel';
@@ -51,20 +51,23 @@ export default function SwingPage() {
 
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono">VICTORIA 2026 · WHAT-IF TOOL · NOT A FORECAST</div>
-          <h1>Swingometer</h1>
-          <p className="au-sub"><Link to="/au/victoria">Victoria</Link> / Apply a uniform two-party swing to the 2022-based pendulum and see which districts change hands.</p>
-        </div>
-        <dl className="au-stats mono">
+      <PageHeader
+        className="au-pagehead"
+        kicker="Victoria 2026 · What-if tool · Not a forecast"
+        title="Swingometer"
+        crumbs={[{ to: '/', label: 'Home' }, { to: '/au', label: 'Australia' }, { to: '/au/victoria', label: 'Victoria 2026' }, { label: 'Swingometer' }]}
+        sub="Apply a uniform two-party swing to the 2022-based pendulum and see which districts change hands."
+        aside={
+          <dl className="au-stats mono">
           <div><dt>ALP 2PP</dt><dd>{alpTpp.toFixed(1)}%</dd></div>
           <div><dt>Labor</dt><dd style={{ color: pColor('ALP') }}>{alp}</dd></div>
           <div><dt>Coalition</dt><dd style={{ color: pColor('LIB') }}>{coal}</dd></div>
           <div><dt>Result</dt><dd>{verdict}</dd></div>
-        </dl>
-      </header>
+          </dl>
+        }
+      >
+        <AuNav />
+      </PageHeader>
 
       <Card title="Set the swing" kicker={`Baseline: 2022 statewide 2PP ALP ${VIC_2022_TPP_ALP.toFixed(1)}%`}>
         <div className="au-swing-ctl">

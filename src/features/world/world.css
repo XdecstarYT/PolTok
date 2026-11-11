@@ -15,7 +15,7 @@
 .wd-week__row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
 .wd-wk { flex: 0 0 auto; min-width: 170px; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: var(--radius-sm); color: var(--text); cursor: pointer; font: inherit; }
 .wd-wk:hover { border-color: var(--line-3); }
-.wd-wk.is-today { border-color: var(--accent); }
+.wd-wk.is-today { border-color: var(--text); }
 .wd-wk.is-past { opacity: .7; }
 .wd-wk__when { font-family: var(--font-data); font-size: var(--fs-xs); color: var(--signal); text-transform: uppercase; }
 .wd-wk__c { font-weight: 700; }
@@ -34,8 +34,8 @@
 .wd-cty.is-hit { cursor: pointer; }
 .wd-cty.is-hit:hover, .wd-cty.is-hit:focus-visible { opacity: .75; outline: none; stroke: var(--text); stroke-width: 1; }
 .wd-cty.is-sel { stroke: var(--text); stroke-width: 1.5; }
-.is-b0 { fill: var(--accent); background: var(--accent); }
-.is-b1 { fill: color-mix(in srgb, var(--accent) 75%, var(--bg-3)); background: color-mix(in srgb, var(--accent) 75%, var(--bg-3)); }
+.is-b0 { fill: var(--signal); background: var(--signal); }
+.is-b1 { fill: color-mix(in srgb, var(--signal) 70%, var(--bg-3)); background: color-mix(in srgb, var(--signal) 70%, var(--bg-3)); }
 .is-b2 { fill: color-mix(in srgb, var(--signal) 70%, var(--bg-3)); background: color-mix(in srgb, var(--signal) 70%, var(--bg-3)); }
 .is-b3 { fill: color-mix(in srgb, var(--signal) 45%, var(--bg-3)); background: color-mix(in srgb, var(--signal) 45%, var(--bg-3)); }
 .is-b4 { fill: color-mix(in srgb, var(--signal) 25%, var(--bg-3)); background: color-mix(in srgb, var(--signal) 25%, var(--bg-3)); }
@@ -95,6 +95,7 @@
 .cp-mk__row { display: flex; justify-content: space-between; gap: 8px; font-size: var(--fs-sm); }
 .wd-cty.is-prof { cursor: pointer; }
 .cp-card__name { display: flex; align-items: center; gap: 10px; }
+.wd-pagehead { margin-bottom: 0; }
 
 /* Latest results (live from Wikipedia infoboxes) */
 .wd-results { margin: var(--sp-6, 24px) 0; }

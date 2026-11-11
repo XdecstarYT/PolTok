@@ -116,6 +116,9 @@ export function HowToPlay() {
         <li><b>Found a party</b> and pick its place on two axes: economic (left–right) and social (traditional–progressive).</li>
         <li>Each turn you have <b>3 Action Points</b>: campaign in a region, court an interest group, draft a law, lobby a rival or repeal a law.</li>
         <li>Bills go to the <b>Assembly</b>. You see the forecast first. Spend <b>Political Capital</b> to whip wavering blocs. A bill needs more YES than NO and at least 25 YES (48 for entrenched laws).</li>
+        <li>A bill short of votes can take one <b>amendment</b> on the roll-call screen: it wins over a target bloc, at a cost in treasury or Political Capital.</li>
+        <li>Most turns bring a <b>debate</b> or press conference (1 AP). Bold answers win more but can backfire.</li>
+        <li>Your <b>cabinet</b> (Cabinet &amp; Party tab) gives a bonus per filled post. Keep your three party <b>wings</b> content or they rebel, defect or challenge your leadership.</li>
         <li>Every 4 turns there's an <b>election</b>. 37 of 72 seats governs alone; otherwise build a coalition.</li>
         <li>Watch the <b>budget</b>: debt over 300 bankrupts the republic.</li>
       </ol>

@@ -22,7 +22,7 @@ export function PartyDot({ party, size = 10 }: { party: Party; size?: number }) 
 export function RatingBadge({ rating }: { rating: Rating }) {
   const c = RATING_HEX[rating] ?? '#888';
   return (
-    <span className="pt-rating" style={{ background: c + '24', color: c, borderColor: c + '66' }}>
+    <span className="pt-rating" style={{ background: c + '24', color: `color-mix(in srgb, ${c} 68%, var(--text))`, borderColor: c + '66' }}>
       {rating}
     </span>
   );

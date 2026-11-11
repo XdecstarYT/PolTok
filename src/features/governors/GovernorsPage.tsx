@@ -62,7 +62,7 @@ export default function GovernorsPage() {
   });
 
   return (
-    <main className="page gv-page">
+    <div className="page gv-page">
       <PageHeader
         live
         kicker="Governors · 2026 · AP live"
@@ -143,7 +143,7 @@ export default function GovernorsPage() {
           {!races.length && <p className="gv-muted">{error ? 'Could not load results.' : 'Loading results…'}</p>}
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 

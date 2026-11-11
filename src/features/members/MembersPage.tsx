@@ -66,7 +66,7 @@ export default function MembersPage() {
   const label = (p: string) => (country === 'US' ? US_PARTY[p] || p : p);
 
   return (
-    <main className="page mb-page">
+    <div className="page mb-page">
       <PageHeader
         kicker={<>MEMBERS · {country === 'US' ? '119TH US CONGRESS' : '48TH AUSTRALIAN PARLIAMENT'}</>}
         title="Who represents you"
@@ -117,6 +117,6 @@ export default function MembersPage() {
           ? <>Sources: {us.data?.sources.map((s, i) => <span key={s.url}>{i ? ' · ' : ''}<a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></span>)}{us.data?.voteview && <> · Voteview roll calls through {us.data.voteview.latest.House}</>}{us.data && <> · fetched {new Date(us.data.at).toISOString().slice(0, 10)}</>}</>
           : <>Source: PolTok research compilation (src/data/au.ts, compiled 2026-11-04) from AEC/APH public records.</>}
       </footer>
-    </main>
+    </div>
   );
 }

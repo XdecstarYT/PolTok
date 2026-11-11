@@ -29,7 +29,7 @@ const dial: Design = {
     caps(ctx, d.kind === 'au-seat' ? 'margin' : 'leader share', cx, cy - 50, font('sans', 20, 800), 'rgba(255,255,255,0.6)', 0.14, 'center');
     if (a) headline(k, a.label, cx - R - 35, cy + 70, 360, 30, 'sans', a.color, 800, 'left');
     if (b) headline(k, b.label, cx + R + 35, cy + 70, 360, 30, 'sans', mix(b.color, '#ffffff', 0.2), 800, 'right');
-    headline(k, d.title, cx, 800, W - 140, 80, 'display', '#fff', 700, 'center');
+    headline(k, d.title, cx, 800, W - 140, 80, 'news', '#fff', 700, 'center');
     ctx.font = font('sans', 26, 500); ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.textAlign = 'center';
     drawLines(ctx, wrap(ctx, dek(k), W - 160, 2), cx, 852, 36);
     footerLine(k, 70, H - 50, W - 140, 20, 'rgba(255,255,255,0.5)', '#c6ff3d');

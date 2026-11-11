@@ -29,7 +29,7 @@
   --lib: #8a6a00;
   --grn: #2d6a3e;
   --oth: #5f5a50;
-  --tossup: #8a6a00;
+  --tossup: #735800;   /* a11y: 5.3:1 on --bg-3 (was 4.0) */
   --tossup-soft: rgba(138, 106, 0, 0.14);
   --accent: #141210;
   --accent-soft: rgba(20, 18, 16, 0.08);
@@ -40,7 +40,7 @@
   --signal-soft: rgba(31, 79, 138, 0.1);
   --terminal: #7a4a00;
   --ok: #2d6a3e;
-  --warn: #8a6a00;
+  --warn: #735800;
   --danger: #a3302a;
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;

@@ -1,6 +1,6 @@
 /** /au/polls — weighted polling averages (federal + Victoria). */
 import { Link } from 'react-router-dom';
-import { Card } from '../../components';
+import { Card, PageHeader } from '../../components';
 import { useSeo } from '../../lib/seo';
 import { AU_POLLS, type AuPoll } from '../../data/au';
 import { FED2025_NATIONAL_PRIMARY } from '../../data/au-fed2025';
@@ -80,14 +80,15 @@ export default function PollAvgPage() {
   useSeo({ title: 'Australian polling average', description: 'Weighted average of federal and Victorian voting-intention polls: two-party-preferred and primary votes.' });
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono"><Link to="/au">AUSTRALIA</Link> / POLLING AVERAGE</div>
-          <h1>Polling average</h1>
-          <p className="au-sub">A transparent weighted mean of published polls — not a forecast.</p>
-        </div>
-      </header>
+      <PageHeader
+        className="au-pagehead"
+        kicker="Australia · Polling average"
+        title="Polling average"
+        crumbLabel="Polling average"
+        sub="A transparent weighted mean of published polls, not a forecast."
+      >
+        <AuNav />
+      </PageHeader>
       <Block title="Federal" polls={AU_POLLS.federal} baseline={{ label: '2025 election', tpp: 55.2, prim: { ALP: FED2025_NATIONAL_PRIMARY.ALP, GRN: FED2025_NATIONAL_PRIMARY.GRN, ONP: FED2025_NATIONAL_PRIMARY.ONP, LNP: +((FED2025_NATIONAL_PRIMARY.LIB ?? 0) + (FED2025_NATIONAL_PRIMARY.LNP ?? 0) + (FED2025_NATIONAL_PRIMARY.NAT ?? 0)).toFixed(1) } }} />
       <Block title="Victoria" polls={AU_POLLS.victoria} baseline={{ label: '2022 election', tpp: 55.0 }} />
       <Card title="Method">

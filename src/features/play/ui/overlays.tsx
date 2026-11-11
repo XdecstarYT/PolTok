@@ -169,6 +169,9 @@ export const TUTORIAL: { target: string; title: string; body: string }[] = [
   { target: 'approval', title: 'These 8 groups vote', body: 'Each bar is how much a group likes your party. Approval is squared at election time, so loyal groups matter most.' },
   { target: 'actions', title: 'Draft a law', body: 'You have 3 Action Points per turn. Press Draft (or 3) — we\'ll highlight the law that best fits your party.' },
   { target: 'docket', title: 'Forecast & whip', body: 'Bills wait on the docket. Open one to see the forecast tally before you call the vote. Spend Political Capital to whip wavering blocs.' },
+  { target: 'docket', title: 'Amend a bill that falls short', body: 'On the roll-call screen, "Offer an amendment" attaches one rider to your bill. Each option shows which bloc it wins over and whether it turns a failing bill into a passing one. It costs treasury or Political Capital, and its effects apply only if the law passes.' },
+  { target: 'debate|cabinet', title: 'Debates & press conferences', body: 'From turn 2 a debate is often on offer (look for "Take the floor" here). Answering costs 1 AP: bold lines win more approval but can backfire, measured lines are safe. Unanswered debates expire at the end of the turn.' },
+  { target: 'cabinet', title: 'Your cabinet & party wings', body: 'Five posts give bonuses each turn: the Purse adds treasury, the Whip builds Political Capital, the Herald boosts debates. Keep every post filled with a good fit, and keep your three party wings above 35 or they rebel on votes and can challenge your leadership.' },
   { target: 'endturn', title: 'End the turn', body: 'Unspent AP is lost. Ending the turn collects income, pays upkeep and holds any uncalled votes.' },
   { target: 'endturn', title: 'First election in 3 turns', body: 'Every 4 turns Calderra votes. Campaign in regions and keep your groups happy before turn 4.' },
 ];
@@ -177,7 +180,8 @@ export function Coach({ step, onNext, onSkip }: { step: number; onNext: () => vo
   const t = TUTORIAL[step];
   const [rect, setRect] = useState<DOMRect | null>(null);
   useLayoutEffect(() => {
-    const el = document.querySelector(`[data-coach="${t.target}"]`);
+    // a target can list fallbacks ("debate|cabinet"): the first one on screen is highlighted
+    const el = t.target.split('|').map((id) => document.querySelector(`[data-coach="${id}"]`)).find(Boolean) ?? null;
     el?.scrollIntoView({ block: 'center', behavior: 'auto' });
     const upd = () => setRect(el?.getBoundingClientRect() ?? null);
     upd();

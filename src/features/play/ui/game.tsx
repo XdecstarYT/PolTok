@@ -81,7 +81,7 @@ export function ViewTabs({ view, setView, tabs }: { view: View; setView: (v: Vie
   return (
     <nav className="q-views" role="tablist" aria-label="Game views">
       {tabs.map((t) => (
-        <button key={t.id} role="tab" aria-selected={view === t.id} className={`q-view${view === t.id ? ' is-on' : ''}`} onClick={() => setView(t.id)}>
+        <button key={t.id} role="tab" aria-selected={view === t.id} className={`q-view${view === t.id ? ' is-on' : ''}`} onClick={() => setView(t.id)} data-coach={t.id === 'cabinet' ? 'cabinet' : undefined}>
           {t.label}{t.badge ? <span className="q-view__badge">{t.badge}</span> : null}
         </button>
       ))}

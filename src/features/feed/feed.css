@@ -4,7 +4,7 @@
   position: relative; height: var(--fd-h); min-height: 480px; overflow: hidden; background: #05060a; isolation: isolate;
   display: grid; grid-template-columns: minmax(0, 1fr);
 }
-.fd-root button:focus-visible, .fd-root a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fd-root button:focus-visible, .fd-root a:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 
 /* ambient (desktop) */
 .fd-ambient { position: absolute; inset: -10%; z-index: -1; pointer-events: none;
@@ -66,8 +66,8 @@
 .fd-lean { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px 5px 8px; border-radius: 99px; border: 1px solid; background: rgba(0,0,0,.35); backdrop-filter: blur(8px); }
 .fd-lean b { color: #fff; font-weight: 600; }
 .fd-lean span { font-size: 11px; opacity: .7; }
-.fd-why { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; }
-.fd-why-label { font-size: 10px; letter-spacing: .16em; color: var(--accent); font-weight: 700; }
+.fd-why { border-left: 3px solid var(--line-3); padding: 2px 0 2px 12px; }
+.fd-why-label { font-size: var(--fs-xs); letter-spacing: var(--tracking-caps); color: var(--kicker); font-weight: 700; }
 .fd-why p { margin: 3px 0 2px; font-size: 14.5px; line-height: 1.42; color: rgba(255,255,255,.92); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .fd-why-src { font-size: 10.5px; color: rgba(255,255,255,.5); }
 .fd-cov { background: rgba(10,12,20,.55); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 10px 12px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); display: grid; gap: 8px; }
@@ -143,9 +143,9 @@
 .fd-seg button { z-index: 0; isolation: isolate; }
 .fd-top-tools { display: flex; gap: 6px; flex: none; }
 .fd-icon { width: 34px; height: 34px; border-radius: 99px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.4); color: #fff; backdrop-filter: blur(12px); }
-.fd-icon.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.fd-icon.on { background: var(--text); color: var(--bg); border-color: var(--text); }
 .fd-progress { position: absolute; z-index: 7; top: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,.12); }
-.fd-progress span { display: block; height: 100%; background: var(--accent); transform-origin: left; animation: fd-prog linear forwards; }
+.fd-progress span { display: block; height: 100%; background: var(--text); transform-origin: left; animation: fd-prog linear forwards; }
 @keyframes fd-prog { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* dots + counter */
@@ -178,7 +178,7 @@
 .is-focus .fd-cov, .is-focus .fd-why { display: none; }
 
 /* empty */
-.fd-spinner { width: 44px; height: 44px; border-radius: 99px; border: 3px solid rgba(255,255,255,.15); border-top-color: var(--accent); animation: fd-spin 0.9s linear infinite; margin-bottom: 8px; }
+.fd-spinner { width: 44px; height: 44px; border-radius: 99px; border: 3px solid rgba(255,255,255,.15); border-top-color: var(--text); animation: fd-spin 0.9s linear infinite; margin-bottom: 8px; }
 .fd-skel-lines { display: grid; gap: 8px; width: 80%; margin-top: 12px; }
 .fd-skel-lines span { height: 10px; border-radius: 6px; background: linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.14) 50%, rgba(255,255,255,.06) 75%); background-size: 200% 100%; animation: fd-shimmer 1.4s linear infinite; }
 .fd-skel-lines span:nth-child(2) { width: 85%; justify-self: center; }
@@ -197,23 +197,25 @@
   .fd-right > * { width: 100%; max-width: 340px; }
 }
 .fd-brand { display: flex; align-items: center; gap: 12px; }
-.fd-logo { font: 800 34px var(--font-display); letter-spacing: -0.05em; background: linear-gradient(90deg, #7aa2ff, #fff, #ff8a9a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.fd-pagehead { margin-bottom: 0; padding-bottom: var(--sp-4); }
+.fd-pagehead .pt-pagehead__title { font-size: clamp(30px, 3vw, 40px); }
+@media (min-width: 980px) { .fd-h1-m { display: none; } }
 .fd-side-sub { margin: 0; font-size: 13.5px; color: var(--text-2); line-height: 1.5; }
 .fd-panel { background: rgba(13,15,23,.72); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .fd-panel h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--text-3); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; font-family: var(--font-data); }
-.fd-now-kick { font: 700 10px var(--font-data); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.fd-now-kick { font: 700 var(--fs-xs) var(--font-body); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--kicker); }
 .fd-now-title { margin: 4px 0 12px; font: 600 15px/1.3 var(--font-display); }
 .fd-srcs { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; font-size: 12.5px; }
 .fd-srcs li { display: flex; align-items: center; gap: 8px; }
 .fd-srcs a { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.fd-srcs a:hover { color: var(--accent); }
+.fd-srcs a:hover { color: var(--signal); }
 .fd-srcs .mono { font-size: 10.5px; color: var(--text-3); }
-.fd-side-link { font-size: 13px; color: var(--accent); font-weight: 600; }
+.fd-side-link { font-size: 13px; color: var(--signal); font-weight: 600; }
 .fd-keys { font-size: 12px; color: var(--text-3); display: grid; gap: 6px; }
 .fd-next { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .fd-next button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 3px; padding: 8px; border-radius: 10px; width: 100%; }
 .fd-next button:hover { background: rgba(255,255,255,.05); }
-.fd-next button:focus-visible { outline: 2px solid var(--accent); }
+.fd-next button:focus-visible { outline: 2px solid var(--signal); }
 .fd-next-kind { font: 700 9.5px var(--font-data); letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
 .fd-next-kind.k-call, .fd-next-kind.k-close { color: var(--tossup); }
 .fd-next-kind.k-market { color: #2fd3c0; }

@@ -4,7 +4,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fmtTime, tzAbbr, useNow } from '../../components';
+import { EmptyState, ErrorState, PageHeader, Skeleton, fmtTime, tzAbbr, useNow } from '../../components';
 import './calendar.css';
 
 type Ev = {
@@ -93,20 +93,21 @@ export default function CalendarPage() {
 
   return (
     <div className="page cal">
-      <header className="cal-head">
-        <div>
-          <p className="cal-kicker">Elections &amp; key dates</p>
-          <h1>Calendar</h1>
-          <p className="cal-sub">US and Australian elections, runoffs, deadlines and swearing-ins — every date sourced. Times shown in {tzAbbr()} (change in Settings). Other countries: <Link to="/world">World elections →</Link></p>
-        </div>
-        {next && (
-          <div className="cal-next">
-            <span>Next up</span>
-            <b>{next.title}</b>
-            <em>{countdown(next, now)}</em>
-          </div>
-        )}
-      </header>
+      <PageHeader
+        className="cal-head"
+        kicker="Elections & key dates"
+        title="Calendar"
+        sub={<>US and Australian elections, runoffs, deadlines and swearing-ins, every date sourced. Times shown in {tzAbbr()} (change in Settings). Other countries: <Link to="/world">World elections</Link>.</>}
+        aside={
+          next ? (
+            <div className="cal-next">
+              <span>Next up</span>
+              <b>{next.title}</b>
+              <em>{countdown(next, now)}</em>
+            </div>
+          ) : undefined
+        }
+      />
 
       <div className="cal-bar">
         <div className="cal-seg" role="group" aria-label="View">
@@ -124,12 +125,12 @@ export default function CalendarPage() {
         <button type="button" className="cal-btn" onClick={() => navigator.clipboard?.writeText(subUrl)} title={subUrl}>Copy subscribe URL</button>
       </div>
 
-      {err && <p className="cal-err">Couldn’t load the calendar ({err}).</p>}
-      {!data && !err && <p className="cal-muted">Loading…</p>}
+      {err && !data && <ErrorState title="Couldn’t load the calendar" description={err} onRetry={() => location.reload()} />}
+      {!data && !err && <div className="cal-list" aria-busy="true" aria-label="Loading calendar">{[0, 1, 2].map((i) => <Skeleton key={i} height={96} radius={12} />)}</div>}
 
       {data && view === 'agenda' && (
         <section className="cal-list" aria-label="Agenda">
-          {agenda.length ? agenda.map((e) => <EventCard key={e.id} e={e} now={now} />) : <p className="cal-muted">No events match these filters.</p>}
+          {agenda.length ? agenda.map((e) => <EventCard key={e.id} e={e} now={now} />) : <EmptyState compact title="No events match these filters" description="Try another country or type, or show past events." />}
         </section>
       )}
 

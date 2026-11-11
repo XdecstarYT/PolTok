@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import type { PollSeries } from '../../types';
 import { raceById } from '../../data';
 import { POLL_SERIES } from '../../data/polls';
-import { RatingBadge } from '../../components';
+import { EmptyState, PageHeader, RatingBadge, StatGroup, StatTile } from '../../components';
 import { PollChart, type Range } from './PollChart';
 import { DAY, fmtDay, headline, marginOf, parseDay, preparePolls, rollingAverage, signed } from './pollMath';
 import { Segmented } from './ui';
@@ -25,25 +25,26 @@ function useSeriesAverages(series: PollSeries | undefined) {
 }
 
 /* ---------- headline stat tile ---------- */
-function StatTile({ label, value, delta, sub, color }: { label: string; value: string; delta: number | null; sub?: string; color?: string }) {
+function PollStat({ label, value, delta, sub, color }: { label: string; value: string; delta: number | null; sub?: string; color?: string }) {
   const dir = delta == null || Math.abs(delta) < 0.05 ? 0 : delta > 0 ? 1 : -1;
   return (
-    <div className="pl-stat">
-      <div className="pl-stat-label">{label}</div>
-      <div className="pl-stat-value mono" style={{ color }}>{value}</div>
-      <div className="pl-stat-delta mono">
-        {delta == null ? (
-          <span className="muted">— vs 1 wk ago</span>
-        ) : (
-          <>
-            <span aria-hidden className={`pl-arrow ${dir > 0 ? 'up' : dir < 0 ? 'down' : ''}`}>{dir > 0 ? '▲' : dir < 0 ? '▼' : '■'}</span>
-            <span>{signed(delta)} </span>
-            <span className="muted">vs 1 wk ago</span>
-          </>
-        )}
-      </div>
-      {sub && <div className="pl-stat-sub">{sub}</div>}
-    </div>
+    <StatTile
+      label={label}
+      value={<span style={{ color }}>{value}</span>}
+      sub={
+        <>
+          {delta == null ? (
+            <span>{sub ?? 'Running total'}</span>
+          ) : (
+            <>
+              <span aria-hidden className={`pl-arrow ${dir > 0 ? 'up' : dir < 0 ? 'down' : ''}`}>{dir > 0 ? '▲' : dir < 0 ? '▼' : '■'}</span>{' '}
+              <span>{signed(delta)} vs 1 wk ago</span>
+              {sub && <span> · {sub}</span>}
+            </>
+          )}
+        </>
+      }
+    />
   );
 }
 
@@ -75,23 +76,23 @@ function Headlines({ generic, approval }: { generic?: PollSeries; approval?: Pol
     const h = headline(mSeries, 'm');
     if (h) {
       const ml = marginLabel(h.value, k0, k1);
-      tiles.push(<StatTile key="gm" label="Generic ballot margin" value={ml.text} color={ml.color} delta={h.delta} sub={`${k0.label} ${g.avg.at(-1)?.v[k0.key]?.toFixed(1) ?? '–'} · ${k1.label} ${g.avg.at(-1)?.v[k1.key]?.toFixed(1) ?? '–'}`} />);
+      tiles.push(<PollStat key="gm" label="Generic ballot margin" value={ml.text} color={ml.color} delta={h.delta} sub={`${k0.label} ${g.avg.at(-1)?.v[k0.key]?.toFixed(1) ?? '–'} · ${k1.label} ${g.avg.at(-1)?.v[k1.key]?.toFixed(1) ?? '–'}`} />);
     }
   }
   if (approval && a && approval.keys.length >= 1) {
     const [k0, k1] = approval.keys;
     const h0 = headline(a.avg, k0.key);
-    if (h0) tiles.push(<StatTile key="ap" label={`${approval.title.replace(/approval/i, '').trim() || 'President'} · ${k0.label}`} value={`${h0.value.toFixed(1)}%`} color={k0.color} delta={h0.delta} />);
+    if (h0) tiles.push(<PollStat key="ap" label={`${approval.title.replace(/approval/i, '').trim() || 'President'} · ${k0.label}`} value={`${h0.value.toFixed(1)}%`} color={k0.color} delta={h0.delta} />);
     if (k1) {
       const mSeries = a.avg.map((p) => ({ ...p, v: { m: marginOf(p.v, approval.keys) ?? NaN } })).filter((p) => Number.isFinite(p.v.m));
       const hn = headline(mSeries, 'm');
-      if (hn) tiles.push(<StatTile key="an" label="Net approval" value={signed(hn.value)} color={hn.value >= 0 ? k0.color : k1.color} delta={hn.delta} />);
+      if (hn) tiles.push(<PollStat key="an" label="Net approval" value={signed(hn.value)} color={hn.value >= 0 ? k0.color : k1.color} delta={hn.delta} />);
     }
   }
   const total = POLL_SERIES.reduce((n, s) => n + (s.polls?.length ?? 0), 0);
-  tiles.push(<StatTile key="n" label="Polls tracked" value={String(total)} delta={null} sub={`${POLL_SERIES.length} series`} />);
+  tiles.push(<PollStat key="n" label="Polls tracked" value={String(total)} delta={null} sub={`${POLL_SERIES.length} series`} />);
 
-  return <div className="pl-stats">{tiles}</div>;
+  return <StatGroup label="Polling averages" min={170}>{tiles}</StatGroup>;
 }
 
 /* ---------- chart card ---------- */
@@ -320,14 +321,14 @@ export default function PollsPage() {
 
   return (
     <div className="page pl-page">
-      <header className="pl-hero">
-        <div className="eyebrow">Polls · 2026 midterms</div>
-        <h1>The polling picture</h1>
-        <p className="pl-lede">
-          Every public poll we track, smoothed into a time- and sample-weighted average. Hover or use arrow keys on any chart to inspect a day.
-          {latest > 0 && <span className="mono pl-asof"> Latest poll: {fmtDay(latest, { month: 'short', day: 'numeric', year: 'numeric' })}</span>}
-        </p>
-      </header>
+      <PageHeader
+        className="pl-hero"
+        kicker="Polls · 2026 midterms"
+        title="The polling picture"
+        crumbLabel="Polls"
+        sub="Every public poll we track, smoothed into a time- and sample-weighted average. Hover or use arrow keys on any chart to inspect a day."
+        meta={latest > 0 ? <span>Latest poll: {fmtDay(latest, { month: 'short', day: 'numeric', year: 'numeric' })}</span> : undefined}
+      />
 
       <Headlines generic={generic} approval={approval} />
 
@@ -358,7 +359,7 @@ function EmptyCard({ title }: { title: string }) {
   return (
     <section className="card pl-chart-card">
       <h2>{title}</h2>
-      <div className="pl-empty">Polls for this series are loading from the data desk.</div>
+      <EmptyState compact title="No polls in this series yet" description="It will appear here once public polls are released." />
     </section>
   );
 }

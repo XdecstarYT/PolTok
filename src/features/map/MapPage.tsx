@@ -10,7 +10,7 @@ import type { Chamber, Race, Rating } from '../../types';
 import { racesByState } from '../../data';
 import { useLive } from '../../lib/live';
 import { fmtPct, marginColor, PARTY_HEX, PARTY_NAME, RATING_HEX, RATINGS } from '../../lib/format';
-import { PartyDot, RatingBadge, SimBadge } from '../../components';
+import { PageHeader, PartyDot, RatingBadge, SimBadge } from '../../components';
 import { USMap } from './USMap';
 import { ElectoralBar, type BarSegment } from './ElectoralBar';
 import { ALL_ABBRS, pres2024, stateEV, stateName } from './stateTable';
@@ -191,11 +191,13 @@ export default function MapPage() {
   return (
     <div className={`mp ${selected && mode !== 'build' ? 'has-sel' : ''}`}>
       <div className="mp-bg" aria-hidden />
-      <header className="mp-head">
-        <div className="mp-title">
-          <span className="mp-kicker mono">ELECTION DAY · NOV 3, 2026</span>
-          <h1>The Map</h1>
-        </div>
+      <PageHeader
+        className="mp-head"
+        kicker="Election day · Nov 3, 2026"
+        title="The map"
+        crumbLabel="Map"
+        sub="Every state at a glance: the 2024 baseline, 2026 ratings, live AP results, or your own forecast."
+        aside={
         <nav className="mp-tabs" role="tablist" aria-label="Map mode">
           {MODES.map((m) => (
             <button
@@ -214,7 +216,8 @@ export default function MapPage() {
             </button>
           ))}
         </nav>
-      </header>
+        }
+      />
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.section

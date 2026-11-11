@@ -2,7 +2,7 @@
 .fl-page { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; min-width: 0; }
 .fl-page .muted { color: var(--text-3); }
 .fl-kicker { display: flex; gap: 8px; align-items: center; font-size: 11px; letter-spacing: .12em; color: var(--text-3); }
-.fl-head h1 { font-size: clamp(24px, 3.4vw, 38px); line-height: 1.05; margin: 6px 0; }
+.fl-head { margin-bottom: 0; }
 .fl-sub { color: var(--text-2); font-size: var(--fs-sm); max-width: 760px; }
 .fl-upd { color: var(--text-3); font-size: 11px; display: block; margin-top: 4px; }
 .fl-h2 { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); margin-bottom: 10px; }
@@ -15,7 +15,7 @@
 .fl-seg { display: inline-flex; background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 2px; flex-wrap: wrap; }
 .fl-seg button, .fl-chip, .fl-more { background: none; border: 0; color: var(--text-2); font: inherit; font-size: 13px; padding: 6px 12px; border-radius: var(--radius-pill); cursor: pointer; min-height: 32px; }
 .fl-seg button.on { background: var(--bg-3); color: var(--text); }
-.fl-chip { background: var(--accent-soft); color: var(--text); }
+.fl-chip { background: var(--bg-3); color: var(--text); }
 .fl-more { width: 100%; margin-top: 6px; border: 1px solid var(--line); border-radius: var(--radius-sm); }
 .fl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); gap: 16px; align-items: start; }
 .fl-cards { min-width: 0; }

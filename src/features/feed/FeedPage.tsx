@@ -4,7 +4,7 @@ import { AnimatePresence, m as motion } from 'framer-motion';
 import { useLive } from '../../lib/live';
 import { timeAgo } from '../../lib/format';
 import { raceById } from '../../data';
-import { BalanceBar, Kbd, LiveDot, SimBadge, useReducedMotion } from '../../components';
+import { BalanceBar, Kbd, PageHeader, SimBadge, useReducedMotion } from '../../components';
 import { CoverageBar, LeanDot } from '../news/BiasBar';
 import { clusterNews, useNow, type Cluster } from '../news/newsUtils';
 import { LEAN_HEX } from '../../lib/format';
@@ -228,18 +228,21 @@ export default function FeedPage() {
 
   return (
     <div className={`fd-root ${focus ? 'is-focus' : ''}`} style={ambient}>
-      <h1 className="sr-only">PolTok feed</h1>
+      <h1 className="sr-only fd-h1-m">PolTok feed</h1>
       <div className="fd-ambient" aria-hidden="true">
         {meta?.image ? <img src={meta.image} alt="" referrerPolicy="no-referrer" /> : null}
       </div>
 
       {/* ---------- left side panel (desktop) ---------- */}
       <aside className="fd-side fd-left" aria-label="About this card">
-        <div className="fd-brand">
-          <span className="fd-logo">PolTok</span>
-          <LiveDot />
-        </div>
-        <p className="fd-side-sub">Election night, one swipe at a time. Real headlines from {new Set(live.news.map((n) => n.source)).size || '—'} outlets, plus live results.</p>
+        <PageHeader
+          className="fd-pagehead"
+          live
+          kicker="Live feed"
+          title="The feed"
+          crumbLabel="Feed"
+          sub={<>Election night, one swipe at a time. Real headlines from {new Set(live.news.map((n) => n.source)).size || 'many'} outlets, plus live results.</>}
+        />
         {activeKey && meta && <NowPanel k={activeKey} meta={meta} cluster={clusterStore.current.get(idOf(activeKey))} now={now} />}
         <div className="fd-keys">
           <div>

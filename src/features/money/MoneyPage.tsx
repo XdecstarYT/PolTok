@@ -3,6 +3,7 @@
  */
 import { useMemo, useState } from 'react';
 import { useLive } from '../../lib/live';
+import { ErrorState, PageHeader, Skeleton } from '../../components';
 import { USMap } from '../map/USMap';
 import { fecUrl, usd, useMoney, type MoneyRace } from './data';
 import { RaceMoneyPanel } from './RaceMoney';
@@ -62,19 +63,22 @@ export default function MoneyPage() {
   const selected = data?.races.find((r) => r.raceId === sel) ?? null;
 
   return (
-    <main className="mo-page">
-      <header className="mo-hero">
-        <p className="kicker">Campaign finance · 2026 cycle</p>
-        <h1 className="mo-h1">Follow the money</h1>
-        <p className="mo-muted">
-          Candidate fundraising, spending and outside money for every Senate race and the competitive House races, from official Federal Election Commission filings.
-        </p>
-        {data && (
-          <p className="mo-fresh">
-            FEC filings through <strong>{data.coverageThrough ?? 'n/a'}</strong> · fetched {new Date(data.generatedAt).toLocaleString()} ·{' '}
-            <a href={data.sourceUrl} target="_blank" rel="noreferrer">Source: FEC / OpenFEC</a>
-          </p>
-        )}
+    <div className="mo-page">
+      <PageHeader
+        className="mo-hero"
+        kicker="Campaign finance · 2026 cycle"
+        title="Follow the money"
+        crumbLabel="Money"
+        sub="Candidate fundraising, spending and outside money for every Senate race and the competitive House races, from official Federal Election Commission filings."
+        meta={
+          data ? (
+            <span className="mo-fresh">
+              FEC filings through <strong>{data.coverageThrough ?? 'n/a'}</strong> · fetched {new Date(data.generatedAt).toLocaleString()} ·{' '}
+              <a href={data.sourceUrl} target="_blank" rel="noreferrer">Source: FEC / OpenFEC</a>
+            </span>
+          ) : undefined
+        }
+      >
         {data && (data.rateLimited || data.partial) && (
           <p className="mo-warn" role="status">
             {data.rateLimited ? 'The FEC API rate limit was reached' : 'Some FEC data could not be loaded'}
@@ -82,14 +86,19 @@ export default function MoneyPage() {
             {data.missing.length ? ` Missing for now: ${data.missing.map((m) => m.replace(/^party:.*/, 'party committees')).filter((v, i, a) => a.indexOf(v) === i).join(', ')}.` : ''} It retries automatically.
           </p>
         )}
-      </header>
+      </PageHeader>
 
-      {loading && <p className="mo-muted">Loading FEC data…</p>}
-      {error && <p className="mo-warn">Could not load campaign finance data: {error}</p>}
+      {loading && !data && (
+        <div className="mo-loading" aria-busy="true" aria-label="Loading FEC data">
+          <Skeleton height={40} width="min(420px, 100%)" />
+          <Skeleton height={320} radius={12} />
+        </div>
+      )}
+      {error && !data && <ErrorState title="Could not load campaign finance data" description={error} onRetry={() => location.reload()} />}
 
       {data && (
         <>
-          <div className="mo-tabs" role="tablist">
+          <div className="mo-tabs" role="tablist" aria-label="Money views">
             {(['races', 'leaders', 'parties'] as Tab[]).map((t) => (
               <button key={t} role="tab" aria-selected={tab === t} className={`mo-tab ${tab === t ? 'is-on' : ''}`} onClick={() => setTab(t)}>
                 {t === 'races' ? 'Races' : t === 'leaders' ? 'Top fundraisers' : 'Party committees'}
@@ -204,6 +213,6 @@ export default function MoneyPage() {
           )}
         </>
       )}
-    </main>
+    </div>
   );
 }

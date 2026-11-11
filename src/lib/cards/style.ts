@@ -51,6 +51,7 @@ export interface CardStyle {
 
 /** Curated display/body font pairings. */
 export const FONT_PAIRS: { id: string; label: string; display: string; body: string }[] = [
+  { id: 'ledger', label: 'Ledger (site) — Newsreader + Inter Tight', display: 'Newsreader', body: 'Inter Tight' },
   { id: 'editorial', label: 'Editorial — Fraunces + Inter Tight', display: 'Fraunces', body: 'Inter Tight' },
   { id: 'magazine', label: 'Magazine — Instrument Serif + Inter', display: 'Instrument Serif', body: 'Inter' },
   { id: 'poster', label: 'Poster — Anton + Inter Tight', display: 'Anton', body: 'Inter Tight' },
@@ -74,20 +75,21 @@ export const SIZE_PRESETS: { id: string; label: string; w: number; h: number }[]
 export const TEXTURES: Texture[] = ['none', 'grain', 'halftone', 'grid', 'scanlines', 'paper'];
 
 /** Theme fonts (each theme only loads its own, so these are injected on demand too), plus extra Google Fonts. */
-export const PAGE_FONTS = ['Inter', 'Space Grotesk', 'Oswald', 'Roboto Condensed', 'Playfair Display', 'Source Serif 4', 'JetBrains Mono', 'IBM Plex Mono'];
+export const PAGE_FONTS = ['Inter', 'Inter Tight', 'Newsreader', 'Space Grotesk', 'Oswald', 'Roboto Condensed', 'Playfair Display', 'Source Serif 4', 'JetBrains Mono', 'IBM Plex Mono'];
 export const EXTRA_FONTS: Record<string, string> = {
   Anton: 'Anton',
   'Bebas Neue': 'Bebas+Neue',
   'DM Serif Display': 'DM+Serif+Display',
   'Archivo Black': 'Archivo+Black',
   Fraunces: 'Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700',
-  'Inter Tight': 'Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700',
   'Instrument Serif': 'Instrument+Serif:ital@0;1',
   'Bricolage Grotesque': 'Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800',
   'Barlow Condensed': 'Barlow+Condensed:wght@500;700;800',
 };
 const PAGE_FONT_Q: Record<string, string> = {
   Inter: 'Inter:wght@400;500;600;700;800',
+  'Inter Tight': 'Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700',
+  Newsreader: 'Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600',
   'Space Grotesk': 'Space+Grotesk:wght@400;500;600;700',
   Oswald: 'Oswald:wght@500;600;700',
   'Roboto Condensed': 'Roboto+Condensed:wght@400;700;900',

@@ -1,5 +1,6 @@
 /** /member/:id — profile. US: bioguide id (congress-legislators + Voteview). AU: au-h-{seat} / au-s-{slug}. */
 import { Link, useParams } from 'react-router-dom';
+import { Breadcrumbs, PageHeader, Skeleton, EmptyState, ErrorState } from '../../components';
 import { useLive } from '../../lib/live';
 import { AU_MEMBERS, US_PARTY, auSeatFor, useJson, withAuPhoto, type DirMember, type UsMemberResp } from './data';
 import { usePhotoIndex } from '../../data/photos';
@@ -38,8 +39,9 @@ function AuProfile({ m: raw }: { m: DirMember }) {
   const m = withAuPhoto(raw);
   const seat = auSeatFor(m.key);
   return (
-    <main className="page mb-page">
-      <div className="mb-kicker"><Link to="/members?c=au">MEMBERS</Link> · AUSTRALIA · {m.chamber === 'senate' ? 'SENATE' : 'HOUSE OF REPRESENTATIVES'}</div>
+    <div className="page mb-page">
+      <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/members?c=au', label: 'Members' }, { label: m.name }]} />
+      <span className="kicker">Australia · {m.chamber === 'senate' ? 'Senate' : 'House of Representatives'}</span>
       <header className="mb-hero">
         <Avatar m={m} size={96} />
         <div><h1>{m.name}</h1><p className="mb-sub"><b style={{ color: m.color }}>{m.partyLabel}</b> · {m.chamber === 'senate' ? `Senator for ${m.state}` : `Member for ${m.seat} (${m.state})`}</p>
@@ -55,7 +57,7 @@ function AuProfile({ m: raw }: { m: DirMember }) {
       </div>
       <p className="mb-muted mb-small">Voting records and committees are not shown for Australian members: PolTok has no verified keyless source wired up yet (TheyVoteForYou needs a key). Source: PolTok research compilation from AEC/APH records.</p>
       <News name={m.name} />
-    </main>
+    </div>
   );
 }
 
@@ -64,9 +66,9 @@ export default function MemberPage() {
   const isAu = id.startsWith('au-');
   const au = isAu ? AU_MEMBERS.find((m) => m.key === id) : undefined;
   const r = useJson<UsMemberResp>(isAu ? null : `/api/members/us/${encodeURIComponent(id)}`);
-  if (isAu) return au ? <AuProfile m={au} /> : <main className="page mb-page"><p>Unknown member. <Link to="/members?c=au">All members</Link></p></main>;
-  if (r.loading) return <main className="page mb-page"><p className="mb-muted">Loading…</p></main>;
-  if (!r.data) return <main className="page mb-page"><p>Could not load this member ({r.error}). <Link to="/members">All members</Link></p></main>;
+  if (isAu) return au ? <AuProfile m={au} /> : <div className="page mb-page"><PageHeader kicker="Member" title="Member not found" crumbLabel="Not found" /><EmptyState title="Unknown member" description={<Link to="/members?c=au">Browse all Australian members</Link>} /></div>;
+  if (r.loading) return <div className="page mb-page" aria-busy="true"><PageHeader kicker="Member" title={<Skeleton width="min(420px, 80%)" height={36} />} crumbLabel="Loading" /><Skeleton height={200} radius={16} /></div>;
+  if (!r.data) return <div className="page mb-page"><PageHeader kicker="Member" title="Member unavailable" crumbLabel="Unavailable" /><ErrorState title="Could not load this member" description={<>{r.error}. <Link to="/members">All members</Link></>} onRetry={() => location.reload()} /></div>;
   const m = r.data.member;
   const color = PARTY_HEX[m.party];
   const s = m.stats;
@@ -77,8 +79,9 @@ export default function MemberPage() {
   const committees = m.committees.filter((c) => !c.sub), subs = m.committees.filter((c) => c.sub);
 
   return (
-    <main className="page mb-page">
-      <div className="mb-kicker"><Link to="/members">MEMBERS</Link> · US {m.chamber === 'senate' ? 'SENATE' : 'HOUSE'} · 119TH CONGRESS</div>
+    <div className="page mb-page">
+      <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/members', label: 'Members' }, { label: m.name }]} />
+      <span className="kicker">US {m.chamber === 'senate' ? 'Senate' : 'House'} · 119th Congress</span>
       <header className="mb-hero">
         <Avatar m={{ name: m.name, photo: m.photo, color }} size={110} />
         <div>
@@ -135,6 +138,6 @@ export default function MemberPage() {
         </div>
       </div>
       <footer className="mb-src">Sources: {r.data.sources.map((x, i) => <span key={x.url}>{i ? ' · ' : ''}<a href={x.url} target="_blank" rel="noreferrer">{x.name}</a></span>)}</footer>
-    </main>
+    </div>
   );
 }

@@ -8,7 +8,10 @@ export type Ctx = CanvasRenderingContext2D;
 
 export const FAM = {
   sans: `Inter, 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif`,
-  display: `'Space Grotesk', Inter, system-ui, sans-serif`,
+  /** UI headings & figures: Inter Tight, as on the site (Ledger design system). */
+  display: `'Inter Tight', Inter, system-ui, sans-serif`,
+  /** Editorial headlines: Newsreader, the site's serif. */
+  news: `Newsreader, 'Iowan Old Style', Georgia, 'Times New Roman', serif`,
   mono: `'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace`,
   plex: `'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace`,
   cond: `Oswald, 'Roboto Condensed', 'Arial Narrow', Impact, sans-serif`,
@@ -21,6 +24,8 @@ export type Fam = keyof typeof FAM;
 /** Font loads to request before drawing (Google Fonts are declared on the page but load lazily). */
 export const FONT_LOADS = [
   '400 20px Inter', '600 20px Inter', '800 20px Inter',
+  '500 20px "Inter Tight"', '600 20px "Inter Tight"', '700 20px "Inter Tight"', '800 20px "Inter Tight"',
+  '500 20px Newsreader', '600 20px Newsreader', '700 20px Newsreader', 'italic 600 20px Newsreader',
   '700 20px "Space Grotesk"', '500 20px "Space Grotesk"',
   '400 20px "JetBrains Mono"', '700 20px "JetBrains Mono"',
   '400 20px "IBM Plex Mono"', '700 20px "IBM Plex Mono"',
@@ -32,7 +37,7 @@ export const FONT_LOADS = [
 
 /** Render-scoped overrides set by the style layer (drawing is synchronous, so module state is safe). */
 export const RT: { display?: string; body?: string; logoOff?: boolean; align?: 'left' | 'center' | 'right'; track?: number; ratio?: number } = {};
-const DISPLAY_FAMS: Fam[] = ['display', 'cond', 'serif'];
+const DISPLAY_FAMS: Fam[] = ['display', 'cond', 'serif', 'news'];
 const BODY_FAMS: Fam[] = ['sans', 'rc', 'text'];
 
 export function font(fam: Fam, px: number, weight: number | string = 600, italic = false) {

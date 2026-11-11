@@ -198,8 +198,9 @@ export function newGame(opts: NewGameOptions = {}): GameState {
       s.enacted.push(id); s.enactedBy[id] = by;
     }
     s.treasury = Math.max(0, 80 + diff.treasury); s.debt = 30;
-    // incumbency: the governing party is known everywhere and its base is fired up for the snap vote
-    for (const g of topGroups(s, 'player')) { s.approval[g] += 8; s.approvalBase[g] += 4; }
+    // incumbency: the governing party is known everywhere and its base is fired up for the snap vote. The boost is a
+    // one-off swell (no approvalBase change), so it fades after the vote; rivals regroup too (meta.ts: rival approval +2).
+    for (const g of topGroups(s, 'player')) s.approval[g] += 14;
     for (const r of REGION_IDS) s.campaign[r] = 1;
     founding = 1;
   } else if (scenarioId === 'debt_crisis') {

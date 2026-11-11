@@ -111,7 +111,7 @@ const h2h: Design = {
       ctx.restore();
     }
     ctx.fillStyle = '#fff'; ctx.fillRect(half - 1.5 * u, by - 10 * u, 3 * u, bh + 20 * u);
-    headline(k, d.title, P, H - 90 * u, W * 0.6, 40 * u, 'display', inkAB, 700);
+    headline(k, d.title, P, H - 90 * u, W * 0.6, 40 * u, 'news', inkAB, 700);
     ctx.font = font('sans', 24 * u, 500); ctx.fillStyle = inkAB; ctx.textAlign = 'left';
     ctx.fillText(ellipsize(ctx, k.d.cta?.trim() || dek(k), W * 0.6), P, H - 56 * u);
     wordmark(ctx, W - P, H - 76 * u, 30 * u, { align: 'right', color: inkB });
@@ -209,7 +209,7 @@ const trend: Design = {
     const u = U(k), P = 60 * u;
     ctx.fillStyle = '#0c1018'; ctx.fillRect(0, 0, W, H);
     topBar(k, P + 4 * u);
-    headline(k, d.title, P, P + 78 * u, W - P * 2, 50 * u, 'display', '#fff', 700);
+    headline(k, d.title, P, P + 78 * u, W - P * 2, 50 * u, 'news', '#fff', 700);
     ctx.font = font('sans', 21 * u, 500); ctx.fillStyle = 'rgba(255,255,255,0.68)'; ctx.textAlign = 'left';
     ctx.fillText(ellipsize(ctx, dek(k), W - P * 2), P, P + 114 * u);
     const series = (d.series ?? []).filter((s) => s.points.length >= 2);
@@ -395,7 +395,7 @@ const carousel: Design = {
     rr(ctx, W - P - pw, P + 2 * u, pw, 46 * u, 23 * u); ctx.fillStyle = '#111'; ctx.fill();
     text(ctx, pill, W - P - pw / 2, P + 33 * u, font('mono', 22 * u, 700), '#fff', 'center');
     caps(ctx, k.kicker, P, P + 120 * u, font('sans', 22 * u, 800), mix(k.accent, '#000', 0.35), 0.16);
-    const tb = fitBlock(ctx, d.title, W - P * 2, H * 0.3, 104 * u, 'display', 700, 1.02, 4, 36 * u);
+    const tb = fitBlock(ctx, d.title, W - P * 2, H * 0.3, 104 * u, 'news', 700, 1.02, 4, 36 * u);
     ctx.fillStyle = '#111'; ctx.textAlign = 'left';
     let y = drawLines(ctx, tb.lines, P, P + 150 * u + tb.px * 0.85, tb.lh);
     ctx.font = font('sans', 30 * u, 500); ctx.fillStyle = '#555';
@@ -437,7 +437,7 @@ const table: Design = {
     ctx.fillStyle = '#0d1321'; ctx.fillRect(0, 0, W, 300 * u);
     wordmark(ctx, P, P + 20 * u, 36 * u, { accent: k.accent });
     capsFit(ctx, k.kicker, W * 0.5, W - P, P + 14 * u, font('sans', 20 * u, 800), k.accent, 0.16, 'right');
-    const tb = fitBlock(ctx, d.title, W - P * 2, 150 * u, 74 * u, 'display', 700, 1.04, 2, 28 * u);
+    const tb = fitBlock(ctx, d.title, W - P * 2, 150 * u, 74 * u, 'news', 700, 1.04, 2, 28 * u);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
     drawLines(ctx, tb.lines, P, 300 * u - 40 * u - (tb.lines.length - 1) * tb.lh, tb.lh);
     ctx.font = font('sans', 24 * u, 500); ctx.fillStyle = '#4a5368';

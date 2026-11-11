@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Market } from '../../types';
-import { RatingBadge, SimBadge } from '../../components';
+import { PageHeader, RatingBadge, SimBadge } from '../../components';
 import { useLive } from '../../lib/live';
 import { marginColor, PARTY_COLOR, PARTY_HEX } from '../../lib/format';
 import { USMap } from '../map/USMap';
@@ -433,13 +433,16 @@ export default function ForecastPage() {
 
   return (
     <div className="page pl-page fc-page">
-      <header className="pl-hero">
-        <div className="eyebrow">Forecast &amp; what-if lab</div>
-        <h1>Run the midterms yourself</h1>
-        <p className="pl-lede">
+      <PageHeader
+        className="pl-hero"
+        kicker="Forecast & what-if lab"
+        title="Run the midterms yourself"
+        crumbLabel="Forecast"
+        sub={<>
           A transparent Monte Carlo model that runs in your browser: {SENATE_SIMS.toLocaleString('en-US')} Senates and {HOUSE_SIMS.toLocaleString('en-US')} Houses per setting,
           built from race ratings, polling averages and a correlated national error. Move the sliders and watch it re-run.
-        </p>
+        </>}
+      >
         <div className="fc-disclaimer" role="note">
           <b>This is a model for exploration, not a prediction of record.</b> It uses public race ratings and polls compiled before Election Day and makes
           simple, stated assumptions. For calls, follow the <Link to="/live">live results desk</Link>.
@@ -448,11 +451,11 @@ export default function ForecastPage() {
         <label className="fc-live-toggle">
           <input type="checkbox" checked={useLiveResults} onChange={(e) => setUseLiveResults(e.target.checked)} />
           <span>
-            <b>Use tonight&apos;s results</b> — {sCond.locked + hCond.locked} races locked in from {live.source === 'live' ? 'AP calls' : 'demo calls'},{' '}
+            <b>Use tonight&apos;s results</b> — {sCond.locked + hCond.locked} races locked in from AP calls,{' '}
             {sCond.counting + hCond.counting} counting races use the live model.
           </span>
         </label>
-      </header>
+      </PageHeader>
 
       <div className="fc-controls card">
         <Slider

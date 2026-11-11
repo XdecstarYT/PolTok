@@ -1,7 +1,7 @@
 .mn { max-width: var(--maxw); margin: 0 auto; padding: var(--sp-5) var(--gutter) calc(var(--sp-16) + var(--shell-bottom)); display: grid; gap: var(--sp-10); }
 .mn > .pt-pagehead { margin-bottom: 0; }
 .mn-head { display: grid; gap: 6px; }
-.mn-kicker { margin: 0; font: 600 var(--fs-xs)/1 var(--font-data); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.mn-kicker { margin: 0; font: 600 var(--fs-xs)/1 var(--font-data); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--kicker); }
 .mn-title { margin: 0; font: 700 var(--fs-2xl)/1.05 var(--font-display); color: var(--text); letter-spacing: -0.02em; }
 .mn-sec { display: grid; gap: var(--sp-3); }
 .mn-sec__h { margin: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding-top: var(--sp-3); border-top: 1px solid var(--line-3); font: 600 var(--fs-xl)/1.2 var(--font-serif); color: var(--text); }

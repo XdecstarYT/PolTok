@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { ShareCardButton } from '../embed/ShareCardButton';
 import { Link, useParams } from 'react-router-dom';
-import { Card, EmptyState, ProgressBar } from '../../components';
+import { Card, EmptyState, PageHeader, ProgressBar } from '../../components';
 import { relatedNews, useAuNews, useAuResults } from './api';
 import { MapPanel } from './MapPanel';
 import { FEDERAL, party, partyKey, pColor, seatById, stateName, VICTORIA } from './model';
@@ -45,24 +45,31 @@ export default function SeatPage() {
   const c = pColor(seat.party);
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head" style={{ ['--pc' as string]: c }}>
-        <div>
-          <div className="au-kicker mono">
-            <Link to="/au">AUSTRALIA</Link> / {isVic ? <Link to="/au/victoria">VICTORIA 2026</Link> : 'FEDERAL'} / {seat.state}
-          </div>
-          <h1 className="au-seat-h"><i style={{ background: c }} />{seat.name}</h1>
-          <WatchStar auSeatId={seat.id} label={seat.name} />
-          <ShareCardButton kind="au-seat" id={seat.id} />
-          <p className="au-sub">{isVic ? 'Victorian Legislative Assembly district' : `Federal division · House of Representatives · ${stateName(seat.state)}`}</p>
-        </div>
-        <dl className="au-stats mono">
-          <div><dt>Held by</dt><dd style={{ color: c }}>{party(seat.party).short}</dd></div>
-          <div><dt>Margin</dt><dd>{seat.margin != null ? `${seat.margin.toFixed(1)}%` : 'TBD'}</dd></div>
-          <div><dt>Status</dt><dd>{seat.margin == null ? '—' : seat.margin < 3 ? 'Marginal' : seat.margin < 6 ? 'Fairly safe' : 'Safe'}</dd></div>
-          {rank && <div><dt>Pendulum</dt><dd>#{rank.i} of {rank.n}</dd></div>}
-        </dl>
-      </header>
+      <div className="au-head-wrap" style={{ ['--pc' as string]: c }}>
+        <PageHeader
+          className="au-pagehead"
+          crumbs={[
+            { to: '/', label: 'Home' },
+            { to: '/au', label: 'Australia' },
+            ...(isVic ? [{ to: '/au/victoria', label: 'Victoria 2026' }] : []),
+            { label: seat.name },
+          ]}
+          kicker={isVic ? `Victoria 2026 · ${seat.state}` : `Federal · ${seat.state}`}
+          title={<span className="au-seat-h"><i style={{ background: c }} aria-hidden="true" />{seat.name}</span>}
+          sub={isVic ? 'Victorian Legislative Assembly district' : `Federal division · House of Representatives · ${stateName(seat.state)}`}
+          meta={<><WatchStar auSeatId={seat.id} label={seat.name} /><ShareCardButton kind="au-seat" id={seat.id} /></>}
+          aside={
+            <dl className="au-stats mono">
+              <div><dt>Held by</dt><dd style={{ color: c }}>{party(seat.party).short}</dd></div>
+              <div><dt>Margin</dt><dd>{seat.margin != null ? `${seat.margin.toFixed(1)}%` : 'TBD'}</dd></div>
+              <div><dt>Status</dt><dd>{seat.margin == null ? '—' : seat.margin < 3 ? 'Marginal' : seat.margin < 6 ? 'Fairly safe' : 'Safe'}</dd></div>
+              {rank && <div><dt>Pendulum</dt><dd>#{rank.i} of {rank.n}</dd></div>}
+            </dl>
+          }
+        >
+          <AuNav />
+        </PageHeader>
+      </div>
 
       <div className="au-grid-main">
         <MapPanel layer={isVic ? 'vic' : 'federal'} seats={peers} selected={seat.id} title={isVic ? 'District' : 'Division'} kicker={`${seat.name} highlighted`} />

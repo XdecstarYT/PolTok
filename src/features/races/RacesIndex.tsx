@@ -4,7 +4,7 @@ import { m as motion } from 'framer-motion';
 import type { Race, Rating } from '../../types';
 import { HOUSE_BASELINE, RACES, SENATE_NOT_UP } from '../../data';
 import { useLive } from '../../lib/live';
-import { RatingBadge, SimBadge, PartyDot } from '../../components';
+import { PageHeader, RatingBadge, SimBadge, PartyDot } from '../../components';
 import { PARTY_HEX, RATING_HEX, RATINGS } from '../../lib/format';
 import { RaceChip, MarginPill } from './parts';
 import { CHAMBER_LABEL, type ChamberTab, headlinePair, incumbentOf, leaderOf, longTitle, ratingIndex, seatMath, totalVotes } from './util';
@@ -38,23 +38,22 @@ export default function RacesIndex() {
 
   return (
     <div className="page rx-page">
-      <header className="rx-index-head">
-        <div>
-          <span className="rx-eyebrow">
-            <span className="rx-live-dot" /> Election Day · Nov 3, 2026
-          </span>
-          <h1 className="rx-h1">Race Ratings Board</h1>
-          <p className="rx-muted rx-lede">
-            Every {CHAMBER_LABEL[tab].toLowerCase()} race on the ballot, from Solid D to Solid R — with live leaders and calls laid on top as the count comes in.
-          </p>
-        </div>
-        <div className="rx-head-meta">
-          <SimBadge />
-          <span className="mono rx-muted">
-            {called}/{races.length} called{mode === 'connecting' ? ' · connecting…' : ''}
-          </span>
-        </div>
-      </header>
+      <PageHeader
+        className="rx-pagehead"
+        live
+        kicker="Election Day · Nov 3, 2026"
+        title="Race ratings board"
+        crumbLabel="Races"
+        sub={`Every ${CHAMBER_LABEL[tab].toLowerCase()} race on the ballot, from Solid D to Solid R, with live leaders and calls laid on top as the count comes in.`}
+        meta={
+          <>
+            <SimBadge />
+            <span>
+              {called}/{races.length} called{mode === 'connecting' ? ' · connecting…' : ''}
+            </span>
+          </>
+        }
+      />
 
       <div className="rx-toolbar">
         <div className="rx-tabs" role="tablist" aria-label="Chamber">

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BalanceBar, Button, Card, Chip, EmptyState, Needle, SectionHeader, Skeleton, Tabs, fmtTime, tzAbbr, useReducedMotion } from '../../components';
+import { BalanceBar, Button, Card, Chip, EmptyState, ErrorState, Needle, PageHeader, SectionHeader, Skeleton, Tabs, fmtTime, tzAbbr, useReducedMotion } from '../../components';
 import { PARTY_HEX } from '../../lib/format';
 import { useSettings } from '../../lib/settings';
 import { USMap } from '../map/USMap';
@@ -25,8 +25,8 @@ export default function ReplayPage() {
     loadOverview().then(setOv, (e) => setErr(String(e?.message ?? e)));
   }, []);
 
-  if (err) return <div className="page"><EmptyState title="Couldn’t load the NYT results feed" description={err} /></div>;
-  if (!ov) return <div className="page an"><Skeleton height={40} width={320} /><Skeleton height={420} style={{ marginTop: 16 }} /></div>;
+  if (err) return <div className="page an"><PageHeader kicker="Election night · Nov 3–4, 2026" title="Relive election night" crumbLabel="Replay" /><ErrorState title="Couldn’t load the NYT results feed" description={err} onRetry={() => location.reload()} /></div>;
+  if (!ov) return <div className="page an" aria-busy="true"><PageHeader kicker="Election night · Nov 3–4, 2026" title="Relive election night" crumbLabel="Replay" /><Skeleton height={120} radius={12} /><Skeleton height={420} radius={12} style={{ marginTop: 16 }} /></div>;
   return <Replay ov={ov} />;
 }
 
@@ -137,11 +137,12 @@ function Replay({ ov }: { ov: Overview }) {
 
   return (
     <div className="page an">
-      <SectionHeader
+      <PageHeader
         kicker="Election night · Nov 3–4, 2026"
         title="Relive election night"
-        sub={<>Every AP race call, in order, at the moment it landed — with the NYT model’s live chamber forecast. Times in {z}.</>}
-        action={<Link to="/analysis" className="an-link">What happened →</Link>}
+        crumbLabel="Replay"
+        sub={<>Every AP race call, in order, at the moment it landed, with the NYT model’s live chamber forecast. Times in {z}.</>}
+        aside={<Link to="/analysis" className="an-link">What happened</Link>}
       />
 
       <div className="an-player card" role="group" aria-label="Replay controls">

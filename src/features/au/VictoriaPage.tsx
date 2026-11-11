@@ -1,7 +1,7 @@
 /** /au/victoria — Victorian state election 2026 night page (AU-UI). */
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AnimatedNumber, Card, Countdown, LiveDot } from '../../components';
+import { AnimatedNumber, Card, Countdown, LiveDot, PageHeader } from '../../components';
 import { fmtTime, tzAbbr } from '../../components/time';
 import { relatedNews, useAuMarkets, useAuNews, useAuResults, type AuResults } from './api';
 import { MapPanel, VIC_ZOOMS } from './MapPanel';
@@ -76,24 +76,24 @@ export default function VictoriaPage() {
 
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono">
-            <LiveDot color={live ? undefined : 'var(--text-3)'} label={live ? 'COUNTING' : 'PRE-ELECTION'} /> VICTORIAN STATE ELECTION · SAT 28 NOV 2026
-          </div>
-          <h1>Victoria decides</h1>
-          <p className="au-sub">
-            <Link to="/au">Australia</Link> / Legislative Assembly · 88 districts · {VIC_MAJORITY} for majority
-          </p>
-        </div>
-        <dl className="au-stats mono">
-          <div><dt>Polls close</dt><dd>{fmtTime(VIC_CLOSE)} {tzAbbr(VIC_CLOSE)}</dd></div>
-          <div><dt>Status</dt><dd className={live ? 'ok' : ''}>{status === 'final' ? 'Final' : live ? 'Counting' : 'Pre-election'}</dd></div>
-          <div><dt>Reporting</dt><dd><AnimatedNumber value={tally.reporting} />/{VIC_TOTAL}</dd></div>
-          <div><dt>Results feed</dt><dd><FeedStatus updated={res.updated} error={res.error} label={res.data?.source ?? 'VEC'} /></dd></div>
-        </dl>
-      </header>
+      <PageHeader
+        className="au-pagehead"
+        live={live}
+        kicker={live ? 'Counting · Victorian state election · Sat 28 Nov 2026' : 'Pre-election · Victorian state election · Sat 28 Nov 2026'}
+        title="Victoria decides"
+        crumbLabel="Victoria 2026"
+        sub={<>Legislative Assembly · 88 districts · {VIC_MAJORITY} for majority</>}
+        aside={
+          <dl className="au-stats mono">
+            <div><dt>Polls close</dt><dd>{fmtTime(VIC_CLOSE)} {tzAbbr(VIC_CLOSE)}</dd></div>
+            <div><dt>Status</dt><dd className={live ? 'ok' : ''}>{status === 'final' ? 'Final' : live ? 'Counting' : 'Pre-election'}</dd></div>
+            <div><dt>Reporting</dt><dd><AnimatedNumber value={tally.reporting} />/{VIC_TOTAL}</dd></div>
+            <div><dt>Results feed</dt><dd><FeedStatus updated={res.updated} error={res.error} label={res.data?.source ?? 'VEC'} /></dd></div>
+          </dl>
+        }
+      >
+        <AuNav />
+      </PageHeader>
 
       <div className="au-vic-hero">
         <Card className="au-count-card" kicker="6:00pm AEDT · 07:00 UTC" title={live ? 'Polls closed' : 'Polls close in'}>

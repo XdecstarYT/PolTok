@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import { PageHeader, Skeleton, EmptyState } from '../../components';
 import { LEAN_HEX } from '../../lib/format';
 import { useSeo } from '../../lib/seo';
 import { LeanDot } from './BiasBar';
@@ -13,13 +14,10 @@ export default function SourcePage() {
   useSeo({ title: `${data?.name ?? name} · news source`, description: `${data?.name ?? name}: media-bias rating, recent political stories and share of coverage on PolTok.` });
 
   return (
-    <main className="container n2">
-      <nav className="n2-crumb" aria-label="Breadcrumb">
-        <Link to="/news">News</Link> <span aria-hidden="true">/</span> <span>Sources</span>
-      </nav>
-      <h1>{data?.name ?? name}</h1>
-      {loading && !data && <p className="n2-muted">Loading…</p>}
-      {error && !data && <p className="n2-muted">No recent stories from this outlet in our feeds ({error}).</p>}
+    <div className="container n2">
+      <PageHeader className="n2-head" kicker="News source" title={data?.name ?? name} crumbLabel={data?.name ?? name} sub="Media-bias rating, recent political stories and share of coverage on PolTok." />
+      {loading && !data && <Skeleton lines={6} />}
+      {error && !data && <EmptyState title="No recent stories from this outlet" description={`Nothing from this outlet is in our feeds right now (${error}).`} />}
       {data && (
         <div className="n2-grid">
           <section className="n2-panel" aria-labelledby="n2-recent">
@@ -59,6 +57,6 @@ export default function SourcePage() {
           </aside>
         </div>
       )}
-    </main>
+    </div>
   );
 }

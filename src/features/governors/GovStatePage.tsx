@@ -3,7 +3,7 @@
  * NYT per-state file (LG, AG, SOS, misc "X" offices…), and a ballot-measure summary. Real AP data.
  */
 import { Link, useParams } from 'react-router-dom';
-import { LiveDot, fmtTime, tzAbbr } from '../../components';
+import { LiveDot, fmtTime, tzAbbr, PageHeader, EmptyState } from '../../components';
 import { raceById, stateByAbbr } from '../../data';
 import { PARTY_HEX } from '../../lib/format';
 import { ATTRIBUTION, NOT_UP, parseContest, slug, useNyt, type NytRace } from './data';
@@ -18,7 +18,7 @@ export default function GovStatePage() {
   const { abbr = '' } = useParams();
   const st = stateByAbbr.get(abbr.toUpperCase());
   const { data, error, at } = useNyt<{ races?: NytRace[] }>(st && st.abbr !== 'DC' ? `results-${slug(st.name)}.json` : null, 90000);
-  if (!st) return <main className="page gv-page"><p>Unknown state. <Link to="/governors">All governors</Link></p></main>;
+  if (!st) return <div className="page gv-page"><PageHeader kicker="Governors" title="Unknown state" crumbLabel="Not found" /><EmptyState title="We don't recognise that state" description={<Link to="/governors">See all governor races</Link>} /></div>;
 
   const all = data?.races || [];
   const gov = all.find((r) => r.office_id === 'G' && r.coverage === 'state');
@@ -30,12 +30,14 @@ export default function GovStatePage() {
   const prior = raceById.get(`${st.abbr}-GOV`)?.incumbentParty;
 
   return (
-    <main className="page gv-page">
-      <header>
-        <div className="gv-kicker"><LiveDot label="AP LIVE" /> <Link to="/governors">GOVERNORS</Link> <span>· STATE GOVERNMENT</span></div>
-        <h1>{st.name}</h1>
-        <span className="gv-upd">{ATTRIBUTION}{at ? ` · updated ${fmtTime(at)} ${tzAbbr(at)}` : ''}{error ? ` · fetch failed (${error})` : ''} · <Link to={`/state/${st.abbr}`}>Full state page</Link></span>
-      </header>
+    <div className="page gv-page">
+      <PageHeader
+        live
+        kicker="AP live · State government"
+        title={st.name}
+        crumbLabel={st.name}
+        meta={<span className="gv-upd">{ATTRIBUTION}{at ? ` · updated ${fmtTime(at)} ${tzAbbr(at)}` : ''}{error ? ` · fetch failed (${error})` : ''} · <Link to={`/state/${st.abbr}`}>Full state page</Link></span>}
+      />
 
       <section>
         <h2 className="gv-h2">Governor</h2>
@@ -96,6 +98,6 @@ export default function GovStatePage() {
           </p>
         </section>
       )}
-    </main>
+    </div>
   );
 }

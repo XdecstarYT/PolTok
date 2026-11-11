@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Button, EmptyState, SectionHeader, SimBadge, useToast } from '../../components';
+import { Button, EmptyState, PageHeader, SectionHeader, SimBadge, useToast } from '../../components';
 import { RACES } from '../../data';
 import { useLive } from '../../lib/live';
 import { useSettings } from '../../lib/settings';
@@ -95,19 +95,21 @@ export default function WatchPage() {
 
   return (
     <div className="page wt">
-      <header className="wt-head">
-        <div>
-          <span className="wt-kick mono">★ {viewingShared ? 'SHARED WATCHLIST' : 'YOUR WATCHLIST'}</span>
-          <h1 className="wt-h1">{viewingShared ? 'Shared races' : 'My races'}</h1>
-          <p className="wt-sub">Live cards for every race you star. Alerts fire when a watched race is called or changes leader.</p>
-        </div>
-        <div className="wt-head__acts">
-          <SimBadge />
-          {!viewingShared && <NotifyButton />}
-          {!viewingShared && wl.ids.length > 0 && <Button variant="ghost" size="sm" onClick={share}>Share list</Button>}
-          {compareIds.length >= 2 && <Button variant="ghost" size="sm" to={`/compare?r=${compareIds.join(',')}`}>Compare</Button>}
-        </div>
-      </header>
+      <PageHeader
+        className="wt-head"
+        kicker={viewingShared ? 'Shared watchlist' : 'Your watchlist'}
+        title={viewingShared ? 'Shared races' : 'My races'}
+        crumbLabel="Watchlist"
+        sub="Live cards for every race you star. Alerts fire when a watched race is called or changes leader."
+        aside={
+          <div className="wt-head__acts">
+            <SimBadge />
+            {!viewingShared && <NotifyButton />}
+            {!viewingShared && wl.ids.length > 0 && <Button variant="ghost" size="sm" onClick={share}>Share list</Button>}
+            {compareIds.length >= 2 && <Button variant="ghost" size="sm" to={`/compare?r=${compareIds.join(',')}`}>Compare</Button>}
+          </div>
+        }
+      />
 
       {viewingShared && (
         <div className="wt-banner">

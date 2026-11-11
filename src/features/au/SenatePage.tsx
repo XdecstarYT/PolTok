@@ -1,6 +1,6 @@
 /** /au/senate — 76 senators by state and party, plus the crossbench. */
 import { useMemo } from 'react';
-import { Card } from '../../components';
+import { Card, PageHeader } from '../../components';
 import { SENATORS } from '../../data/au';
 import { AuNav } from './AuNav';
 import { orderIdx, party, partyKey, pColor, sortParties, stateName } from './model';
@@ -28,20 +28,22 @@ export default function SenatePage() {
 
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono">AUSTRALIA · 48TH PARLIAMENT · SENATE</div>
-          <h1>Senate</h1>
-          <p className="au-sub">76 senators: 12 per state, 2 each for the ACT and NT. 39 votes pass a bill.</p>
-        </div>
-        <dl className="au-stats mono">
+      <PageHeader
+        className="au-pagehead"
+        kicker="Australia · 48th Parliament · Senate"
+        title="Senate"
+        sub="76 senators: 12 per state, 2 each for the ACT and NT. 39 votes pass a bill."
+        aside={
+          <dl className="au-stats mono">
           <div><dt>Government</dt><dd style={{ color: pColor('ALP') }}>{gov}</dd></div>
           <div><dt>Coalition</dt><dd style={{ color: pColor('LIB') }}>{opp}</dd></div>
           <div><dt>Crossbench</dt><dd>{crossbench.length}</dd></div>
           <div><dt>Labor needs</dt><dd>{Math.max(0, 39 - gov)} more</dd></div>
-        </dl>
-      </header>
+          </dl>
+        }
+      >
+        <AuNav />
+      </PageHeader>
 
       <div className="au-grid-2">
         <Hemicycle title="Senate composition" total={total} comp={comp} majority={39} govLabel={`${total} senators · 39 to pass`} note="Current party; Tyrrell (IND→ALP, May 2026) and Cox (GRN→ALP, Jun 2025) counted as Labor." />

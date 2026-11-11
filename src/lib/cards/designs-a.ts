@@ -237,7 +237,7 @@ const mapHero: Design = {
       ctx.restore();
       capsFit(ctx, h.label, 400, W - 60, 716, font('sans', 22, 700), h.color === '#fff' ? '#fff' : mix(h.color, '#ffffff', 0.35), 0.06, 'right');
     }
-    headline(k, d.title, 60, 820, W - 120, 84, 'display', '#fff', 700);
+    headline(k, d.title, 60, 820, W - 120, 84, 'news', '#fff', 700);
     ctx.font = font('sans', 28, 500); ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.textAlign = 'left';
     drawLines(ctx, wrap(ctx, dek(k), W - 120, 2), 60, 870, 38);
     stackBar(ctx, d, 60, 950, W - 120, 14, 7);
@@ -262,7 +262,7 @@ const bigNumber: Design = {
     ctx.fillStyle = grad; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(v, 62, 200 + px * 0.86);
     capsFit(ctx, h.label, W - 140, 70, 260 + px * 0.86, font('sans', 30, 800), mix(h.color, '#ffffff', 0.3), 0.1);
-    const tb = fitBlock(ctx, d.title, W - 140, 220, 80, 'display', 700, 1.05, 2, 34);
+    const tb = fitBlock(ctx, d.title, W - 140, 220, 80, 'news', 700, 1.05, 2, 34);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
     let y = drawLines(ctx, tb.lines, 70, 340 + px * 0.86 + tb.px, tb.lh);
     ctx.font = font('sans', 28, 500); ctx.fillStyle = 'rgba(255,255,255,0.65)';

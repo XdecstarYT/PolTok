@@ -15,8 +15,9 @@
   --dem: #1e6bff;
   --rep: #e3122d;
   --accent: #ffcc00;
-  --live: #e3122d;
+  --live: #ff707c;     /* a11y: 4.6:1 on --bg-3 (was #e3122d, 2.6:1); fills use --live-fill */
   --live-fill: #d0102a;
+  --danger: #ff7a88;    /* a11y: 4.9:1 on --bg-3 */
   --breaking: #e3122d;
   --bg-4: #1d3c84;
   --line-3: rgba(255, 255, 255, 0.36);

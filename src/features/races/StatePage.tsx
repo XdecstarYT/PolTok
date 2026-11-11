@@ -4,7 +4,7 @@ import { m as motion } from 'framer-motion';
 import type { Race, RaceResult } from '../../types';
 import { racesByState, stateByAbbr } from '../../data';
 import { useLive } from '../../lib/live';
-import { SimBadge } from '../../components';
+import { PageHeader, SimBadge, StatGroup, StatTile } from '../../components';
 import { marginColor, PARTY_HEX, RATING_HEX } from '../../lib/format';
 import { USMap } from '../map/USMap';
 import { NewsList, NotFound, PresBar, RaceCard, ShareButton } from './parts';
@@ -37,11 +37,12 @@ export default function StatePage() {
 
   return (
     <div className="page rx-page">
-      <nav className="rx-crumbs" aria-label="Breadcrumb">
-        <Link to="/races">Races</Link>
-        <span aria-hidden>/</span>
-        <span aria-current="page">{st.name}</span>
-      </nav>
+      <PageHeader
+        className="rx-pagehead"
+        crumbs={[{ to: '/', label: 'Home' }, { to: '/races', label: 'Races' }, { label: st.name }]}
+        kicker="State hub · Election Day 2026"
+        title={st.name}
+      />
 
       <motion.section
         className="rx-state-hero"
@@ -54,29 +55,12 @@ export default function StatePage() {
           {st.abbr}
         </span>
         <div className="rx-state-info">
-          <span className="rx-eyebrow">State hub · Election Day 2026</span>
-          <h1 className="rx-h1">{st.name}</h1>
-          <dl className="rx-facts rx-facts-lg">
-            <div>
-              <dt>Electoral votes</dt>
-              <dd className="mono">{st.ev}</dd>
-            </div>
-            <div>
-              <dt>House seats</dt>
-              <dd className="mono">{st.houseSeats}</dd>
-            </div>
-            <div>
-              <dt>Polls close</dt>
-              <dd className="mono">{fmtCloseET(st.pollClose)}</dd>
-            </div>
-            <div>
-              <dt>Races tonight</dt>
-              <dd className="mono">
-                {races.length}
-                {called > 0 && <small> · {called} called</small>}
-              </dd>
-            </div>
-          </dl>
+          <StatGroup label={`${st.name} at a glance`} min={130}>
+            <StatTile label="Electoral votes" value={st.ev} />
+            <StatTile label="House seats" value={st.houseSeats} />
+            <StatTile label="Polls close" value={fmtCloseET(st.pollClose)} />
+            <StatTile label="Races" value={races.length} sub={called > 0 ? `${called} called` : 'None called yet'} />
+          </StatGroup>
           <PresBar st={st} />
           <div className="rx-inline" style={{ marginTop: 12 }}>
             <SimBadge />

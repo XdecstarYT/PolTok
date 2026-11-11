@@ -1,7 +1,7 @@
 /** /au/nsw — NSW state election 2027 (same template as /au/victoria, pre-election only). */
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Countdown, LiveDot } from '../../components';
+import { Card, Countdown, LiveDot, PageHeader } from '../../components';
 import { fmtDay, fmtTime, tzAbbr } from '../../components/time';
 import { NSW_2027 } from '../../data/au';
 import { relatedNews, useAuMarkets, useAuNews } from './api';
@@ -23,19 +23,22 @@ export default function NSWPage() {
 
   return (
     <div className="page au-page">
-      <AuNav />
-      <header className="au-head">
-        <div>
-          <div className="au-kicker mono"><LiveDot color="var(--text-3)" label="PRE-ELECTION" /> NSW STATE ELECTION · SAT 13 MAR 2027</div>
-          <h1>New South Wales 2027</h1>
-          <p className="au-sub"><Link to="/au">Australia</Link> / Legislative Assembly · {NSW_2027.totalSeats} seats · {NSW_2027.majority} for majority · plus {NSW_2027.upperHouse}</p>
-        </div>
-        <dl className="au-stats mono">
+      <PageHeader
+        className="au-pagehead"
+        kicker="NSW state election · Sat 13 Mar 2027"
+        title="New South Wales 2027"
+        crumbLabel="NSW 2027"
+        sub={<>Legislative Assembly · {NSW_2027.totalSeats} seats · {NSW_2027.majority} for majority · plus {NSW_2027.upperHouse}</>}
+        aside={
+          <dl className="au-stats mono">
           <div><dt>Election</dt><dd>{fmtDay(CLOSE)}</dd></div>
           <div><dt>Polls close</dt><dd>{fmtTime(CLOSE)} {tzAbbr(CLOSE)}</dd></div>
           <div><dt>Status</dt><dd>Pre-election</dd></div>
-        </dl>
-      </header>
+          </dl>
+        }
+      >
+        <AuNav />
+      </PageHeader>
 
       <div className="au-vic-hero">
         <Card className="au-count-card" kicker="6:00pm AEDT · 07:00 UTC" title="Polls close in">

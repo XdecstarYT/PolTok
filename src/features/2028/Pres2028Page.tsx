@@ -89,7 +89,7 @@ export default function Pres2028Page() {
   const party = get('party');
 
   return (
-    <main className="page p28-page">
+    <div className="page p28-page">
       <PageHeader
         kicker="Road to 2028 · Election day Nov 7, 2028"
         title="2028 Presidential Race"
@@ -158,6 +158,6 @@ export default function Pres2028Page() {
           renderTooltip={(a) => { const p = pres2024(a); return <div><b>{stateName(a)}</b> · {stateEV(a)} EV<br />2024: {p.margin > 0 ? 'Harris' : 'Trump'} +{Math.abs(p.margin).toFixed(1)}</div>; }}
           describe={(a) => `${stateEV(a)} electoral votes, currently ${picks[a] === 'U' ? 'toss-up' : picks[a]}`} />
       </section>
-    </main>
+    </div>
   );
 }
