@@ -9,13 +9,23 @@ const snapshot = cached(45000, async () => {
   let pending = 0;
   const fetchImpl = (...a) => {
     pending++;
-    return fetch(...a).finally(() => setTimeout(() => pending--, 0));
+    // Count the request as pending until its whole body has downloaded (the House file is >1 MB),
+    // then hand the provider a buffered Response so parsing happens before we take the snapshot.
+    return fetch(...a)
+      .then(async (r) => new Response(await r.arrayBuffer(), { status: r.status, statusText: r.statusText, headers: r.headers }))
+      .finally(() => setTimeout(() => pending--, 0));
   };
   const pr = createNytProvider({ races: structuredClone(RACES), states: STATES, log: quiet, fetchImpl });
   pr.start();
   const t0 = Date.now();
   await sleep(50);
-  while (pending > 0 && Date.now() - t0 < 9000) await sleep(100);
+  while (Date.now() - t0 < 9000) {
+    if (pending === 0) {
+      await sleep(250); // let res.json() + ingest finish for the last buffered body
+      if (pending === 0) break;
+    }
+    await sleep(100);
+  }
   pr.stop();
   const s = pr.snapshot();
   return { mode: 'live', results: s.results, balance: s.balance, markets: s.markets, clock: s.clock, fetchedAt: Date.now() };
