@@ -56,6 +56,33 @@ Data: AP race calls via PolTok's live feed, as of 11 Nov, 7:58 AM ET. The 2024 b
 
 **Alt text:** A 3D render of a 435-seat chamber. Seats first show the 2024 split (220 red, 215 blue), then change hands one by one to the 2026 count of 255 Democrats and 167 Republicans, with 13 grey seats still uncalled. A counter shows +37 seats past the 218 majority.
 
+## 3. Too close to call: `poltok-us-too-close.mp4` (30.5s)
+
+Data: live vote counts (NYT/AP) via PolTok, as of 11 Nov, 10:03 AM ET. These races are NOT called, so check the counts before you post.
+
+**Instagram / TikTok**
+> 321 votes. That's the whole gap. 😳
+>
+> Minnesota's 1st district: Jake Johnson (D) 50.05%, Brad Finstad (R) 49.95%, out of 325,787 votes.
+>
+> Mississippi's Senate race is about 3,000 apart. Colorado's 4th, where Boebert is trailing, is about 3,400.
+>
+> Johnson or Finstad? Comment your call 👇 and follow so you see who wins 🗳️
+> #midterms2026 #minnesota #election2026 #uspolitics #toclosetocall #politics
+
+**X**
+> 321 votes.
+>
+> That's all that separates Johnson (D) and Finstad (R) in MN-01, out of 325,787 cast.
+>
+> Still uncalled:
+> MS Senate: Colom +3,041
+> CO-04: Laubacher +3,362 over Boebert
+>
+> Who takes MN-01? 👇
+
+**Alt text:** Two near-identical stacks of ballot papers on a wooden desk represent the Minnesota 1st district count: Jake Johnson 50.05%, Brad Finstad 49.95%, 321 votes apart. A list follows of other uncalled races: Mississippi Senate (Colom leads by 3,041) and Colorado's 4th (Laubacher leads by 3,362). It ends asking "Johnson or Finstad?".
+
 ## 4. UK polls: `poltok-uk-polls.mp4` (27.5s)
 
 Data: PolTok averages of GB-wide voting-intention polls listed on Wikipedia. "Now" is the last 15 polls, to 9 November 2026. The monthly lines are simple monthly averages.
