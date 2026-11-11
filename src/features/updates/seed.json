@@ -1,5 +1,29 @@
 [
   {
+    "id": "v1-4-polish",
+    "version": "v1.4",
+    "date": "2026-11-11T12:00:00Z",
+    "title": "World results, more faces and a sharper PolTok everywhere",
+    "categories": [
+      "New",
+      "Improved",
+      "Fixed",
+      "Data"
+    ],
+    "major": true,
+    "body": "- **Latest results worldwide:** the World page now shows results for recent national elections around the world, labelled unofficial until they're certified\n- **Live US results are back:** fixed a bug that had left the scoreboard and Live page empty\n- **Over 60 more official portraits** for Australian and New Zealand candidates, each credited to its source\n- **The new design, everywhere:** every page now has the same clear header, plus proper loading, empty and error states\n- **Easier to read:** every theme now meets accessibility contrast standards, and party colours adjust automatically to stay readable\n- **What's new on Home:** the latest update now appears right under the headline\n- **QUORUM:** a tougher Snap Election scenario, a tutorial that covers cabinets, debates and amendments, and smoother dialogs",
+    "links": [
+      {
+        "label": "World results",
+        "to": "/world"
+      },
+      {
+        "label": "Play QUORUM",
+        "to": "/play"
+      }
+    ]
+  },
+  {
     "id": "v1-3-redesign",
     "version": "v1.3",
     "date": "2026-11-10T20:00:00Z",
