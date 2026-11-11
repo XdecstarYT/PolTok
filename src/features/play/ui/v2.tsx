@@ -166,9 +166,9 @@ export function DebateBanner({ s, onOpen }: { s: GameState; onOpen: () => void }
   const d = (() => { try { return currentDebate(s); } catch { return null; } })();
   if (!d) return null;
   return (
-    <button className="q-card q-debatebanner" onClick={onOpen}>
+    <button className="q-card q-debatebanner" onClick={onOpen} data-coach="debate">
       <span className="q-debatebanner__ic" aria-hidden="true">{d.kind === 'press' ? '✒' : '⚖'}</span>
-      <span className="q-debatebanner__t"><span className="q-kicker">{d.kind === 'press' ? 'Press conference' : 'Assembly debate'} · free, this turn only</span><b>{d.title}</b></span>
+      <span className="q-debatebanner__t"><span className="q-kicker">{d.kind === 'press' ? 'Press conference' : 'Assembly debate'} · 1 AP, this turn only</span><b>{d.title}</b></span>
       <span className="q-docket__go">Take the floor ›</span>
     </button>
   );

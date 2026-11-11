@@ -12,8 +12,8 @@ const SCENARIO_ORDER: ScenarioId[] = ['sandbox', 'snap_election', 'debt_crisis',
 export function resolveMods(scenarioId: ScenarioId, difficulty: DifficultyId, perks: PerkId[]): Modifiers {
   const d = DIFFICULTIES[difficulty] ?? DIFFICULTIES.normal;
   return {
-    // the establishment closes ranks against an insurgent movement
-    rivalApproval: d.rivalApproval + (scenarioId === 'insurgent' ? 2 : 0),
+    // the establishment closes ranks against an insurgent movement; after a snap dissolution the opposition regroups
+    rivalApproval: d.rivalApproval + (scenarioId === 'insurgent' || scenarioId === 'snap_election' ? 2 : 0),
     eventSeverity: d.eventSeverity,
     pactChance: d.pactChance,
     campaignMult: (perks.includes('party_machine') ? 1.25 : 1) * (scenarioId === 'insurgent' ? 1.25 : 1),

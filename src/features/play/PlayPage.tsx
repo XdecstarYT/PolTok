@@ -273,7 +273,7 @@ export default function PlayPage() {
           <Coach step={coach} onSkip={() => { setCoach(null); const m2 = { ...meta, tutorialDone: true }; writeMeta(m2); setMeta(m2); }}
             onNext={() => {
               if (coach === 1) { setSheet({ kind: 'laws', tab: 'draft' }); return; }
-              if (coach === 2 && s.docket[0]) { setVoteId(s.docket[0].id); setCoach(3); return; }
+              if (coach === 2 && s.docket[0]) { setVoteId((s.docket.find((d) => d.proposer === 'player') ?? s.docket[0]).id); setCoach(3); return; } // the bill just drafted (rival bills can sit first)
               if (coach >= TUTORIAL.length - 1) { setCoach(null); const m2 = { ...meta, tutorialDone: true }; writeMeta(m2); setMeta(m2); return; }
               setCoach(coach + 1);
             }} />

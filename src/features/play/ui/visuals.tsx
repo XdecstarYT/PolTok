@@ -94,22 +94,28 @@ export function Dialog({ label, onClose, children, className, variant = 'sheet',
   label: string; onClose?: () => void; children: ReactNode; className?: string; variant?: 'sheet' | 'center' | 'full'; rm: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose); closeRef.current = onClose;
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     const el = ref.current;
     const first = el?.querySelector<HTMLElement>('[data-autofocus]') ?? el?.querySelector<HTMLElement>('button, [href], input, [tabindex]:not([tabindex="-1"])');
     first?.focus({ preventScroll: true });
+    // Listen on the window (not the dialog): when a choice re-renders the dialog's content, focus drops to <body> and
+    // Esc / Tab must still work. Only the topmost open dialog reacts.
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && onClose) { e.stopPropagation(); onClose(); }
+      const dialogs = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+      if (!el || dialogs[dialogs.length - 1] !== el) return;
+      if (e.key === 'Escape' && closeRef.current) { e.stopPropagation(); closeRef.current(); }
       if (e.key === 'Tab' && el) {
+        if (!el.contains(document.activeElement)) { const f0 = el.querySelector<HTMLElement>('button:not(:disabled), [href], input, [tabindex]:not([tabindex="-1"])'); if (f0) { e.preventDefault(); f0.focus(); } return; }
         const f = Array.from(el.querySelectorAll<HTMLElement>('button:not(:disabled), [href], input, [tabindex]:not([tabindex="-1"])'));
         if (!f.length) return;
         if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
         else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
       }
     };
-    el?.addEventListener('keydown', onKey);
-    return () => { el?.removeEventListener('keydown', onKey); prev?.focus?.({ preventScroll: true }); };
+    window.addEventListener('keydown', onKey);
+    return () => { window.removeEventListener('keydown', onKey); prev?.focus?.({ preventScroll: true }); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className={`q-scrim q-scrim--${variant}`} onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}>

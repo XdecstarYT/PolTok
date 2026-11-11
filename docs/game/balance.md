@@ -18,7 +18,7 @@ v2 drama per game (smart / random): 1.9 / 1.4 scandals, 1.8 chain follow-ups / 1
 
 | Setting | Smart win | Random win | Smart goals done |
 |---|---|---|---|
-| Snap Election | 81% | 7% | 30% |
+| Snap Election | 62% (64% on seeds 1..200) | 10% | 31% |
 | Debt Crisis | 55% (6% bankrupt) | 5% (14% bankrupt) | 64% |
 | Insurgent Party | 54% | 6% | 77% |
 | Story | 92% | 33% | n/a |
@@ -40,6 +40,7 @@ Ablations at the start of the pass (rival approval 50): full smart bot 91%; with
 | Amendment support | n/a | +0.16 to +0.30 per template | At +0.08 to +0.22, only 38% of offered amendments moved any vote. Now 67% do, and 48% turn a failing bill into a passing one. The ranking also prefers blocs near the YES line. |
 | Insurgent | n/a | campaigns x1.25 (was x1.5); rivals +2 approval | At first the insurgent won 76%, easier than the sandbox. |
 | Snap Election | n/a | incumbency: +8 on the top 3 groups, 1 campaign in every region | Without it the caretaker lost the snap vote almost every time (about 15 seats). |
+| Snap Election (polish pass) | +8 approval and +4 `approvalBase` on the top 3 groups | **+14 approval, no `approvalBase` change; rivals +2 approval** (`resolveMods`) | The permanent base bonus made the three later elections easy: the smart bot won 81%. Now the incumbency swell carries the snap vote (win_snap goal 54% over 200 games, was 60%) and then fades while the regrouped opposition stays strong. Smart 64% (seeds 1..200), random 7-10%. Other scenarios are untouched (Debt 55%, Insurgent 54%, Sandbox 66% in `npm test`). |
 | Difficulty rival approval | n/a | Story -4, Hard +2, Ironclad +4 | +3 and +6 made Hard 34% and Ironclad 19%. |
 
 ### v2 levers if it plays too easy or too hard
