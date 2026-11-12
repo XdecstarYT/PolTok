@@ -77,3 +77,28 @@ The real 2022 Victorian votes (VEC), re-counted. First-past-the-post: the top fi
 > Same votes. Which system's fairest? 👇
 
 **Alt text:** A 3D 88-seat chamber recolours under three counting systems using the real 2022 Victorian votes. Preferential (actual): Labor 56 seats with 36.7% of first preferences. First-past-the-post: only Hastings, Mildura and Morwell change hands. Proportional: Labor 34, Coalition 32, Greens 11, others 11, so Labor plus the Greens make exactly 45.
+
+## What if Andrews never quit? `poltok-what-if-andrews.mp4` (31s)
+
+Timeline from Wikipedia ("2026 Victorian state election"). Labor's 2022 vote is from VEC first preferences; "now" is the average of the latest 4 polls. The reel makes no claims about Andrews' conduct and leaves the what-if to the comments.
+
+**Instagram / TikTok**
+> What if Dan Andrews never resigned? 🤔
+>
+> 9 years as premier · 3 election wins · quit Sept 2023
+> Then Jacinta Allan, then Ben Carroll (July 2026)
+> Labor: 36.7% in 2022 → ~21% in the polls now
+>
+> Would Andrews have saved Labor, or made it worse? 👇 Victoria votes 28 Nov.
+> #springst #vicpol #danandrews #victorianlabor #victoria
+
+**X**
+> What if Andrews never quit? 🤔
+>
+> 2014–2023: 3 wins, 9 years
+> 2023: Allan · 2026: Carroll
+> Labor primary: 36.7% (2022) → ~21% now
+>
+> Saved Labor, or made it worse? 👇
+
+**Alt text:** Illustrative front pages from a fictional paper, "The PolTok Ledger", land on a desk: "Andrews wins again" (2022), "Andrews resigns" (Sept 2023), "Allan becomes Premier" and "Carroll replaces Allan" (July 2026). A 3D chamber then shows Labor's vote falling from 36.7% in 2022 to 21.4% in the latest polls, and it ends asking "Saved Labor, or made it worse?".
