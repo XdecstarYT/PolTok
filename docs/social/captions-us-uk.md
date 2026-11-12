@@ -112,3 +112,30 @@ Data: PolTok averages of GB-wide voting-intention polls listed on Wikipedia. "No
 > Labour's low was 18.1% in Dec 2025. What changed? 👇
 
 **Alt text:** Glowing 3D trend lines for Labour (red), the Conservatives (blue) and Reform UK (cyan) from January 2025 to November 2026. Reform leads until August 2026, when Labour's line crosses above it. A ranking then shows Labour 28.9%, Conservatives 22.3% and Reform 21.4%.
+
+## 5. UK polls part 2, how Reform lost the lead: `poltok-uk-polls-part2.mp4` (46s)
+
+Polls: PolTok averages of GB polls on Wikipedia. May 2026: Lab 19.1%, Ref 27.1%. Aug 2026: Lab 25.8%, Ref 24.1%. Now (last 15 polls to 9 Nov): Lab 28.9%, Con 22.3%, Ref 21.4%. Events: BBC News, via Wikipedia's "2026 in United Kingdom politics and government".
+
+**Instagram / TikTok**
+> Part 2: how Reform lost the lead 🇬🇧
+>
+> 🗳️ May: Reform win big at the local elections, and Labour MPs turn on Starmer
+> 🔄 June: Burnham wins Makerfield, and Starmer says he'll quit
+> 🏛️ 20 July: Burnham becomes PM. The "Burnham bounce" puts Labour ahead by August
+> 📉 Reform: questions over a £5m gift to Farage, a Channel 4 undercover report, a police probe into donations, and the Restore Britain split
+>
+> Can Reform come back? 👇
+> #ukpolitics #reformuk #labour #burnham #farage #polls
+
+**X**
+> How Reform lost a 16-month poll lead, in 45 seconds 🧵
+>
+> May: Lab 19% · Ref 27%
+> Jul: Burnham becomes PM
+> Aug: Lab 26% · Ref 24%
+> Now: Lab 29 · Con 22 · Ref 21
+>
+> Can they come back? 👇
+
+**Alt text:** Illustrative front pages under a fictional masthead, "The PolTok Ledger", land on a desk in turn: Reform sweeping the May local elections, Burnham winning Makerfield, Starmer stepping down, Burnham becoming PM, then the problems Reform faced. A 3D chamber shows Labour rising from 19.1% to 25.8%, and the final ranking is Labour 28.9%, Conservatives 22.3%, Reform 21.4%.
