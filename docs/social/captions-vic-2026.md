@@ -172,3 +172,29 @@ Method: uniform two-party swing (the classic pendulum). 2022 margins and the 55.
 > Rough guide only. Seats never swing evenly. Believe the polls?
 
 **Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue one by one, from the most marginal, as a counter drops Labor from 56 seats to 13 and lifts the Coalition from 28 to 71. A close-up shows Niddrie, Premier Ben Carroll's seat, flipping. Then a caveat that seats never swing evenly and that One Nation isn't modelled.
+
+## Is your seat about to flip? `poltok-vic-is-your-seat-next.mp4` (34.5s)
+
+Same method and data as "What if the polls are right?": an 11-point uniform two-party swing on the 2022 VEC margins. These are the 43 Labor seats that fall in that calculation. It's a rough guide, not a prediction.
+
+**Instagram / TikTok**
+> Is YOUR seat about to flip? 👀
+>
+> If the polls are right (an 11-point swing), these Labor seats fall:
+>
+> 🔵 Under 5 pts: Bendigo East, Carrum, Yan Yean, Bass, Lara, Bundoora, Pakenham, Tarneit, Mill Park, Bendigo West, Wendouree, Greenvale, Hastings, Werribee, Sydenham, Broadmeadows, Laverton, Ripon, Kororoit, Glen Waverley, Cranbourne, Clarinda, Bayswater, Narre Warren South, Melton
+> 🔵 5–8 pts: Narre Warren North, Ashwood, Sunbury, Niddrie, Eureka, Box Hill, Ringwood, Monbulk
+> 🔵 8–11 pts: Bentleigh, Mordialloc, Point Cook, Bellarine, Frankston, Eltham, Macedon, St Albans, South Barwon, Mulgrave
+>
+> Seats never swing evenly, so this is a rough guide. Comment your seat 👇 and tag someone who lives there.
+> #springst #vicpol #victoria #election2026 #melbourne
+
+**X**
+> If the Vic polls are right, 43 Labor seats fall on a uniform 11-pt swing 👀
+>
+> Closest: Bendigo East, Carrum, Yan Yean, Bass, Lara, Bundoora, Pakenham, Tarneit…
+> Also on the list: Niddrie (the Premier's seat), Box Hill, Frankston, Bentleigh.
+>
+> Is your seat on it? 👇
+
+**Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue in three waves as the swing grows. Each wave lists the seat names: 25 seats under 5 points, 8 between 5 and 8 points, and 10 between 8 and 11 points, 43 in total. Then a caveat that seats never swing evenly, and the question "Is your seat on the list?".
