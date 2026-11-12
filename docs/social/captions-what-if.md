@@ -102,3 +102,34 @@ Timeline from Wikipedia ("2026 Victorian state election"). Labor's 2022 vote is 
 > Saved Labor, or made it worse? 👇
 
 **Alt text:** Illustrative front pages from a fictional paper, "The PolTok Ledger", land on a desk: "Andrews wins again" (2022), "Andrews resigns" (Sept 2023), "Allan becomes Premier" and "Carroll replaces Allan" (July 2026). A 3D chamber then shows Labor's vote falling from 36.7% in 2022 to 21.4% in the latest polls, and it ends asking "Saved Labor, or made it worse?".
+
+## Dan Andrews: wins, fails, what if: `poltok-andrews-wins-fails-what-if.mp4` (57.5s)
+
+Balanced on purpose: four wins and four fails, with about the same airtime. Sources: ABC News (27 Sep 2023), Victorian Auditor-General (East West Link, 2015), COVID-19 Hotel Quarantine Inquiry (2020), VEC, and the latest polls on Wikipedia. This replaces the shorter `poltok-what-if-andrews.mp4`.
+
+**Instagram / TikTok**
+> Dan Andrews: the wins, the fails, and what if he'd stayed 🤔
+>
+> ✅ 70+ level crossings removed
+> ✅ First state to legalise assisted dying
+> ✅ Free TAFE
+> ✅ All 227 family violence recommendations accepted
+>
+> ❌ Hotel quarantine breaches, linked to the second wave
+> ❌ ~260 days of lockdown
+> ❌ Commonwealth Games cancelled after costs blew out
+> ❌ $1.1b+ to scrap the East West Link
+>
+> Labor won 36.7% in 2022. It's polling ~21% now. Would he have saved Labor, or made it worse? 👇
+> #springst #vicpol #danandrews #victoria #auspol
+
+**X**
+> Dan Andrews, 2014–2023 🧾
+>
+> ✅ 70+ level crossings · assisted dying · Free TAFE · all 227 FV recommendations
+> ❌ Hotel quarantine · ~260 days of lockdown · Games cancelled · $1.1b East West
+>
+> Labor: 36.7% (2022) → ~21% now.
+> If he'd stayed: saved Labor, or made it worse? 👇
+
+**Alt text:** Illustrative front pages from a fictional paper, "The PolTok Ledger", land on a desk with green WIN and red FAIL stamps. They cover Andrews' record (3,200+ days as premier, 3 election wins), four wins (level crossings, assisted dying, Free TAFE, family violence reforms) and four fails (hotel quarantine, lockdowns, Commonwealth Games, East West Link), then his successors. A 3D chamber shows Labor's vote falling from 36.7% to 21.4%, and it ends asking "Saved Labor, or made it worse?".
