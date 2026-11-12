@@ -32,7 +32,7 @@ export const scenes = (d) => [
     say: 'He quit in September twenty twenty-three, after nine years as premier and three election wins.',
     cap: 'Andrews resigned in September 2023 after 9 years and 3 election wins.' },
   { id: 'after', beats: 10, energy: 3, trans: { type: 'whip', dir: 'left', dur: 0.42 },
-    say: 'Jacinta Allan took over. Then, this July, after weeks of bad polls, Ben Carroll replaced her.',
+    say: '[Jacinta Allan](/dʒəsˈɪntə ˈælən/) took over. Then, this July, after weeks of bad polls, Ben Carroll replaced her.',
     cap: 'Jacinta Allan took over. In July 2026, Ben Carroll replaced her.' },
   { id: 'polls', beats: 9, energy: 3, trans: { type: 'flash', dur: 0.36 },
     say: `Labor won ${R(d.alp2022)} percent in twenty twenty-two. Now it's polling around ${R(d.alpNow)}.`,
