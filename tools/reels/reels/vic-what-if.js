@@ -87,7 +87,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     S.aperture = 0.3;
     const cyc = [COL.ALP, COL.LNP, COL.ONP];
     E.cue(S.t0 + 0.3, 'boom', { g: 0.7 });
-    S.update((lt) => { const p = Math.floor(lt * 1.6) % 3; for (let i = 0; i < N; i++) ch.set(i, rank[i] < MAJ ? cyc[p] : WARM, rank[i] < MAJ ? 1.3 : 0.25); ch.commit(); });
+    S.update((lt) => { const p = ((Math.floor(lt * 1.6) % 3) + 3) % 3; for (let i = 0; i < N; i++) ch.set(i, rank[i] < MAJ ? cyc[p] : WARM, rank[i] < MAJ ? 1.3 : 0.25); ch.commit(); });
     ui.kicker(S, { t0: 0, text: `Victoria votes in ${d.days} days`, y: 372 });
     ui.headline(S, { t0: 0, html: 'What if <em>they</em> win?', y: 410, size: 112, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
     ui.block(S, { t0: 0.35, html: `<b style="color:${CSS.ALP}">Labor</b> · <b style="color:${CSS.LNP}">Liberal</b> · <b style="color:${CSS.ONP}">One Nation</b><br>The real promises, side by side`, cls: 'body', y: 580, w: 920, size: 48, t1: S.dur + 1 });

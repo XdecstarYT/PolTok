@@ -92,7 +92,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     E.camPath(S, [{ t: 0, pos: [0, 2.2, 6.2], look: [0, 1.0, -5], fov: 36 }, { t: S.dur + 0.4, pos: [0.6, 4.0, 10], look: [0, 0.7, -3.5], fov: 36 }], { shake: 0.025, focusOn: true });
     S.aperture = 0.3;
     E.cue(S.t0 + 0.3, 'boom', { g: 0.7 });
-    S.update((lt) => { const x = Math.floor(lt * 2) % 3; paint(ch, [A, F, P][x], [A, F, P][x], 1); });
+    S.update((lt) => { const x = ((Math.floor(lt * 2) % 3) + 3) % 3; paint(ch, [A, F, P][x], [A, F, P][x], 1); });
     ui.kicker(S, { t0: 0, text: 'Victoria 2022 · re-counted', y: 372 });
     ui.headline(S, { t0: 0, html: 'Same votes. <em>Different rules.</em>', y: 410, size: 92, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
   });
@@ -140,7 +140,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     const ch = hall(S, { key: 220 });
     E.camPath(S, [{ t: 0, pos: [-3, 2.4, 6], look: [0, 1, -5], fov: 36 }, { t: 6, pos: [2, 3.0, 7.5], look: [0, 0.9, -4.5], fov: 36 }], { shake: 0.02, focusOn: true });
     S.aperture = 0.35;
-    S.update((lt) => { const x = Math.floor(lt * 1.2) % 3; paint(ch, [A, F, P][x], [A, F, P][x], 1); });
+    S.update((lt) => { const x = ((Math.floor(lt * 1.2) % 3) + 3) % 3; paint(ch, [A, F, P][x], [A, F, P][x], 1); });
     ui.kicker(S, { t0: 0.05, text: 'Your call', y: 372 });
     ui.headline(S, { t0: 0.1, html: 'Which system is <em>fairest?</em>', y: 410, size: 100, style: 'rise' });
     ui.block(S, { t0: 0.9, html: '<b style="color:#c8f04a">Preferential</b> · <b style="color:#c8f04a">first-past-the-post</b> · <b style="color:#c8f04a">proportional</b>. Comment 👇', cls: 'body', y: 640, w: 920, size: 40 });

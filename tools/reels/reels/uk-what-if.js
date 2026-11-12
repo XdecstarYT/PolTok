@@ -65,7 +65,7 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     S.aperture = 0.3;
     const cyc = [COL.Lab, COL.Con, COL.Ref];
     E.cue(S.t0 + 0.3, 'boom', { g: 0.7 });
-    S.update((lt) => { const p = Math.floor(lt * 1.6) % 3; for (let i = 0; i < N; i++) ch.set(i, rank[i] < MAJ ? cyc[p] : WARM, rank[i] < MAJ ? 1.3 : 0.25); ch.commit(); });
+    S.update((lt) => { const p = ((Math.floor(lt * 1.6) % 3) + 3) % 3; for (let i = 0; i < N; i++) ch.set(i, rank[i] < MAJ ? cyc[p] : WARM, rank[i] < MAJ ? 1.3 : 0.25); ch.commit(); });
     ui.kicker(S, { t0: 0, text: 'Next UK general election · due by 2029', y: 372 });
     ui.headline(S, { t0: 0, html: 'What if <em>they</em> ran Britain?', y: 410, size: 84, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
     ui.block(S, { t0: 0.35, html: `<b style="color:${CSS.Lab}">Labour</b> · <b style="color:${CSS.Con}">Conservative</b> · <b style="color:${CSS.Ref}">Reform</b><br>The real policies, side by side`, cls: 'body', y: 660, w: 920, size: 46, t1: S.dur + 1 });
