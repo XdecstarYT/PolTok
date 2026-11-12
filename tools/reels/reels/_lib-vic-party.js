@@ -19,7 +19,7 @@ export function make(P) {
   };
 
   const meta = {
-    title: `If ${P.short} wins Victoria`,
+    title: `If ${P.short} ${P.verb || 'wins'} Victoria`,
     label: `VIC 2026 · PARTY ${P.n}/${P.of}`,
     out: `poltok-vic-if-${P.slug}-wins`,
     cover: 1.6,
@@ -27,7 +27,7 @@ export function make(P) {
   };
 
   const scenes = (d) => [
-    { id: 'hook', beats: 6, energy: 3, voLead: 0.08, say: `What if ${P.short} wins Victoria?` },
+    { id: 'hook', beats: 6, energy: 3, voLead: 0.08, say: `What if ${P.short} ${P.verb || 'wins'} Victoria?` },
     { id: 'leader', beats: 8, energy: 2, trans: { type: 'zoom', dur: 0.45 },
       say: `${P.leaderSay}. Polling around ${Math.round(d.pct)} percent.`,
       cap: `${P.leaderTitle} ${P.leader} · polling ${d.pct}%` },
@@ -66,7 +66,7 @@ export function make(P) {
       E.cue(S.t0 + 0.3, 'boom', { g: 0.7 });
       S.update((lt) => { for (let i = 0; i < N; i++) { const on = rank[i] < MAJ; ch.set(i, on ? P.color : WARM, on ? 1.4 * ease.back(remap(lt, 0.1 + rank[i] * 0.012, 0.4 + rank[i] * 0.012)) : 0.2); } ch.commit(); });
       ui.kicker(S, { t0: 0, text: `Victoria votes in ${d.days} days · ${P.n} of ${P.of}`, y: 372 });
-      ui.headline(S, { t0: 0, html: `If <em style="color:${P.css}">${P.short}</em> wins`, y: 410, size: 120, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
+      ui.headline(S, { t0: 0, html: `If <em style="color:${P.css}">${P.short}</em> ${P.verb || 'wins'}`, y: 410, size: 120, style: 'slam', stagger: 0.04, t1: S.dur + 1 });
       ui.block(S, { t0: 0.3, html: 'Their real promises, topic by topic', cls: 'body', y: 600, w: 920, size: 46, t1: S.dur + 1 });
     });
 

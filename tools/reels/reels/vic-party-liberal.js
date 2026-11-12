@@ -1,7 +1,7 @@
 // Victoria 2026 — "If the Liberals win" (Liberal–National Coalition). Promises per ABC News policy tracker (4 Nov 2026).
 import { make } from './_lib-vic-party.js';
 const r = make({
-  key: 'LNP', slug: 'liberal', n: 2, of: 3, name: 'The Coalition', short: 'the Liberals', color: 0x1f5fd1, css: '#6ea2ff',
+  key: 'LNP', slug: 'liberal', n: 2, of: 3, name: 'The Coalition', short: 'the Liberals', verb: 'win', color: 0x1f5fd1, css: '#6ea2ff',
   leaderTitle: 'Opposition Leader', leader: 'Jess Wilson', leaderSay: 'The Liberal–National Coalition is led by Jess Wilson',
   others: ['Labor', 'One Nation'],
   say: {
