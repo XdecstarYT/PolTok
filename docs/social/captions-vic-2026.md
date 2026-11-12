@@ -85,3 +85,33 @@ Sources: the royal commission (rcimcp.vic.gov.au); ABC News, 9–11 Nov 2026. Ev
 > Yes or no? 👇
 
 **Alt text:** A 3D chamber lights a 45-seat majority in Labor red. Premier Ben Carroll and a 21.4% poll average are shown, then six topic cards (cost of living, housing, health, crime, transport, energy) with Labor's promise for each, then the question "Would you vote for this?".
+
+## Party series 3/3, If One Nation wins: `poltok-vic-if-one-nation-wins.mp4` (42s)
+
+**Instagram / TikTok**
+> If One Nation wins Victoria 🟠 (3 of 3)
+>
+> Led by Warren Pickering · polling ~22%
+> 💰 Labor's land tax increases reversed, and stamp duty on insurance abolished
+> 🏠 Higher duty for foreign buyers, and a say before high-rises in your suburb
+> 🏥 24/7 emergency departments in the regions
+> ⚖️ Children charged as adults for serious violent crimes
+> 🚇 Suburban Rail Loop cancelled
+> ⚡ Net zero scrapped, nuclear ban lifted
+>
+> Would you vote for this? Yes or no 👇 Follow for the Labor and Liberal versions.
+> #springst #vicpol #onenation #election2026 #victoria
+
+**X**
+> If One Nation wins Victoria (3/3) 🟠
+>
+> 💰 Land tax rises reversed
+> 🏠 Higher foreign buyer duty
+> 🏥 24/7 regional EDs
+> ⚖️ Kids tried as adults for serious violence
+> 🚇 Rail Loop cancelled
+> ⚡ Net zero scrapped · nuclear ban lifted
+>
+> Yes or no? 👇
+
+**Alt text:** A 3D chamber lights a 45-seat majority in One Nation orange. Leader Warren Pickering and a 22.0% poll average are shown, then six topic cards (cost of living, housing, health, crime, transport, energy) with One Nation's promise for each, then the question "Would you vote for this?".
