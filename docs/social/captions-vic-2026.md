@@ -55,3 +55,33 @@ Sources: the royal commission (rcimcp.vic.gov.au); ABC News, 9–11 Nov 2026. Ev
 > All allegations, no findings yet. Hearings end 20 Nov.
 
 **Alt text:** Illustrative inquiry documents land on a wooden desk beside a stack of evidence folders: Terms of Reference, Letters Patent, a Gap Road case study and a 2017 memo. On-screen text summarises the commission's setup, the claimed $15b loss, the roughly $6m Gap Road cost blowout and the "unprecedented access to ministers" memo, with Premier Carroll's denial, then a clear "Just allegations" caveat and the hearing and report dates.
+
+## Party series 1/3, If Labor wins: `poltok-vic-if-labor-wins.mp4` (37s)
+
+**Instagram / TikTok**
+> If Labor wins Victoria 🔴 (1 of 3)
+>
+> Premier Ben Carroll · polling ~21%
+> 🚆 $30 weekly public transport fare cap
+> 🏠 25,600 homes set aside for first home buyers
+> 🦷 10 free public dental clinics
+> 👮 1,500 more police
+> 🚇 Suburban Rail Loop continues
+> ⚡ Net zero by 2045 stays
+>
+> Would you vote for this? Yes or no 👇 Follow for the Liberal and One Nation versions.
+> #springst #vicpol #victorianlabor #election2026 #victoria
+
+**X**
+> If Labor wins Victoria (1/3) 🔴
+>
+> 🚆 $30 weekly fare cap
+> 🏠 25,600 homes for first home buyers
+> 🦷 10 free dental clinics
+> 👮 1,500 more police
+> 🚇 Rail Loop continues
+> ⚡ Net zero 2045 stays
+>
+> Yes or no? 👇
+
+**Alt text:** A 3D chamber lights a 45-seat majority in Labor red. Premier Ben Carroll and a 21.4% poll average are shown, then six topic cards (cost of living, housing, health, crime, transport, energy) with Labor's promise for each, then the question "Would you vote for this?".
