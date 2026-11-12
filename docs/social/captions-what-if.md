@@ -52,3 +52,28 @@ Facts only: the proposed law (Constitution Alteration (Aboriginal and Torres Str
 > Would you vote the same way today?
 
 **Alt text:** Illustrative documents land on a desk: a referendum ballot paper, the proposed constitutional change, and the result. On-screen text explains the proposed advisory body (it could make representations, had no veto, and Parliament would set how it worked), then the result of No 60.06% to Yes 39.94%, with all six states voting No and the ACT voting Yes, then "8 of 45 referendums have passed" and the question "Would you vote the same way today?".
+
+## Same votes, different rules: `poltok-vic-what-if-rules.mp4` (32.5s)
+
+The real 2022 Victorian votes (VEC), re-counted. First-past-the-post: the top first-preference candidate in each district wins. Proportional: 88 seats shared by statewide vote, largest remainder, no threshold, independents left out. This assumes everyone voted the same way.
+
+**Instagram / TikTok**
+> Same votes. Different rules. 🗳️
+>
+> Victoria 2022 (preferential): Labor won 56 of 88 seats with 36.7% of the vote.
+> First-past-the-post (like the UK): only 3 seats flip.
+> Seats by vote share: Labor 34, Coalition 32, Greens 11, others 11. Labor would need the Greens.
+>
+> Which system is fairest? 👇
+> #springst #vicpol #electoralreform #auspol #victoria
+
+**X**
+> Victoria 2022, re-counted 🧮
+>
+> Preferential (real): ALP 56/88 on 36.7%
+> First-past-the-post: just 3 seats change
+> Proportional: ALP 34 · LNP 32 · GRN 11 · others 11
+>
+> Same votes. Which system's fairest? 👇
+
+**Alt text:** A 3D 88-seat chamber recolours under three counting systems using the real 2022 Victorian votes. Preferential (actual): Labor 56 seats with 36.7% of first preferences. First-past-the-post: only Hastings, Mildura and Morwell change hands. Proportional: Labor 34, Coalition 32, Greens 11, others 11, so Labor plus the Greens make exactly 45.
