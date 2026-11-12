@@ -86,6 +86,36 @@ Sources: the royal commission (rcimcp.vic.gov.au); ABC News, 9–11 Nov 2026. Ev
 
 **Alt text:** A 3D chamber lights a 45-seat majority in Labor red. Premier Ben Carroll and a 21.4% poll average are shown, then six topic cards (cost of living, housing, health, crime, transport, energy) with Labor's promise for each, then the question "Would you vote for this?".
 
+## Party series 2/3, If the Liberals win: `poltok-vic-if-liberal-wins.mp4` (40.5s)
+
+**Instagram / TikTok**
+> If the Liberals win Victoria 🔵 (2 of 3)
+>
+> Jess Wilson · Coalition polling ~31%
+> 💰 No new or higher taxes, and a $50 weekly toll cap
+> 🏠 No stamp duty for first home buyers up to $1m
+> 🏥 $1.27b to cut surgery waiting lists
+> 👮 3,000 more police and a one-strike bail rule
+> 🚇 Suburban Rail Loop paused for review
+> ⚡ Net zero kept, home gas ban repealed
+>
+> Would you vote for this? Yes or no 👇 Follow for the Labor and One Nation versions.
+> #springst #vicpol #vicliberals #election2026 #victoria
+
+**X**
+> If the Liberals win Victoria (2/3) 🔵
+>
+> 💰 No new taxes · $50 toll cap
+> 🏠 No stamp duty for first homes to $1m
+> 🏥 $1.27b for surgery waitlists
+> 👮 3,000 police · one-strike bail
+> 🚇 Rail Loop paused
+> ⚡ Gas ban repealed
+>
+> Yes or no? 👇
+
+**Alt text:** A 3D chamber lights a 45-seat majority in Liberal blue. Opposition Leader Jess Wilson and a 30.9% Coalition poll average are shown, then six topic cards (cost of living, housing, health, crime, transport, energy) with the Coalition's promise for each, then the question "Would you vote for this?".
+
 ## Party series 3/3, If One Nation wins: `poltok-vic-if-one-nation-wins.mp4` (42s)
 
 **Instagram / TikTok**
