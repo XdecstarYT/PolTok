@@ -173,28 +173,28 @@ Method: uniform two-party swing (the classic pendulum). The 2022 seat margins ar
 
 **Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue one by one, from the most marginal, as a counter drops Labor from 56 seats to 23 and lifts the Coalition from 28 to 61. A close-up shows Niddrie, Premier Ben Carroll's seat, flipping. Then a caveat that seats never swing evenly and that One Nation isn't modelled.
 
-## Is your seat about to flip? `poltok-vic-is-your-seat-next.mp4` (34.5s)
+## Is your seat about to flip? `poltok-vic-is-your-seat-next.mp4` (34.5s), CORRECTED
 
-Same method and data as "What if the polls are right?": an 11-point uniform two-party swing on the 2022 VEC margins. These are the 43 Labor seats that fall in that calculation. It's a rough guide, not a prediction.
+Same method as "What if the polls are right?": an 11-point uniform two-party swing applied to the official 2022 post-election pendulum (ABC/Antony Green). These are the 33 Labor seats that fall in that calculation. It's a rough guide, not a prediction. (Corrected 13 Nov: the first version used mid-count figures for 29 seats and wrongly listed 43.)
 
 **Instagram / TikTok**
 > Is YOUR seat about to flip? 👀
 >
-> If the polls are right (an 11-point swing), these Labor seats fall:
+> If the polls are right (an 11-point swing), these 33 Labor seats fall:
 >
-> 🔵 Under 5 pts: Bendigo East, Carrum, Yan Yean, Bass, Lara, Bundoora, Pakenham, Tarneit, Mill Park, Bendigo West, Wendouree, Greenvale, Hastings, Werribee, Sydenham, Broadmeadows, Laverton, Ripon, Kororoit, Glen Waverley, Cranbourne, Clarinda, Bayswater, Narre Warren South, Melton
-> 🔵 5–8 pts: Narre Warren North, Ashwood, Sunbury, Niddrie, Eureka, Box Hill, Ringwood, Monbulk
-> 🔵 8–11 pts: Bentleigh, Mordialloc, Point Cook, Bellarine, Frankston, Eltham, Macedon, St Albans, South Barwon, Mulgrave
+> 🔵 Under 5 pts: Bass, Pakenham, Hastings, Ripon, Glen Waverley, Bayswater, Yan Yean, Melton
+> 🔵 5–8 pts: Ashwood, Sunbury, Niddrie, Greenvale, Eureka, Box Hill, Ringwood, Monbulk
+> 🔵 8–11 pts: Bentleigh, Mordialloc, Narre Warren South, Point Cook, Bellarine, Frankston, Narre Warren North, Sydenham, Cranbourne, Eltham, Macedon, St Albans, Carrum, South Barwon, Clarinda, Bendigo East, Werribee
 >
 > Seats never swing evenly, so this is a rough guide. Comment your seat 👇 and tag someone who lives there.
 > #springst #vicpol #victoria #election2026 #melbourne
 
 **X**
-> If the Vic polls are right, 43 Labor seats fall on a uniform 11-pt swing 👀
+> If the Vic polls are right, 33 Labor seats fall on a uniform 11-pt swing 👀
 >
-> Closest: Bendigo East, Carrum, Yan Yean, Bass, Lara, Bundoora, Pakenham, Tarneit…
+> Closest: Bass (0.2), Pakenham (0.4), Hastings (1.4), Ripon, Glen Waverley…
 > Also on the list: Niddrie (the Premier's seat), Box Hill, Frankston, Bentleigh.
 >
 > Is your seat on it? 👇
 
-**Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue in three waves as the swing grows. Each wave lists the seat names: 25 seats under 5 points, 8 between 5 and 8 points, and 10 between 8 and 11 points, 43 in total. Then a caveat that seats never swing evenly, and the question "Is your seat on the list?".
+**Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue in three waves as the swing grows. Each wave lists the seat names: 8 seats under 5 points, 8 between 5 and 8 points, and 17 between 8 and 11 points, 33 in total. Then a caveat that seats never swing evenly, and the question "Is your seat on the list?".
