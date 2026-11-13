@@ -26,19 +26,22 @@ export const meta = {
 };
 
 const fmt = (n) => n.toLocaleString('en-AU');
+// spoken forms (Kokoro IPA): local pronunciations of seat names
+const PRON = { Bass: 'bˈæs', Pakenham: 'pˈækənəm', Mildura: 'mɪldʒˈʊəɹə', Benambra: 'bənˈæmbɹə' };
+const say = (n) => (PRON[n] ? `[${n}](/${PRON[n]}/)` : n);
 
 export const scenes = (d) => {
   const [a, b, c] = d.top;
   return [
     { id: 'hook', beats: 6, energy: 3, voLead: 0.06, say: `${a.flip} people. That's all it would've taken to flip this seat.` },
     { id: 'seat', beats: 10, energy: 2, trans: { type: 'flash', dur: 0.36 },
-      say: `${a.seat}, twenty twenty-two. ${a.win} beat the ${a.lose} by ${a.gap} votes, out of more than ${Math.floor(a.formal / 1000)} thousand.`,
+      say: `${say(a.seat)}, twenty twenty-two. ${a.win} beat the ${a.lose} by ${a.gap} votes, out of more than ${Math.floor(a.formal / 1000)} thousand.`,
       cap: `${a.seat} 2022: ${a.win} beat the ${a.lose} by ${a.gap} votes, out of ${fmt(a.formal)}.` },
     { id: 'didnt', beats: 10, energy: 3, trans: { type: 'whip', dir: 'left', dur: 0.42 },
       say: `Meanwhile, ${fmt(a.nonVoters)} people on the roll there didn't vote at all.`,
       cap: `${fmt(a.nonVoters)} enrolled people in ${a.seat} didn't vote.` },
     { id: 'more', beats: 10, energy: 3, trans: { type: 'whip', dir: 'left', dur: 0.42 },
-      say: `And it's not just there. ${b.seat}, ${b.gap} votes. ${c.seat}, ${c.gap}.`,
+      say: `And it's not just there. ${say(b.seat)}, ${b.gap} votes. ${say(c.seat)}, ${c.gap}.`,
       cap: `${b.seat}: ${b.gap} votes. ${c.seat}: ${c.gap} votes.` },
     { id: 'ask', beats: 9, energy: 2, trans: { type: 'zoom', dur: 0.45 },
       say: 'Still think your vote doesn\'t count? Tag someone who never votes.', cap: 'Still think your vote doesn\'t count? Tag someone who never votes 👇' },
