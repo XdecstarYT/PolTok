@@ -148,7 +148,7 @@ Sources: the royal commission (rcimcp.vic.gov.au); ABC News, 9–11 Nov 2026. Ev
 
 ## What if the polls are right? `poltok-vic-what-if-polls-right.mp4` (38s)
 
-Method: uniform two-party swing (the classic pendulum). 2022 margins and the 55.00–45.00 two-party result are from the VEC. The current two-party figure is the average of the latest 4 polls (RedBridge, DemosAU, Roy Morgan, Newspoll): 56–44 to the Coalition, an 11-point swing. This is a rough guide, not a projection. One Nation, the Greens and independents aren't modelled, and the reel says so.
+Method: uniform two-party swing (the classic pendulum). The 2022 seat margins are the official post-election pendulum (ABC/Antony Green), and the 55.00–45.00 two-party result is from the VEC. (Corrected 13 Nov: the first version used mid-count figures for 29 seats.) The current two-party figure is the average of the latest 4 polls (RedBridge, DemosAU, Roy Morgan, Newspoll): 56–44 to the Coalition, an 11-point swing. This is a rough guide, not a projection. One Nation, the Greens and independents aren't modelled, and the reel says so.
 
 **Instagram / TikTok**
 > If today's polls are right, the Premier loses his own seat 😳
@@ -156,7 +156,7 @@ Method: uniform two-party swing (the classic pendulum). 2022 margins and the 55.
 > 2022: Labor won 55–45 after preferences
 > Now: polls say 44–56, an 11-point swing
 >
-> Swing every seat by 11 → Labor 56 seats ➡️ 13
+> Swing every seat by 11 → Labor 56 seats ➡️ 23
 > Including Niddrie, Ben Carroll's seat (held by 6.7)
 >
 > Big caveat: seats never swing evenly, and One Nation could scramble it all. Do you believe the polls? 👇
@@ -166,12 +166,12 @@ Method: uniform two-party swing (the classic pendulum). 2022 margins and the 55.
 > If the Vic polls are right 👀
 >
 > 2PP: 55–45 (2022) → 44–56 (now)
-> Uniform 11-pt swing: Labor 56 → 13 seats, Coalition 28 → 71
+> Uniform 11-pt swing: Labor 56 → 23 seats, Coalition 28 → 61
 > Falls: Niddrie, the Premier's own seat (6.7%)
 >
 > Rough guide only. Seats never swing evenly. Believe the polls?
 
-**Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue one by one, from the most marginal, as a counter drops Labor from 56 seats to 13 and lifts the Coalition from 28 to 71. A close-up shows Niddrie, Premier Ben Carroll's seat, flipping. Then a caveat that seats never swing evenly and that One Nation isn't modelled.
+**Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue one by one, from the most marginal, as a counter drops Labor from 56 seats to 23 and lifts the Coalition from 28 to 61. A close-up shows Niddrie, Premier Ben Carroll's seat, flipping. Then a caveat that seats never swing evenly and that One Nation isn't modelled.
 
 ## Is your seat about to flip? `poltok-vic-is-your-seat-next.mp4` (34.5s)
 
