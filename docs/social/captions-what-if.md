@@ -133,3 +133,39 @@ Balanced on purpose: four wins and four fails, with about the same airtime. Sour
 > If he'd stayed: saved Labor, or made it worse? 👇
 
 **Alt text:** Illustrative front pages from a fictional paper, "The PolTok Ledger", land on a desk with green WIN and red FAIL stamps. They cover Andrews' record (3,200+ days as premier, 3 election wins), four wins (level crossings, assisted dying, Free TAFE, family violence reforms) and four fails (hotel quarantine, lockdowns, Commonwealth Games, East West Link), then his successors. A 3D chamber shows Labor's vote falling from 36.7% to 21.4%, and it ends asking "Saved Labor, or made it worse?".
+
+## Alternate reality, what if One Nation won Victoria? `poltok-alt-reality-one-nation-vic.mp4` (71.5s)
+
+An imagined scenario. Every change shown is one of One Nation's own announced policies (ABC News policy tracker, 4 Nov 2026). There are no invented events or outcomes, and each frame is labelled "Alternate reality · imagined". The real-world facts are from the VEC (2022: 0.3%, 0 seats) and the latest 4-poll average (22%).
+
+**Instagram / TikTok**
+> ALTERNATE REALITY: One Nation wins Victoria 🟠
+>
+> 2022: 0.3% and zero seats. In this reality: 45+ seats, and Warren Pickering forms government.
+>
+> Based on their own promises:
+> 🚇 Suburban Rail Loop cancelled, with the money moved to the Melton line and Airport Rail
+> ⚡ Net zero scrapped, the nuclear ban lifted, two transmission lines cancelled
+> 💰 Land tax increases reversed, stamp duty on insurance abolished
+> ⚖️ Kids charged as adults for serious violence, criminal responsibility back to 10
+> 🏫 New curriculum, 24/7 regional EDs
+>
+> Reality check: every law still needs the upper house.
+> Real world: One Nation is polling ~22%.
+>
+> Would Victoria be better, or worse? 👇
+> #springst #vicpol #onenation #victoria #election2026 #whatif
+
+**X**
+> Alternate reality: One Nation wins Victoria 🟠
+>
+> Their own promises, played out:
+> • Rail Loop cancelled
+> • Net zero scrapped, nuclear ban lifted
+> • Land tax rises reversed
+> • Kids tried as adults for serious violence
+>
+> But every law still needs the upper house.
+> Better or worse? 👇
+
+**Alt text:** An imagined scenario: a 3D chamber fills orange past 45 seats on an imagined election night (One Nation went from 0 seats in 2022). Fictional front pages dated "Week 1" to "Month 3", each marked "alternate reality", show One Nation's own promises: the Rail Loop cancelled, net zero scrapped, land tax rolled back, kids tried as adults, and a new curriculum. A red upper-house chamber is the reality check. It ends with One Nation's real poll figure of 22.0% and the question "Would Victoria be better or worse?".
