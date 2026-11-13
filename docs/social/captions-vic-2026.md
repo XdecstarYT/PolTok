@@ -198,3 +198,24 @@ Same method as "What if the polls are right?": an 11-point uniform two-party swi
 > Is your seat on it? 👇
 
 **Alt text:** A 3D 88-seat chamber where Labor seats turn Coalition blue in three waves as the swing grows. Each wave lists the seat names: 8 seats under 5 points, 8 between 5 and 8 points, and 17 between 8 and 11 points, 33 in total. Then a caveat that seats never swing evenly, and the question "Is your seat on the list?".
+
+## Guess the party (quiz): `poltok-viral-guess-the-party.mp4` (47s)
+
+Seven real promises, each with a 3-2-1 countdown, then the reveal. Every answer is from the ABC News policy tracker (4 Nov 2026). Twists: free abortion care (Labor pledged it, and the Coalition matched it) and repealing the home gas ban (Coalition and One Nation).
+
+**Instagram / TikTok**
+> Guess the party 🗳️ Which Victorian party promised this?
+>
+> Keep score, then comment your result out of 7 👇
+> (No cheating: the answers are in the video 😉)
+>
+> #springst #vicpol #victoria #election2026 #quiz
+
+**X**
+> Victorian election quiz 🗳️
+> 7 real promises: Labor, Liberal or One Nation?
+> Two are trick questions.
+>
+> Score out of 7? 👇
+
+**Alt text:** A quiz. Each of seven real Victorian election promises appears on screen with a 3-2-1 countdown, then a 3D chamber floods with the colour of the party that promised it: a $30 weekly fare cap (Labor), lifting the nuclear ban (One Nation), no stamp duty for first homes up to $1m (Liberal), free abortion care (Labor, matched by the Liberals), $150 sport vouchers (One Nation), pausing the Suburban Rail Loop (Liberal), and repealing the home gas ban (Liberal and One Nation).
