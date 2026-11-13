@@ -1,27 +1,46 @@
 // Shared data for the "what if the polls are right?" reels: the 2022 Victorian pendulum + the live two-party swing.
-// • 2022 two-candidate margins per district: VEC (src/data/au-vic.ts). Statewide 2022 2PP: Labor 55.00 / Coalition 45.00 (VEC).
+// • 2022 two-party margins per district: the official post-election pendulum (ABC/Antony Green, as tabled in Wikipedia's
+//   "2022 Victorian state election" article). NOTE: src/data/au-vic.ts `final` is NOT usable for margins — for 29 districts it
+//   holds the preference count at the point the winner crossed 50%, not the final two-candidate result.
+//   Statewide 2022 2PP: Labor 55.00 / Coalition 45.00 (VEC).
 // • Current 2PP: latest polls on Wikipedia that publish an ALP-v-Coalition 2PP (average of up to 4).
 // • Method: uniform swing (the classic pendulum). Only Labor-v-Coalition contests can flip this way; Greens, independents and
 //   One Nation are NOT modelled — the reels say so. It's a rough guide, not a seat projection.
 
 const PAGE = 'Opinion_polling_for_the_2026_Victorian_state_election';
+const PENDULUM_PAGE = '2022_Victorian_state_election';
 const ALP_2PP_2022 = 55.0;
 
-const norm = (c) => (/Labor/i.test(c.pn) && !/DLP|Democratic Labour/i.test(c.pn) ? 'ALP'
-  : /^Liberal$|Liberal Party|National/i.test(c.pn) ? 'LNP' : /Green/i.test(c.pn) ? 'GRN' : /Independent/i.test(c.pn) ? 'IND' : 'OTH');
-const title = (k) => k.replace(/^vic-/, '').split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ');
+// Parse the "Post-election pendulum" tables: rows of [seat, member, party, "x.x% [v GRN]"].
+async function pendulum2022() {
+  const r = await fetch(`https://en.wikipedia.org/w/index.php?title=${PENDULUM_PAGE}&action=raw&_=${Date.now()}`, { headers: { 'user-agent': 'poltok-reels/1.0' } });
+  if (!r.ok) throw new Error('Wikipedia HTTP ' + r.status);
+  const t = await r.text();
+  const i = t.indexOf('===Post-election pendulum===');
+  if (i < 0) throw new Error('post-election pendulum section not found');
+  const sec = t.slice(i);
+  const out = [];
+  for (const row of sec.split('\n|-')) {
+    const cells = row.split('\n').filter((l) => /^\|(?![-}])/.test(l)).map((l) => {
+      const c = l.slice(1); const k = c.indexOf('|');
+      return (k >= 0 && c.slice(0, k).includes('=') ? c.slice(k + 1) : c).trim();
+    });
+    if (cells.length < 4) continue;
+    const m = cells[3].match(/^([\d.]+)%(?:\s*v\s*(\w+))?/);
+    if (!m) continue;
+    const seat = cells[0].replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, '$1').trim();
+    const party = cells[2].replace(/'''/g, '').trim();
+    out.push({ seat, win: party === 'LIB' || party === 'NAT' ? 'LNP' : party, vs: m[2] ? (m[2] === 'LIB' || m[2] === 'NAT' ? 'LNP' : m[2]) : (party === 'ALP' ? 'LNP' : 'ALP'), margin: +m[1] });
+    if (out.length === 88) break;
+  }
+  if (out.length !== 88) throw new Error(`pendulum parse: expected 88 seats, got ${out.length}`);
+  return out;
+}
 
 export async function swingData() {
-  const fs = await import('node:fs');
-  const src = fs.readFileSync(new URL('../../../src/data/au-vic.ts', import.meta.url), 'utf8');
-  const m = src.match(/VIC_RESULTS_2022[^=]*=\s*(\{.*?\});\n/s);
-  if (!m) throw new Error('could not read VIC_RESULTS_2022');
-  const R = JSON.parse(m[1]);
-  const seats = Object.entries(R).map(([k, r]) => {
-    const f = [...r.final].sort((a, b) => b.v - a.v);
-    return { seat: title(k), win: norm(f[0]), vs: norm(f[1]), margin: +(f[0].pct - 50).toFixed(2) };
-  });
+  const seats = await pendulum2022();
   const held = (p) => seats.filter((s) => s.win === p).length;
+  if (held('ALP') !== 56) throw new Error('pendulum sanity check: Labor should hold 56 in 2022, got ' + held('ALP'));
 
   // live 2PP: rows of the first polling table; 2PP cells follow the primary-vote cells, and may be '!' header cells
   const r = await fetch(`https://en.wikipedia.org/w/index.php?title=${PAGE}&action=raw&_=${Date.now()}`, { headers: { 'user-agent': 'poltok-reels/1.0' } });
