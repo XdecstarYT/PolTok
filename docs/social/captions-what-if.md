@@ -260,3 +260,38 @@ Facts: the 1999 referendum (AEC): Yes 45.13%, No 54.87%. The model was a preside
 > King or president? 👇
 
 **Alt text:** A photoreal desk holds a 1999 referendum ballot and the proposed law. Eight state and territory result cards show yes-bars against a red 50% line, and a close-up shows Victoria's bar just under it at 49.84%. A green-leather chamber explains what would change, then a poll card shows 57% for keeping the monarchy, and it ends asking "King or president?".
+
+## Alternate reality, what if Reform won Britain? `poltok-alt-reality-reform-uk.mp4` (69.5s)
+
+An imagined scenario. Every change shown is Reform UK's own policy, per Reuters' platform factbox (17 Mar 2026). Facts: 2024 general election, Reform 14.3% and 5 seats; 326 of 650 to govern; the Lords can delay most bills by about a year. Real world: Reform 21.1%, third (PolTok GB average, last 15 polls).
+
+**Instagram / TikTok**
+> ALTERNATE REALITY: Reform wins Britain 🇬🇧
+>
+> 2024: 14% and 5 seats. In this reality: 326+ seats, and PM Nigel Farage.
+>
+> Based on their own platform:
+> ⚖️ Leave the ECHR, up to 600,000 asylum seekers deported, a "Deportation Command" modelled on ICE
+> ⛽ Net zero and the EV mandate scrapped, more oil, gas and nuclear
+> ✂️ 68,500 government jobs cut, no benefits for foreign nationals, 10% VAT for pubs
+> 🏫 Equality Act scrapped, a "patriotic" curriculum, a bitcoin reserve at the Bank of England
+>
+> Reality check: the Lords can delay most laws about a year.
+> Real world: Reform's polling 21%, in third.
+>
+> Would Britain be better or worse? 👇
+> #ukpolitics #reformuk #farage #whatif #britain
+
+**X**
+> Alternate reality: PM Nigel Farage 🇬🇧
+>
+> Reform's own platform, played out:
+> • Leave the ECHR
+> • Up to 600k deportations
+> • Net zero scrapped
+> • 68,500 civil service jobs cut
+> • Bitcoin reserve at the BoE
+>
+> Real polls: Reform 21%, 3rd. Better or worse? 👇
+
+**Alt text:** An imagined scenario. A photoreal green-leather 650-seat chamber fills teal past 326 seats on an imagined election night (Reform had 5 seats in 2024). Fictional front pages marked "imagined" show Reform's own pledges on migration and the ECHR, energy, the size of the state, and culture. A red House of Lords chamber is the reality check, then real polls show Reform at 21.1% in third place, and it asks "Would Britain be better or worse?".
