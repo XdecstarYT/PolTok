@@ -32,6 +32,8 @@ export const meta = {
 };
 
 const R = Math.round;
+const PRON = { Mildura: 'mɪldʒˈʊəɹə', Pakenham: 'pˈækənəm', Bass: 'bˈæs' };
+const sayN = (n) => (PRON[n] ? `[${n}](/${PRON[n]}/)` : n);
 const cap1 = (s) => s[0].toUpperCase() + s.slice(1);
 
 export const scenes = (d) => [
@@ -46,7 +48,7 @@ export const scenes = (d) => [
     say: 'That\'s preferential voting. If nobody gets half, the last candidate is knocked out, and their votes go to each voter\'s next choice. Until someone passes fifty percent.',
     cap: 'No one over 50%? The last candidate is knocked out and their votes move to each voter\'s next choice, until someone passes 50%.' },
   { id: 'more', beats: 9, energy: 3, trans: { type: 'flash', dur: 0.36 },
-    say: `It happened in ${d.b.seat} too, where ${d.b.lead} led. And in ${d.c.seat}, where ${d.c.lead} led.`,
+    say: `It happened in ${sayN(d.b.seat)} too, where ${d.b.lead} led. And in ${sayN(d.c.seat)}, where ${d.c.lead} led.`,
     cap: `Same in ${d.b.seat} (${d.b.leadS} led) and ${d.c.seat} (${d.c.leadS} led).` },
   { id: 'ask', beats: 8, energy: 2, trans: { type: 'zoom', dur: 0.45 },
     say: 'So your second choice really counts. Who\'s getting your preferences? Comment below.', cap: 'Your 2nd choice counts. Who gets your preferences? 👇' },
