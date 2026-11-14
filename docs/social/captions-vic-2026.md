@@ -264,3 +264,30 @@ Bracks (Labor, 1999–2007), Brumby (Labor, 2007–2010), Baillieu (Liberal, 201
 > Score out of 7 👇
 
 **Alt text:** A quiz. A 3D chamber flashes red and blue, then each of Victoria's seven premiers since 1999 is revealed in turn after a "?" countdown, with the chamber lit in their party's colour: Steve Bracks, John Brumby, Ted Baillieu, Denis Napthine, Daniel Andrews, Jacinta Allan and Ben Carroll. It ends with "Number 8? Decided 28 November" and "Comment your score out of 7".
+
+## Most votes, still lost (preferences explained): `poltok-most-votes-still-lost.mp4` (39s)
+
+VEC 2022. Morwell: Labor led the first count, 31.4% to the Nationals' 22.9% (by 3,699 votes), but the Nationals won 54.4–45.6 after preferences. The same thing happened in Mildura (an independent led on 33.9%) and Hastings (the Liberals led on 39.8%). Parties only, no candidate names.
+
+**Instagram / TikTok**
+> This party got the MOST votes… and still lost. 🤯
+>
+> Morwell 2022: Labor topped the first count 31% to 23%, a lead of 3,699 votes.
+> After preferences? The Nationals won, 54–46.
+>
+> That's preferential voting: if nobody gets 50%, the last candidate is knocked out and their votes go to each voter's next choice, until someone passes 50%.
+> It happened in Mildura and Hastings too.
+>
+> Your 2nd choice counts. Who's getting your preferences? 👇 Send this to someone who only numbers one box.
+> #springst #vicpol #victoria #election2026 #howtovote
+
+**X**
+> Most votes. Still lost. 🤯
+>
+> Morwell 2022: Labor led the first count 31–23.
+> After preferences: Nationals won 54–46.
+>
+> Same in Mildura and Hastings.
+> Your preferences decide seats. Number every box.
+
+**Alt text:** Two stacks of ballot papers on a desk: Labor's is taller on the first count in Morwell (31.4% to the Nationals' 22.9%), then the stacks swap after preferences as the Nationals win 54.4% to 45.6%. An illustrative ballot paper numbered 1 to 5 explains preferential voting. Mildura and Hastings are listed as the other two seats where the first-count leader lost.
