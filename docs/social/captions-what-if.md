@@ -169,3 +169,31 @@ An imagined scenario. Every change shown is one of One Nation's own announced po
 > Better or worse? 👇
 
 **Alt text:** An imagined scenario: a 3D chamber fills orange past 45 seats on an imagined election night (One Nation went from 0 seats in 2022). Fictional front pages dated "Week 1" to "Month 3", each marked "alternate reality", show One Nation's own promises: the Rail Loop cancelled, net zero scrapped, land tax rolled back, kids tried as adults, and a new curriculum. A red upper-house chamber is the reality check. It ends with One Nation's real poll figure of 22.0% and the question "Would Victoria be better or worse?".
+
+## What if Trump tried for a third term? `poltok-what-if-trump-third-term.mp4` (48.5s)
+
+Facts only. Amendment XXII (1951) and Article V. Quotes: "not joking" (NBC, March 2025) and "I'm not allowed to run. It's too bad." (AP/Axios, 29 October 2025). The Congress just elected comes from AP calls via PolTok's live feed (Republicans 169 House, 44 Senate). Trump won 31 states in 2024.
+
+**Instagram / TikTok**
+> What if Trump tried for a THIRD term? 🇺🇸
+>
+> The 22nd Amendment (1951): no one can be elected president more than twice.
+> Mar 2025: "not joking" · Oct 2025: "I'm not allowed to run. It's too bad."
+>
+> To change it: ⅔ of the House + ⅔ of the Senate + 38 states.
+> The new Congress: Republicans have 169 House seats (need 290) and 44 senators (need 67).
+> He won 31 states in 2024. Seven short.
+>
+> Two terms max: keep it? Yes or no 👇
+> #trump #uspolitics #22ndamendment #constitution #2028
+
+**X**
+> Could Trump get a third term? Here's the maths 🧮
+>
+> Needs ⅔ of the House: 290. GOP has 169.
+> Needs ⅔ of the Senate: 67. GOP has 44.
+> Needs 38 states. He won 31 in 2024.
+>
+> Two-term limit: keep it? 👇
+
+**Alt text:** A photoreal 3D US House chamber lit red, then parchment pages of the Constitution's 22nd Amendment and Article V on a wooden desk. On-screen quotes show Trump's March 2025 and October 2025 remarks. The chamber shows Republicans' 169 seats against the 290 needed (the gap in lime), then 50 paper state cards with 31 stamped red and 7 more needed for 38. It ends asking "Two terms max: keep it?".
