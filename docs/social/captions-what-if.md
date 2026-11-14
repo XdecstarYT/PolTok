@@ -327,3 +327,32 @@ Facts: founded 1997; 1998 Queensland election 22.7% and 11 seats; Hanson out of 
 > Moment or movement? 👇
 
 **Alt text:** Illustrative front pages and photoreal stacks of ballot papers trace One Nation's history: founding in 1997, 11 Queensland seats in 1998, a crash to 3 seats by 2001, a Senate return in 2016, 6.4% in 2025, and a single chamber seat lighting orange for the 2026 Farrer win. Ballot stacks for 1998, 2016, 2025 and now show the "now" stack at 26.4% towering over the rest, and it asks "A moment, or a movement?".
+
+## Who's voting One Nation? `poltok-who-votes-one-nation.mp4` (49s)
+
+Source: Crikey, 11 Nov 2026. A Utting Research survey of 1,014 One Nation voters found 70% voted for another party in 2025 or didn't vote. Voter quotes are anonymised. Scanlon Foundation: trust in the federal government fell from 56% (2020) to 37% (2025); among Coalition voters, from 72% (2021) to 29% (2025). The article's caveat is kept: seven interviews, not a representative sample, and several weren't sure One Nation could govern.
+
+**Instagram / TikTok**
+> Who's actually voting One Nation? 🟠
+>
+> 70% of One Nation voters backed another party in 2025, or didn't vote.
+> "I didn't change. Labor did." (former Labor voter, Bondi)
+> "What have we got to lose?"
+>
+> Behind it: trust in the federal government fell from 56% to 37%. Among Coalition voters, from 72% to 29%.
+> But even some switchers aren't sure One Nation could govern.
+>
+> Have you switched? Tell me why 👇
+> #auspol #onenation #australia #politics
+
+**X**
+> Who's switching to One Nation? 🟠
+>
+> 70% of ONP voters backed another party in 2025, or didn't vote
+> "I didn't change. Labor did."
+> Trust in federal govt: 56% → 37%
+> Coalition voters' trust: 72% → 29%
+>
+> Have you switched? Why? 👇
+
+**Alt text:** A photoreal hall of 100 figures, each 1% of One Nation voters, with 70 lit orange to show those who voted another way or didn't vote in 2025. Quote cards read "I didn't change. Labor did." and "A lot of people think: well, what have we got to lose?". Bar cards show trust falling from 56% to 37%, and among Coalition voters from 72% to 29%. It ends with "Have you switched?".
