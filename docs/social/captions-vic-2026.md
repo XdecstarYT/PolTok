@@ -291,3 +291,32 @@ VEC 2022. Morwell: Labor led the first count, 31.4% to the Nationals' 22.9% (by 
 > Your preferences decide seats. Number every box.
 
 **Alt text:** Two stacks of ballot papers on a desk: Labor's is taller on the first count in Morwell (31.4% to the Nationals' 22.9%), then the stacks swap after preferences as the Nationals win 54.4% to 45.6%. An illustrative ballot paper numbered 1 to 5 explains preferential voting. Mildura and Hastings are listed as the other two seats where the first-count leader lost.
+
+## One Nation, kingmaker? `poltok-one-nation-kingmaker.mp4` (48.5s)
+
+Sources: ABC analysis (3 Oct), The Age/Resolve (9 Nov), The Australian via News24, Roy Morgan (4 Nov). VEC 2022: One Nation 0.3%. Polls (latest 4, at render): One Nation 22.3%, Coalition 31.5%, Labor 21%, Greens 14.8%. Seat layouts are illustrative.
+
+**Instagram / TikTok**
+> In 14 days, One Nation could decide who runs Victoria 🟠👑
+>
+> 2022: under 1%. Now: ~22%.
+> Need 45 seats to govern. Roy Morgan says One Nation could win enough regional seats to block a Coalition majority.
+>
+> Jess Wilson: no coalition with One Nation, but hasn't ruled out relying on its support.
+> The Coalition and One Nation are already swapping preferences ahead of Labor.
+> Ben Carroll would "throw the keys back" rather than govern with the Greens.
+>
+> Should One Nation hold the balance of power? Yes or no 👇
+> #springst #vicpol #onenation #victoria #election2026
+
+**X**
+> Could One Nation pick Victoria's next premier? 🟠
+>
+> 2022: 0.3% → now ~22%
+> Wilson: no coalition, but support not ruled out
+> Coalition + ONP swapping preferences
+> Carroll: won't govern with the Greens
+>
+> Balance of power: yes or no? 👇
+
+**Alt text:** A photoreal 88-seat Victorian chamber where an illustrative block of One Nation seats pulses orange. Counters show One Nation rising from 0.3% in 2022 to 22.3% in the polls. The chamber highlights the Coalition falling short of 45, then the on-record positions of Jess Wilson (no coalition, support not ruled out) and Ben Carroll ("throw the keys back"), and asks whether One Nation should hold the balance of power.
