@@ -295,3 +295,35 @@ An imagined scenario. Every change shown is Reform UK's own policy, per Reuters'
 > Real polls: Reform 21%, 3rd. Better or worse? 👇
 
 **Alt text:** An imagined scenario. A photoreal green-leather 650-seat chamber fills teal past 326 seats on an imagined election night (Reform had 5 seats in 2024). Fictional front pages marked "imagined" show Reform's own pledges on migration and the ECHR, energy, the size of the state, and culture. A red House of Lords chamber is the reality check, then real polls show Reform at 21.1% in third place, and it asks "Would Britain be better or worse?".
+
+## One Nation, 6% → 26%: rise, crash, comeback: `poltok-one-nation-rise.mp4` (51s)
+
+Facts: founded 1997; 1998 Queensland election 22.7% and 11 seats; Hanson out of Parliament in 1998; 2001 Queensland, 3 seats; 2016, Hanson back in the Senate with 3 more senators; 2025 federal, 6.4% nationally; 9 May 2026, Farrer, the first House seat (AEC). Now: One Nation 26.4%, Labor 26.1%, Coalition 23.3% (latest 4 national polls at render). The stacks show House votes, one ballot per point.
+
+**Instagram / TikTok**
+> 6% → 26%. How did One Nation get here? 🟠📈
+>
+> 1997: Pauline Hanson starts a party
+> 1998: 11 seats in Queensland, 22.7%
+> 2001: crashes to 3 seats
+> 2016: Hanson back in the Senate
+> 2025: 6.4% nationally
+> May 2026: first ever House seat, Farrer
+> Now: ~26%, level with Labor, ahead of the Coalition
+>
+> A moment, or a movement? 👇
+> #auspol #onenation #paulinehanson #australia #polls
+
+**X**
+> One Nation, 1997 → now 🟠
+>
+> 1998: 11 Qld seats (22.7%)
+> 2001: down to 3
+> 2016: back in the Senate
+> 2025: 6.4%
+> 2026: first House seat (Farrer)
+> Now: 26.4% · ALP 26.1 · LNP 23.3
+>
+> Moment or movement? 👇
+
+**Alt text:** Illustrative front pages and photoreal stacks of ballot papers trace One Nation's history: founding in 1997, 11 Queensland seats in 1998, a crash to 3 seats by 2001, a Senate return in 2016, 6.4% in 2025, and a single chamber seat lighting orange for the 2026 Farrer win. Ballot stacks for 1998, 2016, 2025 and now show the "now" stack at 26.4% towering over the rest, and it asks "A moment, or a movement?".
