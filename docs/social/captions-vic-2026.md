@@ -244,3 +244,23 @@ VEC 2022 two-candidate counts. Northcote: Labor beat the Greens by 184 votes out
 > Your vote counts. Victoria votes 28 Nov.
 
 **Alt text:** A 3D hall of 100 figures. 93 light up to show how few people could have flipped Northcote in 2022, which Labor won over the Greens by 184 votes out of 42,642. A counter shows 5,282 enrolled people who didn't vote, 29 times the margin. Bass (202 votes) and Pakenham (307) follow, and it ends with "Tag someone who never votes".
+
+## 7 premiers since 1999 (quiz): `poltok-vic-7-premiers.mp4` (37s)
+
+Bracks (Labor, 1999–2007), Brumby (Labor, 2007–2010), Baillieu (Liberal, 2010–2013), Napthine (Liberal, 2013–2014), Andrews (Labor, 2014–2023), Allan (Labor, 2023–2026), Carroll (Labor, 2026–). Ends with: "Number 8? That could be decided on 28 November."
+
+**Instagram / TikTok**
+> Victoria's had 7 premiers since 1999. How many can you name? 🤔
+>
+> Play along, then comment your score out of 7 👇
+> Number 8 could be decided on 28 November.
+> #springst #vicpol #victoria #election2026 #quiz #auspol
+
+**X**
+> Victoria has had 7 premiers since 1999.
+> Name them all? 🤔
+>
+> (Number 8 could be decided 28 Nov.)
+> Score out of 7 👇
+
+**Alt text:** A quiz. A 3D chamber flashes red and blue, then each of Victoria's seven premiers since 1999 is revealed in turn after a "?" countdown, with the chamber lit in their party's colour: Steve Bracks, John Brumby, Ted Baillieu, Denis Napthine, Daniel Andrews, Jacinta Allan and Ben Carroll. It ends with "Number 8? Decided 28 November" and "Comment your score out of 7".
