@@ -197,3 +197,37 @@ Facts only. Amendment XXII (1951) and Article V. Quotes: "not joking" (NBC, Marc
 > Two-term limit: keep it? 👇
 
 **Alt text:** A photoreal 3D US House chamber lit red, then parchment pages of the Constitution's 22nd Amendment and Article V on a wooden desk. On-screen quotes show Trump's March 2025 and October 2025 remarks. The chamber shows Republicans' 169 seats against the 290 needed (the gap in lime), then 50 paper state cards with 31 stamped red and 7 more needed for 38. It ends asking "Two terms max: keep it?".
+
+## Alternate reality, what if One Nation won Australia? `poltok-alt-reality-one-nation-au.mp4` (65s)
+
+An imagined scenario. Every change shown is from One Nation's own federal platform (ABC News, 10 Feb 2026). Facts: 6.4% and no House seats in 2025; first seat won at the Farrer by-election on 9 May 2026 (AEC). Real-world polls: One Nation 26.4%, Labor 26.1% (latest 4 national polls).
+
+**Instagram / TikTok**
+> ALTERNATE REALITY: One Nation wins Australia 🇦🇺🟠
+>
+> 2025: 6.4%, no seats. May 2026: first seat (Farrer). In this reality: 76+ seats, and PM Pauline Hanson.
+>
+> Based on their own platform:
+> 🛂 Visas capped at 130,000, out of the UN Refugee Convention
+> ⚡ Net zero scrapped, new coal, a nuclear reactor in regional NSW, out of Paris
+> ⛽ Fuel excise halved, joint tax for couples with kids, no GST on new-home materials
+> ✂️ $90b a year cut from Commonwealth spending
+>
+> Reality check: every law still needs the Senate.
+> Real world: One Nation 26% · Labor 26%.
+>
+> Would Australia be better or worse? 👇
+> #auspol #onenation #paulinehanson #australia #whatif
+
+**X**
+> Alternate reality: PM Pauline Hanson 🟠
+>
+> Their own platform, played out:
+> • Visa cap 130k, leave the Refugee Convention
+> • Net zero scrapped, coal + nuclear
+> • Fuel excise halved
+> • $90b/yr spending cut
+>
+> Real polls: ONP 26 · ALP 26. Better or worse? 👇
+
+**Alt text:** An imagined scenario. A photoreal green House of Representatives fills orange past 76 of 150 seats on an imagined election night (One Nation went from 0 seats in 2025 to 1 at Farrer in May 2026). Fictional front pages marked "imagined" show One Nation's own federal promises on migration, energy, cost of living and spending. A red Senate chamber is the reality check, then real polls show One Nation 26.4% and Labor 26.1%, and it asks "Would Australia be better or worse?".
