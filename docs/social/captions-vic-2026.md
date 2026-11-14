@@ -219,3 +219,28 @@ Seven real promises, each with a 3-2-1 countdown, then the reveal. Every answer 
 > Score out of 7? 👇
 
 **Alt text:** A quiz. Each of seven real Victorian election promises appears on screen with a 3-2-1 countdown, then a 3D chamber floods with the colour of the party that promised it: a $30 weekly fare cap (Labor), lifting the nuclear ban (One Nation), no stamp duty for first homes up to $1m (Liberal), free abortion care (Labor, matched by the Liberals), $150 sport vouchers (One Nation), pausing the Suburban Rail Loop (Liberal), and repealing the home gas ban (Liberal and One Nation).
+
+## 93 people could've flipped it: `poltok-viral-votes-matter.mp4` (30s)
+
+VEC 2022 two-candidate counts. Northcote: Labor beat the Greens by 184 votes out of 42,642 formal votes, so 93 people switching would have flipped it. 5,282 enrolled people didn't vote. Bass: 202 votes. Pakenham: 307. Non-partisan; parties only, no candidate names.
+
+**Instagram / TikTok**
+> 93 people. That's all it would've taken to flip this seat. 🤯
+>
+> Northcote 2022: Labor beat the Greens by 184 votes.
+> 5,282 people on the roll there didn't vote at all.
+> Bass: 202 votes. Pakenham: 307.
+>
+> Still think your vote doesn't count? Tag someone who never votes 👇
+> #springst #vicpol #victoria #election2026 #yourvotecounts
+
+**X**
+> Northcote, 2022: decided by 184 votes.
+> 93 people switching would have flipped it.
+> 5,282 enrolled locals didn't vote.
+>
+> Bass: 202. Pakenham: 307.
+>
+> Your vote counts. Victoria votes 28 Nov.
+
+**Alt text:** A 3D hall of 100 figures. 93 light up to show how few people could have flipped Northcote in 2022, which Labor won over the Greens by 184 votes out of 42,642. A counter shows 5,282 enrolled people who didn't vote, 29 times the margin. Bass (202 votes) and Pakenham (307) follow, and it ends with "Tag someone who never votes".
