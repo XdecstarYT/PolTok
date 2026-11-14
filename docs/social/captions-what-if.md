@@ -231,3 +231,32 @@ An imagined scenario. Every change shown is from One Nation's own federal platfo
 > Real polls: ONP 26 · ALP 26. Better or worse? 👇
 
 **Alt text:** An imagined scenario. A photoreal green House of Representatives fills orange past 76 of 150 seats on an imagined election night (One Nation went from 0 seats in 2025 to 1 at Farrer in May 2026). Fictional front pages marked "imagined" show One Nation's own federal promises on migration, energy, cost of living and spending. A red Senate chamber is the reality check, then real polls show One Nation 26.4% and Labor 26.1%, and it asks "Would Australia be better or worse?".
+
+## What if Australia ditched the King? `poltok-what-if-republic.mp4` (58s)
+
+Facts: the 1999 referendum (AEC): Yes 45.13%, No 54.87%. The model was a president appointed by two-thirds of Parliament. No state voted Yes; Victoria came closest at 49.84%, and the ACT voted Yes at 63.27%. Roy Morgan (Oct 2024): 57% monarchy, 43% republic. Feb 2026: the PM ruled out a referendum.
+
+**Instagram / TikTok**
+> What if Australia ditched the King? 👑🇦🇺
+>
+> We nearly did. 1999: a president chosen by two-thirds of Parliament.
+> Result: No 54.87%. Not one state said yes.
+> Victoria came closest: 49.84%. Short by 0.16 of a point 😳
+>
+> What would change? An Australian president replaces the King and Governor-General. Parliament, elections and the PM stay.
+> The catch: who picks the president?
+>
+> King or president? 👇
+> #auspol #republic #australia #kingcharles #referendum
+
+**X**
+> Australia almost ditched the monarchy in 1999 👑
+>
+> No 54.87% · Yes 45.13%
+> Victoria: 49.84% yes, 0.16 short
+> Only the ACT said yes
+>
+> Today: 57% keep the monarchy (Roy Morgan).
+> King or president? 👇
+
+**Alt text:** A photoreal desk holds a 1999 referendum ballot and the proposed law. Eight state and territory result cards show yes-bars against a red 50% line, and a close-up shows Victoria's bar just under it at 49.84%. A green-leather chamber explains what would change, then a poll card shows 57% for keeping the monarchy, and it ends asking "King or president?".
