@@ -12,7 +12,7 @@ const PENDULUM_PAGE = '2022_Victorian_state_election';
 const ALP_2PP_2022 = 55.0;
 
 // Parse the "Post-election pendulum" tables: rows of [seat, member, party, "x.x% [v GRN]"].
-async function pendulum2022() {
+export async function pendulum2022() {
   const r = await fetch(`https://en.wikipedia.org/w/index.php?title=${PENDULUM_PAGE}&action=raw&_=${Date.now()}`, { headers: { 'user-agent': 'poltok-reels/1.0' } });
   if (!r.ok) throw new Error('Wikipedia HTTP ' + r.status);
   const t = await r.text();
