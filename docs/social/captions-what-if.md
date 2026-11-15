@@ -502,3 +502,28 @@ Sources: Commonwealth Electoral Act 1924 (compulsory voting); One Nation founded
 > Reply with your score /7 👇
 
 **Alt text:** A flip card on a desk shows "????" for each of seven events in Australian politics, then flips to reveal the year: One Nation founded (1997), GST (2000), first female PM (2010), compulsory voting (1924), same-sex marriage (2017), Morrison replaces Turnbull (2018) and the Voice referendum (2023).
+
+## PolTok Gaming: coming soon `poltok-gaming-coming-soon.mp4` (~21s)
+
+Teaser. QUORUM is PolTok's original politics game (poltok.netlify.app/play); Calderra and its parties are fictional.
+
+**Instagram / TikTok**
+> Coming soon to PolTok 👀🎮
+>
+> PolTok Gaming: political games, ready to play, 100% FREE, right in your browser.
+>
+> First up: QUORUM. Found your party, whip the votes, run a country 🏛️
+>
+> What game should we make next? Comment your idea 👇 Best one might get built 👀
+> Follow so you don't miss the launch 🔔
+> #poltok #gaming #freegames #politics #comingsoon #browsergames
+
+**X**
+> Coming soon: PolTok Gaming 🎮
+>
+> Political games. Free. In your browser.
+> First up: QUORUM. Found a party, whip the votes, run a country.
+>
+> What should we make next? 👇
+
+**Alt text:** A dark parliamentary chamber lights up seat by seat in neon colours like an arcade marquee. Text reads "Coming soon to PolTok", then "PolTok Gaming", then "Political games, ready to play, 100% free, right in your browser". QUORUM is shown as the first game, and viewers are asked what game PolTok should make next.
