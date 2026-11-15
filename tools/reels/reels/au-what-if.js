@@ -55,7 +55,7 @@ export const scenes = (d) => [
     say: `One Nation's polling around ${R(d.avg.ONP)} percent. At the last election, it got six. Labor's on ${R(d.avg.ALP)}, the Coalition ${R(d.avg.LNP)}.`,
     cap: `Latest polls: One Nation ${d.avg.ONP}% (6.4% in 2025) · Labor ${d.avg.ALP}% · Coalition ${d.avg.LNP}%` },
   { id: 'alp', beats: 10, energy: 3, trans: { type: 'whip', dir: 'left', dur: 0.42 },
-    say: 'If Labor wins, Anthony Albanese stays PM. Negative gearing ends on existing homes. And net zero by 2050 stays.',
+    say: 'If Labor wins, Anthony [Albanese](/ˌælbənˈiːzi/) stays PM. Negative gearing ends on existing homes. And net zero by 2050 stays.',
     cap: 'Labor: Albanese stays · negative gearing ends on existing homes · net zero 2050 stays' },
   { id: 'lnp', beats: 10, energy: 3, trans: { type: 'whip', dir: 'left', dur: 0.42 },
     say: 'If the Coalition wins, Angus Taylor is PM. Migration is cut to a hundred thousand a year. And net zero is scrapped.',
