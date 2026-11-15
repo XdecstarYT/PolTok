@@ -356,3 +356,52 @@ Source: Crikey, 11 Nov 2026. A Utting Research survey of 1,014 One Nation voters
 > Have you switched? Why? 👇
 
 **Alt text:** A photoreal hall of 100 figures, each 1% of One Nation voters, with 70 lit orange to show those who voted another way or didn't vote in 2025. Quote cards read "I didn't change. Labor did." and "A lot of people think: well, what have we got to lose?". Bar cards show trust falling from 56% to 37%, and among Coalition voters from 72% to 29%. It ends with "Have you switched?".
+
+## Guess the party: federal edition `poltok-guess-the-party-federal.mp4` (~53s)
+
+Sources: each line is the party's own announced policy, per their platforms and ABC/Reuters reporting. "Scrap net zero" is a trick question: both the Coalition and One Nation back it.
+
+**Instagram / TikTok**
+> Labor, Coalition or One Nation: who promised it? 🤔 8 real policies. Keep score 🧠
+>
+> Halve the fuel excise. Leave the Refugee Convention. Abolish the TGA. End negative gearing. One of these is a trick question 👀
+>
+> Comment your score out of 8 👇 Bet you don't get all of them.
+> #auspol #onenation #quiz #australia #politics
+
+**X**
+> Guess the party 🇦🇺
+>
+> 8 real policies: Labor, Coalition or One Nation?
+> One's a trick question.
+>
+> Reply with your score /8 👇
+
+**Alt text:** A photoreal parliamentary chamber whose seats light up in party colours. Eight policy quotes appear one at a time, each followed by a reveal of the party that promised it: One Nation, Labor or the Coalition, with a "twist" where both the Coalition and One Nation back scrapping net zero. Viewers are asked to comment their score out of 8.
+
+## One Nation vs the Greens: who's the real third party? `poltok-one-nation-vs-greens.mp4` (~40s)
+
+Sources: VEC 2022 first preferences (Greens 11.5%, 4 seats; One Nation 0.3%, 0 seats). Polls are the latest 4 Victorian and national polls on Wikipedia at render time (Victoria: One Nation 22.3%, Greens 14.8%; national: One Nation 26.4%, Greens 13.5%). ABC analysis (3 Oct 2026). Stacks: one ballot per percentage point.
+
+**Instagram / TikTok**
+> One Nation or the Greens: who's REALLY Australia's third party? 🟠🟢
+>
+> 2022 in Victoria: Greens 11.5% and 4 seats. One Nation 0.3% and zero.
+> Now: One Nation ~22% in Victoria and ~26% nationally. The Greens ~15% and ~14%.
+>
+> The catch: votes aren't seats. All 4 Greens seats are in inner Melbourne 🏙️ One Nation's chances are in the regions 🌾
+>
+> Pick a side 👇 One Nation or Greens?
+> #auspol #springst #onenation #greens #victoria #election2026
+
+**X**
+> Who's Australia's real third party? 🟠🟢
+>
+> Vic 2022: Greens 11.5% (4 seats), ONP 0.3% (0)
+> Vic now: ONP 22.3, GRN 14.8
+> National: ONP 26.4, GRN 13.5
+>
+> But all 4 Greens seats are inner Melbourne.
+> One Nation or Greens? 👇
+
+**Alt text:** Two stacks of ballot papers, orange-marked for One Nation and green for the Greens, grow and shrink with each figure: Victoria 2022 (0.3% vs 11.5%), the latest Victorian polls (22.3% vs 14.8%) and the latest national polls (26.4% vs 13.5%). An 88-seat chamber lights up the Greens' four inner-Melbourne seats, and the viewer is asked who the real third party is.

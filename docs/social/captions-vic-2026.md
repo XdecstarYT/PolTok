@@ -320,3 +320,25 @@ Sources: ABC analysis (3 Oct), The Age/Resolve (9 Nov), The Australian via News2
 > Balance of power: yes or no? 👇
 
 **Alt text:** A photoreal 88-seat Victorian chamber where an illustrative block of One Nation seats pulses orange. Counters show One Nation rising from 0.3% in 2022 to 22.3% in the polls. The chamber highlights the Coalition falling short of 45, then the on-record positions of Jess Wilson (no coalition, support not ruled out) and Ben Carroll ("throw the keys back"), and asks whether One Nation should hold the balance of power.
+
+## Which Victorian party are you? `poltok-which-vic-party-are-you.mp4` (~53s)
+
+Sources: every option is a Labor, Liberal–National or One Nation promise per the ABC News Victorian election policy tracker (4 Nov 2026). For fun, not voting advice.
+
+**Instagram / TikTok**
+> Which Victorian party actually matches you? 🗳️ 5 questions. Pick A, B or C 👀
+>
+> Rail Loop, energy, crime, housing, cost of living. Every answer is a real promise from Labor, the Liberals or One Nation. The answer key is at the end. No peeking 🙈
+>
+> Comment the party you got 👇 Then send this to the friend who still has no idea who to vote for on 28 Nov.
+> #springst #vicpol #victoria #election2026 #quiz #onenation
+
+**X**
+> Which Victorian party are you? 🗳️
+>
+> 5 questions. Pick A, B or C. Every option is a real Labor, Liberal or One Nation policy.
+> Answer key at the end.
+>
+> Reply with your result 👇
+
+**Alt text:** A photoreal Victorian parliamentary chamber. Five policy questions (Suburban Rail Loop, energy, crime, housing, cost of living) each show three unlabelled options, A, B and C. An answer key reveals which party promised each option, and the viewer is asked to comment the party they matched.
