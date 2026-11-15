@@ -342,3 +342,49 @@ Sources: every option is a Labor, Liberal–National or One Nation promise per t
 > Reply with your result 👇
 
 **Alt text:** A photoreal Victorian parliamentary chamber. Five policy questions (Suburban Rail Loop, energy, crime, housing, cost of living) each show three unlabelled options, A, B and C. An answer key reveals which party promised each option, and the viewer is asked to comment the party they matched.
+
+## Red flag or green flag? `poltok-red-flag-green-flag-vic.mp4` (~60s)
+
+Sources: two promises per party, per the ABC News Victorian election policy tracker (4 Nov 2026). Not voting advice.
+
+**Instagram / TikTok**
+> Red flag 🚩 or green flag 🟢? Six real Victorian election promises, party revealed after each one 👀
+>
+> Kids charged as adults. $30 fare cap. No stamp duty up to $1m. Cancel the Rail Loop. $50 toll cap. 1,500 more police.
+>
+> Which one's the BIGGEST red flag? Comment the number 👇
+> #springst #vicpol #victoria #election2026 #redflag #onenation
+
+**X**
+> Red flag or green flag? 🚩🟢
+>
+> 6 real Vic election promises: 2 Labor, 2 Liberal, 2 One Nation.
+> Party revealed after each.
+>
+> Biggest red flag? Reply with the number 👇
+
+**Alt text:** A photoreal Victorian chamber whose seats glow half red, half green. Six real election promises appear without party names, each followed by a reveal: One Nation (kids charged as adults; cancel the Suburban Rail Loop), Labor ($30 weekly fare cap; 1,500 more police) and the Liberal–Nationals (no stamp duty on first homes to $1m; $50 weekly toll cap).
+
+## 4 polls, 4 answers `poltok-vic-polls-disagree.mp4` (~52s)
+
+Sources: latest 4 Victorian primary-vote polls (Wikipedia), at render: Lighthouse (13 Nov), RedBridge (3–10 Nov), Resolve (2–7 Nov), DemosAU (30 Oct–5 Nov).
+
+**Instagram / TikTok**
+> Victoria's polls don't agree 👀 4 polls, 4 different answers.
+>
+> The Coalition leads in all four. One Nation beats Labor in three. But Labor's anywhere from 18% to 23% 😬
+>
+> 13 days to go. Who wins on the 28th? Comment your prediction 👇
+> #springst #vicpol #victoria #election2026 #polls #onenation
+
+**X**
+> 4 Vic polls, 4 answers 📊
+>
+> Coalition: 30–33
+> One Nation: 21–23
+> Labor: 18–23
+> Greens: 13–17
+>
+> Who wins on 28 Nov? 👇
+
+**Alt text:** Four glossy 3D bars (Coalition, One Nation, Labor, Greens) on a desk change height for each of the latest four Victorian polls: Lighthouse, RedBridge, Resolve and DemosAU. A summary notes the Coalition leads in all four and One Nation is ahead of Labor in three, then shows each party's range across the polls.

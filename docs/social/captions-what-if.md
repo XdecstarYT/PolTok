@@ -405,3 +405,25 @@ Sources: VEC 2022 first preferences (Greens 11.5%, 4 seats; One Nation 0.3%, 0 s
 > One Nation or Greens? 👇
 
 **Alt text:** Two stacks of ballot papers, orange-marked for One Nation and green for the Greens, grow and shrink with each figure: Victoria 2022 (0.3% vs 11.5%), the latest Victorian polls (22.3% vs 14.8%) and the latest national polls (26.4% vs 13.5%). An 88-seat chamber lights up the Greens' four inner-Melbourne seats, and the viewer is asked who the real third party is.
+
+## Higher or lower? Live polls `poltok-higher-or-lower.mp4` (~60s)
+
+Sources: averages of the latest 4 Victorian and latest 4 national primary-vote polls (Wikipedia), at render: Vic One Nation 22.3, Labor 21, Coalition 31.5; national One Nation 26.4, Labor 26.1, Coalition 23.3. One Nation 2025 federal: 6.4% (AEC).
+
+**Instagram / TikTok**
+> Higher or lower? 5 polling match-ups. Keep score 👀
+>
+> One Nation vs Labor. One Nation vs the Coalition. One Nation now vs One Nation at the last election… Round 3 is closer than you think 😳
+>
+> Comment your score out of 5 👇
+> #auspol #springst #onenation #polls #quiz #election2026
+
+**X**
+> Higher or lower? 📊
+>
+> 5 live polling match-ups. Labor, Coalition, One Nation.
+> Round 3 is decided by 0.3 points.
+>
+> Reply with your score /5 👇
+
+**Alt text:** Two stacks of ballot papers on a desk, one per party, one ballot per percentage point. Five rounds each ask which party is polling higher, then reveal the live averages: in Victoria One Nation 22.3% vs Labor 21%, and Coalition 31.5% vs Labor; nationally One Nation 26.4% vs Coalition 23.3% and vs Labor 26.1%; and One Nation now vs 6.4% at the 2025 election.
