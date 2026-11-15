@@ -31,7 +31,7 @@ export const scenes = () => [
     say: 'In real life, both big parties changed their rules. Labor in twenty thirteen. The Liberals in twenty eighteen: two thirds of the party room, to dump a prime minister who won an election.',
     cap: 'Labor changed its rules in 2013. Liberals in Dec 2018: two-thirds to dump an election-winning PM.' },
   { id: 'since', beats: 10, energy: 3, trans: { type: 'whip', dir: 'up', dur: 0.42 },
-    say: 'No sitting prime minister has been knifed since. But in February, the Liberals still dumped Sussan Ley as opposition leader. Thirty four votes to seventeen.',
+    say: 'No sitting prime minister has been knifed since. But in February, the Liberals still dumped Sussan [Ley](/lˈiː/) as opposition leader. Thirty four votes to seventeen.',
     cap: 'Feb 2026: Sussan Ley dumped as Liberal leader, 34–17.' },
   { id: 'ask', beats: 8, energy: 2, trans: { type: 'zoom', dur: 0.45 },
     say: 'So, should a party be allowed to dump the prime minister you voted for? Yes, or no?', cap: 'Should parties be able to dump your PM? Yes or no 👇' },
