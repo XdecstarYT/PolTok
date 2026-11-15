@@ -388,3 +388,32 @@ Sources: latest 4 Victorian primary-vote polls (Wikipedia), at render: Lighthous
 > Who wins on 28 Nov? 👇
 
 **Alt text:** Four glossy 3D bars (Coalition, One Nation, Labor, Greens) on a desk change height for each of the latest four Victorian polls: Lighthouse, RedBridge, Resolve and DemosAU. A summary notes the Coalition leads in all four and One Nation is ahead of Labor in three, then shows each party's range across the polls.
+
+## What if Victoria split in two? `poltok-what-if-victoria-split.mp4` (~49s)
+
+Sources: 2022 Victorian election, official post-election pendulum. Regions are the Legislative Council regions: 5 metropolitan (55 districts) and 3 country (33 districts, including Geelong, Ballarat, Bendigo and some outer suburbs). "Today" applies the live two-party swing (11 points at render) uniformly. Illustrative, not a forecast.
+
+**Instagram / TikTok**
+> What if Melbourne and country Victoria were two different states? 🏙️🌾
+>
+> Using the real 2022 results:
+> 🏙️ Melbourne: a Labor landslide, 40 of 55
+> 🌾 Country: the Coalition wins 17 of 33, exactly enough for a majority
+>
+> Add today's polls and EVEN MELBOURNE flips 😳
+>
+> Which Victoria are you? Comment Melbourne or Country 👇
+> #springst #vicpol #victoria #election2026 #melbourne #whatif
+
+**X**
+> What if Victoria split in two? 🏙️🌾
+>
+> 2022 results:
+> Melbourne: Labor 40/55
+> Country: Coalition 17/33 (bare majority)
+>
+> With today's polls: Melbourne flips too, Coalition 32/55.
+>
+> Melbourne or country? 👇
+
+**Alt text:** A photoreal 88-seat chamber split into Melbourne's 55 seats and country Victoria's 33. The 2022 results light up: Labor 40, Coalition 11 and Greens 4 in Melbourne; Coalition 17 and Labor 16 in the country. Then, with today's polls applied as a uniform swing, the Coalition wins 29 of 33 country seats and 32 of 55 in Melbourne.

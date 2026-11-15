@@ -427,3 +427,78 @@ Sources: averages of the latest 4 Victorian and latest 4 national primary-vote p
 > Reply with your score /5 👇
 
 **Alt text:** Two stacks of ballot papers on a desk, one per party, one ballot per percentage point. Five rounds each ask which party is polling higher, then reveal the live averages: in Victoria One Nation 22.3% vs Labor 21%, and Coalition 31.5% vs Labor; nationally One Nation 26.4% vs Coalition 23.3% and vs Labor 26.1%; and One Nation now vs 6.4% at the 2025 election.
+
+## What if they ran Australia? `poltok-au-what-if.mp4` (~49s)
+
+Sources: party policies per the 2026 federal budget, ABC News and Crikey; polls are the average of the latest 4 national polls at render (One Nation 26.4, Labor 26.1, Coalition 23.3). Leaders: Albanese (PM), Angus Taylor (Liberal leader since Feb 2026), Pauline Hanson.
+
+**Instagram / TikTok**
+> What if Labor, the Coalition or One Nation ran Australia? 🇦🇺
+>
+> One Nation's polling 26%. At the last election it got 6 😳
+>
+> 🔴 Labor: Albanese stays, negative gearing ends on existing homes
+> 🔵 Coalition: PM Angus Taylor, migration cut to 100k, net zero scrapped
+> 🟠 One Nation: PM Hanson, migration capped at 130k, out of the Refugee Convention
+>
+> Which one gets your vote? Comment 👇
+> #auspol #onenation #whatif #australia #politics
+
+**X**
+> What if they ran Australia? 🇦🇺
+>
+> Labor: Albanese, negative gearing changes
+> Coalition: Taylor, migration 100k, no net zero
+> One Nation: Hanson, migration 130k, leave Refugee Convention
+>
+> Which one? 👇
+
+**Alt text:** A photoreal federal chamber lights up in each party's colour in turn. Live national poll averages appear (One Nation 26.4%, Labor 26.1%, Coalition 23.3%), then each party's leader and three of its announced policies, ending with a question about which party viewers would vote for.
+
+## What if the knifings never happened? `poltok-what-if-no-spills.mp4` (~64s)
+
+Sources: SBS ("Six PMs in 10 years", 2018); Liberal two-thirds rule, 3 Dec 2018 (SBS, RNZ); Labor leadership rule change, 2013; Ley v Taylor, 13 Feb 2026, 34–17 (ABC via The Star). The middle section is labelled IMAGINED.
+
+**Instagram / TikTok**
+> What if Australia's leadership knifings never happened? 🔪
+>
+> Rudd. Gillard. Abbott. Turnbull. Four PMs dumped by their OWN party in 8 years.
+>
+> No spills = no PM Gillard? No PM Turnbull? No PM Morrison? 🤯
+>
+> And it's not over: in February the Liberals dumped Sussan Ley 34–17.
+>
+> Should a party be allowed to dump the PM you voted for? YES or NO 👇
+> #auspol #history #whatif #australia #politics
+
+**X**
+> What if the knifings never happened? 🔪
+>
+> 2010–2018: Rudd, Gillard, Abbott, Turnbull, all dumped by their own party.
+> No spills → maybe no Gillard, Turnbull or Morrison as PM.
+>
+> Should parties be able to dump your PM? 👇
+
+**Alt text:** Six prime ministers' name plaques (Rudd, Gillard, Rudd, Abbott, Turnbull, Morrison) stand on a desk, and the four dumped by their own party topple over. Scenes labelled "Imagined" show an alternate history with no spills. Real scenes then cover Labor's 2013 rule change, the Liberals' December 2018 two-thirds rule, and Sussan Ley's removal as Liberal leader in February 2026, 34 votes to 17.
+
+## Guess the year `poltok-guess-the-year.mp4` (~60s)
+
+Sources: Commonwealth Electoral Act 1924 (compulsory voting); One Nation founded April 1997; GST from 1 July 2000; Gillard PM June 2010; Marriage Amendment Act, Dec 2017; Morrison PM 24 Aug 2018; Voice referendum, 14 Oct 2023.
+
+**Instagram / TikTok**
+> Guess the year 📅 7 moments in Australian politics. Within 2 years = 1 point 🧠
+>
+> When did Hanson found One Nation? When did the GST start? When did voting become compulsory? (That one's older than you think 👀)
+>
+> Comment your score out of 7 👇
+> #auspol #quiz #history #australia #onenation
+
+**X**
+> Guess the year 📅
+>
+> 7 moments in Australian politics.
+> Within 2 years = 1 point.
+>
+> Reply with your score /7 👇
+
+**Alt text:** A flip card on a desk shows "????" for each of seven events in Australian politics, then flips to reveal the year: One Nation founded (1997), GST (2000), first female PM (2010), compulsory voting (1924), same-sex marriage (2017), Morrison replaces Turnbull (2018) and the Voice referendum (2023).
