@@ -66,7 +66,8 @@ export function build({ E, kit, ui, THREE, endCard, real }) {
     top.position.set(0, 1.0, 0); top.receiveShadow = true; top.castShadow = true; S.scene.add(top);
     const mk = (x, col) => {
       const g = new THREE.Group();
-      for (let j = 0; j < 36; j++) { const s = real.sheet(0.6, 0.8, (c, w) => { c.fillStyle = '#cdbf9f'; c.fillRect(0, 0, w, 2000); c.fillStyle = 'rgba(30,30,30,.55)'; c.font = '600 60px "Inter Tight"'; c.fillText('BALLOT', 60, 120); c.fillStyle = '#' + new THREE.Color(col).getHexString(); c.fillRect(60, 160, w - 120, 22); }); s.rotation.x = -Math.PI / 2; s.rotation.z = Math.sin(j * 7.1) * 0.05; s.position.set(Math.sin(j * 3.3) * 0.015, j * 0.03, Math.cos(j * 2.1) * 0.015); g.add(s); }
+      const proto = real.sheet(0.6, 0.8, (c, w) => { c.fillStyle = '#cdbf9f'; c.fillRect(0, 0, w, 2000); c.fillStyle = 'rgba(30,30,30,.55)'; c.font = '600 60px "Inter Tight"'; c.fillText('BALLOT', 60, 120); c.fillStyle = '#' + new THREE.Color(col).getHexString(); c.fillRect(60, 160, w - 120, 22); });
+      for (let j = 0; j < 36; j++) { const s = proto.clone(); s.rotation.x = -Math.PI / 2; s.rotation.z = Math.sin(j * 7.1) * 0.05; s.position.set(Math.sin(j * 3.3) * 0.015, j * 0.03, Math.cos(j * 2.1) * 0.015); g.add(s); }
       g.position.set(x, 1.09, 0); S.scene.add(g); return g;
     };
     const A = mk(-0.5, COL[ka]), B = mk(0.5, COL[kb]);
