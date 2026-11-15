@@ -453,7 +453,7 @@ Sources: party policies per the 2026 federal budget, ABC News and Crikey; polls 
 >
 > Which one? 👇
 
-**Alt text:** A photoreal federal chamber lights up in each party's colour in turn. Live national poll averages appear (One Nation 26.4%, Labor 26.1%, Coalition 23.3%), then each party's leader and three of its announced policies, ending with a question about which party viewers would vote for.
+**Alt text:** A photoreal federal chamber lights up in each party's colour in turn. Live national poll averages appear (One Nation 26.4%, Labor 26.1%, Coalition 23.3%), then each party's leader and some of its announced policies, ending with a question about which party viewers would vote for.
 
 ## What if the knifings never happened? `poltok-what-if-no-spills.mp4` (~64s)
 
