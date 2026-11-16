@@ -527,3 +527,30 @@ Teaser. QUORUM is PolTok's original politics game (poltok.netlify.app/play); Cal
 > What should we make next? 👇
 
 **Alt text:** A dark parliamentary chamber lights up seat by seat in neon colours like an arcade marquee. Text reads "Coming soon to PolTok", then "PolTok Gaming", then "Political games, ready to play, 100% free, right in your browser". QUORUM is shown as the first game, and viewers are asked what game PolTok should make next.
+
+## PolTok Gaming: launch teaser v2 `poltok-gaming-launch.mp4` (~28s)
+
+Site-themed motion graphics (near-black, chartreuse, the blue/red logo bars). Shows real screens from poltok.netlify.app/play (QUORUM) and /quiz (Issues match, Daily trivia, Guess the map). Replaces `poltok-gaming-coming-soon.mp4`.
+
+**Instagram / TikTok**
+> PolTok just levelled up 🎮⚡
+>
+> PolTok GAMING is coming: political games, ready to play, 100% free, right in your browser. No download. No paywall.
+>
+> 🏛️ QUORUM: found a party, whip the votes, run a country
+> 🧠 Daily trivia
+> 🗺️ Guess the map
+>
+> What game should we build next? Drop your idea 👇 The best one might actually get made 👀
+> Follow so you don't miss the launch 🔔
+> #poltok #gaming #freegames #browsergames #politics #strategygame #comingsoon
+
+**X**
+> PolTok Gaming is coming 🎮
+>
+> Political games. Free. In your browser.
+> 🏛️ QUORUM · 🧠 Daily trivia · 🗺️ Guess the map
+>
+> What should we build next? 👇
+
+**Alt text:** A neon starfield in PolTok's colours rushes past as the PolTok logo glitches in, followed by "Coming soon" and the word "GAMING" slamming in letter by letter above a scrolling ticker reading "Free to play, no download, in your browser". Glass cards list the features, then a 3D phone shows the real QUORUM title and party-founding screens, followed by the quiz page with Daily trivia, Guess the map and Issues match. It ends with "What should we make next? Comment your idea" and poltok.netlify.app/play.
