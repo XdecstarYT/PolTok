@@ -27,6 +27,8 @@ try {
   ui.captions(E.tl.captions);
   if (q.get('guides')) ui.safeGuides();
   if (E.data && E.data.__mock) { const w = document.createElement('div'); w.textContent = 'TEST DATA · NOT REAL'; w.style.cssText = 'position:absolute;top:900px;left:0;right:0;text-align:center;font:900 90px Inter Tight;color:rgba(255,0,80,.55);transform:rotate(-20deg);z-index:50'; document.body.appendChild(w); }
+  // reels may register async assets (e.g. images) here; wait for them before any frame is captured
+  if (E.pending && E.pending.length) await Promise.all(E.pending);
   window.__frame = (t) => renderFrame(t);
   window.__meta = () => ({ cues: E.cues.sort((a, b) => a.t - b.t) });
   window.__audit = () => ui.audit();

@@ -157,7 +157,7 @@ log(`timeline ${duration.toFixed(2)}s, ${tlScenes.length} scenes, VO ${voLines.l
 for (const s of tlScenes) log(`  ${s.id.padEnd(12)} ${s.t0.toFixed(2)}–${s.t1.toFixed(2)}${s.voDur ? `  vo ${s.voDur.toFixed(2)}s` : ''}`);
 
 // ---------- static server ----------
-const MIME = { '.js': 'text/javascript', '.mjs': 'text/javascript', '.html': 'text/html', '.css': 'text/css', '.json': 'application/json', '.ttf': 'font/ttf', '.svg': 'image/svg+xml', '.png': 'image/png' };
+const MIME = { '.js': 'text/javascript', '.mjs': 'text/javascript', '.html': 'text/html', '.css': 'text/css', '.json': 'application/json', '.ttf': 'font/ttf', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
 const server = http.createServer((q, r) => {
   const u = decodeURIComponent(q.url.split('?')[0]);
   let f;
