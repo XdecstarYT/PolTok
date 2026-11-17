@@ -30,7 +30,7 @@ export const scenes = (d) => [
     say: 'Rents are frozen for the first two years of every new lease. And stamp duty is scrapped on homes under one point one million.',
     cap: 'IMAGINED: 2-year rent freeze on new leases, no stamp duty under $1.1m.' },
   { id: 'roads', beats: 10, energy: 3, trans: { type: 'whip', dir: 'left', dur: 0.4 },
-    say: 'Speed limits drop to thirty on residential streets. And rego doubles for vehicles with bonnets wider than a hundred and twenty centimetres.',
+    say: 'Speed limits drop to thirty on residential streets. And [rego](/ɹˈɛʤoʊ/) doubles for vehicles with bonnets wider than a hundred and twenty centimetres.',
     cap: 'IMAGINED: 30km/h residential streets, double rego for bonnets over 120cm.' },
   { id: 'wild', beats: 9, energy: 3, trans: { type: 'flash', dur: 0.32 },
     say: 'Cannabis is legalised. And a four-day work week gets a trial.', cap: 'IMAGINED: legal cannabis, four-day week trial.' },
