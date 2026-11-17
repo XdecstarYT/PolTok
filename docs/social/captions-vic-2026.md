@@ -417,3 +417,59 @@ Sources: 2022 Victorian election, official post-election pendulum. Regions are t
 > Melbourne or country? 👇
 
 **Alt text:** A photoreal 88-seat chamber split into Melbourne's 55 seats and country Victoria's 33. The 2022 results light up: Labor 40, Coalition 11 and Greens 4 in Melbourne; Coalition 17 and Labor 16 in the country. Then, with today's polls applied as a uniform swing, the Coalition wins 29 of 33 country seats and 32 of 55 in Melbourne.
+
+## What if the Greens won Victoria? `poltok-what-if-greens-vic.mp4` (~53s)
+
+Sources: every promise per the ABC News Victorian election policy tracker (4 Nov 2026); Sandell's "replace Labor" aim per The Conversation (Nov 2026); 4 seats (VEC 2022); polling = latest 4 Victorian polls at render. Middle section labelled IMAGINED.
+
+**Instagram / TikTok**
+> What if the Greens won Victoria? 🟢
+>
+> 🚆 Free public transport. Permanently.
+> 🦷 Free dental for everyone
+> 🏠 Rents frozen for 2 years on every new lease
+> 🚸 30km/h on residential streets
+> 🛻 Double rego if your bonnet's wider than 120cm
+> 🌿 Legal cannabis + a 4-day week trial
+>
+> Paid for by a big-bank levy and a tax on investors with $5m+ in property.
+>
+> Would Victoria be BETTER or WORSE? 👇
+> #springst #vicpol #greens #victoria #election2026 #whatif
+
+**X**
+> What if the Greens won Victoria? 🟢
+>
+> Free PT. Free dental. 2-year rent freeze on new leases. 30km/h streets. Double rego for big bonnets. Legal cannabis.
+>
+> Better or worse? 👇
+
+**Alt text:** A photoreal 88-seat Victorian chamber fills with green seats. Counters show the Greens' 4 seats and their poll average, then scenes labelled "Imagined" list Greens promises from the ABC policy tracker: free public transport and dental, a two-year rent freeze on new leases, no stamp duty under $1.1m, 30 km/h residential limits, double rego for vehicles with bonnets wider than 120cm, legal cannabis and a four-day week trial, funded by a big-bank levy and a tax on investors with over $5m in property.
+
+## Victoria in 30 seconds `poltok-vic-race-30-seconds.mp4` (~36s)
+
+Sources: latest 4 Victorian primary-vote polls (Wikipedia) at render: Coalition 31.5, One Nation 22.3, Labor 21, Greens 14.8. Two-party and seats from the 2022 official pendulum with a uniform swing (illustrative, not a forecast).
+
+**Instagram / TikTok**
+> 11 days. Victoria's election in 30 seconds ⏱️
+>
+> 🔵 Coalition 31.5
+> 🟠 One Nation 22.3
+> 🔴 Labor 21
+> 🟢 Greens 14.8
+>
+> After preferences: Coalition 56, Labor 44. Swing that evenly and Labor drops from 56 seats to 23 😳
+>
+> But polls aren't votes. Drop your prediction 👇 We'll check them on election night.
+> #springst #vicpol #victoria #election2026 #polls #onenation
+
+**X**
+> Victoria, 11 days out ⏱️
+>
+> Primaries: LNP 31.5 · ONP 22.3 · ALP 21 · GRN 14.8
+> 2PP: Coalition 56–44
+> Even swing: Labor 56 → 23 seats
+>
+> Your prediction? 👇
+
+**Alt text:** Motion graphics in PolTok's style: a giant "11 days to go", animated poll bars for the Coalition, One Nation, Labor and the Greens, a two-party bar sliding to 56–44, and 88 seat dots where Labor's marginal seats flip blue until the tally reads Coalition 61, Labor 23, Greens 4. It closes with a caution that polls aren't votes and asks for viewers' predictions.

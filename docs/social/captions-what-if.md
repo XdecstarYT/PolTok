@@ -554,3 +554,29 @@ Site-themed motion graphics (near-black, chartreuse, the blue/red logo bars). Sh
 > What should we build next? 👇
 
 **Alt text:** A neon starfield in PolTok's colours rushes past as the PolTok logo glitches in, followed by "Coming soon" and the word "GAMING" slamming in letter by letter above a scrolling ticker reading "Free to play, no download, in your browser". Glass cards list the features, then a 3D phone shows the real QUORUM title and party-founding screens, followed by the quiz page with Daily trivia, Guess the map and Issues match. It ends with "What should we make next? Comment your idea" and poltok.netlify.app/play.
+
+## 6 things Aussie elections do that the world finds wild `poltok-aussie-election-facts.mp4` (~47s)
+
+Sources: Electoral Act 1856 (Vic; Tasmania also legislated in 1856) and the "Australian ballot" (National Museum of Australia, MoAD); SA Constitutional Amendment (Adult Suffrage) Act 1894; preferential voting federally since the 1918 Corangamite by-election; compulsory federal voting since 1924; Saturday elections (Commonwealth Electoral Act s158); "democracy sausage", ANDC Word of the Year 2016.
+
+**Instagram / TikTok**
+> 6 things Aussie elections do that the rest of the world finds WILD 🇦🇺
+>
+> #6 Always on a Saturday 📅
+> #5 You get a sausage 🌭 (it was literally Word of the Year)
+> #4 Voting is compulsory ⚖️
+> #3 You rank EVERY candidate 🔢
+> #2 Women could run for parliament in 1894 🙋‍♀️
+> #1 We gave the world the secret ballot 🗳️ (Americans called it "the Australian ballot")
+>
+> Which one surprised you? Comment the number 👇
+> #australia #auspol #didyouknow #democracysausage #history #election2026
+
+**X**
+> 6 things Aussie elections do that the world finds wild 🇦🇺
+>
+> Saturday voting · democracy sausage · compulsory voting · ranked ballots · women standing in 1894 · the secret ballot (aka "the Australian ballot")
+>
+> Which surprised you? 👇
+
+**Alt text:** A countdown from 6 to 1 in PolTok's neon style, each fact on a glass card with a big number and emoji: elections are always on a Saturday, the democracy sausage was Word of the Year 2016, voting has been compulsory federally since 1924, preferential voting since 1918, South Australia let women vote and stand for parliament in 1894, and Australia pioneered the secret ballot in 1856, which Americans called "the Australian ballot".
