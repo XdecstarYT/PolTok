@@ -162,3 +162,12 @@
 .pg-changes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .pg-changes button { border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text); border-radius: 12px; padding: 8px 11px; font: 600 13px/1.2 var(--font-body, sans-serif); cursor: pointer; }
 .pg-changes button:hover { border-color: var(--line-3); }
+
+/* follow */
+.fbtn { display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; vertical-align: middle; border: 1px solid var(--line-2); background: rgba(255, 255, 255, 0.06); color: var(--text); border-radius: 999px; padding: 7px 12px; font: 800 12px/1 var(--font-body, sans-serif); cursor: pointer; transition: transform .15s; }
+.fbtn:hover { transform: scale(1.04); }
+.fbtn.is-on { background: rgba(255, 196, 0, 0.16); border-color: rgba(255, 196, 0, 0.6); color: #ffd34d; box-shadow: 0 0 16px rgba(255, 196, 0, 0.25); }
+.fbtn--sm { margin: 0; padding: 5px 8px; font-size: 14px; }
+
+.pg-card { width: min(520px, 100%); justify-items: center; }
+.pg-card img { width: 100%; height: auto; border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }

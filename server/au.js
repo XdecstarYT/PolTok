@@ -243,9 +243,9 @@ export function createAuResults({ log = console.log, fetchers } = {}) {
     vic2026: process.env.VEC_RESULTS_URL ? createUrlResultsFetcher({
       url: process.env.VEC_RESULTS_URL,
       source: process.env.VEC_RESULTS_URL ? `VEC (${process.env.VEC_RESULTS_URL})` : 'Victorian Electoral Commission',
-      activeFrom: Date.parse('2026-11-28T07:00:00Z'),
+      activeFrom: Number(process.env.VEC_RESULTS_ACTIVE_FROM) || Date.parse('2026-11-28T07:00:00Z'),
       prefix: 'vic-',
-    }) : createVecSnapshotFetcher({ activeFrom: Date.parse('2026-11-28T07:00:00Z') }),
+    }) : createVecSnapshotFetcher({ activeFrom: Number(process.env.VEC_RESULTS_ACTIVE_FROM) || Date.parse('2026-11-28T07:00:00Z') }),
   };
   const cache = new Map(); // contest -> { at, value }
   const TTL = 30000;

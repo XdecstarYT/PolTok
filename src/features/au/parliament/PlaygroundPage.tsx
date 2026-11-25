@@ -12,6 +12,7 @@ import { AuNav } from '../AuNav';
 import { VIC_NAME, useVicLive, vicColor, type VicModel } from '../vicLive';
 import { Hemicycle, ModelSummary, SeatProfile } from './components';
 import { seatById } from './people';
+import { renderShareCard, shareOrDownload } from './shareCard';
 import '../au.css';
 
 const engine = createModel(PRIM as never, CANDS as never) as { runModel: (now: Record<string, number>, o?: { sims?: number; seed?: number }) => VicModel };
@@ -36,6 +37,8 @@ export default function PlaygroundPage() {
   const [mix, setMix] = useState<Mix | null>(fromUrl);
   const [seat, setSeat] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [card, setCard] = useState<string | null>(null);
+  const [cardBlob, setCardBlob] = useState<Blob | null>(null);
   const polls = data?.polls?.average;
   useEffect(() => { if (!mix && polls) setMix({ LNP: polls.LNP, ALP: polls.ALP, ONP: polls.ONP, GRN: polls.GRN }); }, [polls, mix]);
   const dmix = useDeferredValue(mix);
@@ -61,6 +64,11 @@ export default function PlaygroundPage() {
     const url = `${location.origin}/au/victoria/build?${p}`;
     navigator.clipboard?.writeText(url).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => {});
   };
+  const makeCard = async () => {
+    if (!model || !mix) return;
+    const b = await renderShareCard(model, mix, location.href);
+    setCardBlob(b); setCard(URL.createObjectURL(b));
+  };
   const winner = model ? (model.majority.LNP > 0.5 ? 'Coalition majority' : model.majority.ALP > 0.5 ? 'Labor majority' : 'Hung parliament') : '';
 
   return (
@@ -82,6 +90,7 @@ export default function PlaygroundPage() {
           </div>
           <div className="pg-presets">{PRESETS.map((p) => <button key={p.id} type="button" className="lg lg--pill lg-btn" onClick={() => setMix(p.mix ?? (polls ? { LNP: polls.LNP, ALP: polls.ALP, ONP: polls.ONP, GRN: polls.GRN } : null))}>{p.label}</button>)}</div>
           <div className="row row-wrap" style={{ gap: 10, marginTop: 14 }}>
+            <button type="button" className="lg lg--pill lg-btn" onClick={makeCard}>📸 Make my share card</button>
             <button type="button" className="lg-immersive" onClick={share}><span className="lg-immersive__icon" aria-hidden="true">🔗</span><span><small>Share</small>{copied ? 'Link copied!' : 'Copy my prediction link'}</span></button>
           </div>
         </Card>
@@ -106,6 +115,17 @@ export default function PlaygroundPage() {
         )}
       </div>
       <p className="vp-method">This is a what-if tool using the <Link to="/au/victoria/parliament">PolTok seat model</Link>. It isn't a forecast. 400 simulations per change; the main model uses 2,000.</p>
+      {card && (
+        <div className="sp-back" onClick={() => setCard(null)} role="presentation">
+          <div className="sp lg pg-card" role="dialog" aria-modal="true" aria-label="Your share card" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="sp__x" onClick={() => setCard(null)} aria-label="Close">✕</button>
+            <img src={card} alt="Your Victoria 2026 prediction card" />
+            <div className="row row-wrap" style={{ gap: 10 }}>
+              <button type="button" className="lg-immersive" onClick={() => cardBlob && shareOrDownload(cardBlob, 'my-victoria-2026-prediction.png', 'My Victoria 2026 prediction on PolTok')}><span className="lg-immersive__icon" aria-hidden="true">📤</span><span><small>Instagram · TikTok · X</small>Share or download</span></button>
+            </div>
+          </div>
+        </div>
+      )}
       {seat && <SeatProfile id={seat} data={model ? { ...(data ?? ({} as never)), model } : data} onClose={() => setSeat(null)} />}
     </div>
   );

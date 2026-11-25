@@ -4,7 +4,9 @@ import type { Market, NewsItem } from '../../types';
 
 export interface SeatResult {
   counted: number;
-  tcp?: { party: string; pct: number }[];
+  tcp?: { party: string; pct: number; name?: string }[];
+  fp?: { party: string; pct: number; name?: string }[];
+  final?: boolean;
   leader?: string;
   called?: string;
 }

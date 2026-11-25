@@ -28,3 +28,11 @@ test('finished preference distribution is a call', () => {
 test('no votes yet → null', () => {
   assert.equal(parseDistrictPage('<p>Results will appear after 6pm.</p>'), null);
 });
+
+import { diffResults } from '../shared/au/vec-results.js';
+test('diffResults: first results, lead changes and calls', () => {
+  const a = { seats: { 'vic-a': { leader: 'ALP' }, 'vic-b': { leader: 'LIB' } } };
+  const b = { seats: { 'vic-a': { leader: 'LIB' }, 'vic-b': { leader: 'LIB', called: 'LIB' }, 'vic-c': { leader: 'GRN' } } };
+  const ev = diffResults(a, b, 1);
+  assert.deepEqual(ev.map((e) => [e.id, e.kind, e.party]).sort(), [['vic-a', 'lead', 'LIB'], ['vic-b', 'called', 'LIB'], ['vic-c', 'first', 'GRN']]);
+});

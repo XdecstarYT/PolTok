@@ -4,6 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 const TABS = [
   { to: '/au', label: 'Overview', end: true },
   { to: '/au/victoria', label: 'Victoria 2026', end: true },
+  { to: '/au/victoria/live', label: '🔴 Live Desk' },
   { to: '/au/victoria/parliament', label: 'Vic projection' },
   { to: '/au/victoria/candidates', label: 'Vic candidates' },
   { to: '/au/victoria/build', label: 'Build your own' },

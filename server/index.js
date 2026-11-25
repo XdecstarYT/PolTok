@@ -137,6 +137,7 @@ async function main() {
         if (p.startsWith('/api/owner')) return (await import('./owner.js')).nodeOwnerHandler(req, res);
         if (p === '/api/updates' || p === '/api/updates.rss' || p.startsWith('/api/updates/')) return (await import('./updates.js')).nodeUpdatesHandler(req, res);
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
+        if (p === '/api/vic/events') return json(res, 200, { events: [] }); // Netlify Blobs only; the Live Desk also diffs client-side
         if (p === '/api/vic/live') {
           const { fetchVicLive } = await import('../shared/au/vic-live.js');
           if (!globalThis.__vicLive || Date.now() - globalThis.__vicLive.at > 600000) globalThis.__vicLive = { at: Date.now(), p: fetchVicLive() };

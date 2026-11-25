@@ -73,3 +73,15 @@ export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 800
   const called = Object.values(seats).filter((s) => s.called).length;
   return { status: called === ids.length ? 'final' : 'counting', updatedAt: Date.now(), source: 'Victorian Electoral Commission district results pages', seats, stats: { ok, missing, failed } };
 }
+
+/** Diff two snapshots into feed events: a new leader, a seat called, or first results in. Pure (testable). */
+export function diffResults(prev, next, at = Date.now()) {
+  const ev = [];
+  for (const [id, s] of Object.entries(next?.seats ?? {})) {
+    const p = prev?.seats?.[id];
+    if (s.called && s.called !== p?.called) ev.push({ at, id, kind: 'called', party: s.called, prev: p?.called ?? p?.leader ?? null });
+    else if (!p && s.leader) ev.push({ at, id, kind: 'first', party: s.leader });
+    else if (p && s.leader && p.leader && s.leader !== p.leader && !s.called) ev.push({ at, id, kind: 'lead', party: s.leader, prev: p.leader });
+  }
+  return ev;
+}

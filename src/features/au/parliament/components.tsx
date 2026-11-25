@@ -7,6 +7,7 @@ import { usePhotoIndex } from '../../../data/photos/store';
 import { VIC_NAME, vicColor, type Rating, type VicLive, type VicModel } from '../vicLive';
 import { candidates, member2022, personFor, seatById, type Person } from './people';
 import './parliament.css';
+import { useFollowed } from '../follow';
 
 export const RATING_LABEL: Record<Rating, string> = { safe: 'Safe', likely: 'Likely', leans: 'Leans', tossup: 'Toss-up' };
 const pct = (x: number) => (x >= 0.995 ? '>99%' : x <= 0.005 ? '<1%' : `${Math.round(x * 100)}%`);
@@ -64,6 +65,7 @@ export function SeatProfile({ id, data, onClose }: { id: string; data: VicLive |
           <span className="sp__kicker">District of</span>
           <h2>{seat.name}</h2>
           {ms && <span className={`sp__rating r-${ms.rating}`}>{RATING_LABEL[ms.rating]} {VIC_NAME[ms.fav] ?? ms.fav}</span>}
+          <FollowButton id={id} />
         </header>
         <div className="sp__grid">
           <section>
@@ -220,5 +222,17 @@ export function RatingsBoard({ m, onPick }: { m: VicModel; onPick: (id: string) 
         </div>
       ))}
     </div>
+  );
+}
+
+/** ⭐ follow a seat (stored in this browser) */
+export function FollowButton({ id, small }: { id: string; small?: boolean }) {
+  const [list, toggle] = useFollowed();
+  const on = list.includes(id);
+  return (
+    <button type="button" className={`fbtn${on ? ' is-on' : ''}${small ? ' fbtn--sm' : ''}`} aria-pressed={on} onClick={(e) => { e.stopPropagation(); toggle(id); }}
+      title={on ? 'Unfollow this seat' : 'Follow this seat on the Live Desk'}>
+      {on ? '★' : '☆'}{small ? null : on ? ' Following' : ' Follow seat'}
+    </button>
   );
 }

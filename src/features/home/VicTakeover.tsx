@@ -97,7 +97,8 @@ export default function VicTakeover() {
       )}
       <div className="vt__ctas">
         <Link to="/au/victoria/immersive" className="lg-immersive"><span className="lg-immersive__icon" aria-hidden="true">🌏</span><span><small>New · 3D</small>Enter Immersive Mode</span></Link>
-        <Button variant="accent" size="lg" to="/au/victoria">{closed ? 'Live results →' : 'Victoria hub →'}</Button>
+        <Button variant="accent" size="lg" to={closed ? '/au/victoria/live' : '/au/victoria'}>{closed ? '🔴 Live Desk →' : 'Victoria hub →'}</Button>
+        {!closed && <Button variant="ghost" size="lg" to="/au/victoria/live">🔴 Live Desk</Button>}
         <Button variant="ghost" size="lg" to="/au/victoria/build">🎛️ Build your own</Button>
         <Button variant="ghost" size="lg" to="/au/victoria/districts">All 88 seats</Button>
         <Button variant="ghost" size="lg" to="/au/swingometer">Swingometer</Button>
