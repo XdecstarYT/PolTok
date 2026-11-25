@@ -473,3 +473,34 @@ Sources: latest 4 Victorian primary-vote polls (Wikipedia) at render: Coalition 
 > Your prediction? 👇
 
 **Alt text:** Motion graphics in PolTok's style: a giant "11 days to go", animated poll bars for the Coalition, One Nation, Labor and the Greens, a two-party bar sliding to 56–44, and 88 seat dots where Labor's marginal seats flip blue until the tally reads Coalition 61, Labor 23, Greens 4. It closes with a caution that polls aren't votes and asks for viewers' predictions.
+
+## Victoria: the final update `poltok-vic-final-update.mp4` (~91s)
+
+Live at render (25 Nov): 40 Victorian polls since Feb (Wikipedia); newest Resolve (20–23 Nov, The Age): Labor 20, Coalition 31, One Nation 25, Greens 13, 2PP 59–41. Latest-4 average (Resolve, YouGov, Lighthouse, RedBridge): Coalition 31.5, One Nation 23.3, Labor 21, Greens 14.8; 2PP 57–43 (12-pt swing). Seats: 2022 official pendulum + uniform swing (illustrative, not a forecast). Early votes: VEC, 1,384,864 to 24 Nov. Premier Ben Carroll holds Niddrie (6.7%).
+
+**Instagram / TikTok**
+> 3 days. The FINAL Victorian election update 🗳️🔥
+>
+> 🚨 New poll: Labor on just 20%. After preferences: Coalition 59, Labor 41
+> 📉 All 40 polls this year: Labor sliding, Coalition climbing, One Nation stuck above 20
+> 🗺️ Swing it evenly and Labor drops from 56 seats to 20. Even Melbourne turns blue
+> 😳 Even Premier Ben Carroll's own seat, Niddrie, falls on these numbers
+> 🔪 Knife's edge: Mill Park, Wendouree, Tarneit, Essendon
+> 🗳️ 1.38 MILLION Victorians have already voted
+>
+> Polls close 6pm Saturday. Number every box. Grab a sausage 🌭
+>
+> Who wins? Comment your call 👇 Then watch every seat LIVE on PolTok.
+> #springst #vicpol #victoria #election2026 #onenation #polls #auspol
+
+**X**
+> Victoria, 3 days out 🗳️
+>
+> New Resolve: ALP 20 · L/NP 31 · ONP 25 · GRN 13 (2PP 59–41)
+> Latest-4 avg 2PP: Coalition 57–43
+> Even swing: Coalition 64, Labor 20. Niddrie falls.
+> 1.38m early votes already.
+>
+> Your call? 👇
+
+**Alt text:** A 91-second motion-graphics update in PolTok's neon style. A glitching "3 days to go" opens, then a breaking-news bar shows the newest Resolve poll (Labor 20%, Coalition 59–41 after preferences). Animated lines trace all 40 polls since February, bars show the latest four-poll average, and a 3D map of Victoria's 88 districts flips seat by seat under a uniform 12-point swing to Coalition 64, Labor 20, Greens 4, before zooming into Melbourne. A meter shows the Premier's seat of Niddrie (6.7%) falling, four knife's-edge seats are stamped "falls" or "holds", a bar chart shows 1,384,864 early votes, One Nation's rise from 0.3% to 23.3% is shown, and a Saturday checklist ends with "Who wins Saturday?".
