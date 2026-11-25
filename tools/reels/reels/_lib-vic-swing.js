@@ -9,7 +9,7 @@
 
 const PAGE = 'Opinion_polling_for_the_2026_Victorian_state_election';
 const PENDULUM_PAGE = '2022_Victorian_state_election';
-const ALP_2PP_2022 = 55.0;
+export const ALP_2PP_2022 = 55.0;
 
 // Parse the "Post-election pendulum" tables: rows of [seat, member, party, "x.x% [v GRN]"].
 export async function pendulum2022() {
