@@ -137,6 +137,11 @@ async function main() {
         if (p.startsWith('/api/owner')) return (await import('./owner.js')).nodeOwnerHandler(req, res);
         if (p === '/api/updates' || p === '/api/updates.rss' || p.startsWith('/api/updates/')) return (await import('./updates.js')).nodeUpdatesHandler(req, res);
         if (req.method !== 'GET' && req.method !== 'HEAD') return json(res, 405, { error: 'method not allowed' });
+        if (p === '/api/vic/live') {
+          const { fetchVicLive } = await import('../shared/au/vic-live.js');
+          if (!globalThis.__vicLive || Date.now() - globalThis.__vicLive.at > 600000) globalThis.__vicLive = { at: Date.now(), p: fetchVicLive() };
+          try { return json(res, 200, await globalThis.__vicLive.p); } catch (e) { globalThis.__vicLive = null; return json(res, 502, { error: 'Victorian live data unavailable', detail: String(e?.message ?? e) }); }
+        }
         if (p.startsWith('/api/au/') && (await au.handle(p, url, json, res))) return;
         if (p.startsWith('/api/parliament')) return (await import('./parliament.js')).nodeParliamentHandler(p, url, json, res);
         if (p.startsWith('/api/members')) return (await import('./members.js')).nodeMembersHandler(p, url, json, res);

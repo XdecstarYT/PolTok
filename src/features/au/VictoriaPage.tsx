@@ -8,6 +8,7 @@ import { MapPanel, VIC_ZOOMS } from './MapPanel';
 import { AU_POLLS, counts, leader, normPolls, party, partyKey, pColor, VIC_CLOSE, VIC_MAJORITY, VIC_TOTAL, VICTORIA, type AuSeat } from './model';
 import { FeedStatus, LeaderCard, MarketsPanel, NewsPanel, PollsPanel, Pendulum, TallyBar } from './widgets';
 import { AuNav } from './AuNav';
+import { VicLiveDashboard } from './VicLiveDashboard';
 import './au.css';
 
 const NOT_REPORTING = '#2a3048';
@@ -104,6 +105,8 @@ export default function VictoriaPage() {
         <LeaderCard role="Opposition Leader" name={opp.name} partyCode={opp.party ?? 'LIB'} seat={opp.seat ?? 'Kew'} />
       </div>
 
+      {!live && <VicLiveDashboard />}
+
       {live ? (
         <Card title="Seats won + leading" live kicker={`Updated ${res.data?.updatedAt ? fmtTime(typeof res.data.updatedAt === 'number' ? res.data.updatedAt : Date.parse(res.data.updatedAt), true) : '—'} · source ${res.data?.source ?? 'VEC'}`}>
           <div className="au-race">
@@ -177,6 +180,8 @@ export default function VictoriaPage() {
           </Card>
         </div>
       </div>
+
+      {live && <VicLiveDashboard />}
 
       <Pendulum seats={seats} title="Victorian pendulum" results={live ? Object.fromEntries(Object.entries(res.data?.seats ?? {}).map(([k, v]) => [k, { leader: v.leader, called: v.called }])) : undefined} />
 

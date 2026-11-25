@@ -16,6 +16,7 @@ import './home.css';
 import { useHomeCountry, type HomeCountry } from './prefs';
 
 const USMap = lazy(() => import('../map/USMap').then((m) => ({ default: m.USMap })));
+const VicTakeover = lazy(() => import('./VicTakeover'));
 const heroes = () => import('./heroes');
 const AUHero = lazy(() => heroes().then((m) => ({ default: m.AUHero })));
 const NZHero = lazy(() => heroes().then((m) => ({ default: m.NZHero })));
@@ -489,6 +490,7 @@ export default function HomePage() {
   const { flipsAll, flips, flipsLoading } = useResultsData();
   return (
     <div className="page hm">
+      <Suspense fallback={<div className="hm-ph" style={{ minHeight: 420 }} aria-hidden="true" />}><VicTakeover /></Suspense>
       <CountryHero />
       <LatestUpdateCard compact className="hm-whatsnew" />
       <div className="hm-band">
