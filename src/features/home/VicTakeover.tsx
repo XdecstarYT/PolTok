@@ -6,6 +6,7 @@ import { useAuResults } from '../au/api';
 import { partyKey } from '../au/model';
 import { AverageBars, EarlyVotes, NewestPoll, ProjectionBar, TppBar } from '../au/VicLiveWidgets';
 import { VIC_NAME, useVicLive, vicColor } from '../au/vicLive';
+import { FindSeat } from '../au/parliament/FindSeat';
 import '../au/vic-live.css';
 import '../../lib/liquidGlass';
 import { Link } from 'react-router-dom';
@@ -58,6 +59,7 @@ export default function VicTakeover() {
         {!closed && <span className="vt__count">Polls close in <span className="num"><Countdown to={VIC_CLOSE} compact doneLabel="now" /></span></span>}
       </h2>
       {data?.polls && !closed && <NewestPoll d={data} />}
+      <FindSeat />
       {loading && !data ? <Skeleton lines={4} /> : error && !data ? <p className="vt__err">Live poll data is briefly unavailable. The Victoria hub has everything else.</p> : data && (
         <div className="vt__grid">
           {closed && <Counting />}
@@ -96,6 +98,7 @@ export default function VicTakeover() {
       <div className="vt__ctas">
         <Link to="/au/victoria/immersive" className="lg-immersive"><span className="lg-immersive__icon" aria-hidden="true">🌏</span><span><small>New · 3D</small>Enter Immersive Mode</span></Link>
         <Button variant="accent" size="lg" to="/au/victoria">{closed ? 'Live results →' : 'Victoria hub →'}</Button>
+        <Button variant="ghost" size="lg" to="/au/victoria/build">🎛️ Build your own</Button>
         <Button variant="ghost" size="lg" to="/au/victoria/districts">All 88 seats</Button>
         <Button variant="ghost" size="lg" to="/au/swingometer">Swingometer</Button>
       </div>

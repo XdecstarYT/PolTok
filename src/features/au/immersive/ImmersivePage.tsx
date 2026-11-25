@@ -6,6 +6,8 @@ import { useSeo } from '../../../lib/seo';
 import '../../../lib/liquidGlass';
 import { Countdown, useReducedMotion } from '../../../components';
 import { useVicLive, vicColor, VIC_NAME, type VicSeatProj } from '../vicLive';
+import { useAuResults } from '../api';
+import { partyKey } from '../model';
 import { createImmersive, type District, type Immersive } from './scene';
 import './immersive.css';
 
@@ -40,6 +42,10 @@ export default function ImmersivePage() {
   const [labels, setLabels] = useState<{ key: string; label: string; x: number; y: number; visible: boolean }[]>([]);
   const [webgl, setWebgl] = useState(true);
   const [ready, setReady] = useState(false);
+  const [mode, setMode] = useState<'model' | 'swing' | 'live'>('model');
+  const res = useAuResults('vic2026');
+  const counting = !!res.data && res.data.status !== 'pre-election' && Object.keys(res.data.seats ?? {}).length > 0;
+  useEffect(() => { if (counting) setMode('live'); }, [counting]);
 
   useEffect(() => { fetch('/geo/vic-districts.json').then((r) => r.json()).then(setGeo).catch(() => setGeoErr(true)); }, []);
   useEffect(() => { if (data?.projection && swing == null) setSwing(data.projection.swing); }, [data, swing]);
@@ -51,7 +57,19 @@ export default function ImmersivePage() {
   }, [nav]);
 
   const seats = data?.projection?.seats;
-  const now = useMemo(() => (seats && swing != null ? project(seats, swing) : null), [seats, swing]);
+  const swingNow = useMemo(() => (seats && swing != null ? project(seats, swing) : null), [seats, swing]);
+  const model = data?.model;
+  const liveMap = useMemo(() => {
+    if (!counting) return null;
+    const o: Record<string, { p: string; called: boolean }> = {};
+    for (const [id, r] of Object.entries(res.data!.seats)) { const x = r.called ?? r.leader; if (!x) continue; const k = partyKey(x); o[id] = { p: ['LIB', 'NAT', 'LNP'].includes(k) ? 'LNP' : ['ALP', 'GRN', 'ONP', 'IND'].includes(k) ? k : 'OTH', called: !!r.called }; }
+    return o;
+  }, [counting, res.data]);
+  const now = useMemo(() => {
+    if (mode === 'swing') return swingNow;
+    if (mode === 'live') return liveMap ? Object.fromEntries(Object.entries(liveMap).map(([k, v]) => [k, v.p])) : null;
+    return model ? Object.fromEntries(Object.entries(model.seats).map(([k, v]) => [k, v.fav])) : swingNow;
+  }, [mode, swingNow, liveMap, model]);
   const tally = useMemo(() => { const o: Record<string, number> = {}; for (const w of Object.values(now ?? {})) o[w] = (o[w] ?? 0) + 1; return o; }, [now]);
 
   // build the scene once geo + polls are in
@@ -78,9 +96,15 @@ export default function ImmersivePage() {
   useEffect(() => {
     if (!api.current || !seats || !now) return;
     const m: Record<string, { color: string; changed: boolean; height: number }> = {};
-    for (const [id, s] of Object.entries(seats)) m[id] = { color: vicColor(now[id]), changed: now[id] !== s.win2022, height: 0.07 + Math.min(s.margin, 30) * 0.006 };
+    const H = { safe: 0.3, likely: 0.22, leans: 0.15, tossup: 0.09 } as const;
+    for (const [id, s] of Object.entries(seats)) {
+      const w = now[id];
+      if (mode === 'live') { const l = liveMap?.[id]; m[id] = l ? { color: vicColor(l.p), changed: !l.called, height: l.called ? 0.3 : 0.12 } : { color: '#2a3048', changed: false, height: 0.03 }; continue; }
+      if (mode === 'model' && model?.seats[id]) { const ms = model.seats[id]; m[id] = { color: vicColor(ms.fav), changed: ms.fav !== s.win2022 || ms.rating === 'tossup', height: H[ms.rating] }; continue; }
+      m[id] = { color: vicColor(w ?? s.win2022), changed: w !== s.win2022, height: 0.07 + Math.min(s.margin, 30) * 0.006 };
+    }
     api.current.setSeats(m);
-  }, [seats, now, ready]);
+  }, [seats, now, ready, mode, model, liveMap]);
 
   // pillar labels follow the 3D pillars
   useEffect(() => {
@@ -105,7 +129,7 @@ export default function ImmersivePage() {
   const hv = hover && seats?.[hover.id] ? { ...seats[hover.id], now: now?.[hover.id] } : null;
   const P = data?.projection;
   const sw = swing ?? 0;
-  const order = ['LNP', 'GRN', 'ALP'].filter((k) => tally[k]);
+  const order = ['LNP', 'ONP', 'IND', 'OTH', 'GRN', 'ALP'].filter((k) => tally[k]);
 
   return (
     <div className="im" data-reduced={reduced || undefined}>
@@ -150,7 +174,7 @@ export default function ImmersivePage() {
           <dl>
             <div><dt>2022 winner</dt><dd style={{ color: vicColor(sel.win2022) }}>{VIC_NAME[sel.win2022] ?? sel.win2022}</dd></div>
             <div><dt>Margin</dt><dd>{sel.margin}% v {VIC_NAME[sel.vs] ?? sel.vs}</dd></div>
-            <div><dt>At {Math.abs(sw)}-pt swing</dt><dd style={{ color: vicColor(sel.now) }}>{VIC_NAME[sel.now] ?? sel.now}</dd></div>
+            <div><dt>{mode === 'model' ? `Model${model?.seats[sel.id] ? ` (${Math.round((model.seats[sel.id].prob[sel.now] ?? 0) * 100)}%)` : ''}` : mode === 'live' ? 'Live count' : `At ${Math.abs(sw)}-pt swing`}</dt><dd style={{ color: vicColor(sel.now) }}>{VIC_NAME[sel.now] ?? sel.now}</dd></div>
           </dl>
           <Link to={`/au/seat/${sel.id}`} className="lg lg--pill lg-btn">Seat page →</Link>
         </aside>
@@ -159,6 +183,11 @@ export default function ImmersivePage() {
       {/* bottom HUD */}
       <footer className="im-hud">
         <div className="lg im-panel im-seats">
+          <div className="im-modes" role="group" aria-label="What the map shows">
+            <button type="button" aria-pressed={mode === 'model'} onClick={() => setMode('model')} disabled={!model}>🧠 Model</button>
+            <button type="button" aria-pressed={mode === 'swing'} onClick={() => setMode('swing')}>🎚️ Swing</button>
+            <button type="button" aria-pressed={mode === 'live'} onClick={() => setMode('live')} disabled={!counting} title={counting ? '' : 'Live once counting starts after 6pm Saturday'}>🔴 Live</button>
+          </div>
           <div className="im-seats__nums">
             {order.map((k) => <span key={k}><b className="num" style={{ color: vicColor(k) }}>{tally[k]}</b><small>{VIC_NAME[k]}</small></span>)}
           </div>
@@ -166,11 +195,13 @@ export default function ImmersivePage() {
             {order.map((k) => <span key={k} style={{ flex: tally[k], background: vicColor(k) }} />)}
             <i style={{ left: `${(45 / 88) * 100}%` }} />
           </div>
-          <label className="im-slider">
+          {mode === 'swing' && <label className="im-slider">
             <span className="im-slider__lab">Two-party swing <b>{sw > 0 ? `${sw} to Coalition` : sw < 0 ? `${-sw} to Labor` : 'none'}</b>{P && Math.abs(sw - P.swing) < 0.05 ? <em> · polls now</em> : null}</span>
             <input type="range" min={-6} max={20} step={0.5} value={sw} onChange={(e) => setSwing(+e.target.value)} aria-label="Two-party swing from 2022" />
-          </label>
-          {P && <button type="button" className="im-link" onClick={() => setSwing(P.swing)}>Reset to the polls ({P.swing} pts)</button>}
+          </label>}
+          {mode === 'model' && model && <p className="im-slider__lab" style={{ margin: 0 }}>PolTok model · <b style={{ color: vicColor('LNP') }}>{Math.round(model.majority.LNP * 100)}%</b> Coalition majority · <b>{Math.round(model.majority.hung * 100)}%</b> hung · tall = safe, pulsing = toss-up or gain</p>}
+          {mode === 'live' && <p className="im-slider__lab" style={{ margin: 0 }}>Live VEC count · tall = called, glowing = leading</p>}
+          {mode === 'swing' && P && <button type="button" className="im-link" onClick={() => setSwing(P.swing)}>Reset to the polls ({P.swing} pts)</button>}
         </div>
         <div className="lg im-panel im-actions">
           <button type="button" className="lg lg--pill lg-btn" onClick={() => { setTouring(false); setPicked(null); api.current?.flyHome(); }}>🗺️ Whole state</button>
@@ -179,7 +210,7 @@ export default function ImmersivePage() {
         </div>
       </footer>
       {error && !data && <div className="lg im-fallback"><b>Live data unavailable.</b><p>Try again in a minute.</p></div>}
-      <p className="im-note">Uniform-swing illustration on the 2022 pendulum, not a forecast. One Nation and independents aren't modelled. Drag to orbit · scroll to zoom · tap a district.</p>
+      <p className="im-note">{mode === 'swing' ? 'Uniform-swing illustration on the 2022 pendulum; One Nation and independents aren\'t modelled.' : mode === 'model' ? 'PolTok seat model: an illustration, not a forecast.' : 'Live results from the Victorian Electoral Commission.'} Drag to orbit · scroll to zoom · tap a district.</p>
     </div>
   );
 }

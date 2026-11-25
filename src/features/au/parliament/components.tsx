@@ -141,11 +141,11 @@ export function ModelSummary({ m }: { m: VicModel }) {
 
 /* ───────── Hemicycle of faces ───────── */
 export type HView = 'model' | '2022' | 'live';
-export function Hemicycle({ data, view, live, onPick }: { data: VicLive | null; view: HView; live?: Record<string, string>; onPick: (id: string) => void }) {
+export function Hemicycle({ data, view, live, onPick, model: override }: { data: VicLive | null; view: HView; live?: Record<string, string>; onPick: (id: string) => void; model?: VicModel | null }) {
   usePhotoIndex('au');
   const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
   const seats = useMemo(() => {
-    const m = data?.model;
+    const m = override ?? data?.model;
     return [...seatById.keys()].map((id) => {
       let group = 'OTH', person: Person | null = null, rating: Rating | null = null, chance: number | null = null;
       if (view === '2022') { person = member2022(id); group = person?.bucket ?? 'OTH'; }
@@ -153,7 +153,7 @@ export function Hemicycle({ data, view, live, onPick }: { data: VicLive | null; 
       else if (m?.seats[id]) { const s = m.seats[id]; group = s.fav; person = personFor(id, group, m); rating = s.rating; chance = s.prob[group] ?? null; }
       return { id, group, person, rating, chance };
     });
-  }, [data, view, live]);
+  }, [data, view, live, override]);
   const pos = useMemo(() => {
     const n = seats.length, rows = 6, r0 = 0.36, r1 = 0.97;
     const radii = Array.from({ length: rows }, (_, i) => r0 + ((r1 - r0) * i) / (rows - 1));
@@ -188,7 +188,7 @@ export function Hemicycle({ data, view, live, onPick }: { data: VicLive | null; 
         </div>
         {hv && hover && hv.person && (
           <div className="hc__pop" style={{ left: hover.x, top: hover.y }}>
-            <ProfileCard p={hv.person} model={data?.model} compact />
+            <ProfileCard p={hv.person} model={override ?? data?.model} compact />
             <span className="hc__popseat">{seatById.get(hv.id)?.name}{hv.rating ? ` · ${RATING_LABEL[hv.rating]}` : ''} · tap for the seat profile</span>
           </div>
         )}

@@ -218,14 +218,34 @@ export function createUrlResultsFetcher({ url, source, activeFrom, prefix }) {
   };
 }
 
+/** Election-night VEC snapshot written by netlify/functions/vic-results-cron.mjs (Netlify Blobs), or, off Netlify,
+ *  read the VEC district pages directly. Used when VEC_RESULTS_URL isn't set. */
+export function createVecSnapshotFetcher({ activeFrom }) {
+  return {
+    source: 'Victorian Electoral Commission',
+    activeFrom,
+    async fetch() {
+      try {
+        const { getStore } = await import('@netlify/blobs');
+        const snap = await getStore('poltok').get('vic2026-results', { type: 'json' });
+        if (snap && Object.keys(snap.seats || {}).length) return snap;
+      } catch { /* not on Netlify: fall through to a direct read */ }
+      if (process.env.NETLIFY) return null;
+      const ids = Object.keys((await import('../shared/au/vic-2022-primaries.json', { with: { type: 'json' } })).default);
+      const snap = await (await import('../shared/au/vec-results.js')).fetchVecDistricts(ids);
+      return Object.keys(snap.seats).length ? snap : null;
+    },
+  };
+}
+
 export function createAuResults({ log = console.log, fetchers } = {}) {
   const registry = fetchers || {
-    vic2026: createUrlResultsFetcher({
+    vic2026: process.env.VEC_RESULTS_URL ? createUrlResultsFetcher({
       url: process.env.VEC_RESULTS_URL,
       source: process.env.VEC_RESULTS_URL ? `VEC (${process.env.VEC_RESULTS_URL})` : 'Victorian Electoral Commission',
       activeFrom: Date.parse('2026-11-28T07:00:00Z'),
       prefix: 'vic-',
-    }),
+    }) : createVecSnapshotFetcher({ activeFrom: Date.parse('2026-11-28T07:00:00Z') }),
   };
   const cache = new Map(); // contest -> { at, value }
   const TTL = 30000;

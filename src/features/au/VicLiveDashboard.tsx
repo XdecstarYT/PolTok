@@ -8,6 +8,7 @@ import { VIC_NAME, useVicLive, vicColor } from './vicLive';
 import './vic-live.css';
 import '../../lib/liquidGlass';
 import { Link } from 'react-router-dom';
+import { FindSeat } from './parliament/FindSeat';
 
 function SeatWatch({ name, who, margin, swing, holder }: { name: string; who: string; margin: number; swing: number; holder: string }) {
   const max = Math.max(16, margin, Math.abs(swing)) * 1.1;
@@ -41,6 +42,7 @@ export function VicLiveDashboard() {
   const updated = new Date(data.updatedAt);
   return (
     <section className="vl-dash" aria-label="Live campaign dashboard">
+      <div className="card-wide"><FindSeat /></div>
       <div className="card-wide vl-immersive-cta lg">
         <div><span className="im-badge-lite">New · 3D</span><h2>Fly through Victoria</h2><p>All 88 districts in 3D. Drag the swing and watch seats flip in real time.</p></div>
         <Link to="/au/victoria/immersive" className="lg-immersive"><span className="lg-immersive__icon" aria-hidden="true">🌏</span><span><small>Immersive Mode</small>Enter the 3D world</span></Link>
@@ -51,6 +53,7 @@ export function VicLiveDashboard() {
           <div className="row row-wrap" style={{ gap: 10 }}>
             <Link to="/au/victoria/parliament" className="lg lg--pill lg-btn">👥 Live Parliament →</Link>
             <Link to="/au/victoria/candidates" className="lg lg--pill lg-btn">🪪 All candidates</Link>
+            <Link to="/au/victoria/build" className="lg lg--pill lg-btn">🎛️ Build your own</Link>
           </div>
         </div>
       )}

@@ -10,6 +10,7 @@ import { partyKey } from '../model';
 import { VIC_NAME, useVicLive, vicColor } from '../vicLive';
 import { Hemicycle, ModelSummary, RatingsBoard, SeatProfile, type HView } from './components';
 import { candidatesAsAt, allCandidates } from './people';
+import { FindSeat } from './FindSeat';
 import '../au.css';
 
 const VIC_CLOSE = Date.parse('2026-11-28T18:00:00+11:00');
@@ -48,9 +49,11 @@ export default function ParliamentPage() {
           {Date.now() < VIC_CLOSE && <>Polls close in <b><Countdown to={VIC_CLOSE} compact /></b>.</>}</p>
         <div className="row row-wrap" style={{ gap: 10, marginTop: 14 }}>
           <Link to="/au/victoria/candidates" className="lg lg--pill lg-btn">👥 All {nCands} candidates</Link>
+          <Link to="/au/victoria/build" className="lg lg--pill lg-btn">🎛️ Build your own</Link>
           <Link to="/au/victoria/immersive" className="lg-immersive"><span className="lg-immersive__icon" aria-hidden="true">🌏</span><span><small>3D</small>Immersive Mode</span></Link>
         </div>
       </section>
+      <FindSeat onSeat={(id) => pick(id)} />
 
       {loading && !data ? <Card><Skeleton lines={8} /></Card> : error && !data ? <Card><p className="au-note">Live model data is briefly unavailable. Try again shortly.</p></Card> : (
         <div className="vp-grid">
