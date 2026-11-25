@@ -7,6 +7,8 @@ import { PageSkeleton } from './PageSkeleton';
 // Each feature owns its folder and default-exports its page component.
 const Home = lazy(() => import('../features/home/HomePage'));
 const VicImmersive = lazy(() => import('../features/au/immersive/ImmersivePage'));
+const VicParliament = lazy(() => import('../features/au/parliament/ParliamentPage'));
+const VicCandidatesDir = lazy(() => import('../features/au/parliament/CandidatesDirectory'));
 const MapPage = lazy(() => import('../features/map/MapPage'));
 const LivePage = lazy(() => import('../features/live/LivePage'));
 const NewsPage = lazy(() => import('../features/news/NewsPage'));
@@ -89,6 +91,8 @@ export function App() {
           <Route path="/au" element={<AUPage />} />
           <Route path="/au/victoria" element={<VictoriaPage />} />
           <Route path="/au/victoria/immersive" element={<VicImmersive />} />
+          <Route path="/au/victoria/parliament" element={<VicParliament />} />
+          <Route path="/au/victoria/candidates" element={<VicCandidatesDir />} />
           <Route path="/au/seat/:id" element={<AUSeatPage />} />
           <Route path="/au/senate" element={<AUSenatePage />} />
           <Route path="/au/party/:id" element={<AUPartyPage />} />

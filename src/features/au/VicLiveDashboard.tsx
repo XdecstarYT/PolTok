@@ -45,6 +45,15 @@ export function VicLiveDashboard() {
         <div><span className="im-badge-lite">New · 3D</span><h2>Fly through Victoria</h2><p>All 88 districts in 3D. Drag the swing and watch seats flip in real time.</p></div>
         <Link to="/au/victoria/immersive" className="lg-immersive"><span className="lg-immersive__icon" aria-hidden="true">🌏</span><span><small>Immersive Mode</small>Enter the 3D world</span></Link>
       </div>
+      {data.model && (
+        <div className="card-wide vl-immersive-cta lg">
+          <div><span className="im-badge-lite">PolTok seat model</span><h2>Coalition {data.model.range.LNP?.median ?? 0} · Labor {data.model.range.ALP?.median ?? 0} · One Nation {data.model.range.ONP?.median ?? 0} · Greens {data.model.range.GRN?.median ?? 0}</h2><p>{Math.round(data.model.majority.LNP * 100)}% chance of a Coalition majority. See every seat's win chances, a live parliament of faces, and every candidate.</p></div>
+          <div className="row row-wrap" style={{ gap: 10 }}>
+            <Link to="/au/victoria/parliament" className="lg lg--pill lg-btn">👥 Live Parliament →</Link>
+            <Link to="/au/victoria/candidates" className="lg lg--pill lg-btn">🪪 All candidates</Link>
+          </div>
+        </div>
+      )}
       {data.polls && (
         <Card className="card-wide" title="Live poll tracker" kicker={`${data.polls.count} polls this year · rolling four-poll average · updated ${updated.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}`} live>
           <div style={{ display: 'grid', gap: 14 }}>

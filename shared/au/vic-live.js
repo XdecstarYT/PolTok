@@ -7,6 +7,7 @@
 // Projection = classic uniform swing on the 2PP from 2022 (Labor 55.0 / Coalition 45.0). Only Labor-v-Coalition contests can
 // flip; Greens/independent/One Nation seats are not modelled. It is an illustration, never presented as a forecast.
 
+import { runModel } from './vic-model.js';
 const UA = { 'user-agent': 'PolTok/1.0 (+https://poltok.netlify.app)' };
 const POLLS_PAGE = 'Opinion_polling_for_the_2026_Victorian_state_election';
 const PENDULUM_PAGE = '2022_Victorian_state_election';
@@ -124,6 +125,7 @@ export function buildPayload({ polls, pendulum, vec, now = Date.now() }) {
     out.projection = { swing, seats, before: tally('win2022'), after: tally('projected'), edge, majority: 45, total: 88 };
     out.sources.pendulum = 'Wikipedia: 2022 Victorian state election, post-election pendulum';
   }
+  if (out.polls) { try { out.model = runModel(out.polls.average); out.sources.model = 'PolTok model (see method)'; } catch (e) { out.modelError = String(e?.message ?? e); } }
   if (vec) { out.earlyVotes = vec; out.sources.earlyVotes = 'Victorian Electoral Commission: early and postal vote statistics'; }
   return out;
 }

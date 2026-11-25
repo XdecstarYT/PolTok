@@ -68,6 +68,14 @@ export default function VicTakeover() {
               <TppBar d={data} />
             </div>
           )}
+          {data.model && !closed && (
+            <div className="vt__panel lg">
+              <h3>PolTok seat model · {data.model.sims.toLocaleString()} simulations</h3>
+              <div className="vt__big">{(['LNP', 'ALP', 'ONP', 'GRN'] as const).filter((k) => data.model!.range[k]).map((k) => <span key={k} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6 }}><b className="num" style={{ color: vicColor(k) }}>{data.model!.range[k].median}</b><span className="faint">{VIC_NAME[k]}</span></span>)}</div>
+              <p className="vt__note" style={{ fontSize: 13, color: 'var(--text-2)' }}><b style={{ color: vicColor('LNP') }}>{Math.round(data.model.majority.LNP * 100)}%</b> Coalition majority · <b>{Math.round(data.model.majority.hung * 100)}%</b> hung parliament</p>
+              <Link to="/au/victoria/parliament" className="lg lg--pill lg-btn" style={{ justifySelf: 'start' }}>👥 Live Parliament & every candidate →</Link>
+            </div>
+          )}
           {p && (
             <div className="vt__panel lg">
               <h3>If the polls are right · uniform swing</h3>

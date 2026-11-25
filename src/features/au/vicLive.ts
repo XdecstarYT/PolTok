@@ -28,13 +28,27 @@ export interface VicLive {
     majority: number;
     total: number;
   };
+  model?: VicModel;
   earlyVotes?: { days: { day: string; date: number; early: number; postal: number }[]; total: number; updated: string | null };
 }
 
+export type Rating = 'safe' | 'likely' | 'leans' | 'tossup';
+export interface VicModelSeat { prob: Record<string, number>; fav: string; primaries: Record<string, number>; finalTwo: [string, number][]; ind: { n: string; pct: number } | null; rating: Rating }
+export interface VicModel {
+  sims: number;
+  now: Record<string, number>;
+  seats: Record<string, VicModelSeat>;
+  range: Record<string, { median: number; p10: number; p90: number; mean: number }>;
+  hist: Record<string, Record<string, number>>;
+  majority: { LNP: number; ALP: number; hung: number };
+  flows: Record<string, Record<string, number>>;
+  method: string;
+}
+
 export const VIC_KEYS: VicKey[] = ['LNP', 'ONP', 'ALP', 'GRN'];
-export const VIC_NAME: Record<string, string> = { ALP: 'Labor', LNP: 'Coalition', GRN: 'Greens', ONP: 'One Nation' };
+export const VIC_NAME: Record<string, string> = { ALP: 'Labor', LNP: 'Coalition', GRN: 'Greens', ONP: 'One Nation', IND: 'Independent', OTH: 'Other' };
 /** Site party colours (Coalition uses the Liberal colour). */
-export const vicColor = (k: string) => pColor(k === 'LNP' ? 'LIB' : k);
+export const vicColor = (k: string) => (k === 'OTH' ? '#8a8f99' : pColor(k === 'LNP' ? 'LIB' : k));
 
 let shared: { at: number; p: Promise<VicLive> } | null = null;
 function load(force = false): Promise<VicLive> {
