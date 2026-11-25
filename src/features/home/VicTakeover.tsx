@@ -7,6 +7,8 @@ import { partyKey } from '../au/model';
 import { AverageBars, EarlyVotes, NewestPoll, ProjectionBar, TppBar } from '../au/VicLiveWidgets';
 import { VIC_NAME, useVicLive, vicColor } from '../au/vicLive';
 import '../au/vic-live.css';
+import '../../lib/liquidGlass';
+import { Link } from 'react-router-dom';
 
 /** Polls close 6pm AEDT Sat 28 Nov 2026 (UTC+11). */
 export const VIC_CLOSE = Date.parse('2026-11-28T18:00:00+11:00');
@@ -26,7 +28,7 @@ function Counting() {
   }, [res.data]);
   const counting = res.data && res.data.status !== 'pre-election' && tally.length > 0;
   return (
-    <div className="vt__panel">
+    <div className="vt__panel lg">
       <h3>{res.data?.status === 'final' ? 'Final result' : 'Live count · won + leading'}</h3>
       {counting ? (
         <div className="vt__big" style={{ gap: 18 }}>
@@ -60,14 +62,14 @@ export default function VicTakeover() {
         <div className="vt__grid">
           {closed && <Counting />}
           {data.polls && (
-            <div className="vt__panel">
+            <div className="vt__panel lg">
               <h3>Poll average · latest {data.polls.averageOf.length}</h3>
               <AverageBars d={data} compact />
               <TppBar d={data} />
             </div>
           )}
           {p && (
-            <div className="vt__panel">
+            <div className="vt__panel lg">
               <h3>If the polls are right · uniform swing</h3>
               <div className="vt__big"><b className="num" style={{ color: vicColor('LNP') }}>{p.after.LNP ?? 0}</b><span className="faint">Coalition</span><b className="num" style={{ color: vicColor('ALP') }}>{p.after.ALP ?? 0}</b><span className="faint">Labor</span></div>
               <ProjectionBar d={data} />
@@ -75,7 +77,7 @@ export default function VicTakeover() {
             </div>
           )}
           {data.earlyVotes && (
-            <div className="vt__panel">
+            <div className="vt__panel lg">
               <h3>Already voted · VEC</h3>
               <EarlyVotes d={data} />
               <p className="vt__note">Early votes cast since 17 November{data.earlyVotes.updated ? `, as of ${data.earlyVotes.updated}` : ''}.</p>
@@ -84,6 +86,7 @@ export default function VicTakeover() {
         </div>
       )}
       <div className="vt__ctas">
+        <Link to="/au/victoria/immersive" className="lg-immersive"><span className="lg-immersive__icon" aria-hidden="true">🌏</span><span><small>New · 3D</small>Enter Immersive Mode</span></Link>
         <Button variant="accent" size="lg" to="/au/victoria">{closed ? 'Live results →' : 'Victoria hub →'}</Button>
         <Button variant="ghost" size="lg" to="/au/victoria/districts">All 88 seats</Button>
         <Button variant="ghost" size="lg" to="/au/swingometer">Swingometer</Button>
