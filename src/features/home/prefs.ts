@@ -30,8 +30,8 @@ export { read as readLocal };
 const COUNTRIES: HomeCountry[] = ['us', 'au', 'nz', 'world'];
 export function useHomeCountry(): [HomeCountry, (c: HomeCountry) => void] {
   const [c, setC] = useState<HomeCountry>(() => {
-    const v = read<string>(C_KEY, 'us');
-    return (COUNTRIES as string[]).includes(v) ? (v as HomeCountry) : 'us';
+    const v = read<string>(C_KEY, 'au');
+    return (COUNTRIES as string[]).includes(v) ? (v as HomeCountry) : 'au';
   });
   return [c, (n) => { setC(n); write(C_KEY, n); }];
 }

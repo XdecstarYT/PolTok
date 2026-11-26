@@ -16,8 +16,8 @@ import { useSettings } from '../lib/settings';
 import { UpdatesBell } from '../features/updates';
 import { ToastProvider, Kbd, useNow, useReducedMotion, fmtTime, tzAbbr } from '../components';
 import { Ticker } from './shell/Ticker';
+import { ElectionBar } from './shell/ElectionBar';
 const CommandPalette = lazy(() => import('./shell/CommandPalette').then((m) => ({ default: m.CommandPalette })));
-import { RaceCallWatcher } from './shell/RaceCallWatcher';
 import { HistoryRecorder } from '../features/home/prefs';
 import { AskPolTok } from '../features/ask/AskPolTok';
 import { UpdatePrompt } from '../lib/pwa';
@@ -26,12 +26,11 @@ import './shell/shell.css';
 
 export const NAV = [
   { to: '/', label: 'Home' },
-  { to: '/live', label: 'Live' },
-  { to: '/map', label: 'Map' },
+  { to: '/au/victoria', label: '🗳️ Vic 2026' },
+  { to: '/au/victoria/live', label: 'Live Desk' },
+  { to: '/au/victoria/parliament', label: 'Projection' },
+  { to: '/au/victoria/candidates', label: 'Candidates' },
   { to: '/news', label: 'News' },
-  { to: '/races', label: 'Races' },
-  { to: '/polls', label: 'Polls' },
-  { to: '/forecast', label: 'Forecast' },
   { to: '/au', label: 'Australia' },
   { to: '/world', label: 'World' },
   { to: '/feed', label: 'Feed' },
@@ -39,8 +38,8 @@ export const NAV = [
 
 const TABS = [
   { to: '/', label: 'Home', Icon: IconHome },
-  { to: '/live', label: 'Live', Icon: IconLive },
-  { to: '/map', label: 'Map', Icon: IconMap },
+  { to: '/au/victoria/live', label: 'Vic Live', Icon: IconLive },
+  { to: '/au/victoria/parliament', label: 'Seats', Icon: IconMap },
   { to: '/news', label: 'News', Icon: IconNews },
   { to: '/menu', label: 'Menu', Icon: IconGrid },
 ];
@@ -77,18 +76,16 @@ function Wordmark() {
 }
 
 function LiveStatus() {
-  const { mode, connected } = useLive();
-  const local = mode === 'browser-live';
-  const state =
-    mode === 'connecting' ? { cls: 'is-wait', label: 'CONNECTING' }
-    : !connected && !local ? { cls: 'is-wait', label: 'RECONNECTING' }
-    : { cls: 'is-live', label: 'LIVE' };
+  // US election night is over: the header pill now tracks the Victorian election.
+  const now = useNow(30000);
+  const close = Date.parse('2026-11-28T18:00:00+11:00');
+  const live = now >= close && now < Date.parse('2026-12-12T00:00:00+11:00');
   return (
     <span className="sh-status">
-      <span className={`sh-pill ${state.cls}`} role="status" aria-live="polite" title="Real results: AP via The New York Times">
+      <Link to="/au/victoria/live" className={`sh-pill ${live ? 'is-live' : 'is-vic'}`} title="Victorian state election">
         <span className="pulse" aria-hidden="true" />
-        {state.label}
-      </span>
+        {live ? 'VIC LIVE' : 'VIC 2026'}
+      </Link>
     </span>
   );
 }
@@ -109,8 +106,13 @@ type NavItem = { to: string; label: string; sub?: string };
 /** Secondary pages for the "More" menu, grouped by audience task. */
 export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
   {
-    title: 'US 2026 results',
+    title: 'US midterms 2026 · results archive',
     items: [
+      { to: '/live', label: 'US live results', sub: 'Election night archive' },
+      { to: '/map', label: 'US map', sub: 'Every state and district' },
+      { to: '/races', label: 'Races', sub: 'Senate, House & governors' },
+      { to: '/polls', label: 'US polls', sub: 'Polling averages' },
+      { to: '/forecast', label: 'Forecast', sub: 'Pre-election model' },
       { to: '/house', label: 'House', sub: 'All 435 districts, live' },
       { to: '/governors', label: 'Governors', sub: '36 races + state dashboards' },
       { to: '/candidates', label: 'Candidates', sub: 'Every nominee, headshots & results' },
@@ -292,6 +294,7 @@ export function Shell({ children }: { children: ReactNode }) {
             </button>
           </div>
         </header>
+        {!immersive && <ElectionBar />}
         {!immersive && <Ticker />}
       </div>
 
@@ -313,7 +316,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <Link key={to} to={to} className={`sh-tab ${on ? 'is-active' : ''}`} aria-current={on ? 'page' : undefined}>
               <span className="sh-tab__icon">
                 <Icon width={22} height={22} />
-                {to === '/live' && <span className="sh-tab__dot" aria-hidden="true" />}
+                {to === '/au/victoria/live' && <span className="sh-tab__dot" aria-hidden="true" />}
               </span>
               <span className="sh-tab__t">{label}</span>
             </Link>
@@ -322,7 +325,6 @@ export function Shell({ children }: { children: ReactNode }) {
       </nav>
 
       {cmdkUsed && <Suspense fallback={null}><CommandPalette open={cmdk} onClose={closeCmdk} /></Suspense>}
-      <RaceCallWatcher />
       <HistoryRecorder />
       <AskPolTok />
       <UpdatePrompt />

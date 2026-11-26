@@ -7,6 +7,7 @@ const TABS = [
   { to: '/au/victoria/live', label: '🔴 Live Desk' },
   { to: '/au/victoria/parliament', label: 'Vic projection' },
   { to: '/au/victoria/candidates', label: 'Vic candidates' },
+  { to: '/au/victoria/policies', label: 'Compare promises' },
   { to: '/au/victoria/build', label: 'Build your own' },
   { to: '/au/victoria/districts', label: 'Vic districts' },
   { to: '/au/states', label: 'States' },

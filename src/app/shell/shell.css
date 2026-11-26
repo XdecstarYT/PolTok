@@ -320,3 +320,31 @@
 
 /* ── Main menu button (legacy; not rendered in the top bar) ── */
 .sh-menubtn { display: none; }
+
+/* ── Victorian election mode (Nov 2026) ── */
+.sh-pill.is-vic { color: var(--accent-ink, #0d1200); background: var(--accent); border: 1px solid transparent; --pulse-c: var(--accent-ink, #0d1200); text-decoration: none; }
+a.sh-pill { text-decoration: none; }
+.tk__badge--vic { color: var(--accent); }
+
+@keyframes eb-flow { to { background-position: 200% 0; } }
+.eb { position: relative; border-bottom: 1px solid var(--line-2);
+  background: radial-gradient(600px 80px at 0% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%), color-mix(in srgb, var(--bg-1) 92%, transparent); }
+.eb__stripe { position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, #e53935, #ff9a4a, #cdf25a, #36c46b, #3d7bff, #e53935); background-size: 200% 100%; animation: eb-flow 8s linear infinite; }
+.eb__in { display: flex; align-items: center; gap: 10px 18px; flex-wrap: wrap; padding: 9px clamp(12px, 3vw, 28px) 8px; max-width: var(--maxw, 1400px); margin: 0 auto; }
+.eb__title { display: inline-flex; align-items: center; gap: 9px; color: var(--text); text-decoration: none; font: 800 14px/1.1 var(--font-display, 'Inter Tight', sans-serif); }
+.eb__title b { font-weight: 900; text-transform: uppercase; letter-spacing: .04em; }
+.eb__box { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--accent); font-size: 15px; box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 40%, transparent); }
+.eb__date { color: var(--accent); font-weight: 800; }
+.eb__clock { display: inline-flex; align-items: baseline; gap: 8px; color: var(--text-2); font-size: 12px; font-weight: 700; }
+.eb__clock small { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
+.eb__clock b { font: 800 16px/1 var(--font-data, var(--font-display)); color: var(--text); letter-spacing: .02em; }
+.eb__clock i { font-style: normal; font-size: .7em; color: var(--text-3); margin-left: 1px; }
+@keyframes eb-blink { 50% { opacity: .35; } }
+.eb__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--live, #ff3d55); animation: eb-blink 1.4s infinite; }
+.eb__links { display: flex; gap: 6px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+.eb__links::-webkit-scrollbar { display: none; }
+.eb__links a { white-space: nowrap; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--text-2); font: 700 12.5px/1 var(--font-body, sans-serif); text-decoration: none; transition: border-color .2s, color .2s; }
+.eb__links a:hover, .eb__links a.is-on { color: var(--text); border-color: var(--accent); }
+.eb--live .eb__links a:first-child { background: var(--live-fill, #d0102a); color: #fff; border-color: transparent; }
+@media (max-width: 720px) { .eb__in { gap: 6px 12px; padding: 7px 12px; } .eb__title { font-size: 13px; } .eb__links { margin-left: 0; width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .eb__stripe { animation: none; } }

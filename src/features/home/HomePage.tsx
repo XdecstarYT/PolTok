@@ -17,6 +17,7 @@ import { useHomeCountry, type HomeCountry } from './prefs';
 
 const USMap = lazy(() => import('../map/USMap').then((m) => ({ default: m.USMap })));
 const VicTakeover = lazy(() => import('./VicTakeover'));
+const VicHome = lazy(() => import('./VicHome'));
 const heroes = () => import('./heroes');
 const AUHero = lazy(() => heroes().then((m) => ({ default: m.AUHero })));
 const NZHero = lazy(() => heroes().then((m) => ({ default: m.NZHero })));
@@ -491,8 +492,11 @@ export default function HomePage() {
   return (
     <div className="page hm">
       <Suspense fallback={<div className="hm-ph" style={{ minHeight: 420 }} aria-hidden="true" />}><VicTakeover /></Suspense>
+      <LazySection min={420} eager><VicHome /></LazySection>
+      <h2 className="hm-sechead">Around PolTok</h2>
       <CountryHero />
       <LatestUpdateCard compact className="hm-whatsnew" />
+      <h2 className="hm-sechead">US midterms 2026 · final results</h2>
       <div className="hm-band">
         <Numbers flipsAll={flipsAll} flips={flips} />
         <LazySection min={56} eager><S.Markets /></LazySection>
