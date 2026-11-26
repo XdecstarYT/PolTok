@@ -1,0 +1,58 @@
+/* Who matches you? + Make your calls */
+.mt { display: grid; justify-items: center; gap: 14px; padding: 8px 0 20px; }
+.mt-prog { width: min(520px, 100%); height: 6px; border-radius: 999px; background: var(--bg-3); overflow: hidden; }
+.mt-prog i { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 10px var(--accent); border-radius: inherit; }
+.mt-count { font: 800 12px/1 var(--font-mono, monospace); color: var(--text-3); letter-spacing: .1em; }
+.mt-stack { position: relative; width: min(440px, 100%); height: 320px; }
+.mt-card { --lg-r: 28px; position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 12px; padding: 28px; text-align: center; cursor: grab; touch-action: pan-y; user-select: none; }
+.mt-card:active { cursor: grabbing; }
+.mt-card--behind { transform: translateY(12px) scale(.94); opacity: .5; pointer-events: none; }
+.mt-card h2 { margin: 0; font: 900 clamp(22px, 4.5vw, 30px)/1.15 var(--font-display, sans-serif); letter-spacing: -.015em; }
+.mt-emoji { font-size: 54px; filter: drop-shadow(0 8px 20px rgba(0, 0, 0, .3)); }
+.mt-stamp { position: absolute; top: 22px; padding: 6px 12px; border: 3px solid; border-radius: 10px; font: 900 20px/1 var(--font-display, sans-serif); letter-spacing: .06em; }
+.mt-stamp--yes { left: 22px; color: #2fbf55; transform: rotate(-12deg); }
+.mt-stamp--no { right: 22px; color: #ff4d64; transform: rotate(12deg); }
+.mt-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.mt-btn { border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text); border-radius: 999px; padding: 12px 18px; font: 800 14px/1 var(--font-body, sans-serif); cursor: pointer; transition: transform .15s, box-shadow .15s; }
+.mt-btn:hover { transform: translateY(-2px); }
+.mt-btn--yes { border-color: #2fbf55; box-shadow: 0 0 18px color-mix(in srgb, #2fbf55 30%, transparent); }
+.mt-btn--no { border-color: #ff4d64; box-shadow: 0 0 18px color-mix(in srgb, #ff4d64 30%, transparent); }
+.mt-back { border: 0; background: none; color: var(--text-3); cursor: pointer; font-weight: 700; }
+.mt-res { display: grid; gap: 16px; }
+.mt-res__h { margin: 8px 0 0; text-align: center; font: 900 clamp(26px, 5vw, 40px)/1.1 var(--font-display, sans-serif); letter-spacing: -.02em; }
+.mt-bars { display: grid; gap: 10px; width: min(680px, 100%); margin: 0 auto; }
+.mt-bar { --lg-r: 16px; display: grid; grid-template-columns: 110px 1fr 56px; gap: 4px 12px; align-items: center; padding: 12px 16px; }
+.mt-bar b { color: var(--c); } .mt-bar strong { font: 900 22px/1 var(--font-display, sans-serif); text-align: right; }
+.mt-bar small { grid-column: 2 / -1; color: var(--text-3); font-size: 11.5px; }
+.mt-bar__track { height: 14px; border-radius: 999px; background: var(--bg-3); overflow: hidden; }
+.mt-bar__track i { display: block; height: 100%; border-radius: inherit; background: var(--c); box-shadow: 0 0 14px var(--c); }
+.mt-grid { display: grid; gap: 6px; }
+.mt-row { display: grid; grid-template-columns: minmax(0, 1.4fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--bg-2); }
+@media (max-width: 640px) { .mt-row { grid-template-columns: 1fr; } }
+.mt-row__q { display: grid; gap: 3px; font-size: 14px; font-weight: 700; } .mt-row__q small { color: var(--text-3); font-weight: 500; }
+.mt-row__p { display: flex; flex-wrap: wrap; gap: 5px; }
+.mt-chip { font: 800 11.5px/1 var(--font-body, sans-serif); font-style: normal; padding: 6px 8px; border-radius: 999px; background: var(--bg-3); color: var(--text-2); }
+.mt-chip.is-same { background: var(--c); color: #fff; box-shadow: 0 0 12px color-mix(in srgb, var(--c) 50%, transparent); }
+
+.pr-score { --lg-r: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; padding: 18px 22px; margin-bottom: 14px; }
+.pr-score b { display: block; font: 900 44px/1 var(--font-display, sans-serif); } .pr-score b small { font-size: 20px; color: var(--text-3); }
+.pr-score p { margin: 0; font-weight: 800; flex-basis: 100%; }
+.pr-score .lg-btn { margin-left: auto; }
+.pr-vs { font: 900 20px/1 var(--font-display, sans-serif); color: var(--text-3); }
+.pr-lock b { font-size: 30px !important; } .pr-lock small { color: var(--text-3); font-size: 12px; }
+.pr-gov { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+.pr-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.pr-seat { --lg-r: 20px; padding: 14px; display: grid; gap: 10px; align-content: start; transition: box-shadow .3s; }
+.pr-seat.is-right { box-shadow: 0 0 0 2px #2fbf55, 0 0 30px color-mix(in srgb, #2fbf55 25%, transparent); }
+.pr-seat.is-wrong { opacity: .75; }
+.pr-seat header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.pr-seat header b { font: 900 19px/1.1 var(--font-display, sans-serif); } .pr-seat header small { color: var(--text-3); font-size: 12px; }
+.pr-res { margin-left: auto; font: 800 11px/1 var(--font-body, sans-serif); font-style: normal; color: #fff; padding: 5px 8px; border-radius: 999px; }
+.pr-opts { display: grid; gap: 6px; }
+.pr-opt { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 9px 11px; border-radius: 14px; border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text); cursor: pointer; transition: transform .15s, border-color .15s, background .15s, box-shadow .15s; }
+.pr-opt:not(:disabled):hover { transform: translateY(-1px); border-color: var(--c); }
+.pr-opt[aria-pressed='true'] { border-color: var(--c); background: color-mix(in srgb, var(--c) 22%, var(--bg-2)); box-shadow: 0 0 0 1px var(--c), 0 0 22px color-mix(in srgb, var(--c) 35%, transparent); }
+.pr-opt:disabled { cursor: default; }
+.pr-opt span { display: grid; gap: 2px; min-width: 0; } .pr-opt b { font-size: 14px; } .pr-opt small { color: var(--text-3); font-size: 11.5px; }
+.pr-gov .pr-opt { flex-direction: column; align-items: flex-start; }
+.pr-more { font-size: 12.5px; font-weight: 700; color: var(--accent); justify-self: start; }

@@ -8,6 +8,8 @@ const TABS = [
   { to: '/au/victoria/parliament', label: 'Vic projection' },
   { to: '/au/victoria/candidates', label: 'Vic candidates' },
   { to: '/au/victoria/premier', label: '👑 Battle for Premier' },
+  { to: '/au/victoria/match', label: '💘 Who matches you?' },
+  { to: '/au/victoria/predict', label: '🎯 Make your calls' },
   { to: '/au/victoria/voters', label: 'Voter explorer' },
   { to: '/au/victoria/policies', label: 'Compare promises' },
   { to: '/au/victoria/build', label: 'Build your own' },

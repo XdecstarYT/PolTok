@@ -17,6 +17,7 @@ import { UpdatesBell } from '../features/updates';
 import { ToastProvider, Kbd, useNow, useReducedMotion, fmtTime, tzAbbr } from '../components';
 import { Ticker } from './shell/Ticker';
 import { ElectionBar } from './shell/ElectionBar';
+import { Journey } from '../features/au/engage/Journey';
 const CommandPalette = lazy(() => import('./shell/CommandPalette').then((m) => ({ default: m.CommandPalette })));
 import { HistoryRecorder } from '../features/home/prefs';
 import { AskPolTok } from '../features/ask/AskPolTok';
@@ -307,6 +308,7 @@ export function Shell({ children }: { children: ReactNode }) {
         transition={{ duration: 0.26, ease: [0.2, 0.8, 0.2, 1] }}
       >
         {children}
+        {!immersive && loc.pathname.startsWith('/au/victoria') && <Journey />}
       </motion.main>
 
       <nav className="sh-tabbar" aria-label="Primary mobile">

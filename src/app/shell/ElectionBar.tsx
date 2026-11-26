@@ -18,8 +18,8 @@ export function ElectionBar() {
     { to: '/au/victoria/live', label: state === 'live' ? '🔴 Live results' : '🔴 Live Desk' },
     { to: '/au/victoria/parliament', label: '🏛️ Projection' },
     { to: '/au/victoria/premier', label: '👑 Premier race' },
+    { to: '/au/victoria/predict', label: '🎯 Make your calls' },
     { to: '/au/victoria/candidates', label: '👥 Candidates' },
-    { to: '/au/victoria/build', label: '🎛️ Build your own' },
   ];
   return (
     <div className={`eb eb--${state}`} role="region" aria-label="Victorian state election">
