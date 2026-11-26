@@ -1,7 +1,7 @@
 import { useState, type CSSProperties } from 'react';
 import type { Party } from '../types';
 import { initials, PARTY_COLOR } from '../lib/format';
-import { chunkFor, personPhoto, photoFromUrl, usePhotoIndex, type PersonPhoto, type PhotoQuery } from '../data/photos';
+import { chunkFor, focalFor, personPhoto, photoFromUrl, usePhotoIndex, type PersonPhoto, type PhotoQuery } from '../data/photos';
 import './person-avatar.css';
 
 /**
@@ -10,6 +10,14 @@ import './person-avatar.css';
  * `lookup` resolves a portrait from the lazily loaded photo index when no explicit `photo` is given; the avatar shows
  * initials until the index arrives, then swaps in the photo.
  */
+/** centre and zoom on the face when we know where it is (Commons photos; official ones are pre-cropped) */
+function focalProps(url: string): { className?: string; style?: CSSProperties } {
+  const f = focalFor(url);
+  if (!f) return {};
+  const [x, y, z, tx, ty] = f;
+  return { className: 'is-focal', style: { objectPosition: `${x}% ${y}%`, transformOrigin: `${x}% ${y}%`, transform: z > 1.01 || tx || ty ? `translate(${tx}%, ${ty}%) scale(${z})` : undefined } };
+}
+
 export function PersonAvatar({ name, party, color, photo, lookup, size = 40, shape = 'circle', className }: {
   name: string; party?: Party; color?: string; photo?: PersonPhoto | string | null; lookup?: PhotoQuery; size?: number;
   shape?: 'circle' | 'portrait'; className?: string;
@@ -24,7 +32,7 @@ export function PersonAvatar({ name, party, color, photo, lookup, size = 40, sha
   return (
     <span className={`pa pa--${shape} ${show ? 'pa--photo' : 'pa--ini'} pt-avatar ${className ?? ''}`} style={style} title={show ? `${name} — ${ph!.credit}` : name}>
       {show ? (
-        <img src={ph!.url} alt={name} width={size} height={h} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setBad(ph!.url)} />
+        <span className="pa__clip"><img src={ph!.url} alt={name} width={size} height={h} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setBad(ph!.url)} {...focalProps(ph!.url)} /></span>
       ) : (
         <><span className="pa__ini" aria-hidden="true">{initials(name || '?')}</span><span className="sr-only">{name}</span></>
       )}

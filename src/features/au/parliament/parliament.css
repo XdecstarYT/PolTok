@@ -76,7 +76,7 @@
 .hc__seat:hover, .hc__seat:focus-visible { transform: translate(-50%, -50%) scale(1.45); z-index: 5; outline: none; box-shadow: 0 0 0 3px var(--c), 0 0 28px var(--c); }
 .hc__seat.is-tossup { animation: hc-pop 0.5s var(--d) both cubic-bezier(0.2, 0.9, 0.3, 1.3), hc-pulse 1.8s 1s infinite; box-shadow: 0 0 0 2px var(--c); outline: 2px dashed color-mix(in srgb, var(--text) 55%, transparent); outline-offset: 2px; }
 .hc__empty { display: block; width: 100%; height: 100%; border-radius: 50%; background: var(--c); }
-.hc__centre { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); display: grid; justify-items: center; gap: 6px; text-align: center; width: 58%; }
+.hc__centre { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); pointer-events: none; display: grid; justify-items: center; gap: 6px; text-align: center; width: 58%; }
 .hc__tally { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; }
 .hc__tally span { display: grid; justify-items: center; }
 .hc__tally b { font: 900 clamp(22px, 5cqw, 44px)/1 var(--font-display, sans-serif); letter-spacing: -0.03em; text-shadow: 0 0 22px currentColor; }

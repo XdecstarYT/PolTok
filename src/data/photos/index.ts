@@ -15,7 +15,7 @@ import { auRec, genRec, offRec, type GenRec, type PhotoChunk } from './store';
 import { isPhotoBlocked } from './blocklist';
 export { PHOTO_BLOCKLIST, isPhotoBlocked, photoSlug } from './blocklist';
 export { personKey };
-export { usePhotoIndex, loadPhotoIndex, photoIndexReady } from './store';
+export { usePhotoIndex, loadPhotoIndex, photoIndexReady, focalFor } from './store';
 
 export interface PersonPhoto { url: string; credit: string; licence: string; licenceUrl?: string; source: string; official?: boolean }
 export type PhotoScope = 'au' | 'nz' | 'us' | 'us26' | 'world';
@@ -29,7 +29,7 @@ const commons = (r: GenRec | undefined): PersonPhoto | undefined => {
   if ('b' in r) return bioguidePhoto(r.b);
   const f = encodeURIComponent(r.f.replace(/ /g, '_'));
   return {
-    url: `https://commons.wikimedia.org/wiki/Special:FilePath/${f}?width=256`,
+    url: `https://commons.wikimedia.org/wiki/Special:FilePath/${f}?width=400`,
     credit: `Photo: ${r.a}, ${r.l} via Wikimedia Commons`, licence: r.l, licenceUrl: r.u || undefined,
     source: `https://commons.wikimedia.org/wiki/File:${f}`,
   };

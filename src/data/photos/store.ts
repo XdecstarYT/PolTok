@@ -13,11 +13,14 @@ export type GenRec = CommonsRec | { b: string; q: string };
 export type PhotoChunk = 'au' | 'us26' | 'gen' | 'off';
 
 const LOADERS: Record<PhotoChunk, () => Promise<Record<string, GenRec>>> = {
-  au: () => import('../au-photos').then((m) => m.AU_PHOTOS),
+  au: () => Promise.all([import('../au-photos'), import('./focal')]).then(([m, f]) => { focal = f.FOCAL; return m.AU_PHOTOS; }),
   us26: () => import('./generated-us26').then((m) => m.PHOTOS),
   gen: () => import('./generated').then((m) => m.PHOTOS),
   off: () => import('./official').then((m) => m.OFFICIAL as unknown as Record<string, GenRec>),
 };
+let focal: Record<string, [number, number, number, number, number]> = {};
+/** face framing for a Commons thumbnail URL (see ./focal.ts), once the AU chunk has loaded */
+export const focalFor = (url: string) => { const m = url.match(/FilePath\/([^?]+)/); return m ? focal[m[1]] : undefined; };
 const maps: Partial<Record<PhotoChunk, Record<string, GenRec>>> = {};
 const pending: Partial<Record<PhotoChunk, Promise<void>>> = {};
 let version = 0;

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react';
 import { AnimatePresence, m } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import { PersonAvatar } from '../../../components/PersonAvatar';
 import { personPhoto } from '../../../data/photos';
 import { usePhotoIndex } from '../../../data/photos/store';
@@ -156,7 +157,8 @@ export function ProfileHost() {
     const prev = document.body.style.overflow; document.body.style.overflow = 'hidden';
     return () => { window.removeEventListener('keydown', k); document.body.style.overflow = prev; };
   }, [open]);
-  return (
+  if (typeof document === 'undefined') return null;
+  return createPortal(
     <AnimatePresence>
       {open && (
         <m.div key="pfback" className="pf-back" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeProfile} role="presentation">
@@ -167,6 +169,7 @@ export function ProfileHost() {
           </m.div>
         </m.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
