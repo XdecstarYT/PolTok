@@ -11,6 +11,7 @@ import { VIC_NAME, useVicLive, vicColor } from '../vicLive';
 import { Hemicycle, ModelSummary, RatingsBoard, SeatProfile, type HView } from './components';
 import { candidatesAsAt, allCandidates } from './people';
 import { FindSeat } from './FindSeat';
+import { ProfileHost } from './Profile';
 import '../au.css';
 
 const VIC_CLOSE = Date.parse('2026-11-28T18:00:00+11:00');
@@ -87,6 +88,7 @@ export default function ParliamentPage() {
           {m && <Card className="vp-wide" title="Every seat, rated" kicker="Tap a seat for its profile"><RatingsBoard m={m} onPick={pick} /></Card>}
         </div>
       )}
+      <ProfileHost />
       {seat && <SeatProfile id={seat} data={data} onClose={() => pick(null)} />}
     </div>
   );

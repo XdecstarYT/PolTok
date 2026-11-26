@@ -8,6 +8,7 @@ import { AuNav } from '../AuNav';
 import { useVicLive, vicColor, VIC_NAME } from '../vicLive';
 import { ProfileCard, SeatProfile } from './components';
 import { SEATS, allCandidates, candidatesAsAt } from './people';
+import { ProfileHost } from './Profile';
 import '../au.css';
 
 const GROUPS = ['ALP', 'LNP', 'GRN', 'ONP', 'IND', 'OTH'];
@@ -55,6 +56,7 @@ export default function CandidatesDirectory() {
       </div>
       {n < list.length && <div className="cd-more"><Button variant="ghost" size="lg" onClick={() => setN((x) => x + PAGE * 2)}>Show more ({list.length - n} left)</Button></div>}
       <p className="faint" style={{ fontSize: 12, marginTop: 18 }}>Names, parties and ballot positions as published by the VEC; contact details are deliberately not shown. Photos only where a freely licensed (Wikimedia Commons) or official portrait exists. <Link to="/au/victoria/parliament">See the seat model →</Link></p>
+      <ProfileHost />
       {open && <SeatProfile id={open} data={data} onClose={() => setOpen(null)} />}
     </div>
   );

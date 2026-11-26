@@ -8,6 +8,8 @@ import { VIC_NAME, vicColor, type Rating, type VicLive, type VicModel } from '..
 import { candidates, member2022, personFor, seatById, type Person } from './people';
 import './parliament.css';
 import { useFollowed } from '../follow';
+import { m as motion } from 'framer-motion';
+import { Face, openProfile, useOpen } from './Profile';
 
 export const RATING_LABEL: Record<Rating, string> = { safe: 'Safe', likely: 'Likely', leans: 'Leans', tossup: 'Toss-up' };
 const pct = (x: number) => (x >= 0.995 ? '>99%' : x <= 0.005 ? '<1%' : `${Math.round(x * 100)}%`);
@@ -24,7 +26,7 @@ export function ProfileCard({ p, model, compact }: { p: Person; model?: VicModel
   return (
     <article className={`pc lg${compact ? ' pc--compact' : ''}`} style={{ ['--pc' as string]: vicColor(p.bucket) } as CSSProperties}>
       <div className="pc__top">
-        <PersonAvatar name={p.name} color={vicColor(p.bucket)} lookup={{ name: p.name, scope: 'au' }} size={compact ? 52 : 76} shape={compact ? 'circle' : 'portrait'} />
+        <Face p={p} ctx={`card${compact ? 'c' : ''}`} size={compact ? 52 : 76}><PersonAvatar name={p.name} color={vicColor(p.bucket)} lookup={{ name: p.name, scope: 'au' }} size={compact ? 52 : 76} shape={compact ? 'circle' : 'portrait'} /></Face>
         <div className="pc__id">
           <h3>{p.name}</h3>
           <p className="pc__party"><i />{p.partyName}</p>
@@ -168,6 +170,7 @@ export function Hemicycle({ data, view, live, onPick, model: override }: { data:
   const ordered = useMemo(() => [...seats].sort((a, b) => ORDER.indexOf(a.group) - ORDER.indexOf(b.group) || (b.chance ?? 0) - (a.chance ?? 0)), [seats]);
   const tally = useMemo(() => { const o: Record<string, number> = {}; for (const s of seats) o[s.group] = (o[s.group] ?? 0) + 1; return o; }, [seats]);
   const hv = hover ? seats.find((s) => s.id === hover.id) : null;
+  const openNow = useOpen();
   return (
     <div className="hc">
       <div className="hc__stage" onMouseLeave={() => setHover(null)}>
@@ -178,9 +181,12 @@ export function Hemicycle({ data, view, live, onPick, model: override }: { data:
               style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%`, ['--c' as string]: vicColor(s.group), ['--d' as string]: `${i * 9}ms` } as CSSProperties}
               onMouseEnter={(e) => { const r = (e.currentTarget.parentElement as HTMLElement).getBoundingClientRect(); const b = e.currentTarget.getBoundingClientRect(); setHover({ id: s.id, x: b.left - r.left + b.width / 2, y: b.top - r.top }); }}
               onFocus={(e) => { const r = (e.currentTarget.parentElement as HTMLElement).getBoundingClientRect(); const b = e.currentTarget.getBoundingClientRect(); setHover({ id: s.id, x: b.left - r.left + b.width / 2, y: b.top - r.top }); }}
-              onClick={() => onPick(s.id)}
+              onClick={() => (s.person ? openProfile(s.person, `hc:${s.person.seatId}:${s.person.name}`) : onPick(s.id))}
               aria-label={`${seatById.get(s.id)?.name}: ${s.person?.name ?? 'unknown'} (${VIC_NAME[s.group] ?? s.group})${s.chance != null ? `, ${pct(s.chance)}` : ''}`}>
-              {s.person ? <PersonAvatar name={s.person.name} color={vicColor(s.group)} lookup={{ name: s.person.name, scope: 'au' }} size={64} /> : <span className="hc__empty" />}
+              {s.person ? (() => { const lid = `hc:${s.person.seatId}:${s.person.name}`; const hidden = openNow?.lid === lid; return (
+                <motion.div className="hc__face" layoutId={hidden ? undefined : lid} style={{ visibility: hidden ? 'hidden' : undefined }}>
+                  <PersonAvatar name={s.person.name} color={vicColor(s.group)} lookup={{ name: s.person.name, scope: 'au' }} size={64} />
+                </motion.div>); })() : <span className="hc__empty" />}
             </button>
           );
         })}
@@ -191,7 +197,7 @@ export function Hemicycle({ data, view, live, onPick, model: override }: { data:
         {hv && hover && hv.person && (
           <div className="hc__pop" style={{ left: hover.x, top: hover.y }}>
             <ProfileCard p={hv.person} model={override ?? data?.model} compact />
-            <span className="hc__popseat">{seatById.get(hv.id)?.name}{hv.rating ? ` · ${RATING_LABEL[hv.rating]}` : ''} · tap for the seat profile</span>
+            <span className="hc__popseat">{seatById.get(hv.id)?.name}{hv.rating ? ` · ${RATING_LABEL[hv.rating]}` : ''} · tap to open the profile</span>
           </div>
         )}
       </div>

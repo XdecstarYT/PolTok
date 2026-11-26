@@ -14,8 +14,15 @@ import { FindSeat } from '../parliament/FindSeat';
 import { FollowButton, SeatProfile } from '../parliament/components';
 import { personFor, seatById } from '../parliament/people';
 import { VIC_NAME, useVicLive, vicColor } from '../vicLive';
+import { ProfileHost } from '../parliament/Profile';
 import '../au.css';
 import './live.css';
+import { liveOdds } from './liveModel';
+import { Needle, PathTo45, Swingometer, Timeline } from './LiveWidgets';
+import { Face } from '../parliament/Profile';
+import { Hemicycle } from '../parliament/components';
+import { MapPanel, VIC_ZOOMS } from '../MapPanel';
+import { VICTORIA } from '../model';
 
 const VIC_CLOSE = Date.parse('2026-11-28T18:00:00+11:00');
 const ORDER = ['LNP', 'ONP', 'IND', 'OTH', 'GRN', 'ALP'];
@@ -43,7 +50,7 @@ function SeatCard({ id, s, fav, onOpen, model }: { id: string; s?: SeatResult; f
   return (
     <article className="ld-seat lg" style={{ ['--c' as string]: vicColor(g) } as CSSProperties} onClick={() => onOpen(id)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') onOpen(id); }}>
       <header>
-        {who ? <PersonAvatar name={who.name} color={vicColor(g)} lookup={{ name: who.name, scope: 'au' }} size={42} /> : <span className="ld-dot" />}
+        {who ? <Face p={who} ctx="ldcard" size={42} color={vicColor(g)} /> : <span className="ld-dot" />}
         <div><b>{seatById.get(id)?.name ?? id}</b><small>{who ? `${who.name} · ${VIC_NAME[g] ?? g}` : VIC_NAME[g] ?? g}</small></div>
         <FollowButton id={id} small />
       </header>
@@ -115,9 +122,24 @@ export default function LiveDeskPage() {
   }, [seats, data]);
   const keyIds = useMemo(() => [...new Set([...followed, 'vic-niddrie', 'vic-kew', 'vic-melbourne', ...(m ? Object.entries(m.seats).filter(([, s]) => s.rating === 'tossup').map(([id]) => id) : [])])].filter((id) => seatById.has(id)).slice(0, 16), [followed, m]);
   const parties = ORDER.filter((k) => (counting ? tally[k] : m?.range[k]?.median));
+  const odds = useMemo(() => (m ? liveOdds(m, counting ? res.data : null) : null), [m, counting, res.data]);
+  const [tv, setTv] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const toggleTv = () => { const on = !tv; setTv(on); try { if (on) root.current?.requestFullscreen?.(); else if (document.fullscreenElement) document.exitFullscreen(); } catch { /* fullscreen not allowed: TV layout still applies */ } };
+  useEffect(() => { const f = () => { if (!document.fullscreenElement) setTv(false); }; document.addEventListener('fullscreenchange', f); return () => document.removeEventListener('fullscreenchange', f); }, []);
+  // seats-through-the-night: one point per poll while counting (kept in this browser)
+  const [hist, setHist] = useState<{ t: number; s: Record<string, number> }[]>(() => { try { return JSON.parse(localStorage.getItem('poltok.vic.hist') ?? '[]'); } catch { return []; } });
+  useEffect(() => {
+    if (!counting) return;
+    const s: Record<string, number> = {}; for (const [k, v] of Object.entries(tally)) s[k] = v.won + v.lead;
+    setHist((h) => { const last = h[h.length - 1]; if (last && JSON.stringify(last.s) === JSON.stringify(s)) return h; const n = [...h, { t: Date.now(), s }].slice(-400); try { localStorage.setItem('poltok.vic.hist', JSON.stringify(n)); } catch { /* ignore */ } return n; });
+  }, [counting, tally]);
+  const uncalledLeads = useMemo(() => { const o: Record<string, number> = {}; for (const s of Object.values(seats)) if (!s.called && s.leader) { const g = grp(s.leader); o[g] = (o[g] ?? 0) + 1; } return o; }, [seats]);
+  const liveFills = useMemo(() => { const f: Record<string, string> = {}; for (const st of VICTORIA.seats ?? []) { const r = seats[st.id]; const g = r ? grp(r.called ?? r.leader) : null; f[st.id] = g ? vicColor(g) + (r!.called ? '' : '88') : m?.seats[st.id] ? vicColor(m.seats[st.id].fav) + '33' : '#2a3048'; } return f; }, [seats, m]);
+  const liveMap = useMemo(() => { const o: Record<string, string> = {}; for (const [id, r] of Object.entries(seats)) { const g = grp(r.called ?? r.leader); if (g) o[id] = g; } return o; }, [seats]);
 
   return (
-    <div className="page au-page ld">
+    <div className={`page au-page ld${tv ? ' ld--tv' : ''}`} ref={root}>
       <PageHeader className="au-pagehead" live={counting} kicker={counting ? `Counting · ${res.data?.source ?? 'VEC'}` : 'Victorian state election · Sat 28 Nov 2026'} title="Live Desk" crumbLabel="Victoria live"
         sub={counting ? <>Updated {new Date(res.data!.updatedAt ?? Date.now()).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })} · refreshes every 30 seconds</> : <>Election-night command centre. Results start after polls close at 6pm AEDT.</>}>
         <AuNav />
@@ -145,17 +167,26 @@ export default function LiveDeskPage() {
           {parties.map((k) => <span key={k} style={{ ['--c' as string]: vicColor(k) } as CSSProperties}><b className="num">{counting ? (tally[k]?.won ?? 0) + (tally[k]?.lead ?? 0) : m?.range[k]?.median}</b>{VIC_NAME[k] ?? k}{counting && <small> {tally[k]?.won ?? 0} won</small>}</span>)}
           {!counting && <span className="faint">Pre-count: PolTok model medians (striped). Solid = won once results arrive.</span>}
         </div>
+        {odds && (
+          <div className="ld-gauges">
+            <div className="ld-gauge lg"><h3>{counting ? 'Live chance of a majority' : 'Chance of a majority · pre-count'}</h3><Needle odds={odds} live={counting} /><small className="faint">{counting ? `PolTok live model · ${odds.reporting} seats reporting blended with the pre-election model` : 'PolTok model · moves as results land'}</small></div>
+            <div className="ld-gauge lg"><h3>Swingometer</h3><Swingometer measured={swing?.avg ?? null} polls={data?.projection ? data.projection.swing : null} /><small className="faint">Two-party swing to the Coalition since 2022{swing ? ` · ${swing.n} Labor-v-Coalition seats` : ''}</small></div>
+          </div>
+        )}
         <dl className="ld-stats">
           <div><dt>Seats reporting</dt><dd className="num">{reporting}<small>/88</small></dd></div>
           <div><dt>Called</dt><dd className="num">{called}</dd></div>
           <div><dt>Avg counted</dt><dd className="num">{avgCounted ? `${avgCounted.toFixed(0)}%` : '—'}</dd></div>
           <div><dt>2CP swing to Coalition</dt><dd className="num">{swing ? `${swing.avg > 0 ? '+' : ''}${swing.avg}` : m && data?.projection ? `~${data.projection.swing} polls` : '—'}{swing && <small> ({swing.n} seats)</small>}</dd></div>
         </dl>
+        <div className="row row-wrap" style={{ gap: 8 }}>
+        <button type="button" className="lg lg--pill lg-btn" onClick={toggleTv} aria-pressed={tv}>{tv ? '✕ Exit TV mode' : '📺 TV mode'}</button>
         {notifySupported() && (
           <button type="button" className={`lg lg--pill lg-btn${alerts ? ' is-on' : ''}`} onClick={async () => setAlerts(await askNotify())} disabled={alerts}>
             {alerts ? '🔔 Alerts on for your followed seats' : '🔔 Alert me when my seats change'}
           </button>
         )}
+        </div>
       </section>
 
       {!followed.length && <div style={{ margin: '14px 0' }}><FindSeat onSeat={(id) => setOpen(id)} /></div>}
@@ -167,7 +198,7 @@ export default function LiveDeskPage() {
               const g = grp(e.party), who = personFor(e.id, g, m), held = data?.projection?.seats[e.id]?.win2022 ?? (e.prev ? grp(e.prev) : null);
               return (
                 <li key={`${e.id}${e.kind}${e.party}${i}`} className={`k-${e.kind}`} style={{ ['--c' as string]: vicColor(g) } as CSSProperties} onClick={() => setOpen(e.id)}>
-                  {who ? <PersonAvatar name={who.name} color={vicColor(g)} lookup={{ name: who.name, scope: 'au' }} size={34} /> : <span className="ld-dot" />}
+                  {who ? <Face p={who} ctx={`feed${i}`} size={34} color={vicColor(g)} /> : <span className="ld-dot" />}
                   <span><b>{seatById.get(e.id)?.name ?? e.id}</b> {e.kind === 'called' ? <>· <b style={{ color: 'var(--c)' }}>{VIC_NAME[g] ?? g} {held && held !== g ? 'GAIN' : 'RETAIN'}</b>{held && held !== g ? ` from ${VIC_NAME[held] ?? held}` : ''}</> : e.kind === 'lead' ? <>· {VIC_NAME[g] ?? g} takes the lead{e.prev ? ` from ${VIC_NAME[grp(e.prev)] ?? e.prev}` : ''}</> : <>· first results, {VIC_NAME[g] ?? g} ahead</>}</span>
                   <time className="faint">{ago(e.at, now)}</time>
                 </li>
@@ -183,11 +214,20 @@ export default function LiveDeskPage() {
           {upsets.length ? <ul className="ld-list">{upsets.map(([id, s]) => <li key={id} onClick={() => setOpen(id)}><b>{seatById.get(id)?.name}</b><span style={{ color: vicColor(grp(s.called ?? s.leader)) }}>{VIC_NAME[grp(s.called ?? s.leader)]}{s.called ? ' won' : ' leads'}</span><small className="faint">model: {VIC_NAME[m!.seats[id].fav]}</small></li>)}</ul>
             : <p className="ld-note">{counting ? 'So far every reporting seat matches the model favourite.' : 'Shows seats bucking the model once counting starts.'}</p>}
         </Card>
+        <Card className="ld-wide" title="Live Parliament" kicker={counting ? 'Every seat, leading or won · tap a face for the full profile' : 'Pre-count: model favourite in every seat · tap a face'} live={counting}>
+          <Hemicycle data={data} view={counting ? 'live' : 'model'} live={counting ? liveMap : undefined} onPick={setOpen} />
+        </Card>
+        <Card title="Path to 45" kicker="Won (solid) + leading (striped) toward a majority"><PathTo45 tally={tally} uncalledLeads={uncalledLeads} /></Card>
+        <Card title="Seats through the night" kicker="Won + leading, every update"><Timeline hist={hist} /></Card>
+        <div className="ld-wide">
+          <MapPanel layer="vic" seats={VICTORIA.seats ?? []} fills={liveFills} title="Live map" regions={VIC_ZOOMS} kicker={counting ? 'Solid = called · faded = leading · dark = no results yet' : 'Pre-count: faint model favourites'} legendNote="Legend shows 2022 holders; colours follow the live count." />
+        </div>
         <Card className="ld-wide" title={followed.length ? 'Your seats + key seats' : 'Key seats'} kicker="⭐ Star any seat to pin it here · tap for the full profile">
           <div className="ld-seats">{keyIds.map((id) => <SeatCard key={id} id={id} s={seats[id]} fav={m?.seats[id]?.fav} onOpen={setOpen} model={data} />)}</div>
         </Card>
       </div>
       <p className="vp-method">Results: Victorian Electoral Commission district results, read every 2 minutes; calls only on a finished preference distribution or a large two-candidate lead with most of the roll counted. Nothing is estimated on this page except the clearly labelled model figures. <Link to="/au/victoria/parliament">Live Parliament →</Link></p>
+      <ProfileHost />
       {open && <SeatProfile id={open} data={data} onClose={() => setOpen(null)} />}
     </div>
   );

@@ -1,0 +1,52 @@
+/* Candidate profile sheet + clickable faces (site tokens; works across UI themes). */
+.face { padding: 0; border: 0; background: none; border-radius: 50%; cursor: pointer; display: inline-grid; place-items: center; }
+.face:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.face .pa { box-shadow: 0 0 0 2px var(--c); }
+
+.pf-back { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: 14px; background: color-mix(in srgb, var(--bg) 62%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.pf-sheet { --lg-r: 24px; position: relative; width: min(760px, 100%); max-height: calc(100dvh - 28px); overflow: auto; overscroll-behavior: contain; --lg-surface: color-mix(in srgb, var(--bg-1) 93%, transparent); }
+.pf-x { position: absolute; top: 12px; right: 12px; z-index: 3; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line-2); background: color-mix(in srgb, var(--bg-2) 85%, transparent); color: var(--text); cursor: pointer; }
+
+.pf { position: relative; padding: 0 22px 20px; display: grid; gap: 16px; overflow: hidden; border-radius: inherit; }
+.pf__band { position: absolute; inset: 0 0 auto 0; height: 150px; background: radial-gradient(120% 140% at 20% 0%, color-mix(in srgb, var(--c) 55%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, var(--c) 25%, transparent), transparent); pointer-events: none; }
+.pf__hero { position: relative; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; padding-top: 52px; }
+.pf__portrait { position: relative; flex: none; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 3px var(--c), 0 18px 50px color-mix(in srgb, var(--c) 35%, transparent); }
+.pf__portrait .pa { border-radius: 22px !important; }
+.pf__portrait .pa__ini { font-size: 54px; }
+.pf__won { position: absolute; left: 8px; bottom: 8px; padding: 6px 10px; border-radius: 999px; background: var(--c); color: #fff; font: 800 12px/1 var(--font-body, sans-serif); box-shadow: 0 0 20px var(--c); }
+.pf__id { display: grid; gap: 6px; min-width: 0; flex: 1 1 260px; }
+.pf__kicker { font: 700 11px/1.2 var(--font-mono, monospace); letter-spacing: 0.14em; text-transform: uppercase; color: var(--kicker, var(--signal)); }
+.pf__id h2 { margin: 0; font: 900 clamp(30px, 5.5vw, 46px)/1 var(--font-display, 'Inter Tight', sans-serif); letter-spacing: -0.025em; }
+.pf__party { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--text-2); font-weight: 700; }
+.pf__party i { width: 11px; height: 11px; border-radius: 50%; background: var(--c); box-shadow: 0 0 12px var(--c); }
+.pf__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf__badges span { font: 700 12px/1 var(--font-body, sans-serif); padding: 7px 10px; border-radius: 999px; background: var(--bg-3); color: var(--text-2); }
+.pf__badges .is-lead { background: color-mix(in srgb, var(--c) 22%, var(--bg-2)); color: var(--text); }
+.pf__badges .is-won { background: var(--c); color: #fff; }
+
+.pf__grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.pf__tile { --lg-r: var(--radius-lg, 16px); padding: 14px; display: grid; gap: 6px; align-content: start; }
+.pf__tile--wide { grid-column: 1 / -1; }
+.pf__tile h4 { margin: 0; font: 700 10.5px/1.2 var(--font-mono, monospace); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+.pf__tile p { margin: 0; font-size: 14px; color: var(--text-2); line-height: 1.5; }
+.pf__tile small { color: var(--text-3); font-size: 12px; }
+.pf__big { font: 900 34px/1 var(--font-display, sans-serif) !important; color: var(--c) !important; }
+.pf__ring { position: relative; width: 96px; height: 96px; }
+.pf__ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.pf__ring-bg { fill: none; stroke: var(--bg-3); stroke-width: 9; }
+.pf__ring-fg { fill: none; stroke: var(--c); stroke-width: 9; stroke-linecap: round; filter: drop-shadow(0 0 6px var(--c)); }
+.pf__ring b { position: absolute; inset: 0; display: grid; place-items: center; font: 900 22px/1 var(--font-display, sans-serif); }
+.pf__rivals { display: flex; flex-wrap: wrap; gap: 10px; }
+.pf__rival { display: grid; justify-items: center; gap: 4px; border: 0; background: none; color: var(--text-2); cursor: pointer; font: 700 11px/1.1 var(--font-body, sans-serif); max-width: 64px; transition: transform 0.15s; }
+.pf__rival:hover { transform: translateY(-2px); color: var(--text); }
+.pf__rival .pa { box-shadow: 0 0 0 2px var(--c); }
+.pf__rival span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 64px; }
+.pf__actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pf__actions .fbtn { margin: 0; }
+.pf__credit { margin: 0; font-size: 11px; color: var(--text-4, var(--text-3)); }
+
+/* standalone page */
+.pfp { max-width: 820px; margin: 0 auto; }
+.pfp .pf { padding: 0 0 20px; }
+.pfp__card { --lg-r: 24px; overflow: hidden; }
+.pfp__card .pf { padding: 0 22px 22px; }

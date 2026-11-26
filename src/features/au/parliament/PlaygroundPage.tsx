@@ -13,6 +13,7 @@ import { VIC_NAME, useVicLive, vicColor, type VicModel } from '../vicLive';
 import { Hemicycle, ModelSummary, SeatProfile } from './components';
 import { seatById } from './people';
 import { renderShareCard, shareOrDownload } from './shareCard';
+import { ProfileHost } from './Profile';
 import '../au.css';
 
 const engine = createModel(PRIM as never, CANDS as never) as { runModel: (now: Record<string, number>, o?: { sims?: number; seed?: number }) => VicModel };
@@ -126,6 +127,7 @@ export default function PlaygroundPage() {
           </div>
         </div>
       )}
+      <ProfileHost />
       {seat && <SeatProfile id={seat} data={model ? { ...(data ?? ({} as never)), model } : data} onClose={() => setSeat(null)} />}
     </div>
   );
