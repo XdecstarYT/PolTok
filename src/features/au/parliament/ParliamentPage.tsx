@@ -12,6 +12,7 @@ import { Hemicycle, ModelSummary, RatingsBoard, SeatProfile, type HView } from '
 import { candidatesAsAt, allCandidates } from './people';
 import { FindSeat } from './FindSeat';
 import { ProfileHost } from './Profile';
+import { CouncilCard, MrpCompare } from '../insights/PollsterCards';
 import '../au.css';
 
 const VIC_CLOSE = Date.parse('2026-11-28T18:00:00+11:00');
@@ -70,6 +71,8 @@ export default function ParliamentPage() {
             <p className="vp-method">Hover a face for the candidate's profile card, tap for the full seat profile. Dashed, pulsing seats are toss-ups. Faces appear only where a freely licensed or official photo is available; everyone else is shown with initials.</p>
           </Card>
           {m && <Card title="Seat projection" kicker="Median, 80% range and majority chances"><ModelSummary m={m} /></Card>}
+          {data?.extra?.mrp?.length ? <Card title="Pollsters v PolTok" kicker="Published MRP seat projections"><MrpCompare data={data} /></Card> : null}
+          {data?.extra?.council?.length ? <Card title="The upper house" kicker="Legislative Council · 40 seats"><CouncilCard data={data} /></Card> : null}
           {m && (
             <Card title="How the model works" kicker="Transparent by design">
               <div className="vp-method">

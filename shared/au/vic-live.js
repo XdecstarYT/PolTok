@@ -1,3 +1,4 @@
+import { parseExtra } from './vic-extra.js';
 // Live Victorian state election 2026 data for the website (GET /api/vic/live).
 // Sources, all fetched live and cached per warm instance:
 //  • Polls — Wikipedia "Opinion polling for the 2026 Victorian state election" (full table: primaries + ALP-v-L/NP 2PP)
@@ -133,13 +134,14 @@ export function buildPayload({ polls, pendulum, vec, now = Date.now() }) {
 /** Fetch all sources in parallel; failures are recorded, not thrown (unless everything fails). */
 export async function fetchVicLive() {
   const [p, d, v] = await Promise.allSettled([
-    wikiRaw(POLLS_PAGE).then(parsePolls),
+    wikiRaw(POLLS_PAGE).then((t) => { let extra = null; try { extra = parseExtra(t); } catch { /* optional */ } return { polls: parsePolls(t), extra }; }),
     wikiRaw(PENDULUM_PAGE).then(parsePendulum),
     fetch(VEC_STATS, { headers: { ...UA, 'user-agent': 'Mozilla/5.0 ' + UA['user-agent'] }, signal: AbortSignal.timeout(9000) })
       .then((r) => { if (!r.ok) throw new Error('VEC HTTP ' + r.status); return r.text(); }).then(parseVec),
   ]);
   if (p.status === 'rejected' && d.status === 'rejected' && v.status === 'rejected') throw new Error('all Victorian live sources failed');
-  const payload = buildPayload({ polls: p.value ?? null, pendulum: d.value ?? null, vec: v.value ?? null });
+  const payload = buildPayload({ polls: p.value?.polls ?? null, pendulum: d.value ?? null, vec: v.value ?? null });
+  if (p.value?.extra) { payload.extra = p.value.extra; payload.sources.extra = 'Wikipedia: Opinion polling for the 2026 Victorian state election (leadership, sub-state, demographic, upper house, MRP)'; }
   payload.errors = [p, d, v].map((x, i) => (x.status === 'rejected' ? `${['polls', 'pendulum', 'earlyVotes'][i]}: ${x.reason?.message ?? x.reason}` : null)).filter(Boolean);
   return payload;
 }

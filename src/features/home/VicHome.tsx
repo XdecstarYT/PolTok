@@ -14,6 +14,8 @@ import './vic-home.css';
 const TILES = [
   { to: '/au/victoria/live', emoji: '🔴', title: 'Live Desk', sub: 'The needle, race to 45, every call' },
   { to: '/au/victoria/parliament', emoji: '🏛️', title: 'Projection', sub: 'Seat model & live parliament' },
+  { to: '/au/victoria/premier', emoji: '👑', title: 'Battle for Premier', sub: 'Carroll v Wilson v Pickering' },
+  { to: '/au/victoria/voters', emoji: '🧭', title: 'Voter explorer', sub: 'By region, age and gender' },
   { to: '/au/victoria/candidates', emoji: '👥', title: 'Every candidate', sub: '734 profiles: who they are' },
   { to: '/au/victoria/policies', emoji: '⚖️', title: 'Compare the promises', sub: 'Party v party, by topic' },
   { to: '/au/victoria/build', emoji: '🎛️', title: 'Build your own', sub: 'Drag the vote, share your call' },

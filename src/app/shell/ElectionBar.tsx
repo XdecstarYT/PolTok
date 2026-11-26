@@ -17,6 +17,7 @@ export function ElectionBar() {
   const links = [
     { to: '/au/victoria/live', label: state === 'live' ? '🔴 Live results' : '🔴 Live Desk' },
     { to: '/au/victoria/parliament', label: '🏛️ Projection' },
+    { to: '/au/victoria/premier', label: '👑 Premier race' },
     { to: '/au/victoria/candidates', label: '👥 Candidates' },
     { to: '/au/victoria/build', label: '🎛️ Build your own' },
   ];

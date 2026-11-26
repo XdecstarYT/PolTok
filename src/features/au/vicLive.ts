@@ -5,6 +5,17 @@ import { pColor } from './model';
 export type VicKey = 'ALP' | 'LNP' | 'GRN' | 'ONP';
 export interface VicPoll { date: string; firm: string; t: number; ALP: number; LNP: number; GRN: number; ONP: number; tpp: { ALP: number; LNP: number } | null }
 export interface VicSeatProj { name: string; win2022: string; vs: string; margin: number; projected: string }
+export type Leader = 'Carroll' | 'Wilson' | 'Pickering';
+export interface VicSlice { date: string; firm: string; ALP: number | null; LNP: number | null; GRN: number | null; ONP: number | null }
+export interface VicExtra {
+  preferred?: ({ date: string; firm: string; DK: number | null } & Record<Leader, number | null>)[];
+  approval?: ({ date: string; firm: string } & Record<Leader, { pos: number | null; neg: number | null; net: number | null }>)[];
+  regions?: Partial<Record<'inner' | 'outer' | 'provincial' | 'rural', VicSlice>>;
+  age?: Record<string, VicSlice>;
+  gender?: Partial<Record<'women' | 'men', VicSlice>>;
+  council?: ({ date: string; firm: string } & Record<string, number | null | string>)[];
+  mrp?: { date: string; firm: string; type: string; ALP: number; LNP: number; GRN: number; ONP: number; IND: number; result: string }[];
+}
 export interface VicLive {
   updatedAt: string;
   method: string;
@@ -29,6 +40,7 @@ export interface VicLive {
     total: number;
   };
   model?: VicModel;
+  extra?: VicExtra;
   earlyVotes?: { days: { day: string; date: number; early: number; postal: number }[]; total: number; updated: string | null };
 }
 
