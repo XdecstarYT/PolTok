@@ -1,0 +1,698 @@
+{
+  "source": {
+    "name": "ABC News Victorian election policy tracker",
+    "url": "https://www.abc.net.au/news/2026-11-04/victoria-2026-election-policy-promise-tracker/107247200",
+    "asAt": "2026-11-26"
+  },
+  "topics": [
+    {
+      "id": "crime",
+      "label": "Crime & justice",
+      "emoji": "🚓",
+      "parties": {
+        "ALP": [
+          "Recruit 1,500 police officers and open a second police academy at Wyndham",
+          "Spend $62 million recruiting up to 200 police reservists for desk duties",
+          "Lift sentences for serious sexual offences, including life maximum for rape",
+          "Set a 30-year standard sentence for murdering a partner",
+          "Create a permanent $170 million organised crime unit",
+          "Invest $66.5 million in police technology, including cybercrime tools",
+          "Fund $10m council CCTV and lighting fund plus $10m venue security fund",
+          "Introduce Clare's law and ban smart glasses at community facilities"
+        ],
+        "LNP": [
+          "Reopen more than 40 police stations and recruit 3,000 extra officers",
+          "Hire 200 PSOs for train stations and 200 for high-risk shopping precincts",
+          "Bring in RICO-style laws aimed at organised crime leaders",
+          "Introduce a one-strike bail rule for offending while on bail",
+          "Extend adult sentencing for youths to 20 serious offences, including carjacking",
+          "Invest $100 million in youth early intervention and rehabilitation",
+          "Criminalise coercive control and introduce Clare's law"
+        ],
+        "GRN": [
+          "Fund a $1 billion Office of Community Safety and Crime Prevention",
+          "Repeal the 2025 changes that strengthened bail laws",
+          "Raise the age of criminal responsibility to 14",
+          "End life sentences for children",
+          "Ban police drug-detection dogs",
+          "Decriminalise personal use and possession of small amounts of drugs"
+        ],
+        "ONP": [
+          "Offer sign-on bonuses to veterans, defence members and interstate or overseas police",
+          "Provide police accommodation allowances and on-call mental health support",
+          "Charge children accused of serious violent offences as adults",
+          "Return the age of criminal responsibility to 10",
+          "Make parents liable for fines or damage caused by their children",
+          "Build Magistrates' Courts at Melton, Epping and Pakenham; raise magistrates to 170",
+          "Set up a 24/7 bail court and presumption against bail for repeat offenders",
+          "Introduce UK-style home self-defence laws and trial legal capsicum spray"
+        ]
+      }
+    },
+    {
+      "id": "health",
+      "label": "Health",
+      "emoji": "🏥",
+      "parties": {
+        "ALP": [
+          "Spend $230 million on 10 free public dental clinics, three in regional Victoria",
+          "Invest $277 million in Werribee Mercy emergency department and other hospital upgrades",
+          "Provide $125 million for Thomas Embling forensic mental health hospital",
+          "Commit $240.5 million to western Melbourne maternity services, adding 32 post-natal beds",
+          "Add $53.6 million to the Victorian Patient Transport Assistance Scheme",
+          "Make abortion care free"
+        ],
+        "LNP": [
+          "Spend $1.27 billion on 25,000 extra elective surgeries a year",
+          "Guarantee $99 million for hospital patient transit lounges",
+          "Build an $850 million West Gippsland Hospital at Drouin East",
+          "Commit $350 million to Wonthaggi Hospital and $180 million to Mildura Base",
+          "Fund Albury Wodonga Health ($100m) and Hamilton Base Hospital ($45m)",
+          "Provide $5 million to plan a youth mental health facility in Parkville",
+          "Make abortion care free, matching Labor"
+        ],
+        "GRN": [
+          "Keep VicHealth and mandate 5% of health budget for prevention",
+          "Mandate 3% of health spending for community health services",
+          "Invest $3 billion in 20 public dental clinics and free dental for all",
+          "Seek $15 million for abortion access and $10 million for public homebirth",
+          "Make abortion and contraceptive care free",
+          "Legalise cannabis and expand pill testing and supervised injecting rooms"
+        ],
+        "ONP": [
+          "Cut hospital administration and fund more doctors and nurses",
+          "Guarantee 24/7 emergency departments and minimum services in regional areas",
+          "Allow nurse-led discharging and prescribing",
+          "Fund a $136 million families package supporting expectant mothers",
+          "Scrap standalone DEI and ESG programs and redirect savings to frontline care",
+          "Standardise and link electronic medical records statewide",
+          "No planned changes to abortion laws"
+        ]
+      }
+    },
+    {
+      "id": "roads",
+      "label": "Roads",
+      "emoji": "🛣️",
+      "parties": {
+        "ALP": [
+          "Spend $352 million to double potholes fixed from 250,000 to 500,000",
+          "Pilot minimum-security prisoners doing roadside maintenance",
+          "Upgrade the Western Freeway between Melton and Caroline Springs for $550 million",
+          "Upgrade Somerton Road, Greenvale ($494m) and duplicate Hallam Road ($350m)",
+          "Upgrade Findon Road, Epping ($270m) and widen Point Cook Road ($195m)",
+          "Widen Evans Road, Cranbourne West ($180m) and Taylors Road, Kings Park ($170m)",
+          "Replace a Hoppers Crossing roundabout with lights ($90m); Wyndham Vale roads ($83m)",
+          "Invest nearly $49 million in motorcycle safety and licensing"
+        ],
+        "LNP": [
+          "Pledge $5 billion for road repairs, a 25% maintenance spending boost",
+          "Fix one million potholes through a new government repair body",
+          "Give 48 regional councils $288 million for local roads and bridges",
+          "Duplicate Donnybrook Road between Woodstock and Kalkallo for $524 million",
+          "Duplicate Thompsons Road from Clyde North to Officer South for $607 million"
+        ],
+        "GRN": [
+          "Return VicRoads to government hands and redirect savings to road repairs",
+          "Dedicate 5% of transport budget to safe bike routes",
+          "Introduce 30km/h speed limits in residential streets",
+          "Extend truck bans in Kensington, North Melbourne and West Melbourne",
+          "Double registration fees for vehicles with bonnets over 120cm wide"
+        ],
+        "ONP": [
+          "Publish condition and funding of every major regional road",
+          "Create a public pothole reporting portal",
+          "Lock in ongoing regional road funding and clear the maintenance backlog"
+        ]
+      }
+    },
+    {
+      "id": "housing",
+      "label": "Housing",
+      "emoji": "🏠",
+      "parties": {
+        "ALP": [
+          "Build 25,600 homes for first home buyers at market prices, starting 2027",
+          "Deliver 300,000-plus homes by 2051 through Activity Centres with up to 20-storey towers",
+          "Redevelop the Collingwood cohealth site with 69 social homes",
+          "Wind land tax back to previous levels over six years"
+        ],
+        "LNP": [
+          "Scrap Labor's Activity Centres and give locals more say in planning",
+          "Extend the Capital City Zone to Fishermans Bend, North Melbourne, Fitzroy, Collingwood",
+          "Return the land tax threshold to 2023 levels"
+        ],
+        "GRN": [
+          "Spend $4 billion on 88,000 new public homes and upgrades",
+          "Stop planned demolition of public housing towers",
+          "Replace auctions with fixed-price home sales",
+          "Abolish stamp duty under $1.1 million; discount it under $1.6 million",
+          "Freeze rents statewide for two years and in each new tenancy's first two years",
+          "Link rent increases to wage growth or inflation",
+          "Fund a $50 million rental regulator with landlord licensing"
+        ],
+        "ONP": [
+          "Review new-home fees, taxes and charges and cut unjustified ones",
+          "Increase foreign purchaser duty on residential property",
+          "Free up granny flats and spare-room rentals from state interference",
+          "Require community consultation before high-rises in established suburbs",
+          "Offer incentives for low-cost housing and release under-used government land"
+        ]
+      }
+    },
+    {
+      "id": "transport",
+      "label": "Public transport",
+      "emoji": "🚆",
+      "parties": {
+        "ALP": [
+          "Build the Suburban Rail Loop, cutting $1 billion in extras like station parking",
+          "Seek another $1 billion in savings via review, for a $32.3 billion total",
+          "Buy 25 X'Trapolis 2.0 trains for $673.6 million for Craigieburn and Upfield lines",
+          "Fund an $80 million study into duplicating the Upfield line",
+          "Spend $400 million on western suburbs buses running every 10 minutes"
+        ],
+        "LNP": [
+          "Pause and review the Suburban Rail Loop",
+          "Buy 25 hybrid electric trains for Melton and Wyndham Vale lines for $1.7 billion",
+          "Move replaced trains to regional Victoria for peak capacity"
+        ],
+        "GRN": [
+          "Make all public transport permanently free",
+          "Run trams and trains at least every 10 minutes, 7am to 10pm",
+          "Build a second Metro tunnel, reconfigure the City Loop, electrify Melton line",
+          "Fix the Altona Loop",
+          "Spend $270m on buses, $245m on regional services, $225m on accessible tram stops"
+        ],
+        "ONP": [
+          "Cancel the Suburban Rail Loop and redirect funds to other projects",
+          "Electrify the Melton line and complete the Airport Rail Link"
+        ]
+      }
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "emoji": "🎓",
+      "parties": {
+        "ALP": [
+          "Build a $10.73 million performing arts centre at Keilor Downs College",
+          "Upgrade The Grange P-12 College in Hoppers Crossing for $19.74 million",
+          "Reform the curriculum and assessment authority (VCAA) for $222.2 million",
+          "Spend $59.4 million on free uniforms and breakfasts for struggling families",
+          "Open a public apprenticeship academy with 2,000 electrical apprenticeships over four years"
+        ],
+        "LNP": [
+          "Build three new select-entry high schools and convert six existing schools",
+          "Spend $222 million on 10 technical schools for up to 5,000 students",
+          "Create a $115 million fund covering half of apprentices' off-the-job training",
+          "Reform classroom behaviour and review curriculum to ease teacher workloads"
+        ],
+        "GRN": [
+          "End voluntary parent contributions to make public schools fully free",
+          "Push for free university and review Victoria's eight public university acts",
+          "Put students and staff on university councils; cap vice-chancellor pay",
+          "Embed First Nations frameworks in early childhood education",
+          "Explore anti-racism and social cohesion programs in the curriculum"
+        ],
+        "ONP": [
+          "Replace the curriculum with a knowledge-rich syllabus focused on core subjects",
+          "Introduce school vouchers so families can choose schools",
+          "Expand trade schools and ease setting up independent and specialist schools"
+        ]
+      }
+    },
+    {
+      "id": "energy",
+      "label": "Energy & climate",
+      "emoji": "⚡",
+      "parties": {
+        "ALP": [
+          "Keep the net zero by 2045 emissions target",
+          "Continue transmission projects linking western renewables to the grid",
+          "Commission an independent cost review of the Western Renewables Link",
+          "Create a mineral royalties fund raising $500 million over four years for regions",
+          "Require a 2km buffer between new waste-to-energy plants and homes"
+        ],
+        "LNP": [
+          "Fund 335 fire trucks and 17 CFA stations through a $200 million plan",
+          "No plans to change the net zero by 2045 target",
+          "Cancel VNI West and halt the Western Renewables Link pending review",
+          "Reinstate a 2km buffer between wind turbines and homes",
+          "Repeal the ban on gas in homes and allow new gas projects",
+          "Introduce urban solar parks on commercial rooftops",
+          "Guarantee weekly red bin collection and drop the glass bin mandate",
+          "Double planned burns and process native timber at Victorian sawmills"
+        ],
+        "GRN": [
+          "Create a $1 billion climate adaptation fund for disaster-hit communities",
+          "Invest $2 billion in SEC solar on schools, public housing and government buildings",
+          "Impose a moratorium on AI data centres and waste-to-energy incinerators",
+          "Block new fossil fuel projects, including Viva's Geelong gas terminal",
+          "Close Loy Yang A power station earlier than planned",
+          "Ban native forest logging, duck hunting, greyhound and jumps racing"
+        ],
+        "ONP": [
+          "Scrap all net zero targets and subsidies",
+          "Repeal Victoria's ban on nuclear energy",
+          "Cancel VNI West, the Western Renewables Link and other large transmission projects",
+          "Reverse the ban on gas in homes and support offshore gas extraction",
+          "Ban new data centres and battery storage on farmland",
+          "Require consultation and water plans for data centres and batteries near homes",
+          "Support duck and deer hunting; eradicate European carp and redfin"
+        ]
+      }
+    },
+    {
+      "id": "indigenous",
+      "label": "Indigenous affairs",
+      "emoji": "🪃",
+      "parties": {
+        "ALP": [
+          "Maintain Treaty",
+          "Allocate nearly $170 million over four years to First Peoples initiatives",
+          "Fund a $7.6 million Koori Hearing List at Melbourne Magistrates' Court",
+          "Spend $16 million on 30 homes in a First Nations rent-to-buy pilot",
+          "Direct $86 million of the Social Housing Growth Fund to First Nations housing"
+        ],
+        "LNP": [
+          "Legislate to repeal Treaty within the first 100 days",
+          "Return Indigenous policy to a department reporting to a minister",
+          "Fund $52 million for urgent care through 16 Aboriginal community-controlled organisations"
+        ],
+        "GRN": [
+          "Keep Treaty and pursue further local and statewide treaties",
+          "Restructure the environment department around First Nations knowledge and nature protection",
+          "Create a $2 billion nature fund supporting First Nations-led restoration",
+          "Hand management of national and state parks to Traditional Owners"
+        ],
+        "ONP": [
+          "Scrap Treaty and abolish Gellung Warl, redirecting its funding"
+        ]
+      }
+    },
+    {
+      "id": "cost",
+      "label": "Cost of living",
+      "emoji": "💸",
+      "parties": {
+        "ALP": [
+          "Cap public transport fares at $30 a week for two years",
+          "Spend $191 million on a $30 weekly toll cap for smaller vehicles"
+        ],
+        "LNP": [
+          "Promise no new or increased taxes and repeal several Labor taxes",
+          "Cut payroll tax",
+          "Raise first home buyer stamp duty-free threshold to $1 million",
+          "Review tolling and cap tolls at $50 a week, costing $90 million a year",
+          "Return the budget to cash surplus by 2032"
+        ],
+        "GRN": [
+          "Provide $500 million in household vouchers for solar, batteries and insulation",
+          "Offer free energy assessments for renters",
+          "Give up to $3,000 off electric cars, e-bikes and two-way chargers",
+          "Set aside capped $50 lottery tickets for state-funded major events"
+        ],
+        "ONP": [
+          "Repeal Labor's land tax increases",
+          "Raise the payroll tax threshold to exempt more small employers",
+          "Abolish 10% stamp duty on home, contents and car insurance",
+          "Give $150 sport vouchers per school-age child in a $136 million package"
+        ]
+      }
+    },
+    {
+      "id": "business",
+      "label": "Business & jobs",
+      "emoji": "💼",
+      "parties": {
+        "ALP": [
+          "Create 5,000 manufacturing jobs with a $350 million grants and co-investment package",
+          "Let all pubs trade until 3am and fast-track liquor licences",
+          "Amend the Food Act 1984 to allow dogs inside pubs",
+          "Put $80 million into the Victorian Racing Industry Fund"
+        ],
+        "LNP": [
+          "Sell the Epping wholesale fruit and vegetable market, raising $578 million",
+          "Standardise local business rules and modernise home-business planning rules",
+          "Make Service Victoria the single platform for all business approvals",
+          "Set up a Business Approvals Concierge to resolve delays",
+          "Fast-track approvals for music festivals, outdoor events and liquor licences",
+          "Create a $40 million Major Events Attraction Fund"
+        ],
+        "GRN": [
+          "Levy 3% on vacant Melbourne commercial properties, raising $100 million a year",
+          "Trial a four-day week and legislate a right to work from home",
+          "Spend $100 million on paid sick leave for casual workers",
+          "Cut state defence spending to zero and end weapons supply contracts with US and Israel",
+          "Ban weapons expos in Victoria"
+        ],
+        "ONP": [
+          "Remove stamp duty on establishing new businesses",
+          "Raise the payroll tax threshold to exempt more small employers"
+        ]
+      }
+    },
+    {
+      "id": "funding",
+      "label": "Paying for it",
+      "emoji": "🧾",
+      "parties": {
+        "ALP": [
+          "Save $2 billion on the Suburban Rail Loop to fund promises",
+          "Wind up bodies like Infrastructure Victoria; merge the SRL Authority and VIDA",
+          "Cut consultant and adviser spending, saving $70 million",
+          "Stop ministerial spending on non-essential items like branded merchandise",
+          "Use $200 million unallocated Innovation Victoria funds for manufacturing jobs pledge"
+        ],
+        "LNP": [
+          "Save $22 billion over 10 years via public service hiring freeze and executive pay caps",
+          "Save $1 billion over 10 years by scrapping Treaty",
+          "Fund $1.27 billion elective surgery pledge by scrapping Breakthrough Victoria",
+          "Raise $578 million by selling the Melbourne wholesale market"
+        ],
+        "GRN": [
+          "Pursue a wealth tax on investors with over $5 million in residential property",
+          "Impose a 0.1% quarterly levy on the big five banks, raising $3 billion-plus yearly",
+          "Raise pokies tax to 75% and online gambling tax to 25%",
+          "Double taxes on casino table games"
+        ],
+        "ONP": [
+          "Scrap the Suburban Rail Loop and redirect its funds",
+          "Cut bureaucracy and bring in sunset reviews of government bodies",
+          "Redirect funding from Treaty"
+        ]
+      }
+    }
+  ],
+  "stances": [
+    {
+      "id": "srl",
+      "issue": "Suburban Rail Loop",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "Keep building it, with $2bn in savings"
+        },
+        "LNP": {
+          "stance": "mixed",
+          "note": "Pause and review the project"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "against",
+          "note": "Cancel it and redirect the money"
+        }
+      }
+    },
+    {
+      "id": "netzero",
+      "issue": "Net zero by 2045 target",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "Committed to net zero by 2045"
+        },
+        "LNP": {
+          "stance": "for",
+          "note": "No plans to change the target"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "against",
+          "note": "Scrap all net zero targets and subsidies"
+        }
+      }
+    },
+    {
+      "id": "gasban",
+      "issue": "Ban on gas in homes",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "Labor introduced the ban"
+        },
+        "LNP": {
+          "stance": "against",
+          "note": "Repeal the ban"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "against",
+          "note": "Reverse the ban"
+        }
+      }
+    },
+    {
+      "id": "newgas",
+      "issue": "New gas projects",
+      "positions": {
+        "ALP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "LNP": {
+          "stance": "for",
+          "note": "Open the door to new gas projects"
+        },
+        "GRN": {
+          "stance": "against",
+          "note": "Block all new fossil fuel projects"
+        },
+        "ONP": {
+          "stance": "for",
+          "note": "Support offshore gas extraction"
+        }
+      }
+    },
+    {
+      "id": "transmission",
+      "issue": "VNI West & Western Renewables Link",
+      "positions": {
+        "ALP": {
+          "stance": "mixed",
+          "note": "Building transmission; reviewing Western Renewables Link cost"
+        },
+        "LNP": {
+          "stance": "against",
+          "note": "Cancel VNI West, halt WRL pending review"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "against",
+          "note": "Cancel both and other big transmission lines"
+        }
+      }
+    },
+    {
+      "id": "bail",
+      "issue": "Tougher bail laws",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "Strengthened bail laws in 2025"
+        },
+        "LNP": {
+          "stance": "for",
+          "note": "One-strike rule for offending on bail"
+        },
+        "GRN": {
+          "stance": "against",
+          "note": "Repeal the 2025 bail changes"
+        },
+        "ONP": {
+          "stance": "for",
+          "note": "Presumption against bail for repeat offenders"
+        }
+      }
+    },
+    {
+      "id": "age",
+      "issue": "Raising the age of criminal responsibility",
+      "positions": {
+        "ALP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "LNP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "GRN": {
+          "stance": "for",
+          "note": "Raise it to 14"
+        },
+        "ONP": {
+          "stance": "against",
+          "note": "Return it to 10"
+        }
+      }
+    },
+    {
+      "id": "treaty",
+      "issue": "Treaty with First Peoples",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "Maintain Treaty"
+        },
+        "LNP": {
+          "stance": "against",
+          "note": "Repeal within first 100 days"
+        },
+        "GRN": {
+          "stance": "for",
+          "note": "Keep it and pursue more treaties"
+        },
+        "ONP": {
+          "stance": "against",
+          "note": "Scrap Treaty and abolish Gellung Warl"
+        }
+      }
+    },
+    {
+      "id": "activity",
+      "issue": "Activity Centres (suburban high-rise)",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "Up to 20 storeys; 300,000-plus homes by 2051"
+        },
+        "LNP": {
+          "stance": "against",
+          "note": "Axe the Activity Centres"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        }
+      }
+    },
+    {
+      "id": "landtax",
+      "issue": "Reversing land tax increases",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "Phase back to earlier levels over six years"
+        },
+        "LNP": {
+          "stance": "for",
+          "note": "Return threshold to 2023 levels"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "for",
+          "note": "Repeal Labor's increases"
+        }
+      }
+    },
+    {
+      "id": "payroll",
+      "issue": "Payroll tax cuts",
+      "positions": {
+        "ALP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "LNP": {
+          "stance": "for",
+          "note": "Cut payroll taxes"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "for",
+          "note": "Lift threshold to exempt more small employers"
+        }
+      }
+    },
+    {
+      "id": "stampduty",
+      "issue": "Stamp duty relief for home buyers",
+      "positions": {
+        "ALP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "LNP": {
+          "stance": "for",
+          "note": "$1m duty-free threshold for first home buyers"
+        },
+        "GRN": {
+          "stance": "for",
+          "note": "Abolish under $1.1m, discount under $1.6m"
+        },
+        "ONP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        }
+      }
+    },
+    {
+      "id": "fares",
+      "issue": "Cheaper public transport fares",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "$30 weekly fare cap for two years"
+        },
+        "LNP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "GRN": {
+          "stance": "for",
+          "note": "Make public transport permanently free"
+        },
+        "ONP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        }
+      }
+    },
+    {
+      "id": "tolls",
+      "issue": "Weekly toll caps",
+      "positions": {
+        "ALP": {
+          "stance": "for",
+          "note": "$30 weekly cap for smaller vehicles"
+        },
+        "LNP": {
+          "stance": "for",
+          "note": "$50 weekly cap for cars and light commercials"
+        },
+        "GRN": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        },
+        "ONP": {
+          "stance": "unclear",
+          "note": "No clear position stated"
+        }
+      }
+    }
+  ]
+}

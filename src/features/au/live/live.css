@@ -99,3 +99,6 @@
 .ld--tv .ld-race__legend b { font-size: 38px; }
 .ld--tv .ld-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
 .ld--tv .nd, .ld--tv .sw { max-width: 520px; }
+
+.ld-test { display: inline-flex; gap: 6px; align-items: center; }
+.ld-test select { background: var(--bg-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 999px; padding: 10px 12px; font: 600 13px var(--font-body, sans-serif); max-width: 170px; }

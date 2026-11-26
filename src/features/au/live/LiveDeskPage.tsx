@@ -78,6 +78,16 @@ export default function LiveDeskPage() {
   const [followed] = useFollowed();
   const [open, setOpen] = useState<string | null>(null);
   const [alerts, setAlerts] = useState(notifyAllowed());
+  const [testSeat, setTestSeat] = useState<string>('');
+  const [testMsg, setTestMsg] = useState<string | null>(null);
+  const sendTest = async () => {
+    const id = testSeat || followed[0] || 'vic-south-west-coast';
+    const ok = await askNotify(); setAlerts(ok);
+    if (!ok) { setTestMsg('Notifications are blocked for PolTok in this browser. Allow them in your browser\'s site settings, then try again.'); return; }
+    const m0 = data?.model?.seats[id];
+    notify(`🔔 Test alert · ${seatById.get(id)?.name ?? id}`, m0 ? `This is how PolTok will alert you on Saturday. Model favourite: ${VIC_NAME[m0.fav] ?? m0.fav} (${Math.round((m0.prob[m0.fav] ?? 0) * 100)}%).` : 'This is how PolTok will alert you on Saturday night.', 'test-' + id);
+    setTestMsg(`Sent a test alert for ${seatById.get(id)?.name ?? id}. If you didn\'t see it, check your system's notification settings (Focus / Do Not Disturb) for your browser.`);
+  };
   const [server, setServer] = useState<Ev[]>([]);
   const [local, setLocal] = useState<Ev[]>([]);
   const prev = useRef<AuResults | null>(null);
@@ -186,7 +196,17 @@ export default function LiveDeskPage() {
             {alerts ? '🔔 Alerts on for your followed seats' : '🔔 Alert me when my seats change'}
           </button>
         )}
+        {notifySupported() && (
+          <span className="ld-test">
+            <select value={testSeat} onChange={(e) => setTestSeat(e.target.value)} aria-label="Seat for the test alert">
+              <option value="">{followed[0] ? seatById.get(followed[0])?.name : 'South-West Coast'}</option>
+              {[...seatById.values()].map((st) => <option key={st.id} value={st.id}>{st.name}</option>)}
+            </select>
+            <button type="button" className="lg lg--pill lg-btn" onClick={sendTest}>🧪 Send a test alert</button>
+          </span>
+        )}
         </div>
+        {testMsg && <p className="ld-note" role="status">{testMsg}</p>}
       </section>
 
       {!followed.length && <div style={{ margin: '14px 0' }}><FindSeat onSeat={(id) => setOpen(id)} /></div>}

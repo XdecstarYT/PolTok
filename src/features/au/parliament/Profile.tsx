@@ -11,6 +11,7 @@ import { partyKey } from '../model';
 import { VIC_NAME, useVicLive, vicColor } from '../vicLive';
 import { candidates, member2022, personFor, seatById, type Person } from './people';
 import { FollowButton } from './components';
+import PEOPLE from '../../../data/vic-people.json';
 import './profile.css';
 
 /* ── store ── */
@@ -83,6 +84,8 @@ export function ProfileBody({ p, lid, onSwitch }: { p: Person; lid?: string; onS
         </m.div>
       </div>
 
+      {(() => { const b = (PEOPLE as unknown as { people: Record<string, { summary: string | null }> }).people[`${p.seatId}|${p.name}`]; return b?.summary ? <p className="pf__bio">{b.summary.split(/(?<=\.)\s+/).slice(0, 2).join(' ')} <span className="faint">(Wikipedia)</span></p> : null; })()}
+      <Link to={profileUrl(p)} className="lg-immersive pf__more" onClick={() => closeProfile()}><span className="lg-immersive__icon" aria-hidden="true">📖</span><span><small>Full profile</small>Who they are, what they stand for</span></Link>
       <m.div className="pf__grid" variants={stagger} initial="hidden" animate="show">
         {chance != null && (
           <m.section variants={item} className="pf__tile lg">
