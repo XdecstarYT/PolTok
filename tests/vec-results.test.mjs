@@ -36,3 +36,14 @@ test('diffResults: first results, lead changes and calls', () => {
   const ev = diffResults(a, b, 1);
   assert.deepEqual(ev.map((e) => [e.id, e.kind, e.party]).sort(), [['vic-a', 'lead', 'LIB'], ['vic-b', 'called', 'LIB'], ['vic-c', 'first', 'GRN']]);
 });
+
+test('2026 VEC layout: table columns, party-first 2CP, One Nation, enrolled voters, successful candidate', async () => {
+  const { readFileSync } = await import('node:fs');
+  const html = readFileSync(new URL('./fixtures-vec2026-district.html', import.meta.url), 'utf8');
+  const s = parseDistrictPage(html);
+  assert.equal(s.counted, 54.8);
+  assert.equal(s.fp.find((r) => r.name === 'Tam Lindrum').party, 'ONP');
+  assert.deepEqual(s.tcp.map((r) => [r.party, r.name, r.pct]), [['LIB', 'Andrew Cook', 50.7], ['ALP', 'Nina Taylor', 49.3]]);
+  assert.equal(s.called, 'LIB');
+  assert.equal(s.elected, 'Andrew Cook');
+});

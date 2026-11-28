@@ -5,7 +5,7 @@
 
 const BASE = process.env.VEC_RESULTS_BASE || 'https://www.vec.vic.gov.au/results/state-election-results/2026-state-election-results/results-by-district/';
 const UA = { 'user-agent': 'Mozilla/5.0 (PolTok results reader; +https://poltok.netlify.app)' };
-const PARTY = [[/labor/i, 'ALP'], [/liberal(?! democrat)/i, 'LIB'], [/national/i, 'NAT'], [/greens/i, 'GRN'], [/one nation/i, 'ONP']];
+const PARTY = [[/labor\b/i, 'ALP'], [/liberal(?! democrat)/i, 'LIB'], [/national/i, 'NAT'], [/greens/i, 'GRN'], [/one nation/i, 'ONP']];
 const pcode = (p) => (!p ? 'IND' : PARTY.find(([re]) => re.test(p))?.[1] ?? 'OTH');
 const ROW = /([A-Z][A-Z'’\- ]+), ([A-Z][^0-9]*?) ([\d,]+) ([\d.]+)%/g;
 const PARTY_TAIL = / (Liberal|Australian|National|Victorian|Animal|Family|Freedom|Democratic|Legalise|Shooters|Libertarian|Reason|Sustainable|Health|Angry|New Democrats|Companions|Transport|United|Pauline|Labour|The Greens|Climate|Safety|Fusion).*$/;
@@ -24,10 +24,37 @@ function rows(seg) {
   return out;
 }
 
+const cellText = (x) => text(x).trim();
+const nice = (raw) => { const [sur, giv] = raw.split(/,\s*/); const tc = (w) => w.toLowerCase().replace(/(^|[\s'’-])([a-z])/g, (m, a, b) => a + b.toUpperCase()); return giv ? `${giv.trim()} ${tc(sur.trim())}` : tc(raw.trim()); };
+/** 2026 VEC layout: real <table>s with headed columns (Candidate / Party / votes / %), in either column order. */
+function parseTables(html) {
+  const out = { fp: [], tcp: [] };
+  for (const tm of html.matchAll(/<table[\s\S]*?<\/table>/g)) {
+    const t = tm[0];
+    const heads = [...t.matchAll(/<th[\s\S]*?<\/th>/g)].map((h) => cellText(h[0]).toLowerCase());
+    const col = (re) => heads.findIndex((h) => re.test(h));
+    const ci = col(/^candidate/), pi = col(/^party/), vi = col(/votes$/), pc = col(/^%/);
+    if (ci < 0 || vi < 0 || pc < 0) continue;
+    const kind = heads.some((h) => /1st pref/.test(h)) ? 'fp' : heads.some((h) => /preferred votes/.test(h)) ? 'tcp' : null;
+    if (!kind || out[kind].length) continue;
+    for (const rm of t.matchAll(/<tr[\s\S]*?<\/tr>/g)) {
+      const cells = [...rm[0].matchAll(/<td[\s\S]*?<\/td>/g)].map((c) => cellText(c[0]));
+      if (cells.length < heads.length) continue;
+      const v = num(cells[vi]), pct = Number(cells[pc].replace('%', ''));
+      if (!Number.isFinite(v)) continue;
+      out[kind].push({ name: nice(cells[ci]), party: pcode(pi >= 0 ? cells[pi] : ''), partyName: pi >= 0 ? cells[pi] : '', v, pct });
+    }
+  }
+  const sc = /Successful candidate<\/h3>\s*<p>([\s\S]*?)<\/p>/i.exec(html);
+  const winner = sc ? cellText(sc[1]) : '';
+  out.elected = winner && !/will display here/i.test(winner) ? winner : null;
+  return out;
+}
+
 /** Parse one district results page. Returns null when the page has no counted votes yet. */
 export function parseDistrictPage(html) {
   const t = text(html);
-  const enrol = num((/Total enrolment[^:]*: ([\d,]+)/.exec(t) || [])[1] ?? NaN);
+  const enrol = num((/Total enrol(?:ment|led voters)[^:]*: ([\d,]+)/.exec(t) || [])[1] ?? NaN);
   const formal = num((/Formal votes: ([\d,]+)/.exec(t) || [])[1] ?? NaN);
   const informal = num((/Informal votes: ([\d,]+)/.exec(t) || [])[1] ?? NaN);
   const i = t.indexOf('First preference votes');
@@ -38,6 +65,13 @@ export function parseDistrictPage(html) {
   const c = pdDone ? pd : t.indexOf('Two candidate preferred results Candidate');
   const end = t.indexOf('Distributions', c) > 0 ? t.indexOf('Distributions', c) : t.indexOf('Two candidate preferred results by', c);
   const tcpRows = c >= 0 ? rows(t.slice(c, end > c ? end : c + 600)) : [];
+  const tb = /table-freeze-header-row|<th[^>]*>[\s\S]{0,120}1st pref/i.test(html) ? parseTables(html) : null;
+  let elected = null;
+  if (tb && (tb.fp.length || tb.tcp.length)) {
+    fp.splice(0, fp.length, ...tb.fp);
+    tcpRows.splice(0, tcpRows.length, ...(tb.tcp.some((r) => r.v > 0) ? tb.tcp : []));
+    if (tb.elected) { const k = tb.elected.toLowerCase(); elected = tb.fp.find((r) => k.includes(r.name.split(' ').pop().toLowerCase()) && k.includes(r.name.split(' ')[0].toLowerCase())) ?? null; }
+  }
   const fpVotes = fp.reduce((a, r) => a + r.v, 0);
   if (!fpVotes && !tcpRows.length) return null;
   const counted = Number.isFinite(enrol) && enrol > 0 ? +(((Number.isFinite(formal) ? formal : fpVotes) + (Number.isFinite(informal) ? informal : 0)) / enrol * 100).toFixed(1) : fpVotes;
@@ -51,6 +85,7 @@ export function parseDistrictPage(html) {
   } else if (fp.length) {
     seat.leader = fp[0].party; // first-preference leader only; not a call
   }
+  if (elected) { seat.called = elected.party; seat.leader = elected.party; seat.elected = elected.name; }
   return seat;
 }
 
@@ -65,7 +100,7 @@ const DISTRICT = new RegExp(`${YEAR}[^"]*?\\/([a-z0-9-]+)-district(?:-results)?\
  *  following 2026 result links from the VEC results hub. Returns { slug: url } (empty until the VEC publishes). */
 export async function discoverDistrictLinks() {
   const found = {};
-  const take = (list) => { for (const h of list) { const m = DISTRICT.exec(h); if (m && /result/i.test(h)) found[m[1]] ??= h; } };
+  const take = (list) => { for (const h of list) { const m = DISTRICT.exec(h); if (m && /result/i.test(h)) found[m[1].toLowerCase()] ??= h; } };
   const seen = new Set();
   const visit = async (u) => { if (seen.has(u) || seen.size > 12) return ''; seen.add(u); try { const r = await get(u); return r.ok ? await r.text() : ''; } catch { return ''; } };
   const firstPass = [BASE, ORIGIN + '/results/state-election-results', ORIGIN + '/results', ORIGIN + `/voting/${YEAR}-state-election`];
@@ -89,7 +124,7 @@ export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 800
     while (queue.length) {
       const id = queue.shift();
       const slug = id.replace(/^vic-/, '');
-      const url = links?.[slug] ?? BASE + slug + '-district-results';
+      const url = links?.[slug] ?? links?.[slug.toLowerCase()] ?? BASE + slug + '-district-results';
       try {
         const r = await get(url, timeoutMs);
         if (r.status === 404) { missing++; continue; }

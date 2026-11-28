@@ -12,7 +12,7 @@ export default async () => {
   if (now < FROM || now > UNTIL) return new Response('inactive');
   const store = getStore('poltok');
   // find where the VEC actually published the 2026 district pages (cached once found)
-  let links = (await store.get('vic2026-links', { type: 'json' }).catch(() => null)) ?? {};
+  let links = Object.fromEntries(Object.entries((await store.get('vic2026-links', { type: 'json' }).catch(() => null)) ?? {}).map(([k, v]) => [k.toLowerCase(), v]));
   if (Object.keys(links).length < 80) { const d = await discoverDistrictLinks().catch(() => ({})); if (Object.keys(d).length > Object.keys(links).length) { links = d; await store.setJSON('vic2026-links', links); } }
   const snap = await fetchVecDistricts(Object.keys(IDS), { links: Object.keys(links).length ? links : null });
   await store.setJSON('vic2026-cron-status', { at: now, ...snap.stats, seatsWithResults: Object.keys(snap.seats).length, sampleLink: Object.values(links)[0] ?? null });
