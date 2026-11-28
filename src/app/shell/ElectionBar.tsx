@@ -16,6 +16,7 @@ export function ElectionBar() {
   const state = now >= VIC_CLOSE ? 'live' : now >= VIC_OPEN ? 'polling' : 'pre';
   const links = [
     { to: '/au/victoria/live', label: state === 'live' ? '🔴 Live results' : '🔴 Live Desk' },
+    { to: '/au/victoria/watch', label: '📺 Watch live' },
     { to: '/au/victoria/parliament', label: '🏛️ Projection' },
     { to: '/au/victoria/premier', label: '👑 Premier race' },
     { to: '/au/victoria/predict', label: '🎯 Make your calls' },

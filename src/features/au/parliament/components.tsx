@@ -145,6 +145,9 @@ export function ModelSummary({ m }: { m: VicModel }) {
 
 /* ───────── Hemicycle of faces ───────── */
 export type HView = 'model' | '2022' | 'live';
+/** seat order on the chart: right bloc → left bloc, seats still awaiting results in the middle */
+const ord = (g: string) => (g === 'WAIT' ? 2.5 : ORDER.indexOf(g));
+
 export function Hemicycle({ data, view, live, onPick, model: override }: { data: VicLive | null; view: HView; live?: Record<string, string>; onPick: (id: string) => void; model?: VicModel | null }) {
   usePhotoIndex('au');
   const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
@@ -154,6 +157,7 @@ export function Hemicycle({ data, view, live, onPick, model: override }: { data:
       let group = 'OTH', person: Person | null = null, rating: Rating | null = null, chance: number | null = null;
       if (view === '2022') { person = member2022(id); group = person?.bucket ?? 'OTH'; }
       else if (view === 'live' && live?.[id]) { group = live[id]; person = personFor(id, group, m); }
+      else if (view === 'live' && live) { group = 'WAIT'; }
       else if (m?.seats[id]) { const s = m.seats[id]; group = s.fav; person = personFor(id, group, m); rating = s.rating; chance = s.prob[group] ?? null; }
       return { id, group, person, rating, chance };
     });
@@ -167,7 +171,7 @@ export function Hemicycle({ data, view, live, onPick, model: override }: { data:
     radii.forEach((r, ri) => { const c = counts[ri]; for (let j = 0; j < c; j++) { const a = Math.PI - (Math.PI * (j + 0.5)) / c; spots.push({ x: 0.5 + (Math.cos(a) * r) / 2, y: 1 - Math.sin(a) * r, a }); } });
     return spots.sort((p, q) => q.a - p.a);
   }, [seats.length]);
-  const ordered = useMemo(() => [...seats].sort((a, b) => ORDER.indexOf(a.group) - ORDER.indexOf(b.group) || (b.chance ?? 0) - (a.chance ?? 0)), [seats]);
+  const ordered = useMemo(() => [...seats].sort((a, b) => ord(a.group) - ord(b.group) || (b.chance ?? 0) - (a.chance ?? 0)), [seats]);
   const tally = useMemo(() => { const o: Record<string, number> = {}; for (const s of seats) o[s.group] = (o[s.group] ?? 0) + 1; return o; }, [seats]);
   const hv = hover ? seats.find((s) => s.id === hover.id) : null;
   const openNow = useOpen();
@@ -178,11 +182,11 @@ export function Hemicycle({ data, view, live, onPick, model: override }: { data:
           const p = pos[i]; if (!p) return null;
           return (
             <button key={s.id} type="button" className={`hc__seat${s.rating === 'tossup' ? ' is-tossup' : ''}`}
-              style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%`, ['--c' as string]: vicColor(s.group), ['--d' as string]: `${i * 9}ms` } as CSSProperties}
+              style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%`, ['--c' as string]: s.group === 'WAIT' ? 'transparent' : vicColor(s.group), ['--d' as string]: `${i * 9}ms` } as CSSProperties}
               onMouseEnter={(e) => { const r = (e.currentTarget.parentElement as HTMLElement).getBoundingClientRect(); const b = e.currentTarget.getBoundingClientRect(); setHover({ id: s.id, x: b.left - r.left + b.width / 2, y: b.top - r.top }); }}
               onFocus={(e) => { const r = (e.currentTarget.parentElement as HTMLElement).getBoundingClientRect(); const b = e.currentTarget.getBoundingClientRect(); setHover({ id: s.id, x: b.left - r.left + b.width / 2, y: b.top - r.top }); }}
               onClick={() => (s.person ? openProfile(s.person, `hc:${s.person.seatId}:${s.person.name}`) : onPick(s.id))}
-              aria-label={`${seatById.get(s.id)?.name}: ${s.person?.name ?? 'unknown'} (${VIC_NAME[s.group] ?? s.group})${s.chance != null ? `, ${pct(s.chance)}` : ''}`}>
+              aria-label={`${seatById.get(s.id)?.name}: ${s.group === 'WAIT' ? 'awaiting results' : s.person?.name ?? 'unknown'} (${VIC_NAME[s.group] ?? s.group})${s.chance != null ? `, ${pct(s.chance)}` : ''}`}>
               {s.person ? (() => { const lid = `hc:${s.person.seatId}:${s.person.name}`; const hidden = openNow?.lid === lid; return (
                 <motion.div className="hc__face" layoutId={hidden ? undefined : lid} style={{ visibility: hidden ? 'hidden' : undefined }}>
                   <PersonAvatar name={s.person.name} color={vicColor(s.group)} lookup={{ name: s.person.name, scope: 'au' }} size={64} />

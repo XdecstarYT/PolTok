@@ -13,6 +13,7 @@ import './vic-home.css';
 
 const TILES = [
   { to: '/au/victoria/live', emoji: '🔴', title: 'Live Desk', sub: 'The needle, race to 45, every call' },
+  { to: '/au/victoria/watch', emoji: '📺', title: 'PolTok WATCH', sub: 'Full-screen broadcast for your TV' },
   { to: '/au/victoria/parliament', emoji: '🏛️', title: 'Projection', sub: 'Seat model & live parliament' },
   { to: '/au/victoria/match', emoji: '💘', title: 'Who matches you?', sub: 'Swipe the issues, find your party' },
   { to: '/au/victoria/predict', emoji: '🎯', title: 'Make your calls', sub: 'Pick 15 close seats, get scored live' },

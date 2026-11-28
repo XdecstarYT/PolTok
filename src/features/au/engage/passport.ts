@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react';
 export const STAMPS = [
   { to: '/au/victoria', emoji: '🗳️', title: 'Victoria 2026 hub', sub: 'Where it all starts' },
   { to: '/au/victoria/live', emoji: '🔴', title: 'Live Desk', sub: 'The needle and every call' },
+  { to: '/au/victoria/watch', emoji: '📺', title: 'PolTok WATCH', sub: 'Full-screen election broadcast' },
   { to: '/au/victoria/parliament', emoji: '🏛️', title: 'Projection', sub: 'The seat model, live' },
   { to: '/au/victoria/premier', emoji: '👑', title: 'Battle for Premier', sub: 'Carroll v Wilson v Pickering' },
   { to: '/au/victoria/match', emoji: '💘', title: 'Who matches you?', sub: 'Swipe 14 issues, find your party' },

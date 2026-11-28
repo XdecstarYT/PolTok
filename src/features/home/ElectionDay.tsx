@@ -88,7 +88,7 @@ function PollingDay({ now }: { now: number }) {
       <div className="ed-ctas">
         <Link to="/au/victoria/predict" className="ed-cta ed-cta--hot">🎯 Lock in your calls<small>Predictions lock at 6pm. Get scored live tonight</small></Link>
         <Link to="/au/victoria/match" className="ed-cta">💘 Who matches you?<small>Still deciding? Swipe 14 issues</small></Link>
-        <Link to="/au/victoria/live" className="ed-cta">🔴 Live Desk<small>Results from 6pm, every seat, every call</small></Link>
+        <Link to="/au/victoria/watch" className="ed-cta">📺 PolTok WATCH<small>Put it on the TV: the full-screen broadcast</small></Link>
       </div>
       <div className="ed-tonight">
         <div className="ed-h"><span>🌙</span><b>Tonight on PolTok</b></div>
@@ -142,7 +142,7 @@ function ResultsNight() {
       <div className="ed-ctas">
         <Link to="/au/victoria/live" className="ed-cta ed-cta--hot">🔴 Open the Live Desk<small>The needle, race to 45, every seat</small></Link>
         <Link to="/au/victoria/predict" className="ed-cta">🎯 Your calls v the model<small>Scores update as seats are called</small></Link>
-        <Link to="/au/victoria/parliament" className="ed-cta">🏛️ Live parliament<small>Every face, every seat</small></Link>
+        <Link to="/au/victoria/watch" className="ed-cta">📺 PolTok WATCH<small>Full-screen broadcast for the TV</small></Link>
       </div>
       {events.length > 0 && (
         <div className="ed-feed">

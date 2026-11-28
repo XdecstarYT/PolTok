@@ -210,7 +210,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const loc = useLocation();
   const reduce = useReducedMotion();
   const immersive =
-    loc.pathname === '/feed' || loc.pathname.startsWith('/feed/');
+    loc.pathname === '/feed' || loc.pathname.startsWith('/feed/') || loc.pathname === '/au/victoria/watch';
   const [cmdk, setCmdk] = useState(false);
   // Mount the palette (and its search index) only after first open, keeping it out of the entry chunk.
   const [cmdkUsed, setCmdkUsed] = useState(false);

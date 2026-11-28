@@ -174,3 +174,5 @@
 
 .hc__face { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; }
 .hc__face .pa { width: 100% !important; height: 100% !important; }
+/* live view: seats with no published figures yet */
+.hc__seat:has(.hc__empty) .hc__empty { background: transparent; border: 1.5px dashed color-mix(in srgb, var(--text-3) 70%, transparent); box-sizing: border-box; opacity: .7; }

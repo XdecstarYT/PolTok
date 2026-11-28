@@ -15,6 +15,7 @@ const VicCandidate = lazy(() => import('../features/au/parliament/CandidateProfi
 const VicPolicies = lazy(() => import('../features/au/parliament/PoliciesPage'));
 const VicPremier = lazy(() => import('../features/au/insights/PremierPage'));
 const VicVoters = lazy(() => import('../features/au/insights/VotersPage'));
+const VicWatch = lazy(() => import('../features/au/watch/WatchPage'));
 const VicMatch = lazy(() => import('../features/au/engage/MatchPage'));
 const VicPredict = lazy(() => import('../features/au/engage/PredictPage'));
 const MapPage = lazy(() => import('../features/map/MapPage'));
@@ -108,6 +109,7 @@ export function App() {
           <Route path="/au/victoria/premier" element={<VicPremier />} />
           <Route path="/au/victoria/voters" element={<VicVoters />} />
           <Route path="/au/victoria/match" element={<VicMatch />} />
+          <Route path="/au/victoria/watch" element={<VicWatch />} />
           <Route path="/au/victoria/predict" element={<VicPredict />} />
           <Route path="/au/seat/:id" element={<AUSeatPage />} />
           <Route path="/au/senate" element={<AUSenatePage />} />

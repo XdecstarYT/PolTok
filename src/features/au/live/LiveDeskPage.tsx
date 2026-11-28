@@ -190,6 +190,7 @@ export default function LiveDeskPage() {
           <div><dt>2CP swing to Coalition</dt><dd className="num">{swing ? `${swing.avg > 0 ? '+' : ''}${swing.avg}` : m && data?.projection ? `~${data.projection.swing} polls` : '—'}{swing && <small> ({swing.n} seats)</small>}</dd></div>
         </dl>
         <div className="row row-wrap" style={{ gap: 8 }}>
+        <Link to="/au/victoria/watch" className="lg lg--pill lg-btn">📺 PolTok WATCH</Link>
         <button type="button" className="lg lg--pill lg-btn" onClick={toggleTv} aria-pressed={tv}>{tv ? '✕ Exit TV mode' : '📺 TV mode'}</button>
         {notifySupported() && (
           <button type="button" className={`lg lg--pill lg-btn${alerts ? ' is-on' : ''}`} onClick={async () => setAlerts(await askNotify())} disabled={alerts}>
