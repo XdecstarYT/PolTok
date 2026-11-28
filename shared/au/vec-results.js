@@ -117,11 +117,13 @@ export async function discoverDistrictLinks() {
 }
 
 /** Fetch every district page (bounded concurrency). ids: ['vic-albert-park', …]. */
-export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 8000, links = null } = {}) {
-  const seats = {}; let ok = 0, missing = 0, failed = 0;
+export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 8000, links = null, budgetMs = Infinity } = {}) {
+  const seats = {}; let ok = 0, missing = 0, failed = 0, skipped = 0;
   const queue = [...ids];
+  const t0 = Date.now();
   await Promise.all(Array.from({ length: concurrency }, async () => {
     while (queue.length) {
+      if (Date.now() - t0 > budgetMs) { skipped += queue.length; queue.length = 0; break; }
       const id = queue.shift();
       const slug = id.replace(/^vic-/, '');
       const url = links?.[slug] ?? links?.[slug.toLowerCase()] ?? BASE + slug + '-district-results';
@@ -135,7 +137,14 @@ export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 800
     }
   }));
   const called = Object.values(seats).filter((s) => s.called).length;
-  return { status: called === ids.length ? 'final' : 'counting', updatedAt: Date.now(), source: 'Victorian Electoral Commission district results pages', seats, stats: { ok, missing, failed, discovered: links ? Object.keys(links).length : 0 } };
+  return { status: called === ids.length ? 'final' : 'counting', updatedAt: Date.now(), source: 'Victorian Electoral Commission district results pages', seats, stats: { ok, missing, failed, skipped, discovered: links ? Object.keys(links).length : 0 } };
+}
+
+/** Never let a slow or partial run shrink the count: seats this run couldn't read keep their previous figures. */
+export function mergeSnapshot(prev, next, total) {
+  const seats = { ...(prev?.seats ?? {}), ...next.seats };
+  const called = Object.values(seats).filter((s) => s.called).length;
+  return { ...next, seats, status: total && called === total ? 'final' : 'counting' };
 }
 
 /** Diff two snapshots into feed events: a new leader, a seat called, or first results in. Pure (testable). */

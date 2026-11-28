@@ -1,7 +1,7 @@
 // Offline tests for the election-night VEC page reader (shared/au/vec-results.js).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseDistrictPage } from '../shared/au/vec-results.js';
+import { mergeSnapshot, parseDistrictPage } from '../shared/au/vec-results.js';
 
 const counting = `<p>Total enrolment as at close of rolls: 50,000 Formal votes: 20,000 Informal votes: 1,000</p>
 <h2>First preference votes</h2><table><tr><td>CARROLL, Ben Australian Labor Party</td><td>8,000</td><td>40.00%</td></tr>
@@ -46,4 +46,13 @@ test('2026 VEC layout: table columns, party-first 2CP, One Nation, enrolled vote
   assert.deepEqual(s.tcp.map((r) => [r.party, r.name, r.pct]), [['LIB', 'Andrew Cook', 50.7], ['ALP', 'Nina Taylor', 49.3]]);
   assert.equal(s.called, 'LIB');
   assert.equal(s.elected, 'Andrew Cook');
+});
+
+test('mergeSnapshot: a partial run never shrinks the count', () => {
+  const prev = { status: 'counting', seats: { 'vic-a': { counted: 10, leader: 'ALP' }, 'vic-b': { counted: 12, leader: 'LIB' } } };
+  const next = { status: 'counting', updatedAt: 2, seats: { 'vic-a': { counted: 14, leader: 'ALP' } }, stats: { ok: 1 } };
+  const m = mergeSnapshot(prev, next, 2);
+  assert.deepEqual(Object.keys(m.seats).sort(), ['vic-a', 'vic-b']);
+  assert.equal(m.seats['vic-a'].counted, 14);
+  assert.equal(m.status, 'counting');
 });
