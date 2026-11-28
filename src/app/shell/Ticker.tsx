@@ -51,7 +51,7 @@ export function Ticker() {
       for (const [id, s] of seats.filter(([, s]) => !s.called && s.leader).slice(0, 6)) out.push({ id: 'l' + id, label: 'LEADING', color: COL[grp(s.leader)], text: `${title(id)}: ${NAME[grp(s.leader)]} ahead`, to: '/au/victoria/live' });
     } else {
       const days = Math.max(0, Math.ceil((VIC_CLOSE - Date.now()) / 864e5));
-      out.push({ id: 'cd', label: 'VIC 2026', color: '#cdf25a', text: counting ? 'Polls have closed in Victoria: follow the count live' : `Victoria votes ${days <= 1 ? 'tomorrow' : `in ${days} days`}, Saturday 28 November · polls close 6pm AEDT`, to: counting ? '/au/victoria/live' : '/au/victoria' });
+      out.push({ id: 'cd', label: 'VIC 2026', color: '#cdf25a', text: counting || Date.now() >= VIC_CLOSE ? 'Polls have closed in Victoria: follow the count live on the PolTok Live Desk' : new Date().toLocaleDateString('en-CA', { timeZone: 'Australia/Melbourne' }) === '2026-11-28' ? `🗳️ ELECTION DAY: polls are open until 6pm AEDT · ${Math.floor((VIC_CLOSE - Date.now()) / 36e5)}h ${Math.floor(((VIC_CLOSE - Date.now()) % 36e5) / 6e4)}m to go · vote at any voting centre in Victoria` : `Victoria votes ${days <= 1 ? 'tomorrow' : `in ${days} days`}, Saturday 28 November · polls close 6pm AEDT`, to: counting ? '/au/victoria/live' : '/au/victoria' });
       const n = vic?.polls?.newest;
       if (n) out.push({ id: 'np', label: 'NEW POLL', color: '#ff3d55', text: `${n.firm.split('/')[0]} (${n.date}): Coalition ${n.LNP} · One Nation ${n.ONP} · Labor ${n.ALP} · Greens ${n.GRN}${n.tpp ? ` · 2PP ${n.tpp.LNP}–${n.tpp.ALP}` : ''}`, to: '/au/victoria' });
       const m = vic?.model;

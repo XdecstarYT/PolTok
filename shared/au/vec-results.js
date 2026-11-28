@@ -54,15 +54,44 @@ export function parseDistrictPage(html) {
   return seat;
 }
 
+const ORIGIN = 'https://www.vec.vic.gov.au';
+const BROWSER = { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36 PolTok-results-reader' };
+const get = (u, ms = 8000) => fetch(u, { headers: BROWSER, redirect: 'follow', signal: AbortSignal.timeout(ms) });
+const hrefs = (html) => [...html.matchAll(/href="([^"#]+)"/g)].map((m) => m[1].replace(/&amp;/g, '&')).filter((h) => !/readspeaker|^mailto:|^javascript:/i.test(h)).map((h) => (h.startsWith('//') ? 'https:' + h : h.startsWith('/') ? ORIGIN + h : h));
+const YEAR = process.env.VEC_RESULTS_YEAR || '2026';
+const DISTRICT = new RegExp(`${YEAR}[^"]*?\\/([a-z0-9-]+)-district(?:-results)?\\/?$`, 'i');
+
+/** Find the published 2026 district result pages wherever the VEC put them: env override, the expected address, or by
+ *  following 2026 result links from the VEC results hub. Returns { slug: url } (empty until the VEC publishes). */
+export async function discoverDistrictLinks() {
+  const found = {};
+  const take = (list) => { for (const h of list) { const m = DISTRICT.exec(h); if (m && /result/i.test(h)) found[m[1]] ??= h; } };
+  const seen = new Set();
+  const visit = async (u) => { if (seen.has(u) || seen.size > 12) return ''; seen.add(u); try { const r = await get(u); return r.ok ? await r.text() : ''; } catch { return ''; } };
+  const firstPass = [BASE, ORIGIN + '/results/state-election-results', ORIGIN + '/results', ORIGIN + `/voting/${YEAR}-state-election`];
+  const next = [];
+  for (const u of firstPass) {
+    const html = await visit(u);
+    if (!html) continue;
+    const hs = hrefs(html); take(hs);
+    for (const h of hs) if (h.includes(YEAR) && /result/i.test(h) && h.startsWith(ORIGIN) && !DISTRICT.test(h)) next.push(h);
+    if (Object.keys(found).length >= 80) return found;
+  }
+  for (const u of [...new Set(next)].slice(0, 8)) { take(hrefs(await visit(u))); if (Object.keys(found).length >= 80) break; }
+  return found;
+}
+
 /** Fetch every district page (bounded concurrency). ids: ['vic-albert-park', …]. */
-export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 8000 } = {}) {
+export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 8000, links = null } = {}) {
   const seats = {}; let ok = 0, missing = 0, failed = 0;
   const queue = [...ids];
   await Promise.all(Array.from({ length: concurrency }, async () => {
     while (queue.length) {
       const id = queue.shift();
+      const slug = id.replace(/^vic-/, '');
+      const url = links?.[slug] ?? BASE + slug + '-district-results';
       try {
-        const r = await fetch(BASE + id.replace(/^vic-/, '') + '-district-results', { headers: UA, signal: AbortSignal.timeout(timeoutMs) });
+        const r = await get(url, timeoutMs);
         if (r.status === 404) { missing++; continue; }
         if (!r.ok) { failed++; continue; }
         const s = parseDistrictPage(await r.text());
@@ -71,7 +100,7 @@ export async function fetchVecDistricts(ids, { concurrency = 10, timeoutMs = 800
     }
   }));
   const called = Object.values(seats).filter((s) => s.called).length;
-  return { status: called === ids.length ? 'final' : 'counting', updatedAt: Date.now(), source: 'Victorian Electoral Commission district results pages', seats, stats: { ok, missing, failed } };
+  return { status: called === ids.length ? 'final' : 'counting', updatedAt: Date.now(), source: 'Victorian Electoral Commission district results pages', seats, stats: { ok, missing, failed, discovered: links ? Object.keys(links).length : 0 } };
 }
 
 /** Diff two snapshots into feed events: a new leader, a seat called, or first results in. Pure (testable). */

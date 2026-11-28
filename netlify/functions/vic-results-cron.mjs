@@ -2,7 +2,7 @@
 // pages, store a snapshot in Netlify Blobs ('poltok' / 'vic2026-results', served by /api/au/results) and append any
 // changes (first results, lead changes, calls) to the live feed ('vic2026-events', served by /api/vic/events).
 import { getStore } from '@netlify/blobs';
-import { diffResults, fetchVecDistricts } from '../../shared/au/vec-results.js';
+import { diffResults, discoverDistrictLinks, fetchVecDistricts } from '../../shared/au/vec-results.js';
 import IDS from '../../shared/au/vic-2022-primaries.json' with { type: 'json' };
 
 const FROM = Date.parse('2026-11-28T07:00:00Z'), UNTIL = Date.parse('2026-12-12T00:00:00Z');
@@ -11,7 +11,11 @@ export default async () => {
   const now = Date.now();
   if (now < FROM || now > UNTIL) return new Response('inactive');
   const store = getStore('poltok');
-  const snap = await fetchVecDistricts(Object.keys(IDS));
+  // find where the VEC actually published the 2026 district pages (cached once found)
+  let links = (await store.get('vic2026-links', { type: 'json' }).catch(() => null)) ?? {};
+  if (Object.keys(links).length < 80) { const d = await discoverDistrictLinks().catch(() => ({})); if (Object.keys(d).length > Object.keys(links).length) { links = d; await store.setJSON('vic2026-links', links); } }
+  const snap = await fetchVecDistricts(Object.keys(IDS), { links: Object.keys(links).length ? links : null });
+  await store.setJSON('vic2026-cron-status', { at: now, ...snap.stats, seatsWithResults: Object.keys(snap.seats).length, sampleLink: Object.values(links)[0] ?? null });
   if (!Object.keys(snap.seats).length) return new Response(JSON.stringify(snap.stats));
   const prev = await store.get('vic2026-results', { type: 'json' }).catch(() => null);
   const ev = diffResults(prev, snap, now);

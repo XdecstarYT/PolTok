@@ -41,7 +41,7 @@ export function FindSeat({ compact, onSeat }: { compact?: boolean; onSeat?: (id:
     }, () => { setBusy(false); setMsg('Couldn\'t get your location. Try a suburb or postcode.'); }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
   };
   return (
-    <div className={`fs lg${compact ? ' fs--compact' : ''}`}>
+    <div id={compact ? undefined : 'find-seat'} className={`fs lg${compact ? ' fs--compact' : ''}`} style={{ scrollMarginTop: 140 }}>
       {!compact && <div className="fs__head"><span aria-hidden="true">📍</span><div><b>Find my seat</b><small>Suburb or postcode · see your candidates and the projection</small></div></div>}
       <div className="fs__row">
         <input type="search" value={q} onChange={(e) => { setQ(e.target.value); setMsg(null); }} placeholder="e.g. Niddrie or 3042" aria-label="Suburb or postcode" autoComplete="off"

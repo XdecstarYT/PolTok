@@ -54,10 +54,10 @@ export default function VicTakeover() {
         <span className="kicker kicker--accent">Victorian state election</span>
         <span className="kicker kicker--muted">Saturday 28 November · polls close 6pm AEDT</span>
       </div>
-      <h2 id="vt-title" className="vt__title">
-        {closed ? <>Victoria has <em>voted</em></> : <>Victoria votes <em>{days <= 1 ? 'tomorrow' : `in ${days} days`}</em></>}
+      {new Date(now).toLocaleDateString('en-CA', { timeZone: 'Australia/Melbourne' }) === '2026-11-28' && !closed ? <h2 id="vt-title" className="vt__title" style={{ fontSize: 'clamp(28px, 5vw, 44px)' }}>The final polls <em>&</em> your seat</h2> : <h2 id="vt-title" className="vt__title">
+        {closed ? <>Victoria has <em>voted</em></> : <>Victoria votes <em>{new Date(now).toLocaleDateString('en-CA', { timeZone: 'Australia/Melbourne' }) === '2026-11-28' ? 'today' : days <= 1 ? 'tomorrow' : `in ${days} days`}</em></>}
         {!closed && <span className="vt__count">Polls close in <span className="num"><Countdown to={VIC_CLOSE} compact doneLabel="now" /></span></span>}
-      </h2>
+      </h2>}
       {data?.polls && !closed && <NewestPoll d={data} />}
       <FindSeat />
       {loading && !data ? <Skeleton lines={4} /> : error && !data ? <p className="vt__err">Live poll data is briefly unavailable. The Victoria hub has everything else.</p> : data && (
