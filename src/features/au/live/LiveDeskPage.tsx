@@ -151,7 +151,7 @@ export default function LiveDeskPage() {
   return (
     <div className={`page au-page ld${tv ? ' ld--tv' : ''}`} ref={root}>
       <PageHeader className="au-pagehead" live={counting} kicker={counting ? `Counting · ${res.data?.source ?? 'VEC'}` : 'Victorian state election · Sat 28 Nov 2026'} title="Live Desk" crumbLabel="Victoria live"
-        sub={counting ? <>Updated {new Date(res.data!.updatedAt ?? Date.now()).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })} · refreshes every 30 seconds</> : <>Election-night command centre. Results start after polls close at 6pm AEDT.</>}>
+        sub={counting ? <>Updated {new Date(res.data!.updatedAt ?? Date.now()).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit', timeZone: 'Australia/Melbourne' })} AEDT · refreshes every 30 seconds</> : <>Election-night command centre. Results start after polls close at 6pm AEDT.</>}>
         <AuNav />
       </PageHeader>
 
@@ -170,7 +170,7 @@ export default function LiveDeskPage() {
               </span>
             );
           })}
-          {!counting && <span className="ld-race__rest" style={{ flex: Math.max(0, 88 - parties.reduce((a, k) => a + (m?.range[k]?.median ?? 0), 0)) }} />}
+          <span className="ld-race__rest" style={{ flex: Math.max(0, 88 - parties.reduce((a, k) => a + (counting ? (tally[k]?.won ?? 0) + (tally[k]?.lead ?? 0) : m?.range[k]?.median ?? 0), 0)) }} />
           <u style={{ left: `${(45 / 88) * 100}%` }}><em>45</em></u>
         </div>
         <div className="ld-race__legend">
